@@ -4,7 +4,6 @@ const port = process.env.PORT || 3000;
 
 const server = restify.createServer();
 
-
 server.get('/healthprobe', function(req, res, next){
   res.send("I'm healthy");
   next();
