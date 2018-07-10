@@ -1,13 +1,28 @@
 
 
+
+
+## Prerequisites 
+The following are the basic requirements to **start** the labs. Individual labs may have other requirements that will be listed within the lab.
+
+* Azure Account [Azure Portal](https://portal.azure.com)
+* Git 
+
+
 ## Labs
 
-
-0. Azure Cloud Shell []
+0. Azure Cloud Shell [https://shell.azure.com](https://shell.azure.com)
 1. Create AKS Cluster
-⋅⋅* Azure CLI
-⋅⋅* Terraform
+    * Azure CLI
+    * Terraform
 2. ACR (Azure Container Registry)
+3. Helm
+4. CI/CD
+5. Networking
+6. Monitoring
+7. Service Mesh w/ Distributed Tracing
+8. Storage
+9. Security
 
 
 
