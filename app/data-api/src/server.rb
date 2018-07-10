@@ -2,6 +2,9 @@ require 'sinatra'
 require "sinatra/reloader" if :development?
 require 'mongo'
 
+set :bind, '0.0.0.0'
+set :server, "thin"
+
 DBURI = ENV["MONGOURI"]
 DBOptions = {
   user: ENV["MONGOUSER"],
