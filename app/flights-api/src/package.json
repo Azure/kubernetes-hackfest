@@ -1,0 +1,15 @@
+{
+  "name": "flights-api",
+  "version": "1.0.0",
+  "description": "a microservie api to get flight data",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ray Kao",
+  "license": "ISC",
+  "dependencies": {
+    "node-fetch": "^2.1.2",
+    "restify": "^7.2.1"
+  }
+}
