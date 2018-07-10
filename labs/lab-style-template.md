@@ -1,5 +1,5 @@
-# Lab: Create AKS Cluster
-This is the info about the lab. You will creat an AKS cluster. Blah blah blah.
+# Lab: Name of Lab
+This is the info about the lab. More info here. Blah blah blah.
 
 ## Prerequisites 
 
@@ -8,6 +8,7 @@ This is the info about the lab. You will creat an AKS cluster. Blah blah blah.
 
 1. Blah
     * blah 1
+        1. info here
     * blah 2
 2. blah
 3. more blah

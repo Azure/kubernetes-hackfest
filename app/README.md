@@ -1,6 +1,3 @@
-# Lab: Create AKS Cluster
-This is the info about the lab. You will creat an AKS cluster. Blah blah blah.
-
 ## Prerequisites 
 
 
