@@ -27,7 +27,8 @@ rescue StandardError => err
 end
 
 get '/' do
-  flights = DBClient[:flights].find()
+  flights = DBClient[:flights].find("properties.FlightNumber" => "AAL1506 ").to_a.to_json
+  # flights = DBClient[:flights].find("_id" => BSON::ObjectId('5b450e5652c19310c8fe24d4')).to_a.to_json
 end
 
 get '/healthprobe' do
