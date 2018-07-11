@@ -5,7 +5,9 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 ## Prerequisites 
 
 * Clone this repo in Azure Cloud Shell.
-* Complete previous labs for [AKS](../create-aks-cluster/README.md) and [ACR](../build-application/README.md).
+* Complete previous labs:
+    * [Azure Kubernetes Service](../create-aks-cluster/README.md)
+    * [Build Application Components in Azure Container Registry](../build-application/README.md)
 
 ## Instructions
 
