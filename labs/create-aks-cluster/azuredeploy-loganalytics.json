@@ -1,0 +1,53 @@
+{
+"$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+"contentVersion": "1.0.0.0",
+"parameters": {
+    "workspaceName": {
+        "type": "String",
+        "defaultValue": "k8slogs",
+        "metadata": {
+          "description": "Specifies the name of the workspace."
+        }
+    },
+    "location": {
+        "type": "String",
+        "allowedValues": [
+          "eastus",
+          "westus",
+          "canadaeast"
+        ],
+        "defaultValue": "eastus",
+        "metadata": {
+          "description": "Specifies the location in which to create the workspace."
+        }
+    },
+    "sku": {
+        "type": "String",
+        "allowedValues": [
+          "Standalone",
+          "PerNode",
+          "PerGB2018"
+        ],
+        "defaultValue": "Standalone",
+        "metadata": {
+            "description": "Specifies the service tier of the workspace: Standalone, PerNode, Per-GB"
+        }
+    }
+},
+"resources": [
+    {
+        "type": "Microsoft.OperationalInsights/workspaces",
+        "name": "[parameters('workspaceName')]",
+        "apiVersion": "2017-03-15-preview",
+        "location": "[parameters('location')]",
+        "properties": {
+            "sku": {
+                "Name": "[parameters('sku')]"
+            },
+            "features": {
+                "searchVersion": 1
+            }
+        }
+      }
+   ]
+}
