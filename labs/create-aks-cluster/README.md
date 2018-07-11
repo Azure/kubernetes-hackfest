@@ -61,9 +61,9 @@
 
 8. Deploy Log Analytics Workspace
    ```bash
-   az group deployment create -n $WORKSPACENAME -g $RG \ --template-file azuredeploy-loganalytics.json \
-   --parameters workspaceName=$WORKSPACENAME \
-   --parameters location=$LOC \
+   az group deployment create -n $WORKSPACENAME -g $LARG --template-file azuredeploy-loganalytics.json
+   --parameters workspaceName=$WORKSPACENAME
+   --parameters location=$LALOCATION
    --parameters sku="Standalone"
    ```
 
@@ -79,9 +79,9 @@
     ```  
     #### This command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT...
     ```bash
-    az aks create -n $CLLUSTERNAME -g $RGNAME -c 1 -k 1.10.3  --generate-ssh-keys -l $LOCATION \
-    --enable-addons http_application_routing,monitoring \
-    --workspace-resource-id $WORKSPACEIDURL \
+    az aks create -n $CLLUSTERNAME -g $RGNAME -c 1 -k 1.10.3  --generate-ssh-keys -l $LOCATION
+    --enable-addons http_application_routing,monitoring
+    --workspace-resource-id $WORKSPACEIDURL
     --no-wait  
     ```
 
