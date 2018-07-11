@@ -42,7 +42,6 @@ The general workflow/result will be as follows:
 
 #### Create Build Pipeline
 
-
 1. Create an empty build pipeline. Hover over "Build and release" and select "Build"
 2. Click the "New Definition" button
 3. Select to "start with an Empty process"
@@ -60,11 +59,12 @@ The general workflow/result will be as follows:
 9. Choose "Inline script" and enter the following (be sure to replace the ACR name with yours). Notice how we create a dynamic image tag using our build ID from VSTS.
 
     ```
-    export ACRNAME=briaracr
+    export ACRNAME=<replace>
     export IMAGETAG=vsts-$(Build.BuildId)
 
-    az acr build -t hackfest/data-api:$IMAGETAG -r $ACRNAME ./app/data-api
     az acr build -t hackfest/auth-api:$IMAGETAG -r $ACRNAME ./app/auth-api
+    az acr build -t hackfest/cache-api:$IMAGETAG -r $ACRNAME ./app/cache-api
+    az acr build -t hackfest/data-api:$IMAGETAG -r $ACRNAME ./app/data-api
     az acr build -t hackfest/flights-api:$IMAGETAG -r $ACRNAME ./app/flights-api
     az acr build -t hackfest/web-ui:$IMAGETAG -r $ACRNAME ./app/web-ui
     ```
@@ -75,12 +75,47 @@ The general workflow/result will be as follows:
 
 11. Test this by clicking "Save & queue" and providing a comment
 12. Click on "Builds" to check result
+13. Enable Continuous integration for the build definition. Edit the build definition and you will find this setting under "Triggers"
 
 
 #### Create Deployment Pipeline
 
+In the deployment pipeline, we will create a Helm task to update our application. To save time, we will only deploy the web-ui application in this lab. 
 
+1. Hover over "Build and release" and select "Release"
+2. Click the "New Definition" button
+3. Select to "start with an Empty process"
+4. Name the release Environment "dev"
+5. Click on "+ Add" next to Artifacts
+6. In "Source (Build Definition)", select the build we created earlier (should be named "vsts-aks-CI")
 
+    ![](vsts-release-artifact.png)
+
+7. Click on the lightning bolt next to the Artifact we just created and enable "Continuous deployment trigger"
+8. Hover over dev environment and select "View environment tasks"
+9. In Agent phase, change the Agent queue to "Hosted Linux Preview"
+10. On the Agent phase, click the "+" to add a Task
+11. Search for "helm" and add the task called "Package and deploy Helm charts"
+12. Click on the task to configure all of the settings for the release
+    
+    * Select your Azure subscription in the dropdown and click "Authorize"
+    * Select the Resource Group and AKS Cluster
+    * For the Command select "upgrade"
+    * For Chart type select "File Path"
+    * For Chart path, click the "..." button and browse to the "web-ui" chart in the charts directory
+
+#### Run a test build
+
+1. In VSTS, click on Builds and click the "Queue new build" button
+2. Monitor the builds and wait for the build to complete
+
+    ![](vsts-build.png)
+
+3. The release will automatically start when the build is complete (be patient, this can take some time). Review the results as it is complete. 
+
+    ![](vsts-release.png)
+
+4. Now kick-off the full CI/CD pipeline by making an edit to the web-ui frontend code in VSTS.
 
 ## Troubleshooting / Debugging
 
