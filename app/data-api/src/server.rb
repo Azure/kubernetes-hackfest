@@ -3,6 +3,17 @@ require "sinatra/reloader" if :development?
 require "mongo"
 require 'net/http'
 
+# Server values
+HOSTADDRESS = ENV["HOSTADDRESS"] || "0.0.0.0"
+HOSTPORT = ENV["HOSTPORT"] || "4567"
+HOSTENVIRONMENT = ENV["HOSTENVIRONMENT"] || null
+
+# Set Server Values
+set :bind, HOSTADDRESS
+set :port, HOSTPORT
+set :server, "thin"
+set :environment, HOSTENVIRONMENT
+
 ## Database values
 DBURI = ENV["MONGOURI"]
 DBOptions = {}
@@ -13,19 +24,12 @@ DBOptions[:database] = ENV["MONGODB"] if ENV["MONGODB"]
  # Otherwise even a value of false returns true in ruby when grabbing from ENV ¯\_(ツ)_/¯
 DBOptions[:ssl] = true if ENV["MONGODBSSL"]
 
+Mongo::Logger.logger.level = Logger::FATAL if :production?
+
 # Cache Server values
 CACHESERVERPROTOCOL = ENV["CACHESERVERPROTOCOL"]
 CACHESERVER=ENV["CACHESERVER"]
 CACHESERVERPORT=ENV["CACHESERVERPORT"]
-
-# Server values
-HOSTADDRESS = ENV["HOSTADDRESS"] || "0.0.0.0"
-HOSTPORT = ENV["HOSTPORT"] || "4567"
-
-# Set Server Values
-set :bind, HOSTADDRESS
-set :port, HOSTPORT
-set :server, "thin"
 
 begin
   DBClient = Mongo::Client.new([DBURI], DBOptions)
@@ -40,10 +44,14 @@ rescue StandardError => err
 end
 
 get '/flights/country/:code' do
+  content_type 'application/json'
   key = request.path_info
+
   flights = DBClient[:flights].find().to_a.to_json
 
   updateCache(key, flights)
+
+  return flights
 end
 
 get '/healthprobe' do
@@ -63,6 +71,4 @@ def updateCache(key, jsonData)
   res = Net::HTTP.start(uri.hostname, uri.port) do |http|
     http.request(req)
   end
-
-  puts res
 end

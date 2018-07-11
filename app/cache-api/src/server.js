@@ -49,14 +49,12 @@ server.post('/flights/:type/:value', function(req, res, next){
   let key = `/flights/${type}/${value}`;
 
   console.log(`Writing to: ${key}`);
-  console.log(req.body);
   
   redisClient.set(key, JSON.stringify(req.body), 'EX', redisCacheExpirationTimeout, function(err, reply){
     if(err){
       res.status(500);
     }
-    console.log("reply: ");
-    console.log(reply);
+    console.log(`reply: ${reply}`);
 
     res.send();
     next();
