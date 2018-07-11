@@ -5,9 +5,9 @@ require "mongo"
 ## Database values
 DBURI = ENV["MONGOURI"]
 DBOptions = {}
-DBOptions[:user] = ENV["MONGOUSER"] 
-DBOptions[:password] = ENV["MONGOPWD"] 
-DBOptions[:database] = ENV["MONGODB"] 
+DBOptions[:user] = ENV["MONGOUSER"] if ENV["MONGOUSER"]
+DBOptions[:password] = ENV["MONGOPWD"] if ENV["MONGOPWD"]
+DBOptions[:database] = ENV["MONGODB"] if ENV["MONGODB"]
  # Note to self: bash "MONGODBSSL" value is only false if it is completely *NOT* set i.e. bash variable does not exist.  
  # Otherwise even a value of false returns true in ruby when grabbing from ENV ¯\_(ツ)_/¯
 DBOptions[:ssl] = true if ENV["MONGODBSSL"]
