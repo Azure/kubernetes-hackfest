@@ -1,4 +1,4 @@
-# Lab: Create AKS Cluster
+# Lab 1: Create AKS Cluster
 
 ## Prerequisites 
 
@@ -85,6 +85,7 @@
     ```bash
     az aks create -n $CLLUSTERNAME -g $RGNAME -c 1 -k 1.10.3 \
     --generate-ssh-keys -l $LOCATION \
+    --node-count 3 \
     --enable-addons http_application_routing,monitoring \
     --workspace-resource-id $WORKSPACEID
     ```
@@ -102,15 +103,19 @@
      ```bash
       az aks get-credentials -n CLUSTER_NAME -g NAME
      ```
-12.  Verify you have API access to your new AKS cluster
+12. Download your kube config, which will allow you to access         your Kubernetes cluster
+
+     ```bash
+     az aks get-credentials -g $RGNAME -n $CLUSTERNAME --admin
+     ```
+13.  Verify you have API access to your new AKS cluster
 
       > Note: It can take 5 minutes for your nodes to appear and be in READY state. You can run `watch kubectl get nodes` to monitor status.
      ```bash
      kubectl get nodes
     
-     NAME                       STATUS    ROLES     AGE        VERSION
-     aks-nodepool1-20004257-0   Ready     agent     4m         v1.10.3
-     aks-nodepool1-20004257-1   Ready     agent     4m         v1.10.3
+     NAME                       STATUS    ROLES     AGE       VERSION
+     aks-nodepool1-26522970-0   Ready     agent     33m       v1.10.3
      ```
  
      To see more details about your cluster:
@@ -118,27 +123,33 @@
      ```bash
      kubectl cluster-info
 
-     Kubernetes master is running at https://odlaks-v2--odlaks-v2-gbb-11-b23acc-115da6a3.hcp.centralus.azmk8s.io:443
-     Heapster is running at https://odlaks-v2--odlaks-v2-gbb-11-b23acc-115da6a3.hcp.centralus.azmk8s.io:443/api/v1/namespaces/kube-system/services/heapster/proxy
-     KubeDNS is running at https://odlaks-v2--odlaks-v2-gbb-11-b23acc-115da6a3.hcp.centralus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-     kubernetes-dashboard is running at https://odlaks-v2--odlaks-v2-gbb-11-b23acc-115da6a3.hcp.centralus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kubernetes-dashboard/proxy
+     Kubernetes master is running at https://cluster-dw-kubernetes-hackf-80066e-a44f3eb0.hcp.eastus.azmk8s.io:443
+     addon-http-application-routing-default-http-backend is running at https://cluster-dw-kubernetes-hackf-80066e-a44f3eb0.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/addon-http-application-routing-default-http-backend/proxy
+     addon-http-application-routing-nginx-ingress is running at http://168.62.191.18:80 http://168.62.191.18:443
+    Heapster is running at https://cluster-dw-kubernetes-hackf-80066e-a44f3eb0.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/heapster/proxy
+    KubeDNS is running at https://cluster-dw-kubernetes-hackf-80066e-a44f3eb0.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+    kubernetes-dashboard is running at https://cluster-dw-kubernetes-hackf-80066e-a44f3eb0.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kubernetes-dashboard/proxy 
      ```
 
-     To further debug and diagnose cluster problems, use
+     You should now have a Kubernetes cluster running with 3 nodes. You do not see the master servers for the cluster because these are managed by Microsoft. The Control Plane services which manage the Kubernetes cluster such as scheduling, API access, configuration data store and object controllers are all provided as services to the nodes.
+     
+     Download your kube config, which will allow you to access your Kubernetes cluster
+
+     ```bash
+     az aks get-credentials -g $RGNAME -n $CLUSTERNAME --admin
+     ```
+
+
+## Troubleshooting / Debugging
+To further debug and diagnose cluster problems, use
 
      ```bash
      kubectl cluster-info dump
      ```
 
-     You should now have a Kubernetes cluster running with 1 node. You do not see the master servers for the cluster because these are managed by Microsoft. The Control Plane services which manage the Kubernetes cluster such as scheduling, API access, configuration data store and object controllers are all provided as services to the nodes.
-
-
-
-## Troubleshooting / Debugging
-
 ## Docs / References
 
-# Lab: Create AKS Cluster Namespaces
+# Lab 2: Create AKS Cluster Namespaces
 
 This lab creates namespaces that reflect a representative example of an organization's environments. In this case DEV, UAT and PROD. We will also apply the appopriate permissions, limits and resource quotas to each of the namespaces.
 
