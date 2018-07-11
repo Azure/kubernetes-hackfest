@@ -1,23 +1,27 @@
-require 'sinatra'
+require "sinatra"
 require "sinatra/reloader" if :development?
-require 'mongo'
-
-set :bind, '0.0.0.0'
-set :server, "thin"
+require "mongo"
 
 DBURI = ENV["MONGOURI"]
-DBOptions = {
-  user: ENV["MONGOUSER"],
-  password: ENV["MONGOPWD"],
-  database: ENV["MONGODB"],
-  ssl: true
-}
+
+DBOptions = {}
+DBOptions[:user] = ENV["MONGOUSER"] 
+DBOptions[:password] = ENV["MONGOPWD"] 
+DBOptions[:database] = ENV["MONGODB"] 
+
+ # Note to self: bash "MONGODBSSL" value is only false if it is completely *NOT* set i.e. bash variable does not exist.  
+ # Otherwise even a value of false returns true in ruby when grabbing from ENV ¯\_(ツ)_/¯
+DBOptions[:ssl] = true if ENV["MONGODBSSL"]
+
+HOSTADDRESS = ENV["HOSTADDRESS"] || "0.0.0.0"
+
+set :bind, HOSTADDRESS
+set :server, "thin"
 
 begin
   DBClient = Mongo::Client.new([DBURI], DBOptions)
   puts('Client Connection: ')
   puts(DBClient.cluster.inspect)
-  puts
   puts('Collection Names: ')
   puts(DBClient.database.collection_names.inspect)
   puts('Connected!')
@@ -27,8 +31,7 @@ rescue StandardError => err
 end
 
 get '/' do
-  flights = DBClient[:flights].find("properties.FlightNumber" => "AAL1506 ").to_a.to_json
-  # flights = DBClient[:flights].find("_id" => BSON::ObjectId('5b450e5652c19310c8fe24d4')).to_a.to_json
+  flights = DBClient[:flights].find().to_a.to_json
 end
 
 get '/healthprobe' do
