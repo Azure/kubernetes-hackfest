@@ -22,7 +22,7 @@ The following are the basic requirements to **start** the labs. Individual labs 
 9. [Security](labs/security/README.md)
 10. [Service Broker](labs/service-broker/README.md)
 11. [Azure Container Instance](labs/aci/README.md)
-12. [Azure Dev Spaces](labs/devspaces/README.md)
+12. [Azure Dev Spaces](labs/dev-spaces/README.md)
 
 
 
