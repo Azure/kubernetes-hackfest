@@ -1,0 +1,78 @@
+[
+    {
+        "_id": "5b1529c098bef852e0f2bf51",
+        "type": "Feature",
+        "properties": {
+            "sizebyMethanol": 1042,
+            "acres": 858,
+            "operator": "DEF Oil & Gas Llc",
+            "time": 1526310739770,
+            "wellid": "10001920299",
+            "well": "Smith Unit 1"
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [
+                125.4387,
+                10.1726
+            ]
+        }
+    },
+    {
+        "_id": "5b1529c098bef852e0f2bf52",
+        "type": "Feature",
+        "properties": {
+            "sizebyMethanol": 10042,
+            "acres": 22858,
+            "operator": "ABC Oil & Gas Llc",
+            "time": 1526310739770,
+            "wellid": "10001920201",
+            "well": "Garrison Unit 1"
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [
+                -27.0974,
+                -55.9788
+            ]
+        }
+    },
+    {
+        "_id": "5b1529c098bef852e0f2bf53",
+        "type": "Feature",
+        "properties": {
+            "sizebyMethanol": 942,
+            "acres": 8585,
+            "operator": "GGG Oil & Gas Llc",
+            "time": 1526310739770,
+            "wellid": "10001920999",
+            "well": "Roberts Unit 5"
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [
+                51.3795,
+                30.4405
+            ]
+        }
+    },
+    {
+        "_id": "5b1529c098bef852e0f2bf54",
+        "type": "Feature",
+        "properties": {
+            "sizebyMethanol": 1085,
+            "acres": 85985,
+            "operator": "XYZ Oil & Gas Llc",
+            "time": 1526310739770,
+            "wellid": "80001920999",
+            "well": "Bob Unit 5"
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [
+                51.3795,
+                30.4405
+            ]
+        }
+    }
+]
