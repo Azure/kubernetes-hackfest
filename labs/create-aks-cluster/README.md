@@ -58,19 +58,17 @@
 
 8. Deploy Log Analytics Workspace
    ```bash
-   az group deployment create -n $WORKSPACENAME -g $RG \
-   --template-file azuredeploy-loganalytics.json \
-   --parameters workspaceName=$WORKSPACENAME \
-   --parameters location=$LOC \
+   az group deployment create -n $WORKSPACENAME -g $RG --template-file azuredeploy-loganalytics.json
+   --parameters workspaceName=$WORKSPACENAME
+   --parameters location=$LOC
    --parameters sku="Standalone"
-  ```
+   ```
 
-  ```bash
-  export WORSPACEID=<value>
-  ```
-  
+   ```bash
+   export WORSPACEID=<value>
+   ```
 
-8. Create your AKS cluster in the resource group created above with 3 nodes, targeting Kubernetes version 1.10.3, with Container Insights, and HTTP Application Routing Enabled.
+9. Create your AKS cluster in the resource group created above with 3 nodes, targeting Kubernetes version 1.10.3, with Container Insights, and HTTP Application Routing Enabled.
    * Use unique CONSTERNATE
 
     ```bash
@@ -84,8 +82,8 @@
     --no-wait  
     ```
 
-1. Verify your cluster status. The `ProvisioningState` should be `Succeeded`
-    ```
+10. Verify your cluster status. The `ProvisioningState` should be `Succeeded`
+    ```bash
     az aks list -o table
 
     Name                 Location    ResourceGroup         KubernetesVersion    ProvisioningState    Fqdn
@@ -93,36 +91,33 @@
     ODLaks-v2-gbb-16502  eastus   ODL_aks-v2-gbb-16502  1.8.6                Succeeded odlaks-v2--odlaks-v2-gbb-16-b23acc-17863579.hcp.centralus.azmk8s.io
     ```
 
+11.  Get the Kubernetes config files for your new AKS cluster
+     ```bash
+      az aks get-credentials -n CLUSTER_NAME -g NAME
+     ```
+12.  Verify you have API access to your new AKS cluster
 
-2.  Get the Kubernetes config files for your new AKS cluster
-    ```
-    az aks get-credentials -n CLUSTER_NAME -g NAME
-    ```
-
-3.  Verify you have API access to your new AKS cluster
-
-    > Note: It can take 5 minutes for your nodes to appear and be in READY state. You can run `watch kubectl get nodes` to monitor status.
-
-    ```
-    kubectl get nodes
+      > Note: It can take 5 minutes for your nodes to appear and be in READY state. You can run `watch kubectl get nodes` to monitor status.
+     ```
+     kubectl get nodes
     
-    NAME                       STATUS    ROLES     AGE       VERSION
-    aks-nodepool1-20004257-0   Ready     agent     4m        v1.10.3
-    aks-nodepool1-20004257-1   Ready     agent     4m        v1.10.3
-    ```
+     NAME                       STATUS    ROLES     AGE        VERSION
+     aks-nodepool1-20004257-0   Ready     agent     4m         v1.10.3
+     aks-nodepool1-20004257-1   Ready     agent     4m         v1.10.3
+     ```
     
     To see more details about your cluster:
     
-    ```
-    kubectl cluster-info
-    
-    Kubernetes master is running at https://odlaks-v2--odlaks-v2-gbb-11-b23acc-115da6a3.hcp.centralus.azmk8s.io:443
-    Heapster is running at https://odlaks-v2--odlaks-v2-gbb-11-b23acc-115da6a3.hcp.centralus.azmk8s.io:443/api/v1/namespaces/kube-system/services/heapster/proxy
-    KubeDNS is running at https://odlaks-v2--odlaks-v2-gbb-11-b23acc-115da6a3.hcp.centralus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-    kubernetes-dashboard is running at https://odlaks-v2--odlaks-v2-gbb-11-b23acc-115da6a3.hcp.centralus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kubernetes-dashboard/proxy
+     ```bash
+     kubectl cluster-info
+
+     Kubernetes master is running at https://odlaks-v2--odlaks-v2-gbb-11-b23acc-115da6a3.hcp.centralus.azmk8s.io:443
+     Heapster is running at https://odlaks-v2--odlaks-v2-gbb-11-b23acc-115da6a3.hcp.centralus.azmk8s.io:443/api/v1/namespaces/kube-system/services/heapster/proxy
+     KubeDNS is running at https://odlaks-v2--odlaks-v2-gbb-11-b23acc-115da6a3.hcp.centralus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+     kubernetes-dashboard is running at https://odlaks-v2--odlaks-v2-gbb-11-b23acc-115da6a3.hcp.centralus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kubernetes-dashboard/proxy
 
     To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
-    ```
+     ```
 
 You should now have a Kubernetes cluster running with 1 node. You do not see the master servers for the cluster because these are managed by Microsoft. The Control Plane services which manage the Kubernetes cluster such as scheduling, API access, configuration data store and object controllers are all provided as services to the nodes.
 
