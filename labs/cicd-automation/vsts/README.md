@@ -57,12 +57,16 @@ The general workflow/result will be as follows:
     ![](vsts-azurecli.png)
 
 8. Click on the Azure CLI task and choose your Azure subscription and Authorize
-9. Choose "Inline script" and enter the following (be sure to replace the ACR name with yours):
+9. Choose "Inline script" and enter the following (be sure to replace the ACR name with yours). Notice how we create a dynamic image tag using our build ID from VSTS.
 
     ```
     export ACRNAME=briaracr
+    export IMAGETAG=vsts-$(Build.BuildId)
 
-    az acr build -t hackfest/data-api:v1 -r $ACRNAME ./app/data-api
+    az acr build -t hackfest/data-api:$IMAGETAG -r $ACRNAME ./app/data-api
+    az acr build -t hackfest/auth-api:$IMAGETAG -r $ACRNAME ./app/auth-api
+    az acr build -t hackfest/flights-api:$IMAGETAG -r $ACRNAME ./app/flights-api
+    az acr build -t hackfest/web-ui:$IMAGETAG -r $ACRNAME ./app/web-ui
     ```
 
 10. Add another task and search for "Publish Build Artifacts". Use "charts" for the artifact name and browse to the charts folder for the "Path to publish"
