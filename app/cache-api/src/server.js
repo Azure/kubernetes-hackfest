@@ -10,10 +10,12 @@ const redisPort = process.env.REDISPORT || 6379;
 const redisCacheExpirationTimeout = process.env.REDISCACHEEXPIRATIONTIMEOUT || 60;
 const redisClient = redis.createClient({host: redisHost, port: redisPort});
 
+server.use(restify.plugins.bodyParser());
+
 server.get('/flights/:type/:value', function(req, res, next){
   let type = req.params.type;
   let value = req.params.value;
-  let key = `flights/${type}/${value}`.toLowerCase();
+  let key = `/flights/${type}/${value}`.toLowerCase();
 
   let message = null;
 
@@ -44,11 +46,12 @@ server.get('/flights/:type/:value', function(req, res, next){
 server.post('/flights/:type/:value', function(req, res, next){
   let type = req.params.type;
   let value = req.params.value;
-  let key = `flights/${type}/${value}`;
+  let key = `/flights/${type}/${value}`;
 
   console.log(`Writing to: ${key}`);
+  console.log(req.body);
   
-  redisClient.set(key, req.body, 'EX', redisCacheExpirationTimeout, function(err, reply){
+  redisClient.set(key, JSON.stringify(req.body), 'EX', redisCacheExpirationTimeout, function(err, reply){
     if(err){
       res.status(500);
     }

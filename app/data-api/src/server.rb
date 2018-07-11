@@ -1,6 +1,7 @@
 require "sinatra"
 require "sinatra/reloader" if :development?
 require "mongo"
+require 'net/http'
 
 ## Database values
 DBURI = ENV["MONGOURI"]
@@ -13,8 +14,9 @@ DBOptions[:database] = ENV["MONGODB"] if ENV["MONGODB"]
 DBOptions[:ssl] = true if ENV["MONGODBSSL"]
 
 # Cache Server values
-export CACHESERVER="localhost"
-export CACHEPORT="3000"
+CACHESERVERPROTOCOL = ENV["CACHESERVERPROTOCOL"]
+CACHESERVER=ENV["CACHESERVER"]
+CACHESERVERPORT=ENV["CACHESERVERPORT"]
 
 # Server values
 HOSTADDRESS = ENV["HOSTADDRESS"] || "0.0.0.0"
@@ -37,8 +39,11 @@ rescue StandardError => err
   puts(err)
 end
 
-get '/' do
+get '/flights/country/:code' do
+  key = request.path_info
   flights = DBClient[:flights].find().to_a.to_json
+
+  updateCache(key, flights)
 end
 
 get '/healthprobe' do
@@ -47,4 +52,16 @@ end
 
 get 'readinessprobe' do
   "Ready to go!"
+end
+
+def updateCache(key, jsonData)
+  uri = URI(CACHESERVERPROTOCOL + CACHESERVER + ":" + CACHESERVERPORT)
+  req = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
+  req.body = jsonData
+  
+  res = Net::HTTP.start(uri.hostname, uri.port) do |http|
+    http.request(req)
+  end
+
+  puts res
 end
