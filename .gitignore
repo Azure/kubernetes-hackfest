@@ -68,3 +68,7 @@ typings/
 .next
 
 .DS_STORE
+
+# Certificates and Keys
+labs/security/secure-tiller/*.pem
+labs/security/secure-tiller/*.srl
