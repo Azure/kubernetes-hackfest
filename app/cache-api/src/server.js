@@ -23,7 +23,7 @@ server.get('/flights/:type/:value', function(req, res, next){
 
   redisClient.get(key, function(err, data){
     if(data) {
-      message = data;
+      message = JSON.parse(data);
     }
     else if(err) {
       res.status(500);

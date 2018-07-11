@@ -55,7 +55,8 @@ get 'readinessprobe' do
 end
 
 def updateCache(key, jsonData)
-  uri = URI(CACHESERVERPROTOCOL + CACHESERVER + ":" + CACHESERVERPORT)
+  uri = URI(CACHESERVERPROTOCOL + CACHESERVER + ":" + CACHESERVERPORT + key)
+  puts uri
   req = Net::HTTP::Post.new(uri, 'Content-Type' => 'application/json')
   req.body = jsonData
   
