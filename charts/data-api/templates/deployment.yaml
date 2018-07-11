@@ -13,7 +13,7 @@ spec:
         app: data-api
     spec:
       containers:
-        - image: "{{.Values.deploy.image}}:{{.Values.deploy.imageTag}}"
+        - image: "{{.Values.deploy.acrServer}}/hackfest/data-api:{{.Values.deploy.imageTag}}"
           imagePullPolicy: Always
           name: data-api
           env:

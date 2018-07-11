@@ -1,12 +1,12 @@
 # Default values for chart
 
 service:
-  type: ClusterIP
+  type: LoadBalancer
   port: 4567
 
 deploy:
   name: data-api-deploy
   replicas: 3
-  image: "briaracr.azurecr.io/hackfest/data-api"
+  acrServer: "briaracr.azurecr.io"
   imageTag: "v1"
   containerPort: 4567

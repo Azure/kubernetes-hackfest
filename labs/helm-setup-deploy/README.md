@@ -10,60 +10,98 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 ## Instructions
 
 1. Initialize Helm
-
-
-
-    * Use the same resource group that was created for AKS (in lab 1)
-    * In this step, you will need a unique name for your ACR instance. Use the following step to create the ACR name and then deploy.
-
-        ```
-        export RGNAME=kubernetes-hackfest
-        export ACRNAME=acrhackfest$RANDOM
-
-        az acr create --resource-group $RGNAME --name $ACRNAME --sku Basic
-        ```
-
-2. Deploy Cosmos DB
-    * In this step, create a Cosmos DB account for the Mongo api. Again, we will create a random, unique name.
-        
-        ```
-        export RGNAME=kubernetes-hackfest
-        export COSMOSNAME=acrhackfest$RANDOM
-
-        az cosmosdb create --name $COSMOSNAME --resource-group $RGNAME --kind MongoDB
-        ```
     
-    * Show your connection string
+    Helm helps you manage Kubernetes applications — Helm Charts helps you define, install, and upgrade even the most complex Kubernetes application. Helm has a CLI component and a server side component called Tiller. 
+    * Initialize Helm and Tiller:
 
         ```
-        az cosmosdb list-connection-strings --name $COSMOSNAME --resource-group $RGNAME
+        helm init --service-account default --upgrade
         ```
- 
-
-3. Create Docker containers in ACR
-    * In this step we will create a Docker container image for each of our microservices. We will use ACR Builder functionality to build and store these images in the cloud. 
-
+    * Validate the install (in this case, we are using Helm version 2.9.1):
         ```
-        # the $ACRNAME variable should be set from step 1
+        helm version
 
-        az acr build -t hackfest/data-api:v1 -r $ACRNAME ./app/data-api
-
-        # for the rest of the builds, we will add the --no-logs flag to return control to the shell
-
-        az acr build -t hackfest/auth-api:v1 -r $ACRNAME --no-logs ./app/auth-api
-        az acr build -t hackfest/flights-api:v1 -r $ACRNAME --no-logs ./app/flights-api
-        az acr build -t hackfest/web-ui:v1 -r $ACRNAME --no-logs ./app/web-ui
+        Client: &version.Version{SemVer:"v2.9.1", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}
+        Server: &version.Version{SemVer:"v2.9.1", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}
         ```
 
-    * You can see the status of the builds by running the command below.
-        
-        ```
-        az acr build-task list-builds -r $ACRNAME -o table
+2. Review the Helm Chart components
 
-        az acr build-task logs --build-id aa1 -r $ACRNAME
-        ```
+    In this repo, there is a folder for `charts` with a sub-folder for each specific app chart. In our case each application has its own chart. 
+
+    The `values.yaml` file has the parameters that allow you to customize release. This file has the defaults, but they can be overridden on the command line. 
+
+    The `templates` folder holds the yaml files for the specific kubernetes resources for our application. Here you will see how Helm inserts the parameters into resources with this bracketed notation: eg -  `{{.Values.deploy.image}}`
+
+
+3. Customize Chart Parameters
+
+    In each chart we will need to update the values file with our specific Azure Container Registry. 
+
+    * Get the value of your ACR Login Server:
+
+    ```
+    az acr list -o table --query "[].loginServer"
+
+    Result
+    -------------------
+    youracr.azurecr.io
+
+    ```
     
-    * Browse to your ACR instance in the Azure portal and validate that the images are in "Repositories." 
+    * Replace the `acrServer` value below with the Login server from previous step. You will make this change in all 5 of the charts. 
+
+    Example:
+    ```
+    # Default values for chart
+
+    service:
+    type: LoadBalancer
+    port: 4567
+
+    deploy:
+    name: data-api-deploy
+    replicas: 3
+    acrServer: "REPLACE-THIS-VALUE"
+    imageTag: "v1"
+    containerPort: 4567
+    ```
+
+4. Create Kubernetes secret for access to Cosmos DB
+
+    For now, we are creating a secret that holds the credentials for our backend database. The application deployment puts these secrets in environment variables. 
+
+    ```
+    # Customize these values from your Cosmos DB instance deployed in a previous lab.
+    export MONGOURI=
+    export MONGOPWD=
+    export MONGOUSER=
+    export MONGODB=
+    export MONGODBSSL=
+
+    kubectl create secret generic cosmos-db-secret --from-literal=uri='$MONGOURI' --from-literal=ssl='$MONGODBSSL' --from-literal=database='$MONGODB' --from-literal=user='$MONGOUSER' --from-literal=pwd='$MONGOPWD'
+    ```
+
+
+5. Deploy Chart
+
+    Install each chart as below:
+
+    ```
+    # Application charts
+    helm upgrade --install auth-api ./charts/auth-api
+    helm upgrade --install cache-api ./charts/cache-api
+    helm upgrade --install data-api ./charts/data-api
+    helm upgrade --install flights-api ./charts/flights-api
+    helm upgrade --install web-ui ./charts/web-ui
+
+    # Use the public redis chart
+    helm install stable/redis
+    ```
+
+6. Validate application
+
+
 
 
 ## Troubleshooting / Debugging
