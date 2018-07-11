@@ -48,9 +48,9 @@
    ```bash
    export LANAME=k8monitor
    ```
-
+   Workspace Name must be unique
    ```bash
-   export WORKSPACENAME=k8logs
+   export WORKSPACENAME=k8logs-<unique>
    ```
 
    Create and Azure Resource Group for the Log Analytics workspace.
