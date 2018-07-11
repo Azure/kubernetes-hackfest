@@ -4,7 +4,9 @@ In this lab we will build Docker containers for each of the application componen
 
 ## Prerequisites 
 
-Clone this repo in Azure Cloud Shell.
+* Clone this repo in Azure Cloud Shell.
+* Complete previous labs:
+    * [AKS](../create-aks-cluster/README.md)
 
 ## Instructions
 
