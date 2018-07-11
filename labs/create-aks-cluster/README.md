@@ -103,7 +103,12 @@
      ```bash
       az aks get-credentials -n CLUSTER_NAME -g NAME
      ```
-12.  Verify you have API access to your new AKS cluster
+12. Download your kube config, which will allow you to access         your Kubernetes cluster
+
+     ```bash
+     az aks get-credentials -g $RGNAME -n $CLUSTERNAME --admin
+     ```
+13.  Verify you have API access to your new AKS cluster
 
       > Note: It can take 5 minutes for your nodes to appear and be in READY state. You can run `watch kubectl get nodes` to monitor status.
      ```bash
@@ -125,7 +130,7 @@
     KubeDNS is running at https://cluster-dw-kubernetes-hackf-80066e-a44f3eb0.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
     kubernetes-dashboard is running at https://cluster-dw-kubernetes-hackf-80066e-a44f3eb0.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kubernetes-dashboard/proxy 
      ```
-     
+
      You should now have a Kubernetes cluster running with 3 nodes. You do not see the master servers for the cluster because these are managed by Microsoft. The Control Plane services which manage the Kubernetes cluster such as scheduling, API access, configuration data store and object controllers are all provided as services to the nodes.
      
      Download your kube config, which will allow you to access your Kubernetes cluster
