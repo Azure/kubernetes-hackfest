@@ -72,7 +72,7 @@
    ```
    Export WorkspaceID based output above
    ```bash
-   export WORSPACEID=<value>
+   export WORKSPACEID=<value>
    ```
 
 9. Create your AKS cluster in the resource group created above with 3 nodes, targeting Kubernetes version 1.10.3, with Container Insights, and HTTP Application Routing Enabled.
@@ -86,7 +86,7 @@
     az aks create -n $CLLUSTERNAME -g $RGNAME -c 1 -k 1.10.3 \
     --generate-ssh-keys -l $LOCATION \
     --enable-addons http_application_routing,monitoring \
-    --workspace-resource-id $WORKSPACEIDURL \
+    --workspace-resource-id $WORKSPACEID \
     --no-wait  
     ```
 
