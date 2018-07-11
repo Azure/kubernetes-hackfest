@@ -21,26 +21,24 @@ create_target_folder() {
 
 create_service_account() {
     echo -e "\\nCreating a service account: ${SERVICE_ACCOUNT_NAME} on namespace: ${NAMESPACE}"
-    kubectl create sa "${SERVICE_ACCOUNT_NAME}" --namespace "${NAMESPACE}"
+    kubectl create sa "${SERVICE_ACCOUNT_NAME}" -n "${NAMESPACE}"
 }
 
 get_secret_name_from_service_account() {
     echo -e "\\nGetting secret of service account ${SERVICE_ACCOUNT_NAME}-${NAMESPACE}"
-    SECRET_NAME=$(kubectl get sa "${SERVICE_ACCOUNT_NAME}" --namespace "${NAMESPACE}" -o json | jq -r '.secrets[].name')
+    SECRET_NAME=$(kubectl get sa "${SERVICE_ACCOUNT_NAME}" -n "${NAMESPACE}" -o json | jq -r '.secrets[].name')
     echo "Secret name: ${SECRET_NAME}"
 }
 
 extract_ca_crt_from_secret() {
     echo -e -n "\\nExtracting ca.crt from secret..."
-    kubectl get secret "${SECRET_NAME}" --namespace "${NAMESPACE}" -o json | jq \
-    -r '.data["ca.crt"]' | base64 -D > "${TARGET_FOLDER}/ca.crt"
+    kubectl get secret "${SECRET_NAME}" -n "${NAMESPACE}" -o json | jq -r '.data["ca.crt"]' | base64 -D > "${TARGET_FOLDER}/ca.crt"
     printf "done"
 }
 
 get_user_token_from_secret() {
     echo -e -n "\\nGetting user token from secret..."
-    USER_TOKEN=$(kubectl get secret "${SECRET_NAME}" \
-    --namespace "${NAMESPACE}" -o json | jq -r '.data["token"]' | base64 -D)
+    USER_TOKEN=$(kubectl get secret "${SECRET_NAME}" -n "${NAMESPACE}" -o json | jq -r '.data["token"]' | base64 -D)
     printf "done"
 }
 
