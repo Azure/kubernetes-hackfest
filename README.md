@@ -14,8 +14,8 @@ The following are the basic requirements to **start** the labs. Individual labs 
 1. Create AKS Cluster
     * Azure CLI
     * Terraform
-2. ACR (Azure Container Registry)
-3. Helm
+2. [Build Application Components in Azure Container Registry](labs/build-application/README.md)
+3. [Helm Setup and Deploy Application](labs/helm-setup-deploy/README.md)
 4. CI/CD
 5. Networking
 6. Monitoring

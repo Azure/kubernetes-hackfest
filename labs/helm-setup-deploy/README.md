@@ -1,14 +1,18 @@
-# Lab: Build Application Components in Azure Container Registry
+# Lab: Helm Setup and Deploy Application
 
-In this lab we will build Docker containers for each of the application components and setup the back-end database. 
+In this lab we will setup Helm in our AKS cluster and deploy our application with Helm charts.
 
 ## Prerequisites 
 
-Clone this repo in Azure Cloud Shell.
+* Clone this repo in Azure Cloud Shell.
+* Complete previous labs for [AKS](labs/create-aks-cluster/README.md) and [ACR](labs/build-application/README.md).
 
 ## Instructions
 
-1. Create Azure Container Registry (ACR)
+1. Initialize Helm
+
+
+
     * Use the same resource group that was created for AKS (in lab 1)
     * In this step, you will need a unique name for your ACR instance. Use the following step to create the ACR name and then deploy.
 
@@ -67,4 +71,4 @@ Clone this repo in Azure Cloud Shell.
 
 ## Docs / References
 
-* Azure Container Registry Docs. https://docs.microsoft.com/en-us/azure/container-registry 
+* Helm. http://helm.sh
