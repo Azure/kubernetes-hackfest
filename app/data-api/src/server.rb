@@ -12,7 +12,9 @@ DBOptions[:database] = ENV["MONGODB"] if ENV["MONGODB"]
  # Otherwise even a value of false returns true in ruby when grabbing from ENV ¯\_(ツ)_/¯
 DBOptions[:ssl] = true if ENV["MONGODBSSL"]
 
-# Cache Service values
+# Cache Server values
+export CACHESERVER="localhost"
+export CACHEPORT="3000"
 
 # Server values
 HOSTADDRESS = ENV["HOSTADDRESS"] || "0.0.0.0"
