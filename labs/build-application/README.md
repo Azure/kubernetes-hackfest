@@ -56,7 +56,7 @@ Clone this repo in Azure Cloud Shell.
         ```
         az acr build-task list-builds -r $ACRNAME -o table
 
-        az acr build-task show-build --build-id aa1 -r $ACRNAME
+        az acr build-task logs --build-id aa1 -r $ACRNAME
         ```
     
     * Browse to your ACR instance in the Azure portal and validate that the images are in "Repositories." 
