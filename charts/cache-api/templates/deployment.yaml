@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{.Values.deploy.name}}"
+spec:
+  replicas: {{ default 1 .Values.deploy.replicas }}
+  selector:
+    matchLabels:
+      app: cache-api
+  template:
+    metadata:
+      labels:
+        app: cache-api
+    spec:
+      containers:
+        - image: "{{.Values.deploy.acrServer}}/hackfest/cache-api:{{.Values.deploy.imageTag}}"
+          imagePullPolicy: Always
+          name: cache-api
+          env:
+            - name: MONGOURI
+              valueFrom:
+                secretKeyRef:
+                  name: cosmos-db-secret
+                  key: uri
+            - name: MONGOPWD
+              valueFrom:
+                secretKeyRef:
+                  name: cosmos-db-secret
+                  key: pwd
+            - name: MONGOUSER
+              valueFrom:
+                secretKeyRef:
+                  name: cosmos-db-secret
+                  key: user
+            - name: MONGODB
+              valueFrom:
+                secretKeyRef:
+                  name: cosmos-db-secret
+                  key: database  
+            - name: MONGODBSSL
+              valueFrom:
+                secretKeyRef:
+                  name: cosmos-db-secret
+                  key: ssl                    
+          ports:
+          - containerPort: {{.Values.deploy.containerPort}}
+            protocol: TCP
+      restartPolicy: Always

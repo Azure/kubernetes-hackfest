@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{.Values.deploy.name}}"
+spec:
+  replicas: {{ default 1 .Values.deploy.replicas }}
+  selector:
+    matchLabels:
+      app: flights-api
+  template:
+    metadata:
+      labels:
+        app: flights-api
+    spec:
+      containers:
+        - image: "{{.Values.deploy.acrServer}}/hackfest/flights-api:{{.Values.deploy.imageTag}}"
+          imagePullPolicy: Always
+          name: flights-api
+          env:
+            - name: CACHESERVICE
+              valueFrom:
+                secretKeyRef:
+                  name: cosmos-db-secret
+                  key: uri
+            - name: DATASERVICE
+              valueFrom:
+                secretKeyRef:
+                  name: cosmos-db-secret
+                  key: pwd                  
+          ports:
+          - containerPort: {{.Values.deploy.containerPort}}
+            protocol: TCP
+      restartPolicy: Always
