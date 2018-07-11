@@ -66,7 +66,11 @@
    --parameters location=$LALOCATION \
    --parameters sku="Standalone"
    ```
-
+   Get Worspace ID 
+   ```bash
+   az group deployment list -g kubernetes-log -o tsv  --query "[].id" | grep "k8logs"
+   ```
+   Export WorkspaceID based output above
    ```bash
    export WORSPACEID=<value>
    ```
@@ -79,9 +83,10 @@
     ```  
     #### This command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT...
     ```bash
-    az aks create -n $CLLUSTERNAME -g $RGNAME -c 1 -k 1.10.3  --generate-ssh-keys -l $LOCATION
-    --enable-addons http_application_routing,monitoring
-    --workspace-resource-id $WORKSPACEIDURL
+    az aks create -n $CLLUSTERNAME -g $RGNAME -c 1 -k 1.10.3 \
+    --generate-ssh-keys -l $LOCATION \
+    --enable-addons http_application_routing,monitoring \
+    --workspace-resource-id $WORKSPACEIDURL \
     --no-wait  
     ```
 
