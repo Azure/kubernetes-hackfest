@@ -4,7 +4,8 @@
   "description": "An unintelligent api that will grab flight data from a redis cache",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "author": "Ray Kao",
   "license": "ISC",

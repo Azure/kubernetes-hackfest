@@ -1,7 +1,7 @@
 const restify = require('restify');
 const redis = require('redis');
 
-const serverHost = process.env.SERVERHOST || 'localhost';
+const serverHost = process.env.SERVERHOST || '0.0.0.0';
 const serverPort = process.env.SERVERPORT || 3000;
 const server = restify.createServer();
 

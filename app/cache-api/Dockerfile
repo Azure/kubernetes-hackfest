@@ -1,11 +1,11 @@
 FROM node:8.11.2-alpine
 
 WORKDIR /usr/src/app
-COPY package*.json ./
-RUN yarn install
+COPY src/package*.json ./
+RUN npm install
 
-COPY . .
+COPY src/ .
 
-EXPOSE 8004
+EXPOSE 3000
 
-CMD [ "npm", "run", "dev" ]
+CMD [ "npm", "start" ]
