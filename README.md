@@ -14,7 +14,7 @@ The following are the basic requirements to **start** the labs. Individual labs 
 1. [Create AKS Cluster](labs/create-aks-cluster/README.md)
 2. [Build Application Components in Azure Container Registry](labs/build-application/README.md)
 3. [Helm Setup and Deploy Application](labs/helm-setup-deploy/README.md)
-4. CI/CD
+4. [CI/CD Automation](labs/cicd-automation/README.md)
 5. [Networking](labs/networking/README.md)
 6. [Monitoring and Logging](labs/monitoring-logging/README.md)
 7. [Service Mesh w/ Distributed Tracing](labs/servicemesh-tracing/README.md)
