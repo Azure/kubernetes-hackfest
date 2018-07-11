@@ -86,8 +86,7 @@
     az aks create -n $CLLUSTERNAME -g $RGNAME -c 1 -k 1.10.3 \
     --generate-ssh-keys -l $LOCATION \
     --enable-addons http_application_routing,monitoring \
-    --workspace-resource-id $WORKSPACEID \
-    --no-wait  
+    --workspace-resource-id $WORKSPACEID
     ```
 
 10. Verify your cluster status. The `ProvisioningState` should be `Succeeded`
