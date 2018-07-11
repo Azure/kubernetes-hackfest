@@ -2,11 +2,10 @@
 
 This lab is about setting up the Ingress Controller and configuring the different routes.
 
-## Prerequisites 
+## Prerequisites
 
-1. Create AKS Cluster
-2. Build Application
-3. Deploy App via Helm
+* Clone this repo in Azure Cloud Shell.
+* Complete previous labs for [AKS](../../create-aks-cluster/README.md) and [ACR](../../build-application/README.md).
 
 ## Instructions
 
