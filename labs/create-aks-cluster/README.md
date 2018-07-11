@@ -2,7 +2,7 @@
 
 ## Prerequisites 
 
-1. Open
+1. Azure Account
 
 ## Instructions
 
@@ -13,11 +13,14 @@
 
     ![Azure Cloud Shell](img-cloud-shell.png "Azure Cloud Shell")
 
-3. The first time Cloud Shell is started will require you to create a storage account. 
+3. The first time Cloud Shell is started will require you to create a storage account.
 
 4. Once your cloud shell is started, clone the workshop repo into the cloud shell environment
-    ```
+    ```bash
     git clone https://github.com/Azure/kubernetes-hackfest
+    ```
+    ```bash
+    cd kubernetes-hackfest/labs/create-aks-cluster
     ```
 
 5. In the cloud shell, you are automatically logged into your Azure subscription.
