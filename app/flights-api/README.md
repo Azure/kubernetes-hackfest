@@ -16,3 +16,7 @@ It will:
 
 1. ```cache-api``` this is the primary source for data
 2. ```data-api``` this is the secondary source for data, and is called if ```cache-api``` does not have any data
+
+**NOTE:**
+- There is a Time To Live (TTL) for the cache.  If the ```cache-api``` has not been accessed in ```X``` seconds (default is 60 seconds in ```src/server.js```, see [.env_examples](src/.env_examples) for the needed ENV VARS), the key will be removed altogether from ```cache-api```.
+- Any successful non-empty queries from ```data-api``` will automatically save to the ```cache-api``` as well

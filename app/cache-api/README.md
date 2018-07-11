@@ -1,6 +1,6 @@
-# Data-API microservice
+# Cache-API microservice
 
-This API is responsible for querying the persistent data store (mongo or cosmos db).  If data is found, it will be returned to the client (e.g. ```flight-api```) **AND** it will send a POST request to a cache service (e.g. ```cache-api```) for caching.  The ```flight-api``` always queries ```cache-api``` first, and only queries ```data-api``` if no results are found.
+This API is responsible for querying the in memory key-value data store (Redis).  If data is found, it will be returned to the client (e.g. ```flight-api```).  The ```flight-api``` always queries ```cache-api``` first, and only queries ```data-api``` if no results are found in the cache.
 
 Data is queried via a RESTful path and is subsequently stored into cache using the RESTful url path as the key.  For example:
 
