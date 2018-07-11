@@ -1,11 +1,11 @@
-FROM node:8.11.2-alpine
+FROM ruby
 
 WORKDIR /usr/src/app
-COPY package*.json ./
-RUN yarn install
+COPY src/ ./
 
-COPY . .
+RUN gem install bundler
+RUN bundle install
 
-EXPOSE 8004
+EXPOSE 4567
 
-CMD [ "npm", "run", "dev" ]
+CMD [ "ruby", "server.rb" ]

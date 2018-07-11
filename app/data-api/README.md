@@ -9,3 +9,17 @@ This service receives RESTful requests with a JSON payload as its body.  It will
 ### Cached Data Storage Layer
 
 ### Persistent Data Storage Layer
+
+
+## Troubleshooting
+
+
+### Import JSON into Database (Cosmos)
+```
+mongoimport -u cosmos-name -p cosmos-password --host cosmos-name.documents.azure.com:10255 --db dbname --collection collectioname --type json --file /path/to/json_data.json  --jsonArray --ssl --sslAllowInvalidCertificates
+```
+
+### Using Mongo CLI to test connection
+```
+mongo -u cosmos-name -p cosmos-password --host cosmos-name.documents.azure.com:10255 --ssl --sslAllowInvalidCertificates
+```
