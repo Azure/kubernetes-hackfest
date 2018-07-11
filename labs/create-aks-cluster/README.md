@@ -48,9 +48,9 @@
    ```bash
    export LANAME=k8monitor
    ```
-
+   Workspace Name must be unique
    ```bash
-   export WORKSPACENAME=k8logs
+   export WORKSPACENAME=k8logs-<unique>
    ```
 
    Create and Azure Resource Group for the Log Analytics workspace.
@@ -61,9 +61,9 @@
 
 8. Deploy Log Analytics Workspace
    ```bash
-   az group deployment create -n $WORKSPACENAME -g $LARG --template-file azuredeploy-loganalytics.json
-   --parameters workspaceName=$WORKSPACENAME
-   --parameters location=$LALOCATION
+   az group deployment create -n $WORKSPACENAME -g $LARG --template-file azuredeploy-loganalytics.json \
+   --parameters workspaceName=$WORKSPACENAME \
+   --parameters location=$LALOCATION \
    --parameters sku="Standalone"
    ```
 
