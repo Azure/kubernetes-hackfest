@@ -2,15 +2,14 @@ from flask import Flask
 from flask import jsonify
 import logging
 import requests
-import json
 
 server = Flask(__name__)
 
 @server.route("/")
 def index():
-    return "Hello!"
+    return "Hello! you probably want the /geojson path."
 
-@server.route("/flights/<type>/<country_code>")
+@server.route("/geojson")
 def flights(type, country_code):
   # return 'Hello %s %s.' %(type, country_code)
 
