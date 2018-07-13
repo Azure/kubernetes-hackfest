@@ -20,6 +20,8 @@ if 'REDISSERVERDB' in os.environ:
 
 redisClient = redis.StrictRedis(host=redisHost, port=redisPort, db=redisServerDB)
 
+pubsub = redisClient.pubsub()
+
 def getOpenSkyDataJSON():
   url = 'https://opensky-network.org/api/states/all'
   headers = {'User-Agent': 'Python-Requests'}
@@ -45,4 +47,4 @@ def fixFlightCode(flight):
 
 rawData = getOpenSkyDataJSON()
 
-redisClient.set('flights/states/all', rawData)
+pubsub.publish('flights/states/all', rawData)
