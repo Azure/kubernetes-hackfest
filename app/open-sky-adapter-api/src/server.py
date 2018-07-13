@@ -1,10 +1,19 @@
 from flask import Flask
-app = Flask(__name__)
+server = Flask(__name__)
 
-@app.route("/healthprobe")
+@server.route("/")
+def index():
+    return "Hello!"
+
+@server.route("/flights/<type>/<code>")
+def flights(type, code):
+  return 'Hello %s %s.' %(type, code)
+
+@server.route("/healthprobe")
 def healthprobe():
   return "I'm healthy!"
 
-@app.route("/readinessprobe")
+@server.route("/readinessprobe")
 def readinessprobe():
   return "I'm ready!"
+
