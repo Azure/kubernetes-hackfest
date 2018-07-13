@@ -1,3 +1,3 @@
-# Open Sky Adapter API Microservice
+# Open Sky CronJob Microservice
 
-This microservice will communicate with the [Open Sky](https://opensky-network.org/apidoc/) flight data service and cache the information into our local data stores for current/short term (hot path) and future/long term (cold path) data processing.
+This microservice will run as a recuring cronjob.  It's sole purpose is to communicate with the [Open Sky](https://opensky-network.org/apidoc/) flight data service, make the necessary data changes, then write to a message queue to trigger additional work on the new data.
