@@ -49,6 +49,7 @@ In this lab we will build Docker containers for each of the application componen
         # for the rest of the builds, we will add the --no-logs flag to return control to the shell
 
         az acr build -t hackfest/auth-api:v1 -r $ACRNAME --no-logs ./app/auth-api
+        az acr build -t hackfest/cache-api:v1 -r $ACRNAME --no-logs ./app/cache-api
         az acr build -t hackfest/flights-api:v1 -r $ACRNAME --no-logs ./app/flights-api
         az acr build -t hackfest/web-ui:v1 -r $ACRNAME --no-logs ./app/web-ui
         ```
