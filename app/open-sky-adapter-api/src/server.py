@@ -17,3 +17,5 @@ def healthprobe():
 def readinessprobe():
   return "I'm ready!"
 
+if __name__ == "__server__":
+    app.run(host='0.0.0.0', debug=True)
