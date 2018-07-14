@@ -48,8 +48,6 @@ def fixFlightCode(flight):
 
 rawData = getOpenSkyDataJSON()
 
-logging.warning(rawData)
-
 redisClient.publish('/flights/states/all', rawData)
 
 sys.exit()
