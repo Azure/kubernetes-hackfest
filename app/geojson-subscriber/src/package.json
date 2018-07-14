@@ -9,6 +9,7 @@
   "author": "Ray Kao",
   "license": "ISC",
   "dependencies": {
+    "async": "^2.6.1",
     "redis": "^2.8.0"
   }
 }
