@@ -1,3 +1,4 @@
+import sys
 import os
 import json
 import logging
@@ -50,3 +51,5 @@ rawData = getOpenSkyDataJSON()
 logging.warning(rawData)
 
 redisClient.publish('/flights/states/all', rawData)
+
+sys.exit()
