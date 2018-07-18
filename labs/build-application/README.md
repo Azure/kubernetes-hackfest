@@ -1,10 +1,12 @@
-# Lab: Build Application Components
+# Lab: Build Application Components in Azure Container Registry
 
 In this lab we will build Docker containers for each of the application components and setup the back-end database. 
 
 ## Prerequisites 
 
-Clone this repo in Azure Cloud Shell.
+* Clone this repo in Azure Cloud Shell.
+* Complete previous labs:
+    * [AKS](../create-aks-cluster/README.md)
 
 ## Instructions
 
@@ -47,6 +49,7 @@ Clone this repo in Azure Cloud Shell.
         # for the rest of the builds, we will add the --no-logs flag to return control to the shell
 
         az acr build -t hackfest/auth-api:v1 -r $ACRNAME --no-logs ./app/auth-api
+        az acr build -t hackfest/cache-api:v1 -r $ACRNAME --no-logs ./app/cache-api
         az acr build -t hackfest/flights-api:v1 -r $ACRNAME --no-logs ./app/flights-api
         az acr build -t hackfest/web-ui:v1 -r $ACRNAME --no-logs ./app/web-ui
         ```
@@ -56,7 +59,7 @@ Clone this repo in Azure Cloud Shell.
         ```
         az acr build-task list-builds -r $ACRNAME -o table
 
-        az acr build-task show-build --build-id aa1 -r $ACRNAME
+        az acr build-task logs --build-id aa1 -r $ACRNAME
         ```
     
     * Browse to your ACR instance in the Azure portal and validate that the images are in "Repositories." 

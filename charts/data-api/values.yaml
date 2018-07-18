@@ -1,0 +1,12 @@
+# Default values for chart
+
+service:
+  type: LoadBalancer
+  port: 4567
+
+deploy:
+  name: data-api-deploy
+  replicas: 2
+  acrServer: "briaracr.azurecr.io"
+  imageTag: "vsts-15"
+  containerPort: 4567

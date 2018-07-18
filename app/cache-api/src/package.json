@@ -1,0 +1,16 @@
+{
+  "name": "cache-api-node",
+  "version": "1.0.0",
+  "description": "An unintelligent api that will grab flight data from a redis cache",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "Ray Kao",
+  "license": "ISC",
+  "dependencies": {
+    "redis": "^2.8.0",
+    "restify": "^7.2.1"
+  }
+}

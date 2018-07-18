@@ -1,25 +1,20 @@
 # Data-API microservice
 
-This microservice is responsible for executing the the underlying query against the data stores for flight information.
+This API is responsible for querying the persistent data store (mongo or cosmos db).  If data is found, it will be returned to the client (e.g. ```flight-api```) **AND** it will send a POST request to a cache service (e.g. ```cache-api```) for caching.  The ```flight-api``` always queries ```cache-api``` first, and only queries ```data-api``` if no results are found.
 
-This service receives RESTful requests with a JSON payload as its body.  It will then try the data cache layer for data, if it fails it catch the exception and try the Persistent Data Store (Mongo/Cosmos DB) or will return a corresponding error message.
+Data is queried via a RESTful path and is subsequently stored into cache using the RESTful url path as the key.  For example:
 
-## Data Stores
+```:bash
+# Given the following URL request for data:
+http://domain.name/flights/country/can
 
-### Cached Data Storage Layer
+# the path will be
+/flights/country/can
 
-### Persistent Data Storage Layer
-
-
-## Troubleshooting
-
-
-### Import JSON into Database (Cosmos)
-```
-mongoimport -u cosmos-name -p cosmos-password --host cosmos-name.documents.azure.com:10255 --db dbname --collection collectioname --type json --file /path/to/json_data.json  --jsonArray --ssl --sslAllowInvalidCertificates
+# the key used in the cache will also be
+/flights/country/can
 ```
 
-### Using Mongo CLI to test connection
-```
-mongo -u cosmos-name -p cosmos-password --host cosmos-name.documents.azure.com:10255 --ssl --sslAllowInvalidCertificates
-```
+**NOTE:**
+- There is a Time To Live (TTL) for the cache.  If the ```cache-api``` has not been accessed in ```X``` seconds (default is 60 seconds in ```src/server.js```, see [.env_examples](src/.env_examples) for the needed ENV VARS), the key will be removed altogether from ```cache-api```.
+- Any successful non-empty queries from ```data-api``` will automatically save to the ```cache-api``` as well
