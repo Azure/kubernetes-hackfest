@@ -26,6 +26,14 @@
             <v-list-tile-title>United States</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
+        <v-list-tile :to="{path: '/login'}">
+          <v-list-tile-action>
+            <v-icon medium>fingerprint</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Login</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
       </v-list>
     </v-navigation-drawer>
     <v-toolbar app fixed clipped-left>
@@ -66,6 +74,11 @@
 .container{
   padding: 0px;
   margin:0;
+}
+
+.v-form{
+  background-color: #335455;
+  padding: 48px;
 }
 </style>
 

@@ -4,8 +4,19 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import Vuetify from 'vuetify'
-//import 'vuetify/dist/vuetify.min.css'
+import VueAxios from 'vue-axios'
+import VueAuthenticate from 'vue-authenticate'
+import axios from 'axios'
 import '../static/css/vuetify.min.css'
+
+Vue.use(VueAxios, axios)
+
+Vue.use(VueAuthenticate, {
+  baseUrl: 'http://localhost:3000',
+  storage: 'localStorage',
+  loginUrl:'/login',
+  signupUrl:'/register'
+})
 
 Vue.use(Vuetify, { theme: {
   primary: '#85f48a',
