@@ -73,61 +73,87 @@ In order to trigger this pipeline you will need your own Github account and fork
 
 Brigade uses projects to define the configuration for pipelines. Brigade Projects are also installed with a Helm chart. In this section, we will create a YAML file to configure the brigade project Helm chart. 
 
-1. Create a brigade project YAML file
+1. Create a brigade project YAML file.
 
-    * Create a file called ```brig-proj-hackfest.yaml```
+    * Create a file called ```brig-proj-hackfest.yaml```  Keep this file local on the cloud shell. This is a sensitive file and should not be pushed to Github.
+
+        > Note: In the latest Azure Cloud Shell, there is a built-in editor to allow easy file editing without leaving the shell.
+
     * Add the contents below to start your file
 
         ```yaml
-        project: "REPLACE"
-        repository: "REPLACE"
-        cloneURL: "REPLACE"
-        sharedSecret: "create-something-super-secret"
-        # MAKE SURE YOU CHANGE THIS. It's basically a password
+        project: 
+        repository: 
+        cloneURL: 
+        sharedSecret: 
         github:
-          token: "REPLACE"
+            token: 
         secrets:
-          acrServer: REPLACE
-          acrUsername: REPLACE
-          acrPassword: "REPLACE"
-        vcsSidecar: "deis/git-sidecar:v0.11.0"
+            acrServer: 
+            acrName: 
+            appId: 
+            password: 
+            tenant: 
         ```
 
     * Edit the values from above to match your Github account (example below)
-        * project: thedude-lebowski/blackbelt-aks-hackfest
-        * repository: github.com/thedude-lebowski/blackbelt-aks-hackfest
-        * cloneURL: https://github.com/thedude-lebowski/blackbelt-aks-hackfest.git
+        * project: thedude-lebowski/kubernetes-hackfest
+        * repository: github.com/thedude-lebowski/kubernetes-hackfest
+        * cloneURL: https://github.com/thedude-lebowski/kubernetes-hackfest.git
+        * sharedSecret: useSomethingSuperSecretForThis!
 
-    * Create a Github token and update the ```brig-proj-heroes.yaml```
+    * Create a Github token and update the ```brig-proj-hackfest.yaml```
         * In your Github, click on `Settings` and `Developer settings`
         * Select `Personal sccess tokens`
         * Select `Generate new token`
-            ![Github token](img/github-token.png "Github token")
-        * Provide a description and give access to the `repo`
-            ![Github token access](img/github-token-access.png "Github token access")
+            ![](github-dev-settings.png)
+
+        * Enter `brigade-project` for the description and give access to the `repo`
+            ![](github-token.png)
 
         > Note: More details on Brigade and Github integration are here: https://github.com/Azure/brigade/blob/master/docs/topics/github.md 
 
-    * Gather your ACR credentials from the Azure portal. Edit the ```brig-proj-heroes.yaml``` for these values
-        * acrServer
-        * acrUsername
-        * acrPassword
+        * Be sure to copy the access token value and add it to your project YAML file.
+
+    * Gather your ACR info from the Azure portal. Edit the ```brig-proj-hackfest.yaml``` for these values
+        * acrServer (something like )
+        * acrName (something like myacr)
+
+    * Create an Azure service principal with rights to your ACR Resource Group. 
+        * You can get your subscription ID in the Azure portal or running `az account list -o table`
+
+            ```
+            export AZSUBID="471d33fd-a776-405b-947c-467c291dc741"
+            export RGNAME=kubernetes-hackfest
+
+            az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/$AZSUBID/resourceGroups/$RGNAME"
+
+            # mock values:
+            {
+                "appId": "11pp69f2-2d9a-4c46-921c-99058df3738z",
+                "displayName": "azure-cli-2018-01-10-21-20-18",
+                "name": "http://azure-cli-2018-01-10-21-20-18",
+                "password": "11111fe4-07dd-4adb-b984-d25f030f7a92",
+                "tenant": "99f999bf-99f1-41af-99ab-2d7cd011ab12"
+            }
+            ```
+        * Use the output to set the values in the ```brig-proj-hackfest.yaml``` file
 
     * After the above steps, your file will look like the below (values are not valid for realz)
 
         ```yaml
-        project: "thedude-lebowski/blackbelt-aks-hackfest"
-        repository: "github.com/thedude-lebowski/blackbelt-aks-hackfest"
-        cloneURL: "https://github.com/thedude-lebowski/blackbelt-aks-hackfest"
-        sharedSecret: "create-something-super-secret"
-        # MAKE SURE YOU CHANGE THIS. It's basically a password
+        project: thedude-lebowski/kubernetes-hackfest
+        repository: github.com/thedude-lebowski/kubernetes-hackfest
+        cloneURL: https://github.com/thedude-lebowski/kubernetes-hackfest.git
+        sharedSecret: useSomethingSuperSecretForThis!
         github:
-          token: "58df6bf1c6bogus73d2e76b54531c35f45dfe66c"
+            token: 1yyy8a4d1c08004rrttt685980814d3f358e5b0z
         secrets:
-          acrServer: youracr.azurecr.io
-          acrUsername: youracr
-          acrPassword: "lGsP/UA1Gnbogus9Ps5fAL6CeWsGfPCg"
-        vcsSidecar: "deis/git-sidecar:v0.11.0"
+            acrServer: myacr.azurecr.io
+            acrName: myacr
+            appId: 11pp69f2-2d9a-4c46-921c-99058df3738z
+            password: 11111fe4-07dd-4adb-b984-d25f030f7a92
+            tenant: 99f999bf-99f1-41af-99ab-2d7cd011ab12
         ```
 
 2. Create your brigade project
@@ -135,27 +161,20 @@ Brigade uses projects to define the configuration for pipelines. Brigade Project
     ```
     # from the directory where your file from step #1 was created
 
-    helm install --name brig-proj-heroes brigade/brigade-project -f brig-proj-heroes.yaml
+    helm install --name brig-proj-hackfest brigade/brigade-project -f brig-proj-hackfest.yaml
     ``` 
 
     > Note: There is a ```brig``` CLI client that allows you to view your brigade projects. More details here: <https://github.com/Azure/brigade/tree/master/brig>
 
 #### Setup Brigade Pipeline
 
-1. In your forked Github repo, add a file called ```brigade.js```
+1. In the Azure cloud shell, ```cd ~/kubernetes-hackfest``` and create a file called ```brigade.js```
 2. Paste the contents from the sample [brigade.js](./brigade.js) file in this file
-3. Edit `brigade.js` to ensure that the image matches your ACR service name (line 63)
+3. Edit `brigade.js` in cloud shell 
 
-    ```
-    function kubeJobRunner (config, k) {
-        k.storage.enabled = false
-        k.image = "lachlanevenson/k8s-kubectl:v1.8.2"
-        k.tasks = [
-            `kubectl set image deployment/heroes-web-deploy heroes-web-cntnr=<youracrhere>.azurecr.io/azureworkshop/rating-web:${config.get("imageTag")}`
-        ]
-    }
-    ```
+
 4. Commit the new file
+
 5. Review the steps in the javascript that run the jobs in our pipeline
 
 #### Configure Github Webhook
