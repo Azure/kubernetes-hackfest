@@ -22,10 +22,11 @@ events.on("push", (brigadeEvent, project) => {
     acr.image = "microsoft/azure-cli:2.0.38"
     acr.tasks = [
         `az login --service-principal -u ${azServicePrincipal} -p ${azClientSecret} --tenant ${azTenant}`,
-        //`az acr build -t hackfest/auth-api:${imageTag} -r ${acrName} --no-logs ./src/app/auth-api`,
-        `az acr build -t hackfest/cache-api:${imageTag} -r ${acrName} --no-logs ./src/app/cache-api`,
-        `az acr build -t hackfest/flights-api:${imageTag} -r ${acrName} --no-logs ./src/app/flights-api`,
-        //`az acr build -t hackfest/web-ui:${imageTag} -r ${acrName} --no-logs ./src/app/web-ui`
+        //`az acr build -t hackfest/auth-api:${imageTag} -r ${acrName} ./src/app/auth-api`,
+        `az acr build -t hackfest/cache-api:${imageTag} -r ${acrName} ./src/app/cache-api`,
+        `az acr build -t hackfest/flights-api:${imageTag} -r ${acrName} ./src/app/flights-api`,
+        `az acr build -t hackfest/data-api:${imageTag} -r ${acrName} ./src/app/data-api`
+        //`az acr build -t hackfest/web-ui:${imageTag} -r ${acrName} ./src/app/web-ui`
     ]
 
        
@@ -34,7 +35,7 @@ events.on("push", (brigadeEvent, project) => {
     helm.storage.enabled = false
     helm.image = "chzbrgr71/k8s-helm:v2.9.1"
     helm.tasks = [
-        `helm upgrade --install cache-api ./src/charts/cache-api --reuse-values --set deploy.imageTag=${imageTag} --namespace default`
+        `helm upgrade --install web-ui ./src/charts/web-ui --namespace default --set deploy.imageTag=${imageTag}`
     ]
 
     // create a brigade group and run

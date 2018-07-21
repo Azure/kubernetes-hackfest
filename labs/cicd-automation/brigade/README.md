@@ -221,8 +221,27 @@ To save time, we will only deploy the web-ui application in this lab.
 
 1. Make a code change in the web-ui application source code.
 2. Push the update to Github and validate the build in brigade.
+    ```
+    kubectl get pod -n brigade
 
-#### Add Kashti Web Dashboard
+    NAME                                                READY     STATUS      RESTARTS   AGE
+    brigade-brigade-api-789bf79dbd-t2p8g                1/1       Running     0          1d
+    brigade-brigade-ctrl-5d85d9f5bc-txwz4               1/1       Running     0          3h
+    brigade-brigade-github-gw-65f45c69c7-8r2qw          1/1       Running     0          3h
+    brigade-worker-01cjzdd4dnssjp50chw2fps6h3           0/1       Completed   0          31m
+    brigade-worker-01cjzdn7d650jff10a04292pjs           0/1       Completed   0          1m
+    job-runner-acr-builder-01cjzdd4dnssjp50chw2fps6h3   0/1       Completed   0          31m
+    job-runner-acr-builder-01cjzdn7d650jff10a04292pjs   0/1       Completed   0          1m
+    job-runner-helm-01cjzdd4dnssjp50chw2fps6h3          0/1       Completed   0          31m
+    job-runner-helm-01cjzdn7d650jff10a04292pjs          0/1       Completed   0          25s
+
+    kubectl logs job-runner-helm-01cjzdn7d650jff10a04292pjs -n brigade
+    ```
+
+3. Check the `web-ui` application pods and ensure they were updated with the new imageTag created in the build.
+4. If it worked, celebrate and go get a beer.
+
+#### Add Kashti Web Dashboard (Optional)
 
 Add these steps. https://github.com/Azure/kashti 
 
@@ -231,3 +250,6 @@ Add these steps. https://github.com/Azure/kashti
 
 ## Docs / References
 
+Brigade web site. http://brigade.sh 
+Brigade Source. https://github.com/Azure/brigade 
+Original Blog Post. https://open.microsoft.com/2017/10/23/announcing-brigade-event-driven-scripting-kubernetes 
