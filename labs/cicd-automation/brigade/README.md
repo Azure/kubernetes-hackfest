@@ -137,6 +137,7 @@ Brigade uses projects to define the configuration for pipelines. Brigade Project
                 "tenant": "99f999bf-99f1-41af-99ab-2d7cd011ab12"
             }
             ```
+        * Be sure to grant the service principal rights to the RG where your ACR is located.
         * Use the output to set the values in the ```brig-proj-hackfest.yaml``` file
 
     * After the above steps, your file will look like the below (values are not valid for realz)
@@ -161,49 +162,69 @@ Brigade uses projects to define the configuration for pipelines. Brigade Project
     ```
     # from the directory where your file from step #1 was created
 
-    helm install --name brig-proj-hackfest brigade/brigade-project -f brig-proj-hackfest.yaml
+    helm install --name brig-proj-hackfest brigade/brigade-project -f brig-proj-hackfest.yaml --namespace brigade
     ``` 
 
     > Note: There is a ```brig``` CLI client that allows you to view your brigade projects. More details here: <https://github.com/Azure/brigade/tree/master/brig>
 
 #### Setup Brigade Pipeline
 
+To save time, we will only deploy the web-ui application in this lab. 
+
 1. In the Azure cloud shell, ```cd ~/kubernetes-hackfest``` and create a file called ```brigade.js```
-2. Paste the contents from the sample [brigade.js](./brigade.js) file in this file
-3. Edit `brigade.js` in cloud shell 
+2. Edit `brigade.js` in cloud shell 
+3. Paste the contents from the sample [brigade.js](./brigade.js) file in this file
+4. Review the pipeline steps in the javascript
+5. Commit the new file to your Github repository
 
+    ```
+    git add .
+    git add -A
+    git commit -m "added brigade pipeline script"
+    git push
+    ```
 
-4. Commit the new file
-
-5. Review the steps in the javascript that run the jobs in our pipeline
+    > Note that we are using the master branch here. Normally we would use other branches and PR's. For simplicity, we are using master just for this lab.
 
 #### Configure Github Webhook
 
 1. Get a URL for your Brigade Gateway
 
     ```
-    kubectl get service brigade-brigade-gw
+    kubectl get service brigade-brigade-github-gw -n brigade
 
     NAME                 TYPE           CLUSTER-IP    EXTERNAL-IP     PORT(S)          AGE
     brigade-brigade-gw   LoadBalancer   10.0.45.233   13.67.129.228   7744:30176/TCP   4h
+
+    # use these commands to create the full URL
+
+    export GH_WEBHOOK=http://$(kubectl get svc brigade-brigade-github-gw -n brigade -o jsonpath='{.status.loadBalancer.ingress[0].ip}'):7744/events/github
+    
+    echo $GH_WEBHOOK
     ```
 
-    Use the IP address above to note a URL such as: http://13.67.129.228:7744/events/github You will use this in the next step
+    The webhook URL should look something like: http://13.67.129.228:7744/events/github You will use this in the next step.
 
 2. In your forked Github repo, click on Settings
 3. Click Webhooks
 4. Click `Add webhook`
 5. Set the `Payload URL` to the URL created in step 1
 6. Set the `Content type` to `application/json`
-7. Set the `Secret` to the value from your `brig-proj-heroes.yaml` called "sharedSecret"
+7. Set the `Secret` to the value from your `brig-proj-hackfest.yaml` called "sharedSecret"
 8. Set the `Which events...` to `Let me select individual events` and check `Push` and `Pull request`
 
-    ![Github webhook](img/github-webhook.png "Github webhook")
+    ![](github-webhook.png)
 
 9. Click the `Add webhook` button
 
 #### Test the CI/CD Pipeline
 
+1. Make a code change in the web-ui application source code.
+2. Push the update to Github and validate the build in brigade.
+
+#### Add Kashti Web Dashboard
+
+Add these steps. https://github.com/Azure/kashti 
 
 
 ## Troubleshooting / Debugging
