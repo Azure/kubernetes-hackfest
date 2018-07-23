@@ -43,6 +43,10 @@ rescue StandardError => err
   puts(err)
 end
 
+post '/flights' do
+  
+end
+
 get '/flights/country/:code' do
   content_type 'application/json'
   key = request.path_info
