@@ -1,4 +1,4 @@
-name: data-api
+name: flights-api
 home: https://github.com/Azure/kubernetes-hackfest/tree/master/labs/build-application
 version: 1.0
 description: api for GBB Kubernetes Hackfest
