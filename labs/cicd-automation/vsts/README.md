@@ -4,7 +4,6 @@ This workshop will guide you through building Continuous Integration (CI) and Co
 
 ## Prerequisites 
 
-* Clone this repo in Azure Cloud Shell.
 * Complete previous labs:
     * [Azure Kubernetes Service](../../create-aks-cluster/README.md)
     * [Build Application Components in Azure Container Registry](../../build-application/README.md)
