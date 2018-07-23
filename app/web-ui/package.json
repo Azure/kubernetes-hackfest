@@ -1,15 +1,16 @@
 {
-  "name": "web-ui",
+  "name": "msft-gbb-k8s-web-ui",
   "version": "1.0.0",
   "description": "Azure Kubernetes Hackfest",
   "author": "Joey Schluchter <jschluchter@gmail.com>",
   "private": true,
   "scripts": {
-    "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
+    "dev": "NODE_ENV='development' webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",
     "start": "npm run dev",
     "build": "node build/build.js"
   },
   "dependencies": {
+    "async": "^2.6.1",
     "axios": "^0.18.0",
     "mapbox-gl": "^0.45.0",
     "node-sass": "^4.9.0",

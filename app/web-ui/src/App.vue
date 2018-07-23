@@ -1,7 +1,7 @@
 <template>
   <v-app id="azure-kubernetes-hackfest" dark>
     <v-navigation-drawer v-model="drawer" clipped fixed app>
-      <v-list>
+      <v-list v-if="$auth.isAuthenticated()">
         <v-list-tile :to="{path: '/flights'}">
           <v-list-tile-action>
             <v-icon medium>flight</v-icon>
@@ -10,28 +10,30 @@
             <v-list-tile-title>All flights</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile :to="{path: '/flights/ca'}">
+        <v-list-tile @click="logout">
           <v-list-tile-action>
-            <v-icon medium>flight</v-icon>
+            <v-icon medium>cancel</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>Canada</v-list-tile-title>
+            <v-list-tile-title>Log out</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
-        <v-list-tile :to="{path: '/flights/us'}">
-          <v-list-tile-action>
-            <v-icon medium>flight</v-icon>
-          </v-list-tile-action>
-          <v-list-tile-content>
-            <v-list-tile-title>United States</v-list-tile-title>
-          </v-list-tile-content>
-        </v-list-tile>
+      </v-list>
+      <v-list v-else>
         <v-list-tile :to="{path: '/login'}">
           <v-list-tile-action>
             <v-icon medium>fingerprint</v-icon>
           </v-list-tile-action>
           <v-list-tile-content>
-            <v-list-tile-title>Login</v-list-tile-title>
+            <v-list-tile-title>Log in</v-list-tile-title>
+          </v-list-tile-content>
+        </v-list-tile>
+        <v-list-tile :to="{path: '/register'}">
+          <v-list-tile-action>
+            <v-icon medium>person_add</v-icon>
+          </v-list-tile-action>
+          <v-list-tile-content>
+            <v-list-tile-title>Register</v-list-tile-title>
           </v-list-tile-content>
         </v-list-tile>
       </v-list>
@@ -87,8 +89,19 @@ export default {
   data: () => ({
     drawer: true
   }),
+  created: function () {
+    if (this.$auth.isAuthenticated()){
+      alert('authenticated')
+    }
+  },
   props: {
     source: String
+  },
+  methods: {
+    logout() {
+      this.$auth.logout();
+      this.$router.push({ path: '/login' });
+    }
   }
 }
 </script>
