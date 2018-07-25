@@ -1,0 +1,25 @@
+{
+    "app": {
+      "name": "kubernetes-hackfest",
+      "replicas": "3",
+      "cpu": "10m",
+      "memory": "128Mi",
+      "test": true
+    },
+    "container_repo": {
+      "host": "myregistry.azurecr.io",
+      "master_acct": "admin",
+      "alt_acct": "admin",
+      "jenkins_creds_id": "acr_creds",
+      "repo": "kubernetes-hackfest",
+      "dockeremail": ".",
+      "dockerfile": "./"
+    },
+    "pipeline": {
+        "enabled": true,
+        "debug": false,
+        "library": {
+          "branch": "master"
+        }
+    }
+  }
