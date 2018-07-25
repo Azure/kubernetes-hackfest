@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
 var authTypes = require('./options');
+require('dotenv').config();
 
 var connectOptions = { autoIndex: false, useNewUrlParser: true };
 
