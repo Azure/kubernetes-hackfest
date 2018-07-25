@@ -10,7 +10,7 @@ This section contains a number of labs related to Networking decisions that are 
 ## Options
 
 1. [Configure Ingress Controller](ingress/README.md)
-2. [Configure Ingress Controller](network-policy/README.md)
+2. [Configure Network Policy](network-policy/README.md)
 
 ## Troubleshooting / Debugging
 

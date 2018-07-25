@@ -1,0 +1,40 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: sample-go
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: sample-go
+        prometheus: kube-prometheus
+    spec:
+      containers:
+      - name: sample-go
+        image: khacr.azurecr.io/sample-goweb:v1
+        ports:
+        - name: web
+          containerPort: 8080
+        resources:
+          limits:
+            cpu: "250m"
+            memory: "256Mi"
+          requests:
+            cpu: "50m"
+            memory: "128Mi"
+      imagePullSecrets:
+      - name: acr-secret
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: sample-go
+  labels:
+    app: sample-go
+spec:
+  selector:
+    app: sample-go
+  ports:
+  - name: web
+    port: 8080
