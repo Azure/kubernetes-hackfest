@@ -14,6 +14,7 @@
     </v-container>
 </template>
 
+
 <script>
 
 import axios from 'axios'
@@ -36,21 +37,26 @@ export default {
   }),
   methods: {
     redirectToHome() {
+
       console.log('redirecting');
-      this.$router.push({ path: '/' });
+      this.$forceUpdate();
+      this.$router.go('/');
+
     },
     submit() {
-      var formValid = this.$refs.form.validate();
-      var router = this.$router;
-      var auth = this.$auth;
 
+      var isValid = this.$refs.form.validate();
+      var router = this.$router;
+      var root = this.$root;
+      var auth = this.$auth;
       var _email = this.email;
       var _pass = this.password;
 
       async.waterfall([
-        function(cb) {
 
-          if (formValid){
+        function(cb) {
+          
+          if (isValid){
             cb(null);
           }
           else{
@@ -59,37 +65,25 @@ export default {
 
         },
         function(cb) {
-
+          
           auth.login({_email, _pass}).then(function (data) {
             console.log('authenticated');
             cb(null, data);
+          }).catch( function(error) {
+            console.log(error);
+            cb(error);
           });
+
         }
       ], function (err, result) {
-          console.log(err);
-
-          console.log(result);
+        
+        if(!err){
+          root.$emit('toast', 'logged in');
 
           router.push('/');
-      });
-
-
-
-
-
-
-      // if (this.$refs.form.validate()) {
-      //     // console.log(this.email,':',this.password);
-      //     var _email = this.email;
-      //     var _pass = this.password;
+        }
           
-      //     this.$auth.login({_email, _pass}).then(function (data) {
-      //       //console.log(data);
-      //       console.log('authenticated');
-      //       this.$router.push('/flights');
-
-      //     });
-      // }
+      });
     },
     clear() {
       this.$refs.form.reset();

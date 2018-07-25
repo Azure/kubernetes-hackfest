@@ -19,11 +19,11 @@ Vue.use(VueAuthenticate, {
 })
 
 Vue.use(Vuetify, { theme: {
-  primary: '#85f48a',
+  primary: '#107C10',
   secondary: '#4DB6AC',
   accent: '#00796B',
-  error: '#FF8A80',
-  warning: '#ffeb3b',
+  error: '#E81123',
+  warning: '#FFB900',
   info: '#607D8B',
   success: '#00E676'
 }})

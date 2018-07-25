@@ -3,8 +3,9 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var dbConnection = require('./config/db-mongo')
+var dbConnection = require('./config/db-mongo');
 var authRoute = require('./routes/auth');
+require('dotenv').config();
 
 
 var app = express();

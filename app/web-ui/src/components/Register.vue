@@ -14,7 +14,7 @@
                     <v-text-field 
                         v-model="email"
                         :rules="emailRules"
-                        label="E-mail"
+                        label="Confirm E-mail "
                         name="emailConfirm"
                         required>
                     </v-text-field>

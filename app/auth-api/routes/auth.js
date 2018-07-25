@@ -1,5 +1,6 @@
 var express = require('express');
 var bcrypt = require('bcryptjs');
+var salt = bcrypt.genSaltSync(10);
 var jwt = require('jwt-simple');
 var moment = require('moment');
 var mongoose = require('mongoose');
@@ -8,32 +9,36 @@ var TOKEN_SECRET = 'J0eyB0mb';
 
 var userSchema = new mongoose.Schema({
   email: { type: String, unique: true, lowercase: true },
-  password: { type: String, select: false },
+  password: { type: String },
   displayName: String
 });
 
-var admin = { email:'admin@admin.com', display:'hackfest admin', password:'kubernetes' };
+var admin = {
+  email: 'admin@admin.com',
+  display: 'hackfest admin',
+  password: 'kubernetes'
+};
 
 userSchema.pre('save', function(next) {
   var user = this;
   if (!user.isModified('password')) {
     return next();
   }
-  bcrypt.genSalt(10, function(err, salt) {
-    bcrypt.hash(user.password, salt, function(err, hash) {
-      user.password = hash;
-      next();
-    });
+  bcrypt.hash(user.password, salt, function(err, hash) {
+    user.password = hash;
+    next();
   });
 });
 
-userSchema.methods.comparePassword = function(password, done) {
-  bcrypt.compare(password, this.password, function(err, isMatch) {
-    done(err, isMatch);
-  });
-};
-
 var User = mongoose.model('User', userSchema);
+
+function comparePassword(input, server, cb) {
+  bcrypt.compare(input, server, function(err, isMatch) {
+    if (err) console.log('Match Error:', err);
+    if (isMatch) console.log('Matched:', isMatch);
+    cb(err, isMatch);
+  });
+}
 
 /*
  |--------------------------------------------------------------------------
@@ -42,11 +47,9 @@ var User = mongoose.model('User', userSchema);
  */
 function ensureAuthenticated(req, res, next) {
   if (!req.header('Authorization')) {
-    return res
-      .status(401)
-      .send({
-        message: 'Please make sure your request has an Authorization header'
-      });
+    return res.status(401).send({
+      message: 'Please make sure your request has an Authorization header'
+    });
   }
   var token = req.header('Authorization').split(' ')[1];
 
@@ -86,7 +89,6 @@ router.get('/', function(req, res, next) {
   res.json({ msg: 'default auth endpoint' }).status(200);
 });
 
-
 /*
  |--------------------------------------------------------------------------
  | Create a new user in DB (Mongo/Cosmos)
@@ -120,9 +122,8 @@ router.post('/loginLocal', function(req, res, next) {
   var max = 9999999999;
   var min = 99999;
   var id = Math.floor(Math.random() * (max - min + 1)) + min;
-  
-  res.json({ token: createJWT(id) }).status(200);
 
+  res.json({ token: createJWT(id) }).status(200);
 });
 
 /*
@@ -131,18 +132,22 @@ router.post('/loginLocal', function(req, res, next) {
  |--------------------------------------------------------------------------
  */
 router.post('/login', function(req, res, next) {
-  User.findOne({ email: req.body._email }, '+password', function(err, user) {
+
+  var pass = req.body._pass;
+
+  User.findOne({ email: req.body._email }, function(err, user) {
     if (!user) {
-      return res.status(200).json({ message: 'Invalid email and/or password' });
+      return res.json({ msg: 'Invalid email and/or password -e' }).status(200);
     }
-    user.comparePassword(req.body._password, function(err, isMatch) {
-      if (!isMatch) {
-        return res
-          .status(200)
-          .json({ message: 'Invalid email and/or password' });
+    
+    comparePassword(pass, user.password, function(error, isMatch) {
+      if (isMatch) {
+        res.json({ token: createJWT(user._id) }).status(200);
+      } else {
+        res.json({ msg: 'Invalid email and/or password -p' }).status(401);
       }
-      res.json({ token: createJWT(user._id) }).status(200);
     });
+
   });
 });
 
@@ -153,24 +158,22 @@ router.post('/login', function(req, res, next) {
  */
 
 router.get('/admin/create', function(req, res, next) {
-    User.findOne({ email: admin.email }, function(err, existingUser) {
-        if (existingUser) {
-          return res.status(409).json({ message: 'Admin already created' });
-        }
-        var user = new User({
-          displayName: admin.display,
-          email: admin.email,
-          password: admin.password
-        });
-      user.save(function(err, result) {
-        if (err) {
-          res.status(500).json({ message: err.message });
-        }
-        res.status(200).json({ message: 'Admin created' });
-      });
+  User.findOne({ email: admin.email }, function(err, existingUser) {
+    if (existingUser) {
+      return res.status(409).json({ message: 'Admin already created' });
+    }
+    var user = new User({
+      displayName: admin.display,
+      email: admin.email,
+      password: admin.password
     });
+    user.save(function(err, result) {
+      if (err) {
+        res.status(500).json({ message: err.message });
+      }
+      res.status(200).json({ message: 'Admin created' });
+    });
+  });
 });
-
-
 
 module.exports = router;
