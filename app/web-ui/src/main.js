@@ -4,15 +4,26 @@ import Vue from 'vue'
 import App from './App'
 import router from './router'
 import Vuetify from 'vuetify'
-//import 'vuetify/dist/vuetify.min.css'
+import VueAxios from 'vue-axios'
+import VueAuthenticate from 'vue-authenticate'
+import axios from 'axios'
 import '../static/css/vuetify.min.css'
 
+Vue.use(VueAxios, axios)
+
+Vue.use(VueAuthenticate, {
+  baseUrl: 'http://localhost:3000',
+  storage: 'localStorage',
+  loginUrl:'/login',
+  signupUrl:'/register'
+})
+
 Vue.use(Vuetify, { theme: {
-  primary: '#85f48a',
+  primary: '#107C10',
   secondary: '#4DB6AC',
   accent: '#00796B',
-  error: '#FF8A80',
-  warning: '#ffeb3b',
+  error: '#E81123',
+  warning: '#FFB900',
   info: '#607D8B',
   success: '#00E676'
 }})

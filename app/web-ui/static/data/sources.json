@@ -1,0 +1,58 @@
+[
+  {
+    "img": "https://octodex.github.com/images/red-polo.png",
+    "title": "GitHub Repo",
+    "link": "https://github.com/azure/kubernetes-hackfest",
+    "icon": "link",
+    "target": "_blank",
+    "flex": 3
+  },
+  {
+    "img": "https://octodex.github.com/images/twenty-percent-cooler-octocat.png",
+    "title": "Blackbelt 2018 Repo",
+    "link": "https://github.com/azure/blackbelt-aks-hackfest",
+    "icon": "link",
+    "target": "_blank",
+    "flex": 3
+  },
+  {
+    "img": "https://octodex.github.com/images/topguntocat.png",
+    "title": "Flights",
+    "link": "/#/flights",
+    "icon": "link",
+    "target": "_self",
+    "flex": 3
+  },
+  {
+    "img": "https://azurecomcdn.azureedge.net/cvt-3a76c2002e5d2228c7833b4d82ac4bf1031079e5e48db80ebe77d8984b3f21ec/images/page/services/kubernetes-service/deploy.svg",
+    "title": "AKS Docs",
+    "link": "https://docs.microsoft.com/en-us/azure/aks/",
+    "icon": "link",
+    "target": "_blank",
+    "flex": 3
+  },
+  {
+    "img": "https://octodex.github.com/images/twenty-percent-cooler-octocat.png",
+    "title": "Old Hackfest GitHub Repo",
+    "link": "https://github.com/azure/blackbelt-aks-hackfest",
+    "icon": "link",
+    "target": "_blank",
+    "flex": 3
+  },
+  {
+    "img": "https://octodex.github.com/images/twenty-percent-cooler-octocat.png",
+    "title": "Old Hackfest GitHub Repo",
+    "link": "https://github.com/azure/blackbelt-aks-hackfest",
+    "icon": "link",
+    "target": "_blank",
+    "flex": 3
+  },
+  {
+    "img": "https://octodex.github.com/images/twenty-percent-cooler-octocat.png",
+    "title": "Old Hackfest GitHub Repo",
+    "link": "https://github.com/azure/blackbelt-aks-hackfest",
+    "icon": "link",
+    "target": "_blank",
+    "flex": 3
+  }
+]

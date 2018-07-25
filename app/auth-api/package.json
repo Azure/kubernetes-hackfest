@@ -1,0 +1,27 @@
+{
+  "name": "msft-gbb-k8s-auth-api",
+  "version": "1.0.0",
+  "description": "Azure Kubernetes Hackfest",
+  "author": "Joey Schluchter <jschluchter@gmail.com>",
+  "private": true,
+  "scripts": {
+    "local": "NODE_ENV='development' AUTH_TYPE='1' node ./bin/www ",
+    "dev": "cross-env-shell NODE_ENV='development' AUTH_TYPE='3' node ./bin/www",
+    "container": "NODE_ENV='development' AUTH_TYPE='3' node ./bin/www"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "bluebird": "^3.5.1",
+    "cookie-parser": "~1.4.3",
+    "cross-env": "^5.2.0",
+    "debug": "~2.6.9",
+    "dotenv": "^6.0.0",
+    "express": "~4.16.0",
+    "hbs": "~4.0.1",
+    "http-errors": "~1.6.2",
+    "jwt-simple": "^0.5.1",
+    "moment": "^2.22.2",
+    "mongoose": "^5.2.3",
+    "morgan": "~1.9.0"
+  }
+}

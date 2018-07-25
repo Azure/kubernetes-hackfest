@@ -8,5 +8,5 @@ deploy:
   name: data-api-deploy
   replicas: 2
   acrServer: "briaracr.azurecr.io"
-  imageTag: "vsts-15"
+  imageTag: "v1"
   containerPort: 4567
