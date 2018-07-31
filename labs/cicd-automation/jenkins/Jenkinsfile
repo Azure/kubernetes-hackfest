@@ -66,9 +66,7 @@ volumes:[
       container('azcli') {
 
         // perform docker login to container registry as the docker-pipeline-plugin doesn't work with the next auth json format
-        withCredentials([[$class          : 'UsernamePasswordMultiBinding', credentialsId: config.container_repo.jenkins_creds_id,
-                        usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
-          sh "docker login -u ${env.USERNAME} -p ${env.PASSWORD} ${config.container_repo.host}"
+        azureCLI commands: [[exportVariablesString: '', script: 'az acr build -t azureworkshop/web:latest -r config.container_repo.registry ./app/web']], principalCredentialId: '16e18b52-c185-4d16-90db-989603fe01c7'
         }
 
         // build and publish container
@@ -132,7 +130,6 @@ volumes:[
               "replicas": config.app.replicas,
               "cpu": config.app.cpu,
               "memory": config.app.memory,
-              "ingress.hostname": config.app.hostname,
             ]
           )
           

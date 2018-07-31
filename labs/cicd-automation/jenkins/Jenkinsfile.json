@@ -7,7 +7,7 @@
       "test": true
     },
     "container_repo": {
-      "host": "myregistry.azurecr.io",
+      "registry": "tugboatlabs.azurecr.io",
       "master_acct": "admin",
       "alt_acct": "admin",
       "jenkins_creds_id": "acr_creds",
