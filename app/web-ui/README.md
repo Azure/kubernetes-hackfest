@@ -1,21 +1,42 @@
-# web-ui
+![alt text](./src/assets/img/msft_logo_24.png "Microsoft")  Intelligent Cloud Global Blackbelt Kubernetes Hackfest (web-ui)
+======
 
-> Azure Kubernetes Hackfest
 
-## Build Setup
+Running locally
+------
 
-``` bash
-# install dependencies
+> Install Dependencies
+
+```bash
 npm install
-
-# serve with hot reload at localhost:8080
-npm run dev
-
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
+> Run with npm (this serves with the vue-cli and webpack)
+
+```bash
+npm run dev
+```
+
+
+Service setup
+------
+
+[Webpack Proxy Config](./vue.config.js)
+
+This lists the proxy location for services
+
+> e.g., ***/api/stats/inair*** 
+```javascript
+    '/api/flights/inair':{
+        target: 'http://localhost:8004',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api/flights/inair': '/api/stats/flights/inair'
+        }
+    }
+```
+
+Built with
+------
+
+[Vue Paper Dashboard](https://cristijora.github.io/vue-paper-dashboard/)

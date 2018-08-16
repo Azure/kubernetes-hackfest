@@ -19,19 +19,19 @@ MY_LOCATION="eastus"
 #
 # Variable: CORE_ID
 # This is a random 8 alphanumeric character ID for naming of resources
-CORE_ID="$(LC_CTYPE=C tr -dc A-Z0-9 < /dev/urandom | head -c 8 | xargs)"
+CORE_ID="$(LC_CTYPE=C tr -dc a-z0-9 < /dev/urandom | head -c 8 | xargs)"
 #
 #
 # Variable: MY_RESOURCE_GROUP
 # Concatenate RG_ + your CORE_ID
-MY_RESOURCE_GROUP="$(echo $CORE_ID | awk '{print "RG_"$1}')"
+MY_RESOURCE_GROUP="$(echo $CORE_ID | awk '{print "rg-"$1}')"
 # Create the resource group
 az group create -n $MY_RESOURCE_GROUP -l $MY_LOCATION
 #
 #
 # Variable: MY_INSTANCE 
 # The CosmosDB instance
-MY_INSTANCE="$(echo $CORE_ID | awk '{print "COSMOS_"$1}')"
+MY_INSTANCE="$(echo $CORE_ID | awk '{print "cosmos-"$1}')"
 #
 # Create the cosmosdb instance with a mongodb api
 az cosmosdb create -n $MY_INSTANCE -g $MY_RESOURCE_GROUP --kind MongoDB

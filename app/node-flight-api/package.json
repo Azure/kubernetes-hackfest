@@ -1,0 +1,23 @@
+{
+  "name": "api-flights",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "MONGODB_URI=mongodb://SOMETHING.documents.azure.com:10255/DATABASE?ssl=true MONGODB_USER=SOMETHING MONGODB_PASSWORD=COSMOSDBPASSWORD APPINSIGHTS_INSTRUMENTATIONKEY=YOUR_APP_INSIGHTS_KEY REDIS_HOST=127.0.0.1 NODE_ENV=dev REDIS_PORT=6379 node ./bin/www"
+  },
+  "dependencies": {
+    "applicationinsights": "^1.0.3",
+    "async": "^2.6.1",
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.16.0",
+    "hbs": "~4.0.1",
+    "http-errors": "~1.6.2",
+    "moment": "^2.22.2",
+    "mongoose": "^5.2.8",
+    "morgan": "~1.9.0",
+    "redis": "^2.8.0",
+    "request": "^2.87.0",
+    "request-promise": "^4.2.2"
+  }
+}

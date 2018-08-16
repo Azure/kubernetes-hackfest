@@ -49,7 +49,7 @@ if 'MONGOSERVERUSER' in os.environ:
 if 'MONGOSERVERPASSWORD' in os.environ:
   mongoPassword = os.environ['MONGOSERVERPASSWORD']
 
-mongoCleint = MongoClient(mongoServer, mongoPort, username=mongoUser, password=mongoPassword, ssl=True)
+mongoClient = MongoClient(mongoServer, mongoPort, username=mongoUser, password=mongoPassword, ssl=True)
 
 #############################
 # Custom Functions          #
@@ -89,7 +89,7 @@ rawData = getOpenSkyDataJSON()
 redisClient.publish('/flights/states/all', rawData)
 
 # 3. Insert documents into Mongo DB server
-mongoCleint.flights.insert_many(rawData)
+mongoClient.flights.insert_many(rawData)
 
 # 4. exit job
 sys.exit()

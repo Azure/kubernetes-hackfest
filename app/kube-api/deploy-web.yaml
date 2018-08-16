@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: demo-jw
+spec:
+  containers:
+    - name: jw-web
+      image: sonofjorel/rating-web:v1
+      imagePullPolicy: Always
+      ports:
+        - containerPort: 8080

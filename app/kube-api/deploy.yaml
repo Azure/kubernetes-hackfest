@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kube-api
+spec:
+  containers:
+    - name: kube-api-cntr
+      image: sonofjorel/kube-node-api:v1
+      imagePullPolicy: Always
+      ports:
+        - containerPort: 3000

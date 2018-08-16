@@ -1,33 +1,12 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import Home from '@/components/Home'
-import Flights from '@/components/Flights'
-import Login from '@/components/Login'
-import Register from '@/components/Register'
+import Vue from "vue";
+import VueRouter from "vue-router";
+import routes from "./routes";
+Vue.use(VueRouter);
 
-Vue.use(Router)
+// configure router
+const router = new VueRouter({
+  routes, // short for routes: routes
+  linkActiveClass: "active"
+});
 
-export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: Home
-    },
-    {
-      path: '/flights',
-      name: 'Flights',
-      component: Flights
-    },
-    {
-      path: '/login',
-      name: 'login',
-      component: Login
-    },
-    {
-      path: '/register',
-      name: 'register',
-      component: Register
-    }
-  ]
-})
+export default router;
