@@ -1,0 +1,18 @@
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: sample-go
+  namespace: monitoring
+  labels:
+    app: sample-go
+    prometheus: kube-prometheus
+spec:
+  selector:
+    matchLabels:
+      app: sample-go
+  jobLabel: app
+  namespaceSelector:
+    matchNames:
+    - sample-app
+  endpoints:
+  - port: web

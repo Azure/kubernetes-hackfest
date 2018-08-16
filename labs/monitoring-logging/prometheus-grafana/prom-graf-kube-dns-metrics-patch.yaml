@@ -1,0 +1,32 @@
+spec:
+  template:
+    spec:
+      containers:
+      - name: kubedns
+        env:
+        - name: PROMETHEUS_PORT
+          value: "10055"
+      - name: sidecar
+        image: k8s.gcr.io/k8s-dns-sidecar-amd64:1.14.10
+        livenessProbe:
+          httpGet:
+            path: /metrics
+            port: 10054
+            scheme: HTTP
+          initialDelaySeconds: 60
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 5
+        args:
+        - --v=2
+        - --logtostderr
+        - --probe=kubedns,127.0.0.1:10053,kubernetes.default.svc.cluster.local
+        - --probe=dnsmasq,127.0.0.1:53,kubernetes.default.svc.cluster.local
+        ports:
+        - containerPort: 10054
+          name: metrics
+          protocol: TCP
+        resources:
+          requests:
+            memory: 20Mi
+            cpu: 10m

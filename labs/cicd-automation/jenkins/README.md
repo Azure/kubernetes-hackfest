@@ -23,12 +23,17 @@ The general workflow/result will be as follows:
 - Rinse and repeat upon each code update via Git
 - Profit
 
-![](workflow.png)
+![](jenkins-aks.png)
 
 
 #### Setup Jenkins Server With Helm
 
-1. Deploy Jenkins Helm Chart
+1. Fork Repo To Your Own Github Account
+   ```
+   https://github.com/Azure/kubernetes-hackfest
+   ```
+
+2. Deploy Jenkins Helm Chart
    ```bash
    helm init
    ```
@@ -37,7 +42,7 @@ The general workflow/result will be as follows:
    ```
    This will take a couple of minutes to fully deploy
 
-2. Get credentials and IP to Login To Jenkins
+3. Get credentials and IP to Login To Jenkins
    ```bash
    printf $(kubectl get secret --namespace default jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
    ```
@@ -50,4 +55,5 @@ The general workflow/result will be as follows:
 
    Login with the password from previous step and the username: admin
 
-3. 
+#### Configure Jenkins
+1. 
