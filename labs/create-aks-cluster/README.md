@@ -68,7 +68,7 @@
    ```
    Get Worspace ID 
    ```bash
-   az group deployment list -g kubernetes-log -o tsv  --query "[].id" | grep "k8logs"
+   az group deployment list -g kubernetes-log -o json --query "[1].properties.parameters.workspaceResourceId.value"
    ```
    Export WorkspaceID based output above
    ```bash
@@ -83,7 +83,7 @@
     ```  
     #### This command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT...
     ```bash
-    az aks create -n $CLLUSTERNAME -g $RGNAME -c 1 -k 1.10.3 \
+    az aks create -n $CLUSTERNAME -g $RGNAME -k 1.10.3 \
     --generate-ssh-keys -l $LOCATION \
     --node-count 3 \
     --enable-addons http_application_routing,monitoring \
@@ -101,7 +101,7 @@
 
 11.  Get the Kubernetes config files for your new AKS cluster
      ```bash
-      az aks get-credentials -n CLUSTER_NAME -g NAME
+      az aks get-credentials -n $CLUSTERNAME -g $RGNAME
      ```
 12. Download your kube config, which will allow you to access         your Kubernetes cluster
 
@@ -126,27 +126,21 @@
      Kubernetes master is running at https://cluster-dw-kubernetes-hackf-80066e-a44f3eb0.hcp.eastus.azmk8s.io:443
      addon-http-application-routing-default-http-backend is running at https://cluster-dw-kubernetes-hackf-80066e-a44f3eb0.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/addon-http-application-routing-default-http-backend/proxy
      addon-http-application-routing-nginx-ingress is running at http://168.62.191.18:80 http://168.62.191.18:443
-    Heapster is running at https://cluster-dw-kubernetes-hackf-80066e-a44f3eb0.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/heapster/proxy
-    KubeDNS is running at https://cluster-dw-kubernetes-hackf-80066e-a44f3eb0.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-    kubernetes-dashboard is running at https://cluster-dw-kubernetes-hackf-80066e-a44f3eb0.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kubernetes-dashboard/proxy 
+     Heapster is running at https://cluster-dw-kubernetes-hackf-80066e-a44f3eb0.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/heapster/proxy
+     KubeDNS is running at https://cluster-dw-kubernetes-hackf-80066e-a44f3eb0.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+     kubernetes-dashboard is running at https://cluster-dw-kubernetes-hackf-80066e-a44f3eb0.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kubernetes-dashboard/proxy 
      ```
 
      You should now have a Kubernetes cluster running with 3 nodes. You do not see the master servers for the cluster because these are managed by Microsoft. The Control Plane services which manage the Kubernetes cluster such as scheduling, API access, configuration data store and object controllers are all provided as services to the nodes.
-     
-     Download your kube config, which will allow you to access your Kubernetes cluster
 
-     ```bash
-     az aks get-credentials -g $RGNAME -n $CLUSTERNAME --admin
-     ```
 
 
 ## Troubleshooting / Debugging
 To further debug and diagnose cluster problems, use
 
-     ```bash
-     kubectl cluster-info dump
-     ```
-
+```bash
+kubectl cluster-info dump
+```
 ## Docs / References
 
 # Lab 2: Create AKS Cluster Namespaces
