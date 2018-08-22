@@ -5,7 +5,7 @@
   "scripts": {
     "local": "APPINSIGHTS_INSTRUMENTATIONKEY=1038fcc4-e588-4ea7-b271-73f262b122d7 CACHE_SERVICE_URI=http://localhost:3006/ NODE_ENV=dev node ./bin/www",
     "dev": "APPINSIGHTS_INSTRUMENTATIONKEY=1038fcc4-e588-4ea7-b271-73f262b122d7 CACHE_SERVICE_URI=http://localhost:3006/ NODE_ENV=dev node ./bin/www",
-    "container": "APPINSIGHTS_INSTRUMENTATIONKEY=1038fcc4-e588-4ea7-b271-73f262b122d7 CACHE_SERVICE_URI=http://localhost:3006/ NODE_ENV=dev node ./bin/www"    
+    "container": "APPINSIGHTS_INSTRUMENTATIONKEY=1038fcc4-e588-4ea7-b271-73f262b122d7 CACHE_SERVICE_URI=http://localhost:3006/ NODE_ENV=dev node ./bin/www"
   },
   "dependencies": {
     "applicationinsights": "^1.0.3",

@@ -2,6 +2,13 @@ module.exports = {
   lintOnSave: false,
   devServer: {
     proxy: {
+      '/api/flights/current': {
+        target: 'http://localhost:3003/current',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api/flights/current': ''
+        }
+      },
       '/api/k8s/stats': {
         target: 'http://localhost:3000/k8s-service/stats', // NEED TO INCORPORATE THIS
         changeOrigin: true,
