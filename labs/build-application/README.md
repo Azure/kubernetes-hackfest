@@ -44,11 +44,9 @@ In this lab we will build Docker containers for each of the application componen
         ```
         # the $ACRNAME variable should be set from step 1
 
-        az acr build -t hackfest/data-api:v1 -r $ACRNAME ./app/data-api
-
-        # for the rest of the builds, we will add the --no-logs flag to return control to the shell
-
         az acr build -t hackfest/auth-api:v1 -r $ACRNAME --no-logs ./app/auth-api
+        az acr build -t hackfest/node-flight-api:v1 -r $ACRNAME --no-logs ./app/node-flight-api
+        az acr build -t hackfest/data-api:v1 -r $ACRNAME --no-logs ./app/data-api
         az acr build -t hackfest/cache-api:v1 -r $ACRNAME --no-logs ./app/cache-api
         az acr build -t hackfest/flights-api:v1 -r $ACRNAME --no-logs ./app/flights-api
         az acr build -t hackfest/web-ui:v1 -r $ACRNAME --no-logs ./app/web-ui
