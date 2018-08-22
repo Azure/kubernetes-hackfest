@@ -62,8 +62,8 @@ export default {
   },
   methods: {
     addLayer(obj){
-      map.addLayer(
-          {
+      map.addLayer(obj)
+          /*{
             'id': 'flights',
             'type': 'symbol',
             'source': {
@@ -89,7 +89,7 @@ export default {
               // 'text-halo-color':'rgba(255, 255, 255, .50)',
               // 'text-halo-width':1
             }
-            })
+            })*/
 
       map.on('click', 'flights', function (e) {
 
