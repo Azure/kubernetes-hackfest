@@ -6,6 +6,6 @@ RUN npm ci
 
 COPY . .
 ENV NODE_ENV "development"
-EXPOSE 8080
+EXPOSE 3003
 
 CMD [ "npm", "run", "container" ]

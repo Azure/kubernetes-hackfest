@@ -1,9 +1,16 @@
-![alt text](./src/assets/img/msft_logo_24.png "Microsoft")  Intelligent Cloud Global Blackbelt Kubernetes Hackfest (web-ui)
-======
+# ![alt text](../../assets/img/msft_logo_24.png "Microsoft Intelligent Cloud Global Blackbelt") &nbsp;web-ui <sup style='font-size:12px'>&nbsp;&nbsp;kubernetes-hackfest/app/web-ui</sup>
+
+Requirements
+----------
+> web-ui uses the following 
+* [Nodejs](https://nodejs.org)
+* [npm](https://npm.org)
+* [Vue CLI](https://vuejs.org)
 
 
-Running locally
-------
+
+Run it locally
+---------- 
 
 > Install Dependencies
 
@@ -18,14 +25,14 @@ npm run dev
 ```
 
 
-Service setup
-------
+Service setup <sup style='font-size:11px'>or adding services</sup>
+----------
 
 [Webpack Proxy Config](./vue.config.js)
 
 This lists the proxy location for services
 
-> e.g., ***/api/stats/inair*** 
+> e.g., &nbsp;&nbsp; ***/api/flights/inair*** 
 ```javascript
     '/api/flights/inair':{
         target: 'http://localhost:8004',
