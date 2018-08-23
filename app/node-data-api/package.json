@@ -3,9 +3,9 @@
   "version": "0.0.5",
   "private": true,
   "scripts": {
-    "local": "APPINSIGHTS_INSTRUMENTATIONKEY=1038fcc4-e588-4ea7-b271-73f262b122d7 NODE_ENV=dev MONGODB_URI=mongodb://k8shackfest.documents.azure.com:10255/hackfest?ssl=true MONGODB_USER=k8shackfest MONGODB_PASSWORD=t8ZUcC8D9xMyvKtV8UUnZl4LQnvfqyqh9uxf606pemXgYCSOQtWzDtU2hXtfbacsceI8a4LmPTj0BI9oOIx8Yg== node ./bin/www",
-    "dev": "APPINSIGHTS_INSTRUMENTATIONKEY=1038fcc4-e588-4ea7-b271-73f262b122d7 NODE_ENV=dev MONGODB_URI=mongodb://k8shackfest.documents.azure.com:10255/hackfest?ssl=true MONGODB_USER=k8shackfest MONGODB_PASSWORD=t8ZUcC8D9xMyvKtV8UUnZl4LQnvfqyqh9uxf606pemXgYCSOQtWzDtU2hXtfbacsceI8a4LmPTj0BI9oOIx8Yg== node ./bin/www",
-    "container": "APPINSIGHTS_INSTRUMENTATIONKEY=1038fcc4-e588-4ea7-b271-73f262b122d7 NODE_ENV=dev node ./bin/www"
+    "local": "NODE_ENV=dev node ./bin/www",
+    "dev": "NODE_ENV=dev node ./bin/www",
+    "container": "NODE_ENV=dev node ./bin/www"
   },
   "dependencies": {
     "applicationinsights": "^1.0.3",

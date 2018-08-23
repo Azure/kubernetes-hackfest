@@ -2,6 +2,8 @@
 
 In this lab we will setup Helm in our AKS cluster and deploy our application with Helm charts.
 
+> http://localhost:3003/refresh
+
 ## Prerequisites 
 
 * Clone this repo in Azure Cloud Shell.
@@ -27,7 +29,9 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
         Server: &version.Version{SemVer:"v2.9.1", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}
         ```
 
-2. Review the Helm Chart components
+2. Create Application Insights Instance
+
+3. Review the Helm Chart components
 
     In this repo, there is a folder for `charts` with a sub-folder for each specific app chart. In our case each application has its own chart. 
 
@@ -36,7 +40,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     The `templates` folder holds the yaml files for the specific kubernetes resources for our application. Here you will see how Helm inserts the parameters into resources with this bracketed notation: eg -  `{{.Values.deploy.image}}`
 
 
-3. Customize Chart Parameters
+4. Customize Chart Parameters
 
     In each chart we will need to update the values file with our specific Azure Container Registry. 
 
@@ -69,7 +73,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     containerPort: 4567
     ```
 
-4. Create Kubernetes secret for access to Cosmos DB
+5. Create Kubernetes secret for access to Cosmos DB
 
     For now, we are creating a secret that holds the credentials for our backend database. The application deployment puts these secrets in environment variables. 
 
@@ -85,7 +89,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     ```
 
 
-5. Deploy Chart
+6. Deploy Charts
 
     Install each chart as below:
 

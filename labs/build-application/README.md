@@ -1,4 +1,4 @@
-# Lab: Build Application Components in Azure Container Registry
+# Lab: Build Application Components
 
 In this lab we will build Docker containers for each of the application components and setup the back-end database. 
 
@@ -15,8 +15,11 @@ In this lab we will build Docker containers for each of the application componen
     * In this step, you will need a unique name for your ACR instance. Use the following step to create the ACR name and then deploy.
 
         ```
+        # Use the UNIQUE_SUFFIX from the first lab. Validate that the value is still set.
+        echo $UNIQUE_SUFFIX
+
         export RGNAME=kubernetes-hackfest
-        export ACRNAME=acrhackfest$RANDOM
+        export ACRNAME=acrhackfest$UNIQUE_SUFFIX
 
         az acr create --resource-group $RGNAME --name $ACRNAME --sku Basic
         ```
@@ -25,8 +28,11 @@ In this lab we will build Docker containers for each of the application componen
     * In this step, create a Cosmos DB account for the Mongo api. Again, we will create a random, unique name.
         
         ```
+        # Use the UNIQUE_SUFFIX from the first lab. Validate that the value is still set.
+        echo $UNIQUE_SUFFIX
+
         export RGNAME=kubernetes-hackfest
-        export COSMOSNAME=acrhackfest$RANDOM
+        export COSMOSNAME=acrhackfest$UNIQUE_SUFFIX
 
         az cosmosdb create --name $COSMOSNAME --resource-group $RGNAME --kind MongoDB
         ```
@@ -36,7 +42,6 @@ In this lab we will build Docker containers for each of the application componen
         ```
         az cosmosdb list-connection-strings --name $COSMOSNAME --resource-group $RGNAME
         ```
- 
 
 3. Create Docker containers in ACR
     * In this step we will create a Docker container image for each of our microservices. We will use ACR Builder functionality to build and store these images in the cloud. 
@@ -44,12 +49,9 @@ In this lab we will build Docker containers for each of the application componen
         ```
         # the $ACRNAME variable should be set from step 1
 
-        az acr build -t hackfest/auth-api:v1 -r $ACRNAME --no-logs ./app/auth-api
-        az acr build -t hackfest/node-flight-api:v1 -r $ACRNAME --no-logs ./app/node-flight-api
-        az acr build -t hackfest/data-api:v1 -r $ACRNAME --no-logs ./app/data-api
-        az acr build -t hackfest/cache-api:v1 -r $ACRNAME --no-logs ./app/cache-api
-        az acr build -t hackfest/flights-api:v1 -r $ACRNAME --no-logs ./app/flights-api
-        az acr build -t hackfest/web-ui:v1 -r $ACRNAME --no-logs ./app/web-ui
+        az acr build -t hackfest/node-data-api:v1 -r $ACRNAME --no-logs ./app/node-data-api
+        az acr build -t hackfest/node-flights-api:v1 -r $ACRNAME --no-logs ./app/node-flights-api
+        az acr build -t hackfest/web-ui:v1 -r $ACRNAME --no-logs ./app/web-ui        
         ```
 
     * You can see the status of the builds by running the command below.
