@@ -6,42 +6,37 @@ spec:
   replicas: {{ default 1 .Values.deploy.replicas }}
   selector:
     matchLabels:
-      app: auth-api
+      app: node-data-api
   template:
     metadata:
       labels:
-        app: auth-api
+        app: node-data-api
     spec:
       containers:
-        - image: "{{.Values.deploy.acrServer}}/hackfest/auth-api:{{.Values.deploy.imageTag}}"
+        - image: "{{.Values.deploy.acrServer}}/hackfest/node-data-api:{{.Values.deploy.imageTag}}"
           imagePullPolicy: Always
-          name: auth-api
+          name: node-data-api
           env:
-            - name: MONGOURI
+            - name: MONGODB_URI
               valueFrom:
                 secretKeyRef:
                   name: cosmos-db-secret
                   key: uri
-            - name: MONGOPWD
-              valueFrom:
-                secretKeyRef:
-                  name: cosmos-db-secret
-                  key: pwd
-            - name: MONGOUSER
+            - name: MONGODB_USER
               valueFrom:
                 secretKeyRef:
                   name: cosmos-db-secret
                   key: user
-            - name: MONGODB
+            - name: MONGODB_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: cosmos-db-secret
-                  key: database  
-            - name: MONGODBSSL
+                  key: pwd
+            - name: APPINSIGHTS_INSTRUMENTATIONKEY
               valueFrom:
                 secretKeyRef:
                   name: cosmos-db-secret
-                  key: ssl                    
+                  key: appinsights                   
           ports:
           - containerPort: {{.Values.deploy.containerPort}}
             protocol: TCP

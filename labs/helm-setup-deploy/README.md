@@ -2,8 +2,6 @@
 
 In this lab we will setup Helm in our AKS cluster and deploy our application with Helm charts.
 
-> http://localhost:3003/refresh
-
 ## Prerequisites 
 
 * Clone this repo in Azure Cloud Shell.
@@ -33,7 +31,17 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
         Server: &version.Version{SemVer:"v2.9.1", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}
         ```
 
+        > It can take a minute or so for Tiller to start
+
 2. Create Application Insights Instance
+
+    * In your Azure portal, click "Create a resource" and pick "Application Insights"
+    * Click Create
+    * Pick a unique name (you can use the unique identifier created in the 1st lab)
+    * Use "Node.js Application" for the app type
+    * Select "kubernetes-hackfest" for the Resource Group
+    * Use "East US" for location
+    * When this is completed, click on "Getting Started" and note the Instrumentation Key
 
 3. Review the Helm Chart components
 
@@ -59,7 +67,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
     ```
     
-    * Replace the `acrServer` value below with the Login server from previous step. You will make this change in all 5 of the charts. 
+    * Replace the `acrServer` value below with the Login server from previous step. You will make this change in all 4 of the charts. 
 
     Example:
     ```
@@ -71,25 +79,24 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
     deploy:
     name: data-api-deploy
-    replicas: 3
-    acrServer: "REPLACE-THIS-VALUE"
+    replicas: 2
+    acrServer: "youracr.azurecr.io"
     imageTag: "v1"
     containerPort: 4567
     ```
 
-5. Create Kubernetes secret for access to Cosmos DB
+5. Create Kubernetes secrets for access to Cosmos DB and App Insights
 
     For now, we are creating a secret that holds the credentials for our backend database. The application deployment puts these secrets in environment variables. 
 
     ```
-    # Customize these values from your Cosmos DB instance deployed in a previous lab.
-    export MONGOURI=
-    export MONGOPWD=
-    export MONGOUSER=
-    export MONGODB=
-    export MONGODBSSL=
+    # Customize these values from your Cosmos DB instance deployed in a previous lab. Use the ticks provided for strings
+    export MONGODB_URI=''
+    export MONGODB_USER=''
+    export MONGODB_PASSWORD=''
+    export APPINSIGHTS_INSTRUMENTATIONKEY=''
 
-    kubectl create secret generic cosmos-db-secret --from-literal=uri='$MONGOURI' --from-literal=ssl='$MONGODBSSL' --from-literal=database='$MONGODB' --from-literal=user='$MONGOUSER' --from-literal=pwd='$MONGOPWD'
+    kubectl create secret generic cosmos-db-secret --from-literal=uri='$MONGODB_URI' --from-literal=user='$MONGODB_USER' --from-literal=pwd='$MONGODB_PASSWORD' --from-literal=appinsights='$APPINSIGHTS_INSTRUMENTATIONKEY'
     ```
 
 
@@ -99,11 +106,10 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
     ```
     # Application charts
-    helm upgrade --install auth-api ./charts/auth-api
-    helm upgrade --install cache-api ./charts/cache-api
-    helm upgrade --install data-api ./charts/data-api
+    helm upgrade --install node-data-api ./charts/node-data-api
     helm upgrade --install flights-api ./charts/flights-api
     helm upgrade --install web-ui ./charts/web-ui
+    helm upgrade --install cache-api ./charts/cache-api
 
     # Use the public redis chart
     helm install stable/redis
