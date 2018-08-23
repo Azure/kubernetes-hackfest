@@ -6,42 +6,16 @@ spec:
   replicas: {{ default 1 .Values.deploy.replicas }}
   selector:
     matchLabels:
-      app: data-api
+      app: web-ui
   template:
     metadata:
       labels:
-        app: data-api
+        app: web-ui
     spec:
       containers:
-        - image: "{{.Values.deploy.acrServer}}/hackfest/data-api:{{.Values.deploy.imageTag}}"
+        - image: "{{.Values.deploy.acrServer}}/hackfest/web-ui:{{.Values.deploy.imageTag}}"
           imagePullPolicy: Always
-          name: data-api
-          env:
-            - name: MONGOURI
-              valueFrom:
-                secretKeyRef:
-                  name: cosmos-db-secret
-                  key: uri
-            - name: MONGOPWD
-              valueFrom:
-                secretKeyRef:
-                  name: cosmos-db-secret
-                  key: pwd
-            - name: MONGOUSER
-              valueFrom:
-                secretKeyRef:
-                  name: cosmos-db-secret
-                  key: user
-            - name: MONGODB
-              valueFrom:
-                secretKeyRef:
-                  name: cosmos-db-secret
-                  key: database  
-            - name: MONGODBSSL
-              valueFrom:
-                secretKeyRef:
-                  name: cosmos-db-secret
-                  key: ssl                    
+          name: web-ui                   
           ports:
           - containerPort: {{.Values.deploy.containerPort}}
             protocol: TCP

@@ -105,16 +105,26 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     Install each chart as below:
 
     ```
-    # Application charts
-    
+    # Application charts 
+
     helm upgrade --install node-data-api ./charts/node-data-api
     helm upgrade --install node-flights-api ./charts/node-flights-api
     helm upgrade --install web-ui ./charts/web-ui
     ```
 
-6. Validate application
+6. Initialize application
 
+    * First check to see if pods and services are working correctly
 
+    ```
+
+    ```
+
+    * Next call one of the api's to initialize the CosmosDB instance
+
+    ```
+    http://localhost:3003/refresh
+    ```
 
 
 ## Troubleshooting / Debugging
