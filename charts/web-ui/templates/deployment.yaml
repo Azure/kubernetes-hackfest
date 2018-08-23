@@ -15,7 +15,10 @@ spec:
       containers:
         - image: "{{.Values.deploy.acrServer}}/hackfest/web-ui:{{.Values.deploy.imageTag}}"
           imagePullPolicy: Always
-          name: web-ui                   
+          name: web-ui   
+          env:
+            - name: FLIGHTS_SERVICE_URI
+              value: http://node-flights-api:3003/
           ports:
           - containerPort: {{.Values.deploy.containerPort}}
             protocol: TCP

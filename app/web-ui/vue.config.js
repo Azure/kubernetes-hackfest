@@ -3,7 +3,7 @@ module.exports = {
   devServer: {
     proxy: {
       '/api/flights/current': {
-        target: 'http://localhost:3003/latest',
+        target: 'http://node-flights-api:3003/latest',
         changeOrigin: true,
         pathRewrite: {
           '^/api/flights/current': ''
