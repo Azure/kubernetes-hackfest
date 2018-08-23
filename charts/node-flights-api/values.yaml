@@ -5,7 +5,7 @@ service:
   port: 3003
 
 deploy:
-  name: flights-api-deploy
+  name: node-flights-api-deploy
   replicas: 1
   acrServer: "acrhackfestbrian13322.azurecr.io"
   imageTag: "v2"

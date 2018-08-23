@@ -23,9 +23,9 @@ spec:
                   name: cosmos-db-secret
                   key: appinsights
             - name: DATA_SERVICE_URI
-              value: http://node-data-api:3009
+              value: http://node-data-api:3009/
             - name: CACHE_SERVICE_URI
-              value: http://node-cache-api:3006       
+              value: http://node-cache-api:3006/       
           ports:
           - containerPort: {{.Values.deploy.containerPort}}
             protocol: TCP
