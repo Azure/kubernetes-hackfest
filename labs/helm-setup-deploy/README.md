@@ -19,8 +19,12 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     * Initialize Helm and Tiller:
 
         ```
-        helm init --service-account default --upgrade
+        cd ~/kubernetes-hackfest
+        kubectl apply -f ./labs/helm-setup-deploy/rbac-config.yaml
+
+        helm init --service-account tiller --upgrade
         ```
+
     * Validate the install (in this case, we are using Helm version 2.9.1):
         ```
         helm version

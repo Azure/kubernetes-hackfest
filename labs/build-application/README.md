@@ -32,22 +32,22 @@ In this lab we will build Docker containers for each of the application componen
         echo $UNIQUE_SUFFIX
 
         export RGNAME=kubernetes-hackfest
-        export COSMOSNAME=acrhackfest$UNIQUE_SUFFIX
+        export COSMOSNAME=cosmos$UNIQUE_SUFFIX
 
         az cosmosdb create --name $COSMOSNAME --resource-group $RGNAME --kind MongoDB
         ```
     
-    * Show your connection string
+    * You can validate your Cosmos instance in the portal. The credentials and connect string will be used in the next lab.
 
-        ```
-        az cosmosdb list-connection-strings --name $COSMOSNAME --resource-group $RGNAME
-        ```
 
 3. Create Docker containers in ACR
     * In this step we will create a Docker container image for each of our microservices. We will use ACR Builder functionality to build and store these images in the cloud. 
 
         ```
+        cd ~/kubernetes-hackfest
+
         # the $ACRNAME variable should be set from step 1
+        echo $ACRNAME
 
         az acr build -t hackfest/node-data-api:v1 -r $ACRNAME --no-logs ./app/node-data-api
         az acr build -t hackfest/node-flights-api:v1 -r $ACRNAME --no-logs ./app/node-flights-api

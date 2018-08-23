@@ -139,40 +139,40 @@ This lab creates namespaces that reflect a representative example of an organiza
 
 ## Prerequisites
 
-1. Built AKS Cluster
+1. Build AKS Cluster (from above)
 
 ## Instructions
 
 1. Create Three Namespaces
 
     ```bash
-    # Create Namespaces
+    # Create namespaces
     kubectl apply -f create-namespaces.yaml
 
-    # Look at Namespaces
+    # Look at namespaces
     kubectl get ns
     ```
 
 2. Assign CPU, Memory and Storage Limits to Namespaces
 
     ```bash
-    # Create Namespace Limits
+    # Create namespace limits
     kubectl apply -f namespace-limitranges.yaml
 
-    # Get List of Namespaces and Drill into One
+    # Get list of namespaces and drill into one
     kubectl get ns
-    kubectl describe ns <INSERT-NAMESPACE-NAME-HERE>
+    kubectl describe ns uat
     ```
 
 3. Assign CPU, Memory and Storage Quotas to Namespaces
 
     ```bash
-    # Create Namespace Quotas
+    # Create namespace quotas
     kubectl apply -f namespace-quotas.yaml
 
-    # Get List of Namespaces and Drill into One
+    # Get list of namespaces and drill into one
     kubectl get ns
-    kubectl describe ns <INSERT-NAMESPACE-NAME-HERE>
+    kubectl describe ns dev
     ```
 
 4. Test out Limits and Quotas in **dev** Namespace
@@ -202,6 +202,7 @@ This lab creates namespaces that reflect a representative example of an organiza
 
     kubectl describe ns dev
     kubectl describe ns uat
+    kubectl describe ns prod
     ```
 
 ## Troubleshooting / Debugging
