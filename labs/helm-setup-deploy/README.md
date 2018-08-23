@@ -67,7 +67,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
     ```
     
-    * Replace the `acrServer` value below with the Login server from previous step. You will make this change in all 4 of the charts. 
+    * Replace the `acrServer` value below with the Login server from previous step. You will make this change in all of the charts. 
 
     Example:
     ```
@@ -96,7 +96,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     export MONGODB_PASSWORD=''
     export APPINSIGHTS_INSTRUMENTATIONKEY=''
 
-    kubectl create secret generic cosmos-db-secret --from-literal=uri='$MONGODB_URI' --from-literal=user='$MONGODB_USER' --from-literal=pwd='$MONGODB_PASSWORD' --from-literal=appinsights='$APPINSIGHTS_INSTRUMENTATIONKEY'
+    kubectl create secret generic cosmos-db-secret --from-literal=uri=$MONGODB_URI --from-literal=user=$MONGODB_USER --from-literal=pwd=$MONGODB_PASSWORD --from-literal=appinsights=$APPINSIGHTS_INSTRUMENTATIONKEY
     ```
 
 
@@ -107,9 +107,8 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     ```
     # Application charts
     helm upgrade --install node-data-api ./charts/node-data-api
-    helm upgrade --install flights-api ./charts/flights-api
+    helm upgrade --install node-flights-api ./charts/node-flights-api
     helm upgrade --install web-ui ./charts/web-ui
-    helm upgrade --install cache-api ./charts/cache-api
 
     # Use the public redis chart
     helm install stable/redis
