@@ -1,16 +1,27 @@
 {
   "name": "node-data-api",
-  "version": "0.0.0",
+  "version": "0.0.5",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "local": "APPINSIGHTS_INSTRUMENTATIONKEY=1038fcc4-e588-4ea7-b271-73f262b122d7 NODE_ENV=dev MONGODB_URI=mongodb://k8shackfest.documents.azure.com:10255/hackfest?ssl=true MONGODB_USER=k8shackfest MONGODB_PASSWORD=t8ZUcC8D9xMyvKtV8UUnZl4LQnvfqyqh9uxf606pemXgYCSOQtWzDtU2hXtfbacsceI8a4LmPTj0BI9oOIx8Yg== node ./bin/www",
+    "dev": "APPINSIGHTS_INSTRUMENTATIONKEY=1038fcc4-e588-4ea7-b271-73f262b122d7 NODE_ENV=dev MONGODB_URI=mongodb://k8shackfest.documents.azure.com:10255/hackfest?ssl=true MONGODB_USER=k8shackfest MONGODB_PASSWORD=t8ZUcC8D9xMyvKtV8UUnZl4LQnvfqyqh9uxf606pemXgYCSOQtWzDtU2hXtfbacsceI8a4LmPTj0BI9oOIx8Yg== node ./bin/www",
+    "container": "APPINSIGHTS_INSTRUMENTATIONKEY=1038fcc4-e588-4ea7-b271-73f262b122d7 NODE_ENV=dev node ./bin/www"
   },
   "dependencies": {
+    "applicationinsights": "^1.0.3",
+    "async": "^2.6.1",
+    "body-parser": "^1.18.3",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "express": "~4.16.0",
     "hbs": "~4.0.1",
     "http-errors": "~1.6.2",
-    "morgan": "~1.9.0"
+    "moment": "^2.22.2",
+    "mongoose": "^5.2.9",
+    "morgan": "~1.9.0",
+    "path": "^0.12.7",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2",
+    "uglify-js": "^3.4.7"
   }
 }

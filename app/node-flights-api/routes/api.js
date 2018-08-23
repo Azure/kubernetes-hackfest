@@ -1,6 +1,7 @@
 var applicationInsights = require('applicationinsights'),
     async = require('async'),
-    cacheServiceUri = process.env.CACHE_SERVICE_URI
+    cacheServiceUri = process.env.CACHE_SERVICE_URI,
+    dataServiceUri = process.env.DATA_SERVICE_URI,
     express = require('express'),
     jsonResponse = require('../models/express/jsonResponse'),
     moment = require('moment'),
@@ -55,9 +56,9 @@ router.get('/refresh', (req, res, next) => {
         (data, cb) => {
             console.log('got flight data with ', data.states.length, ' flights')
             var currenttime = moment.unix(data.time).format('YYYYMMDDHHmm').toString()
-            postCacheItem('flighttime', currenttime, site.CACHE_SET_FLIGHT_TIME, (err, reply) => {
+            // postCacheItem('flighttime', currenttime, site.CACHE_SET_FLIGHT_TIME, (err, reply) => {
                 cb(null, data, currenttime)
-            })
+            // })
         },
         (data, timestamp, cb) => {
             console.log('building geojson')
@@ -67,12 +68,14 @@ router.get('/refresh', (req, res, next) => {
             })
         },
         (data, key, cb) => {
-            console.log('posted cache item - time ', key)
+            // console.log('posted cache item - time ', key)
             //var flights = JSON.stringify(data.states)
-            var out = data.toString()
-            postCacheItem(key, out, site.CACHE_SET_FlIGHTS, (err, reply) => {
-                cb(null, 'success')
-            })
+            // var out = data.toString()
+
+            saveToDataApi(key, data, (e,r) => { 
+                cb(null, r)
+            } )
+
         }], 
         (e, r) => {
             console.log('posted cache item - flights')
@@ -123,6 +126,28 @@ function postCacheItem(key, data, event, cb){
     })
 }
 
+function saveToDataApi(timestamp, data, cb) {
+    // telemetry.trackEvent({name: event})
+    var url = dataServiceUri + 'save/flights/' + timestamp
+    
+    console.log(url)
+    
+    var opt = { method: 'POST',
+        uri: url,
+        headers: { 'User-Agent': 'Request-Promise' },
+        body: data,
+        json: true
+    }
+
+    rp(opt)
+      .then(out => {
+        cb(null, out)
+    })
+    .catch(err => {
+        cb(err, null)
+    })
+}
+
 function getCacheItem(key, cb){
     var opt = { uri: cacheServiceUri + key,
         headers: { 'User-Agent': 'Request-Promise' },
@@ -138,7 +163,7 @@ function getCacheItem(key, cb){
 }
 
 function buildGeoJson(flights, cb){
-    var flightGeoJson = {'type':'FeatureCollection','features':[]}
+    var flightGeoJson = []
 
     async.each(flights, (flight, callback) => {
         
@@ -166,7 +191,7 @@ function buildGeoJson(flights, cb){
         }
 
         /* Add this flights GeoJSON to the array */
-        flightGeoJson.features.push(feature)
+        flightGeoJson.push(feature)
         callback()
 
     }

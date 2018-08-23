@@ -1,4 +1,5 @@
-var createError = require('http-errors'),
+var bodyParser = require('body-parser'),
+    createError = require('http-errors'),
     express = require('express'),
     logger = require('morgan')
 
@@ -18,7 +19,7 @@ appInsights.setup()
 var app = express()
 
 app.use(logger('dev'))
-app.use(express.json())
+app.use(bodyParser.json({limit:'2mb'}))
 app.use('/', apiRouter)
 
 // catch 404 and forward to error handler

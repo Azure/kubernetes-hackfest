@@ -1,41 +1,84 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
+var bodyParser = require('body-parser'),
+    createError = require('http-errors'),
+    express = require('express'),
+    logger = require('morgan'),
+    mongoose = require('mongoose')
+    
+require('./models/mongo/flights')
+require('./models/mongo/latest')
+    
+mongoose.Promise = global.Promise
 
-var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var apiRouter = require('./routes/api')
 
-var app = express();
+const appInsights = require('applicationinsights')
+appInsights.setup()
+    .setAutoDependencyCorrelation(true)
+    .setAutoCollectRequests(true)
+    .setAutoCollectPerformance(true)
+    .setAutoCollectExceptions(true)
+    .setAutoCollectDependencies(true)
+    .setAutoCollectConsole(true)
+    .setUseDiskRetryCaching(true)
+    .start()
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'hbs');
+var app = express()
 
-app.use(logger('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
+mongoose.connect(process.env.MONGODB_URI, {
+  user: process.env.MONGODB_USER,
+  pass: process.env.MONGODB_PASSWORD,
+  useNewUrlParser: true
+})
 
-app.use('/', indexRouter);
-app.use('/users', usersRouter);
+var db = mongoose.connection
+
+db.on('error', (err) => {
+  appInsights.defaultClient.trackEvent({name: 'MongoConnError'})
+  console.log(err)
+})
+
+db.once('open', () => {
+  appInsights.defaultClient.trackEvent({name: 'MongoConnSuccess'})
+  console.log('connection success with Mongo')
+})
+
+app.use(logger('dev'))
+app.use(bodyParser.json({limit:'2mb'}))
+app.use('/', apiRouter)
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-  next(createError(404));
-});
+  next(createError(404))
+})
+
+app.use(function(req, res, next) {
+  
+  /* AppInsights request tracking for GET and POST */
+  if ( req.method === 'GET' || req.method === 'POST' ) {
+    appInsights.defaultClient.trackNodeHttpRequest({request: req, response: res})
+  }
+
+  res.setHeader('Access-Control-Allow-Origin', '*')
+  res.setHeader(
+    'Access-Control-Allow-Methods',
+    'GET, POST, OPTIONS, PUT, PATCH, DELETE'
+  )
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-Requested-With,content-type'
+  )
+  next()
+})
 
 // error handler
 app.use(function(err, req, res, next) {
   // set locals, only providing error in development
-  res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === 'development' ? err : {};
+  res.locals.message = err.message
+  res.locals.error = req.app.get('env') === 'development' ? err : {}
 
   // render the error page
-  res.status(err.status || 500);
-  res.render('error');
-});
+  res.status(err.status || 500)
+  res.send(err)
+})
 
-module.exports = app;
+module.exports = app

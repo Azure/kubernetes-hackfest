@@ -3,13 +3,14 @@
   "version": "0.0.5",
   "private": true,
   "scripts": {
-    "local": "APPINSIGHTS_INSTRUMENTATIONKEY=1038fcc4-e588-4ea7-b271-73f262b122d7 CACHE_SERVICE_URI=http://localhost:3006/ NODE_ENV=dev node ./bin/www",
-    "dev": "APPINSIGHTS_INSTRUMENTATIONKEY=1038fcc4-e588-4ea7-b271-73f262b122d7 CACHE_SERVICE_URI=http://localhost:3006/ NODE_ENV=dev node ./bin/www",
-    "container": "APPINSIGHTS_INSTRUMENTATIONKEY=1038fcc4-e588-4ea7-b271-73f262b122d7 CACHE_SERVICE_URI=http://localhost:3006/ NODE_ENV=dev node ./bin/www"    
+    "local": "APPINSIGHTS_INSTRUMENTATIONKEY=1038fcc4-e588-4ea7-b271-73f262b122d7 CACHE_SERVICE_URI=http://localhost:3006/ DATA_SERVICE_URI=http://localhost:3009/ NODE_ENV=dev node ./bin/www",
+    "dev": "APPINSIGHTS_INSTRUMENTATIONKEY=1038fcc4-e588-4ea7-b271-73f262b122d7 CACHE_SERVICE_URI=http://localhost:3006/ DATA_SERVICE_URI=http://localhost:3009/ NODE_ENV=dev node ./bin/www",
+    "container": "APPINSIGHTS_INSTRUMENTATIONKEY=1038fcc4-e588-4ea7-b271-73f262b122d7 CACHE_SERVICE_URI=http://localhost:3006/ DATA_SERVICE_URI=http://localhost:3009/ NODE_ENV=dev node ./bin/www"
   },
   "dependencies": {
     "applicationinsights": "^1.0.3",
     "async": "^2.6.1",
+    "body-parser": "^1.18.3",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "express": "~4.16.0",
