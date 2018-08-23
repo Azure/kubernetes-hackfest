@@ -13,6 +13,7 @@
     "es6-promise": "^4.2.4",
     "mapbox-gl": "^0.48.0",
     "vue": "^2.5.13",
+    "vue-application-insights": "^1.0.3",
     "vue-clickaway": "^2.1.0",
     "vue-notifyjs": "^0.3.0",
     "vue-router": "^3.0.1"

@@ -75,14 +75,14 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
     service:
     type: LoadBalancer
-    port: 4567
+    port: 3009
 
     deploy:
-    name: data-api-deploy
-    replicas: 2
+    name: node-data-api-deploy
+    replicas: 1
     acrServer: "youracr.azurecr.io"
     imageTag: "v1"
-    containerPort: 4567
+    containerPort: 3009
     ```
 
 5. Create Kubernetes secrets for access to Cosmos DB and App Insights

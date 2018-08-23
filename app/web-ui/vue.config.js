@@ -1,5 +1,14 @@
+const webpack = require('webpack')
+
 module.exports = {
-  lintOnSave: false,
+   plugins: [
+     new webpack.DefinePlugin({
+       'process.env': {
+         'APPINSIGHTS_INSTRUMENTATIONKEY': JSON.stringify(process.env.APPINSIGHTS_INSTRUMENTATIONKEY),
+       }
+     })
+   ],
+ lintOnSave: false,
   devServer: {
     proxy: {
       '/api/flights/current': {
