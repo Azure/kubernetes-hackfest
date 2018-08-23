@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <section>
     <div class="row">
       <div class="col-md-6 col-xl-3">
         <h6>FLIGHT MAP</h6>
@@ -19,10 +19,10 @@
           :obj-status="fstat.objStatus"/>
       </div>
     </div> -->
-
-
-    <div id='map'></div>
-  </div>
+    <div v-bind:style="{ height: mapHeight + 'px'}">
+        <div id='map'></div>
+    </div>
+  </section>
 </template>
 <script>
 
@@ -35,9 +35,21 @@ let vm
 
 export default {
   data () {
-    return {}
+    return {
+      mapHeight:'100'
+    }
+  },
+  created() {
+    this.mapHeight = (window.innerHeight - 240)
   },
   mounted() {
+    this.$nextTick(function() {
+      window.addEventListener('resize', this.getWindowHeight);
+      //Init
+      this.getWindowHeight()
+    })
+
+
     vm = this
     mapboxgl.accessToken =
       'pk.eyJ1Ijoic29ub2pvcmVsIiwiYSI6ImNqaDl1Z25udzAybGMzNnBmbzl4NDBsam0ifQ.itgTNw7IhsoPTwkxiPz7Vw';
@@ -56,7 +68,6 @@ export default {
     map.on('moveend', function(e) {
       vm.latitude = map.getCenter().lat
       vm.longitude = map.getCenter().lng
-      // console.log (map.getCenter())
     })
 
   },
@@ -97,11 +108,13 @@ export default {
         var coordinates = e.features[0].geometry.coordinates.slice()
         var detail = e.features[0].properties
         var header = '<h2>Flight ' + detail.FlightNumber + '</h2><ul>'
-        var alt = '<li>Altitude:&nbsp;<strong>' + detail.Altitude + ' </strong>meters</li>'
-        var speed = '<li>Air Speed:&nbsp;<strong>' + detail.AirSpeed + ' </strong>meters/second</li>'
-        var heading = '<li>Heading:&nbsp;<strong>' + detail.Heading + ' </strong>degrees</li>'
+        var alt = '<li>Altitude:<br/><strong>' + detail.Altitude + ' </strong>meters</li>'
+        var altFeet = '<li>Altitude:<br/><strong>' + detail.Altitude*3.2808 + ' </strong>feet</li>'
+        var speed = '<li>Air Speed:<br/><strong>' + detail.AirSpeed + ' </strong>meters/second</li>'
+        var speedMph = '<li>Air Speed:<br/><strong>' + Math.round(detail.AirSpeed * 3600 / 1610.3*1000)/1000  + ' </strong>MPH</li>'
+        var heading = '<li>Heading:<br/><strong>' + detail.Heading + ' </strong>degrees</li>'
         var end = '<ul>'
-        var html = header.concat(alt, speed, heading, end)
+        var html = header.concat(alt, altFeet, speed, speedMph, heading, end)
 
         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
             coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360
@@ -129,7 +142,10 @@ export default {
         vm.addLayer(payload)
       })
        
-    }
+    },
+    getWindowHeight(event) {
+        this.mapHeight = (window.innerHeight - 240)
+      }
   }
 }
 </script>
@@ -137,42 +153,41 @@ export default {
 @import url('https://api.tiles.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.css');
 
 
-html {
-    height: 100%;
-}
 #map {
   width: 100%;
-  height: 100%;
-  min-height: 480px;
+  // min-height: 880px;
+  min-height: 100%;
+  height:auto !important; /* cross-browser */
+  height: 100%; /* cross-browser */
 }
-.maxheight{
-  height: 100%;
- }
 
 .mapboxgl-popup-close-button{
-  font-size: 20px;
+  font-size: 25px;
   position: absolute;
-  right: 5px;
-  top: 1px;
-  color:#1de9b6;
+  right: -3px;
+  top: -3px;
+  color: #1de9b6;
   border: 0;
   cursor: pointer;
   background-color: transparent;
 }
 
 .mapboxgl-popup-content{
-    background-color: rgba(0, 0, 0, 0.9);
-    border-radius: 5px;
-    border: 1px solid rgba(115, 167, 160, 1);
-    color: #FFF;
-    font-size: 14px;
-    padding: 18px;
-    position: relative;
-    width: 300px;
-    -webkit-box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
-    box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
-    padding: 15px;
-    pointer-events: auto;
+  background-color: rgba(0, 0, 0, 0.9);
+  border-radius: 5px;
+  border: 1px solid rgba(115, 167, 160, 1);
+  color: #FFF;
+  font-size: 14px;
+  padding: 18px;
+  position: relative;
+  width: 300px;
+  -webkit-box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
+  padding: 15px;
+  pointer-events: auto;
+}
+.mapboxgl-popup-content ul {
+  padding-left: 0px;
 }
 
 .mapboxgl-popup-content li{
@@ -182,13 +197,19 @@ html {
 
 .mapboxgl-popup-content h2{
   padding-bottom:18px;
+  margin-top: 4px;
+  font-size: 28px;
+}
+.mapboxgl-popup-content ul li strong {
+  color: #1de9b6;
+  font-size: 16px;
 }
 
 .mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
-    -webkit-align-self: center;
-    align-self: center;
-    border-bottom: none;
-    border-top-color: #777;
+  -webkit-align-self: center;
+  align-self: center;
+  border-bottom: none;
+  border-top-color: #777;
 }
 
 </style>

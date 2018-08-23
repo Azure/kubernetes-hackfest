@@ -17,6 +17,11 @@ export default {};
   transition: opacity 0.1s;
 }
 
+.content{
+  min-height: calc(100% - 10px);
+}
+
+
 .fade-enter,
   .fade-leave-to
   /* .fade-leave-active in <2.1.8 */

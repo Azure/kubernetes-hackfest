@@ -9,7 +9,7 @@
         </ul>
       </nav>
       <div class="copyright d-flex flex-wrap">
-        <a href="https://github.com/azure/kubernetes-hackfest" target="_blank"> &nbsp; Github Repo<i class="fab fa-github"></i></a>
+        <a href="https://github.com/azure/kubernetes-hackfest" target="_blank">Github Repo&nbsp;<i class="fab fa-github"></i></a>
       </div>
     </div>
   </footer>

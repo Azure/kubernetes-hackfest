@@ -12,17 +12,12 @@ var applicationInsights = require('applicationinsights'),
     site = require('../models/util/site')
 
 var telemetry = applicationInsights.defaultClient
-
-    const routename = path.basename(__filename).replace('.js', ' default endpoint for ' + site.name)
+const routename = path.basename(__filename).replace('.js', ' default endpoint for ' + site.name)
 
 /* GET JSON :: Route Base Endpoint */
 router.get('/', (req, res, next) => {
-
     jsonResponse.json( res, routename, st.OK.code, {} )
-    
 })
-
-
 
 /* GET JSON :: All Flights in Air - No cache - No db version */
 router.get('/current', (req, res, next) => {
@@ -42,6 +37,33 @@ router.get('/current', (req, res, next) => {
     })
 })
 
+
+/* GET JSON :: All Flights in Air - db version */
+router.get('/latest', (req, res, next) => {
+
+    async.waterfall([
+        (cb) => {
+            // get latest timestamp from DB
+            console.log('getting latest timestamp of flights')
+            var path = 'get/latest'
+            getFromDataApi(path, (e, d) => {
+                cb(null, d.payload[0].Timestamp)
+            })
+        },
+        (timestamp, cb) => {
+            // use latest timestamp for flights from DB
+            console.log('getting latest flights based on timestamp')
+            var path = 'get/flights/' + timestamp
+            getFromDataApi(path, (e, d) => {
+                cb(null, d.payload.FeatureCollection)
+            })
+
+        }
+    ],(e,r) => {
+        jsonResponse.json( res, st.OK.msg, st.OK.code, r)
+    })
+
+})
 
 router.get('/refresh', (req, res, next) => {
     var querypath = 'all'
@@ -148,6 +170,25 @@ function saveToDataApi(timestamp, data, cb) {
     })
 }
 
+function getFromDataApi(path, cb){
+    var url = dataServiceUri + path
+    
+    console.log(url)
+    
+    var opt = { uri: url,
+        headers: { 'User-Agent': 'Request-Promise' },
+        json: true
+    }
+
+    rp(opt)
+      .then(out => {
+        cb(null, out)
+    })
+    .catch(err => {
+        cb(err, null)
+    })
+}
+
 function getCacheItem(key, cb){
     var opt = { uri: cacheServiceUri + key,
         headers: { 'User-Agent': 'Request-Promise' },
@@ -164,17 +205,14 @@ function getCacheItem(key, cb){
 
 function buildGeoJson(flights, cb){
     var flightGeoJson = []
-
+    var includedCountries = ['United States', 'Canada', 'Mexico']
     async.each(flights, (flight, callback) => {
         
-        if ( flight[8] || flight[5] === null ) {
+        if ( flight[8] || flight[7] <= 0 || flight[5] === null  || flight[1].toString().replace(/ /g, '') === '' || flight[1].length <=6 || includedCountries.indexOf(flight[2]) === -1  ) {
             callback()
         } else {
       
-
-        
       /* create the GeoJSON feature for this flight */
-      
         var feature = { 
           type: 'Feature',
           properties: {

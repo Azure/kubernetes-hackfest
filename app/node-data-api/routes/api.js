@@ -39,11 +39,6 @@ router.post('/save/flights/:timestamp', (req, res, next) => {
     var latest = new Latest({Timestamp: req.params.timestamp})
     var flights = new Flights({Timestamp: req.params.timestamp, FeatureCollection: req.body})
 
-    // saveToDb(flights, (e,r) => { 
-    //     console.log(r)
-    //     jsonResponse.json( res, 'success', st.OK.code, r )
-    // } )
-
     async.waterfall([
         (cb) => {
             saveToDb(flights, (e,r) => {
