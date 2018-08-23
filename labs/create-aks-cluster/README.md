@@ -57,7 +57,7 @@
 
    Get Workspace ID 
    ```bash
-   az group deployment list -g kubernetes-log -o tsv  --query "[].id" | grep "k8logs"
+   az group deployment list -g $RGNAME -o tsv  --query "[].id" | grep "k8logs"
    ```
    Export WorkspaceID based output above
    ```bash
@@ -68,7 +68,7 @@
    * Use unique CLUSTERNAME
 
     ```bash
-    export CLUSTERNAME=cluster-$UNIQUE_SUFFIX
+    export CLUSTERNAME=aks-$UNIQUE_SUFFIX
     ```  
 
     > The below command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT...
@@ -93,7 +93,7 @@
 10. Get the Kubernetes config files for your new AKS cluster
 
     ```bash
-    az aks get-credentials -n CLUSTER_NAME -g NAME
+    az aks get-credentials -n $CLUSTERNAME -g $RGNAME
     ```
      
 11. Verify you have API access to your new AKS cluster
@@ -192,6 +192,16 @@ This lab creates namespaces that reflect a representative example of an organiza
     # Check running pod and dev Namespace Allocations
     kubectl get po -n dev
     kubectl describe ns dev
+    ```
+
+5. Clean up quotas
+
+    ```
+    kubectl delete -f namespace-limitranges.yaml
+    kubectl delete -f namespace-quotas.yaml
+
+    kubectl describe ns dev
+    kubectl describe ns uat
     ```
 
 ## Troubleshooting / Debugging

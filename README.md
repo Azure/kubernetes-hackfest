@@ -8,6 +8,10 @@ The following are the basic requirements to **start** the labs. Individual labs 
 * Docker CE [Docker Store](https://store.docker.com/search?type=edition&offering=community)
 * Azure Cloud Shell [https://shell.azure.com](https://shell.azure.com)
 
+## Application
+
+![Application architecture diagram](app-architecture.jpeg "Application architecture diagram")
+
 
 ## Labs
 
