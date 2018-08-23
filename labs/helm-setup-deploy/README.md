@@ -117,14 +117,43 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     * First check to see if pods and services are working correctly
 
     ```
+    kubectl get pod,svc
 
+    NAME                                           READY     STATUS    RESTARTS   AGE
+    pod/node-data-api-deploy-d45ddb647-b5qv2       1/1       Running   0          41m
+    pod/node-flights-api-deploy-787c5bd654-dhw59   1/1       Running   0          24m
+    pod/web-ui-deploy-54979b5759-dg5x9             1/1       Running   0          1m
+
+    NAME                       TYPE           CLUSTER-IP   EXTERNAL-IP      PORT(S)          AGE
+    service/kubernetes         ClusterIP      10.0.0.1     <none>           443/TCP          2h
+    service/node-data-api      LoadBalancer   10.0.40.1    138.51.127.106   3009:31173/TCP   58m
+    service/node-flights-api   LoadBalancer   10.0.214.7   137.35.98.30     3003:32481/TCP   24m
+    service/web-ui             LoadBalancer   10.0.129.0   104.41.198.147   80:31014/TCP     1m
     ```
 
     * Next call one of the api's to initialize the CosmosDB instance
 
     ```
-    http://localhost:3003/refresh
+    # get the public IP for the flights API
+    kubectl get service node-flights-api
+
+    NAME               TYPE           CLUSTER-IP   EXTERNAL-IP     PORT(S)          AGE
+    node-flights-api   LoadBalancer   10.0.214.7   137.35.98.30    3003:32481/TCP   21m
+
+    # browse to that address using the port and path below
+    http://<your-public-up>:3003/refresh
     ```
+
+    * Browse the web UI and profit!
+
+    ```
+    kubectl get service web-ui
+
+    NAME      TYPE           CLUSTER-IP   EXTERNAL-IP     PORT(S)          AGE
+    web-ui    LoadBalancer   10.0.82.74   40.16.218.139   8080:31346/TCP   8m
+    ```
+
+    Open the browser to http://40.76.218.139:8080 (your IP will be different #obvious)
 
 
 ## Troubleshooting / Debugging

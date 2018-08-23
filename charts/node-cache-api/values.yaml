@@ -2,11 +2,11 @@
 
 service:
   type: LoadBalancer
-  port: 8004
+  port: 3006
 
 deploy:
-  name: cache-api-deploy
+  name: node-cache-api-deploy
   replicas: 3
-  acrServer: "briaracr.azurecr.io"
+  acrServer: "acrhackfestbrian13322.azurecr.io"
   imageTag: "v1"
-  containerPort: 8004
+  containerPort: 3006
