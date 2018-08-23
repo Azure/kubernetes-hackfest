@@ -49,8 +49,7 @@ export default {
     })
 
     map.on('load', function() {
-      //vm.loadFlights()
-      console.log('map is loaded')
+      vm.loadFlights()
     })
 
     //** show current map center lat lng on page **//
@@ -61,34 +60,78 @@ export default {
     })
 
   },
-  created() {
+  methods: {
+    addLayer(obj){
+      map.addLayer(
+          {
+            'id': 'flights',
+            'type': 'symbol',
+            'source': {
+              'type': 'geojson',
+              'data': {
+                  'type': 'FeatureCollection',
+                  'features': obj
+              }
+            },
+            'layout': {
+              'icon-image': 'green-plane',
+              'icon-size': .65,
+              //'text-field': '{mag}',
+              'icon-allow-overlap': true,
+              'text-allow-overlap':true,
+              // 'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
+              //'text-size': 10,
+              //'text-offset': [0, 0.6],
+              //'text-anchor': 'top'
+            },
+            'paint':{
+              // 'text-color':'#555',
+              // 'text-halo-color':'rgba(255, 255, 255, .50)',
+              // 'text-halo-width':1
+            }
+            })
 
-    // flight stats
+      map.on('click', 'flights', function (e) {
 
-    // const flightOverview = new Request('/api/stats/inair')
+        // FlightNumber":"SWA2926 ","Altitude":11277.6,"AirSpeed":265.44,"Heading":73.22
+        var coordinates = e.features[0].geometry.coordinates.slice()
+        var detail = e.features[0].properties
+        var header = '<h2>Flight ' + detail.FlightNumber + '</h2><ul>'
+        var alt = '<li>Altitude:&nbsp;<strong>' + detail.Altitude + ' </strong>meters</li>'
+        var speed = '<li>Air Speed:&nbsp;<strong>' + detail.AirSpeed + ' </strong>meters/second</li>'
+        var heading = '<li>Heading:&nbsp;<strong>' + detail.Heading + ' </strong>degrees</li>'
+        var end = '<ul>'
+        var html = header.concat(alt, speed, heading, end)
 
-    // fetch(flightOverview)
-    // .then((response) => { 
-    //   return response.json()
-    // })
-    // .then((data) => {
-    //   var info = []
-    //   for(var i=0; i<5; i++){
-    //     info.push({name: data[i].country, value: data[i].total})
-    //   }
-    //   this.flightCards.push({
-    //     objName: 'Top 5 Countries',
-    //     objSubTitle: 'Flights in-air',
-    //     objSubTitleIcon: 'fa fa-plane ',
-    //     objInfoArray: info,
-    //     objStatusIcon : 'fa fa-globe-americas fa-lg text-success',
-    //     objStatus: 'Worldwide'
-    //     })
-    // })
+        while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
+            coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360
+        }
 
+        new mapboxgl.Popup()
+            .setLngLat(coordinates)
+            .setHTML(html)
+            .addTo(map)
+    })
 
+    },
+    loadFlights() {
+      let payload
+
+      // local proxy to middleware (see /config/index.js proxyTable)
+      const myRequest = new Request('/api/flights/current')
+
+      fetch(myRequest)
+      .then((response) => { 
+        return response.json() })
+      .then((data) => {
+        console.log(data)
+        payload = data.payload
+        vm.addLayer(payload)
+      })
+       
+    }
   }
-};
+}
 </script>
 <style lang='scss'>
 @import url('https://api.tiles.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.css');
