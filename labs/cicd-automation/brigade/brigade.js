@@ -22,14 +22,11 @@ events.on("push", (brigadeEvent, project) => {
     acr.image = "microsoft/azure-cli:2.0.38"
     acr.tasks = [
         `az login --service-principal -u ${azServicePrincipal} -p ${azClientSecret} --tenant ${azTenant}`,
-        //`az acr build -t hackfest/auth-api:${imageTag} -r ${acrName} ./src/app/auth-api`,
-        `az acr build -t hackfest/cache-api:${imageTag} -r ${acrName} ./src/app/cache-api`,
-        `az acr build -t hackfest/flights-api:${imageTag} -r ${acrName} ./src/app/flights-api`,
-        `az acr build -t hackfest/data-api:${imageTag} -r ${acrName} ./src/app/data-api`
-        //`az acr build -t hackfest/web-ui:${imageTag} -r ${acrName} ./src/app/web-ui`
+        `az acr build -t hackfest/node-data-api:${imageTag} -r ${acrName} ./src/app/node-data-api`,
+        `az acr build -t hackfest/node-flights-api:${imageTag} -r ${acrName} ./src/app/node-flights-api`,
+        `az acr build -t hackfest/web-ui:${imageTag} -r ${acrName} ./src/app/web-ui`
     ]
 
-       
     // setup brigade job for helm deployment
     var helm = new Job("job-runner-helm")
     helm.storage.enabled = false
