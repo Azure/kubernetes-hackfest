@@ -45,7 +45,7 @@ In order to trigger this pipeline you will need your own Github account and fork
     ```bash
     git clone https://github.com/<your-github-account>/kubernetes-hackfest.git
 
-    cd kubernetes-hackfest
+    cd kubernetes-hackfest/labs/cicd-automation/jenkins
     ```
 
 #### Deploy Jenkins Helm Chart
