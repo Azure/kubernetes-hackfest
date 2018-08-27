@@ -6,27 +6,27 @@ spec:
   replicas: {{ default 1 .Values.deploy.replicas }}
   selector:
     matchLabels:
-      app: flights-api
+      app: node-cache-api
   template:
     metadata:
       labels:
-        app: flights-api
+        app: node-cache-api
     spec:
       containers:
-        - image: "{{.Values.deploy.acrServer}}/hackfest/flights-api:{{.Values.deploy.imageTag}}"
+        - image: "{{.Values.deploy.acrServer}}/hackfest/node-cache-api:{{.Values.deploy.imageTag}}"
           imagePullPolicy: Always
-          name: flights-api
+          name: node-cache-api
           env:
-            - name: CACHESERVICE
+            - name: MONGODB_URI
               valueFrom:
                 secretKeyRef:
                   name: cosmos-db-secret
                   key: uri
-            - name: DATASERVICE
+            - name: APPINSIGHTS_INSTRUMENTATIONKEY
               valueFrom:
                 secretKeyRef:
                   name: cosmos-db-secret
-                  key: pwd                  
+                  key: appinsights                    
           ports:
           - containerPort: {{.Values.deploy.containerPort}}
             protocol: TCP

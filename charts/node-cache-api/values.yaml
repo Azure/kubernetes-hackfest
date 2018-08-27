@@ -2,11 +2,11 @@
 
 service:
   type: LoadBalancer
-  port: 8080
+  port: 3006
 
 deploy:
-  name: web-ui-deploy
-  replicas: 1
+  name: node-cache-api-deploy
+  replicas: 3
   acrServer: "acrhackfestbrian13322.azurecr.io"
   imageTag: "v1"
-  containerPort: 8080
+  containerPort: 3006

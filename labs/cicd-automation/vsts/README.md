@@ -61,11 +61,9 @@ The general workflow/result will be as follows:
     export ACRNAME=<replace>
     export IMAGETAG=vsts-$(Build.BuildId)
 
-    az acr build -t hackfest/auth-api:$IMAGETAG -r $ACRNAME ./app/auth-api
-    az acr build -t hackfest/cache-api:$IMAGETAG -r $ACRNAME ./app/cache-api
-    az acr build -t hackfest/data-api:$IMAGETAG -r $ACRNAME ./app/data-api
-    az acr build -t hackfest/flights-api:$IMAGETAG -r $ACRNAME ./app/flights-api
-    az acr build -t hackfest/web-ui:$IMAGETAG -r $ACRNAME ./app/web-ui
+    az acr build -t hackfest/node-data-api:v1 -r $ACRNAME --no-logs ./app/node-data-api
+    az acr build -t hackfest/node-flights-api:v1 -r $ACRNAME --no-logs ./app/node-flights-api
+    az acr build -t hackfest/web-ui:v1 -r $ACRNAME --no-logs ./app/web-ui    
     ```
 
 10. Add another task and search for "Publish Build Artifacts". Use "charts" for the artifact name and browse to the charts folder for the "Path to publish"

@@ -6,24 +6,26 @@ spec:
   replicas: {{ default 1 .Values.deploy.replicas }}
   selector:
     matchLabels:
-      app: web-ui
+      app: node-flights-api
   template:
     metadata:
       labels:
-        app: web-ui
+        app: node-flights-api
     spec:
       containers:
-        - image: "{{.Values.deploy.acrServer}}/hackfest/web-ui:{{.Values.deploy.imageTag}}"
+        - image: "{{.Values.deploy.acrServer}}/hackfest/node-flights-api:{{.Values.deploy.imageTag}}"
           imagePullPolicy: Always
-          name: web-ui   
+          name: node-flights-api
           env:
             - name: APPINSIGHTS_INSTRUMENTATIONKEY
               valueFrom:
                 secretKeyRef:
                   name: cosmos-db-secret
                   key: appinsights
-            - name: FLIGHTS_SERVICE_URI
-              value: http://node-flights-api:3003/
+            - name: DATA_SERVICE_URI
+              value: http://node-data-api:3009/
+            - name: CACHE_SERVICE_URI
+              value: http://node-cache-api:3006/       
           ports:
           - containerPort: {{.Values.deploy.containerPort}}
             protocol: TCP
