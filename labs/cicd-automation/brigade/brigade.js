@@ -22,9 +22,9 @@ events.on("push", (brigadeEvent, project) => {
     acr.image = "microsoft/azure-cli:2.0.38"
     acr.tasks = [
         `az login --service-principal -u ${azServicePrincipal} -p ${azClientSecret} --tenant ${azTenant}`,
-        `az acr build -t hackfest/node-data-api:${imageTag} -r ${acrName} ./src/app/node-data-api`,
-        `az acr build -t hackfest/node-flights-api:${imageTag} -r ${acrName} ./src/app/node-flights-api`,
-        `az acr build -t hackfest/web-ui:${imageTag} -r ${acrName} ./src/app/web-ui`
+        `az acr build -t hackfest/data-api:${imageTag} -r ${acrName} ./src/app/data-api`,
+        `az acr build -t hackfest/flights-api:${imageTag} -r ${acrName} ./src/app/flights-api`,
+        `az acr build -t hackfest/service-tracker-ui:${imageTag} -r ${acrName} ./src/app/service-tracker-ui`
     ]
 
     // setup brigade job for helm deployment
@@ -32,7 +32,7 @@ events.on("push", (brigadeEvent, project) => {
     helm.storage.enabled = false
     helm.image = "chzbrgr71/k8s-helm:v2.9.1"
     helm.tasks = [
-        `helm upgrade --install web-ui ./src/charts/web-ui --namespace default --set deploy.imageTag=${imageTag}`
+        `helm upgrade --install web-ui ./src/charts/service-tracker-ui --namespace default --set deploy.imageTag=${imageTag}`
     ]
 
     // create a brigade group and run
