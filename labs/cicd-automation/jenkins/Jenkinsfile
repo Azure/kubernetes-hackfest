@@ -16,7 +16,7 @@ labels:
   component: ci
 spec:
 # Use service account that can deploy to all namespaces
-  serviceAccountName: jenkins
+  serviceAccountName: jenkins-jenkins
   containers:
   - name: helm
     image: lachlanevenson/k8s-helm:latest
