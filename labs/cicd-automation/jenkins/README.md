@@ -50,10 +50,14 @@ In order to trigger this pipeline you will need your own Github account and fork
 
 #### Deploy Jenkins Helm Chart
 
-1. Initialize Helm
+1. Initialize Helm With RBAC
+
+   ```bash
+   kubectl apply -f helm-rbac.yaml
+   ```
    
    ```bash
-   helm init
+   helm init --service-account tiller
    ```
 
    ```bash
@@ -64,7 +68,7 @@ In order to trigger this pipeline you will need your own Github account and fork
 
 2. Get credentials and IP to Login To Jenkins
    ```bash
-   printf $(kubectl get secret --namespace default jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
+   printf $(kubectl get secret --namespace default jenkins-jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
    ```
    ```bash
    export SERVICE_IP=$(kubectl get svc --namespace default jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
@@ -77,4 +81,30 @@ In order to trigger this pipeline you will need your own Github account and fork
 
 #### Configure Azure Integration In Jenkins
 
-1. Configure Crendentials In Jenkins Credential Store
+1. Browse to Jenkins Default Admin Screen
+2. Click on `Credentials`
+3. Select `System` under Credentials
+4. On the right side click the `Global Credentials` drop down and select `Add Credentials`
+5. Enter the following:
+    - Kind = Azure Service Principal
+    - Scope = Global
+    - Subscription ID = use Subscription ID from cluster creation
+    - Client ID =  use Subscription ID from cluster creation
+    - Client Secret = use Client Secret from cluster creation
+    - Tenant ID = use Tenant ID from cluster creation
+    - Azure Environment = Azure
+    - Id = azurecli
+    - Description = Azure CLI Credentials
+6. Click `Verify Service Principal`
+7. Click `Save`
+
+#### Create Jenkins Multibranch Pipeline
+
+1. Open Jenkins Main Admin Interface
+2. Click `Create New Project`
+3. Enter "aks-hackfest" for Item Name
+4. Select `Multibrach Pipeline`
+5. Under Branch Sources `Click Add` -> `Git`
+6. In Project Replository enter `your forked git repo`
+7. In Build Configuration -> Script Path -> use the following path `labs/cicd-automation/jenkins/Jenkinsfile` 
+8. Scroll to bottom of page and click `Save`
