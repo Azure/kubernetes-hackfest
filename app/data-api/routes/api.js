@@ -13,7 +13,9 @@ var applicationInsights = require('applicationinsights'),
 var Flights = mongoose.model('Flights'),
     LatestFlight = mongoose.model('LatestFlight'),
     Quakes = mongoose.model('Quakes'),
-    LatestQuake = mongoose.model('LatestQuake')
+    LatestQuake = mongoose.model('LatestQuake'),
+    Weather = mongoose.model('Weather'),
+    LatestWeather = mongoose.model('LatestWeather')
 
 var telemetry = applicationInsights.defaultClient
 
@@ -24,8 +26,18 @@ router.get('/', (req, res, next) => {
     jsonResponse.json( res, routename, st.OK.code, {} )
 })
 
+router.get('/status', (req, res, next) => {
+    jsonResponse.json( res, routename, st.OK.code, {} )
+})
+
 router.get('/get/flights/:timestamp', (req, res, next) => {
     getFlightsFromDb(req.params.timestamp, (err, result) => {
+        jsonResponse.json( res, 'success', st.OK.code, result )
+    })
+})
+
+router.get('/get/quakes/:timestamp', (req, res, next) => {
+    getQuakesFromDb(req.params.timestamp, (err, result) => {
         jsonResponse.json( res, 'success', st.OK.code, result )
     })
 })
@@ -34,12 +46,6 @@ router.get('/get/latest/flights', (req, res, next) => {
     getLatestFromDb(LatestFlight, (err, data) => {
         console.log(err)
         jsonResponse.json( res, 'success', st.OK.code, data )
-    })
-})
-
-router.get('/get/quakes/:timestamp', (req, res, next) => {
-    getQuakesFromDb(req.params.timestamp, (err, result) => {
-        jsonResponse.json( res, 'success', st.OK.code, result )
     })
 })
 
@@ -71,7 +77,6 @@ router.post('/save/flights/:timestamp', (req, res, next) => {
     } )
 
 } )
-
 
 router.post('/save/quakes/:timestamp', (req, res, next) => {
     var latest = new LatestQuake({Timestamp: req.params.timestamp})
@@ -121,15 +126,6 @@ function getFromDb(obj, query, cb) {
 
 function getFlightsFromDb(timestamp, cb){
     Flights
-        .findOne({Timestamp: timestamp})
-        .limit(1)
-        .exec( (err, doc) => {
-            cb(err, doc)
-        })
-}
-
-function getQuakesFromDb(timestamp, cb){
-    Quakes
         .findOne({Timestamp: timestamp})
         .limit(1)
         .exec( (err, doc) => {

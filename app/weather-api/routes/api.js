@@ -146,7 +146,6 @@ router.get('/cityPositions', (req, res, next) => {
     })
 })
 
-
 /* GET JSON :: All Flights in Air - db version */
 router.get('/latest', (req, res, next) => {
 

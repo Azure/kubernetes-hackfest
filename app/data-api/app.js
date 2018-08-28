@@ -13,6 +13,8 @@ require('./models/mongo/flights')
 require('./models/mongo/latestFlight')
 require('./models/mongo/quakes')
 require('./models/mongo/latestQuake')
+require('./models/mongo/weather')
+require('./models/mongo/latestWeather')
     
 mongoose.Promise = global.Promise
 

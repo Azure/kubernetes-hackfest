@@ -14,12 +14,24 @@ var applicationInsights = require('applicationinsights'),
 var telemetry = applicationInsights.defaultClient
 const routename = path.basename(__filename).replace('.js', ' default endpoint for ' + site.name)
 
-/* GET JSON :: Route Base Endpoint */
+/**
+ * 
+ * HTTP GET /
+ * default endpoint
+ * 
+ **/
 router.get('/', (req, res, next) => {
     jsonResponse.json( res, routename, st.OK.code, {} )
 })
 
-/* GET JSON :: All quakes in Air - No cache - No db version */
+/**
+ * 
+ * HTTP GET /current
+ * JSON
+ * NO CACHE
+ * NO DATABASE
+ * 
+ **/
 router.get('/current', (req, res, next) => {
     var event = 'no_cache'
     getQuakesData( event, (err, data) => {
@@ -31,8 +43,14 @@ router.get('/current', (req, res, next) => {
     })
 })
 
-
-/* GET JSON :: All Flights in Air - db version */
+/**
+ * 
+ * HTTP GET /latest
+ * JSON
+ * USES DATABASE
+ * NO CACHE
+ * 
+ **/
 router.get('/latest', (req, res, next) => {
 
     async.waterfall([
@@ -59,6 +77,15 @@ router.get('/latest', (req, res, next) => {
 
 })
 
+/**
+ * 
+ * HTTP GET /refresh
+ * JSON
+ * API CALL TO USGS FOR FLIGHTS
+ * SAVE TO DATABASE
+ * NO CACHE
+ * 
+ **/
 router.get('/refresh', (req, res, next) => {
     
     async.waterfall([
@@ -89,7 +116,18 @@ router.get('/refresh', (req, res, next) => {
 
 })
 
+/** 
+ * 
+ * HTTP GET /status
+ * JSON
+ * ENDPOINT FOR DASHBOARD SERVICE STATUS
+ * 
+ **/
+router.get('/status', (req, res, next) => {
+    jsonResponse.json( res, routename, st.OK.code, {} )
+})
 
+/* USGS API */
 function getQuakesData(event, cb) {
     console.log('rp to usgs:')
 
@@ -109,6 +147,7 @@ function getQuakesData(event, cb) {
     
 }
 
+/* CACHE API SET CALL */
 function postCacheItem(key, data, event, cb){
     // telemetry.trackEvent({name: event})
     var url = cacheServiceUri + 'set/' + key
@@ -131,6 +170,22 @@ function postCacheItem(key, data, event, cb){
     })
 }
 
+/* CACHE API GET CALL */
+function getCacheItem(key, cb){
+    var opt = { uri: cacheServiceUri + key,
+        headers: { 'User-Agent': 'Request-Promise' },
+        json: true
+    }
+    rp(opt)
+    .then(data => {
+      cb(null, data)
+    })
+    .catch(err => {
+      cb(err, null)
+    })
+}
+
+/* DB API SAVE CALL */
 function saveToDataApi(timestamp, data, cb) {
     // telemetry.trackEvent({name: event})
     var url = dataServiceUri + 'save/quakes/' + timestamp
@@ -153,6 +208,7 @@ function saveToDataApi(timestamp, data, cb) {
     })
 }
 
+/* DB API GET CALL */
 function getFromDataApi(path, cb){
     var url = dataServiceUri + path
     
@@ -171,21 +227,5 @@ function getFromDataApi(path, cb){
         cb(err, null)
     })
 }
-
-function getCacheItem(key, cb){
-    var opt = { uri: cacheServiceUri + key,
-        headers: { 'User-Agent': 'Request-Promise' },
-        json: true
-    }
-    rp(opt)
-    .then(data => {
-      cb(null, data)
-    })
-    .catch(err => {
-      cb(err, null)
-    })
-}
-
-
 
 module.exports = router
