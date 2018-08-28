@@ -6,7 +6,7 @@ def  imageTag = "tugboatlabs.azurecr.io/${appName}:${env.BRANCH_NAME}.${env.BUIL
 pipeline {
   agent {
     kubernetes {
-      label 'sample-app'
+      label 'aks-hackfest'
       defaultContainer 'jnlp'
       yaml """
 apiVersion: v1
