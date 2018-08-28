@@ -82,9 +82,9 @@ In order to trigger this pipeline you will need your own Github account and fork
 #### Configure Azure Integration In Jenkins
 
 1. Browse to Jenkins Default Admin Screen
-2. Click on "Credentials"
-3. Select "System" under Credentials
-4. On the right side click the "Global Credentials" drop down and select "Add Credentials"
+2. Click on `Credentials`
+3. Select `System` under Credentials
+4. On the right side click the `Global Credentials` drop down and select `Add Credentials`
 5. Enter the following:
     - Kind = Azure Service Principal
     - Scope = Global
@@ -95,4 +95,16 @@ In order to trigger this pipeline you will need your own Github account and fork
     - Azure Environment = Azure
     - Id = azurecli
     - Description = Azure CLI Credentials
-6. Click Save
+6. Click `Verify Service Principal`
+7. Click `Save`
+
+#### Create Jenkins Multibranch Pipeline
+
+1. Open Jenkins Main Admin Interface
+2. Click `Create New Project`
+3. Enter "aks-hackfest" for Item Name
+4. Select `Multibrach Pipeline`
+5. Under Branch Sources `Click Add` -> `Git`
+6. In Project Replository enter `your forked git repo`
+7. In Build Configuration -> Script Path -> use the following path `labs/cicd-automation/jenkins/Jenkinsfile` 
+8. Scroll to bottom of page and click `Save`

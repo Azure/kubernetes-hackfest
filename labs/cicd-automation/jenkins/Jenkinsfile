@@ -1,7 +1,9 @@
-def  appName = 'web-ui'
+def  appName = 'service-track-ui'
 def  feSvcName = "${appName}"
+def  ACRFOLDER = 'hackfest'
 def  ACRNAME = 'tugboatlabs'
-def  imageTag = "tugboatlabs.azurecr.io/${appName}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
+def  ACRURL = 'azurecr.io'
+def  imageTag = "tugboatlabs.azurecr.io/${ACRFOLDER}/${appName}:${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
 
 pipeline {
   agent {
@@ -42,10 +44,10 @@ spec:
     stage('Build Container and Push to Registry') {
       steps {
         container('azurecli') {
-        withCredentials([azureServicePrincipal('azure-cli')]) {
+        withCredentials([azureServicePrincipal('azurecli')]) {
             sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID'
             sh 'az account set -s $AZURE_SUBSCRIPTION_ID'
-            sh("az acr build -t ${imageTag} -r ${ACRNAME} .")
+            sh("az acr build -t ${imageTag} -r ${ACRNAME}.${ACRURL} /app/service-tracker-ui")
         }
       }
      }
@@ -55,9 +57,9 @@ spec:
       // Production branch
       steps{
         container('helm') {
-        // Change deployed image in canary to the one we just built
-          sh("sed -i.bak 's#gcr.io/cloud-solutions-images/gceme:1.0.0#${imageTag}#' ./k8s/production/*.yaml")
-          sh("helm install -f ../../../../../charts/web-ui .")
+        // Change deployed image to the one we just built
+          sh("sed -i.bak 's#acrhackfestbrian13322.azurecr.io#${imageTag}#' ./app/charts/service-tracker-ui/values.yaml")
+          sh("helm install -f ./app/charts/service-tracker-ui")
           sh("echo http://`kubectl --namespace=production get service/${feSvcName} -o jsonpath='{.status.loadBalancer.ingress[0].ip}'` > ${feSvcName}")
         }
       }
