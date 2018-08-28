@@ -3,9 +3,9 @@
   "version": "0.0.5",
   "private": true,
   "scripts": {
-    "local": "NODE_ENV=dev node ./bin/www",
+    "local": "NODE_ENV=local node ./bin/www",
     "dev": "NODE_ENV=dev node ./bin/www",
-    "container": "NODE_ENV=dev node ./bin/www"
+    "container": "NODE_ENV=container node ./bin/www"
   },
   "dependencies": {
     "applicationinsights": "^1.0.3",
@@ -13,6 +13,7 @@
     "body-parser": "^1.18.3",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
+    "dotenv": "^6.0.0",
     "express": "~4.16.0",
     "hbs": "~4.0.1",
     "http-errors": "~1.6.2",

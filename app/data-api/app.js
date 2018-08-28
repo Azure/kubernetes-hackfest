@@ -2,7 +2,12 @@ var bodyParser = require('body-parser'),
     createError = require('http-errors'),
     express = require('express'),
     logger = require('morgan'),
-    mongoose = require('mongoose')
+    mongoose = require('mongoose'),
+    path = require('path')
+ 
+if (process.env.NODE_ENV != 'container') {
+  require('dotenv').config({path: path.join(__dirname, '.env.local')})
+}
     
 require('./models/mongo/flights')
 require('./models/mongo/latestFlight')

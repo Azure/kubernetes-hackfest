@@ -1,7 +1,12 @@
 var bodyParser = require('body-parser'),
     createError = require('http-errors'),
     express = require('express'),
-    logger = require('morgan')
+    logger = require('morgan'),
+    path = require('path')
+    
+if (process.env.NODE_ENV != 'container') {
+  require('dotenv').config({path: path.join(__dirname, '.env.local')})
+}
 
 var apiRouter = require('./routes/api')
 
