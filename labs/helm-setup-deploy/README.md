@@ -85,6 +85,8 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     containerPort: 3009
     ```
 
+    * Valdiate that the `imageTag` parameter matches the tag you created in Azure Container Registry in the previous lab.
+
 5. Create Kubernetes secrets for access to Cosmos DB and App Insights
 
     For now, we are creating a secret that holds the credentials for our backend database. The application deployment puts these secrets in environment variables. 
@@ -121,16 +123,20 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     ```
     kubectl get pod,svc
 
-    NAME                                           READY     STATUS    RESTARTS   AGE
-    pod/data-api-deploy-d45ddb647-b5qv2       1/1       Running   0          41m
-    pod/flights-api-deploy-787c5bd654-dhw59   1/1       Running   0          24m
-    pod/service-tracker-ui-deploy-54979b5759-dg5x9             1/1       Running   0          1m
+    NAME                                      READY     STATUS    RESTARTS   AGE
+    pod/data-api-555688c8d-xb76d              1/1       Running   0          1m
+    pod/flights-api-69b9d9dfc-8b9z8           1/1       Running   0          1m
+    pod/quakes-api-7d95bccfc8-5x9hw           1/1       Running   0          1m
+    pod/service-tracker-ui-7db967b8c9-p27s5   1/1       Running   0          54s
+    pod/weather-api-7448ff75b7-7bptj          1/1       Running   0          1m
 
-    NAME                       TYPE           CLUSTER-IP   EXTERNAL-IP      PORT(S)          AGE
-    service/kubernetes         ClusterIP      10.0.0.1     <none>           443/TCP          2h
-    service/data-api           LoadBalancer   10.0.40.1    138.51.127.106   3009:31173/TCP   58m
-    service/flights-api        LoadBalancer   10.0.214.7   137.35.98.30     3003:32481/TCP   24m
-    service/service-tracker-ui LoadBalancer   10.0.129.0   104.41.198.147   80:31014/TCP     1m
+    NAME                         TYPE           CLUSTER-IP     EXTERNAL-IP    PORT(S)          AGE
+    service/data-api             LoadBalancer   10.0.89.66     23.96.11.105   3009:31779/TCP   9m
+    service/flights-api          LoadBalancer   10.0.210.195   23.96.11.180   3003:30862/TCP   8m
+    service/kubernetes           ClusterIP      10.0.0.1       <none>         443/TCP          20h
+    service/quakes-api           LoadBalancer   10.0.134.0     23.96.11.127   3003:31950/TCP   8m
+    service/service-tracker-ui   LoadBalancer   10.0.90.157    23.96.11.115   8080:32324/TCP   8m
+    service/weather-api          LoadBalancer   10.0.179.66    23.96.11.49    3003:31951/TCP   8m
     ```
 
     * Next call one of the api's to initialize the CosmosDB instance
@@ -139,8 +145,8 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     # get the public IP for the flights API
     kubectl get service flights-api
 
-    NAME               TYPE           CLUSTER-IP   EXTERNAL-IP     PORT(S)          AGE
-    flights-api   LoadBalancer   10.0.214.7   137.35.98.30    3003:32481/TCP   21m
+    NAME          TYPE           CLUSTER-IP     EXTERNAL-IP    PORT(S)          AGE
+    flights-api   LoadBalancer   10.0.210.195   23.96.11.180   3003:30862/TCP   9m
 
     # browse to that address using the port and path below
     http://<your-public-up>:3003/refresh
