@@ -1,6 +1,6 @@
 def  appName = 'service-tracker-ui'
 def  feSvcName = "${appName}"
-def  ACRFOLDER = 'hackfest'
+def  ACRPATH = 'hackfest'
 def  ACRNAME = 'tugboatlabs'
 def  ACRURL = 'azurecr.io'
 def  imageTag = "${env.BRANCH_NAME}.${env.BUILD_NUMBER}"
@@ -47,7 +47,7 @@ spec:
         withCredentials([azureServicePrincipal('azurecli')]) {
             sh 'az login --service-principal -u $AZURE_CLIENT_ID -p $AZURE_CLIENT_SECRET -t $AZURE_TENANT_ID'
             sh 'az account set -s $AZURE_SUBSCRIPTION_ID'
-          sh("az acr build -t ${ACRNAME}.${ACRURL}/${ACRFOLDER}/${appName}:${imageTag} -r ${ACRNAME} ./app/service-tracker-ui")
+          sh("az acr build -t ${ACRNAME}.${ACRURL}/${ACRPATH}/${appName}:${imageTag} -r ${ACRNAME} ./app/service-tracker-ui")
         }
       }
      }
@@ -60,7 +60,7 @@ spec:
         // Change deployed image to the one we just built
           //sh("sed -i.bak 's#acrhackfestbrian13322.azurecr.io#${ACRNAME}.${ACRURL}#' ./charts/service-tracker-ui/values.yaml")
           //sh("sed -i.bak 's#v1#${imageTag}#' ./charts/service-tracker-ui/values.yaml")
-          sh("helm upgrade --name service-tracker-ui ./charts/service-tracker-ui --set deploy.imageTag=${imageTag},deploy.acrserver=${ACRNAME}.${ACRNAME}")
+          sh("helm upgrade --install service-tracker-ui ./charts/service-tracker-ui --set deploy.imageTag=${imageTag},deploy.acrserver=${ACRNAME}.${ACRNAME}")
           //sh("helm upgrade --install service-tracker-ui ./charts/service-tracker-ui")
           sh("echo http://`kubectl get service/${feSvcName} -o jsonpath='{.status.loadBalancer.ingress[0].ip}'` > ${feSvcName}")
         }
