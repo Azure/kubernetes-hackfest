@@ -6,27 +6,37 @@ spec:
   replicas: {{ default 1 .Values.deploy.replicas }}
   selector:
     matchLabels:
-      app: node-cache-api
+      app: cache-api
   template:
     metadata:
       labels:
-        app: node-cache-api
+        app: cache-api
     spec:
       containers:
-        - image: "{{.Values.deploy.acrServer}}/hackfest/node-cache-api:{{.Values.deploy.imageTag}}"
+        - image: "{{.Values.deploy.acrServer}}/hackfest/cache-api:{{.Values.deploy.imageTag}}"
           imagePullPolicy: Always
-          name: node-cache-api
+          name: cache-api
           env:
             - name: MONGODB_URI
               valueFrom:
                 secretKeyRef:
                   name: cosmos-db-secret
                   key: uri
+            - name: MONGODB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: cosmos-db-secret
+                  key: user
+            - name: MONGODB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cosmos-db-secret
+                  key: pwd
             - name: APPINSIGHTS_INSTRUMENTATIONKEY
               valueFrom:
                 secretKeyRef:
                   name: cosmos-db-secret
-                  key: appinsights                    
+                  key: appinsights                     
           ports:
           - containerPort: {{.Values.deploy.containerPort}}
             protocol: TCP

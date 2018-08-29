@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: node-cache-api
+  name: cache-api
   labels:
-    name: node-cache-api
+    name: cache-api
 spec:
   type: "{{.Values.service.type}}"
   ports:
@@ -11,4 +11,4 @@ spec:
     port: {{.Values.service.port}}
     targetPort: {{.Values.service.port}}
   selector:
-    app: node-cache-api
+    app: cache-api

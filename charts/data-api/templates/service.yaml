@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: node-data-api
+  name: data-api
   labels:
-    name: node-data-api
+    name: data-api
 spec:
   type: "{{.Values.service.type}}"
   ports:
@@ -11,4 +11,4 @@ spec:
     port: {{.Values.service.port}}
     targetPort: {{.Values.service.port}}
   selector:
-    app: node-data-api
+    app: data-api

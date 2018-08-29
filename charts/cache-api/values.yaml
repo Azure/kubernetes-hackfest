@@ -5,8 +5,8 @@ service:
   port: 3006
 
 deploy:
-  name: node-cache-api-deploy
-  replicas: 3
-  acrServer: "acrhackfestbrian13322.azurecr.io"
-  imageTag: "v1"
+  name: cache-api
+  replicas: 1
+  acrServer: "briaracr.azurecr.io"
+  imageTag: "v3"
   containerPort: 3006

@@ -49,9 +49,11 @@ In this lab we will build Docker containers for each of the application componen
         # the $ACRNAME variable should be set from step 1
         echo $ACRNAME
 
-        az acr build -t hackfest/node-data-api:v1 -r $ACRNAME --no-logs ./app/node-data-api
-        az acr build -t hackfest/node-flights-api:v1 -r $ACRNAME --no-logs ./app/node-flights-api
-        az acr build -t hackfest/web-ui:v1 -r $ACRNAME --no-logs ./app/web-ui        
+        az acr build -t hackfest/data-api:v3 -r $ACRNAME --no-logs ./app/data-api
+        az acr build -t hackfest/flights-api:v3 -r $ACRNAME --no-logs ./app/flights-api
+        az acr build -t hackfest/quakes-api:v3 -r $ACRNAME --no-logs ./app/quakes-api
+        az acr build -t hackfest/weather-api:v3 -r $ACRNAME --no-logs ./app/weather-api
+        az acr build -t hackfest/service-tracker-ui:v3 -r $ACRNAME --no-logs ./app/service-tracker-ui
         ```
 
     * You can see the status of the builds by running the command below.
@@ -59,7 +61,7 @@ In this lab we will build Docker containers for each of the application componen
         ```
         az acr build-task list-builds -r $ACRNAME -o table
 
-        az acr build-task logs --build-id aa1 -r $ACRNAME
+        az acr build-task logs -r $ACRNAME --build-id aa1
         ```
     
     * Browse to your ACR instance in the Azure portal and validate that the images are in "Repositories." 

@@ -6,16 +6,16 @@ spec:
   replicas: {{ default 1 .Values.deploy.replicas }}
   selector:
     matchLabels:
-      app: node-data-api
+      app: data-api
   template:
     metadata:
       labels:
-        app: node-data-api
+        app: data-api
     spec:
       containers:
-        - image: "{{.Values.deploy.acrServer}}/hackfest/node-data-api:{{.Values.deploy.imageTag}}"
+        - image: "{{.Values.deploy.acrServer}}/hackfest/data-api:{{.Values.deploy.imageTag}}"
           imagePullPolicy: Always
-          name: node-data-api
+          name: data-api
           env:
             - name: MONGODB_URI
               valueFrom:
