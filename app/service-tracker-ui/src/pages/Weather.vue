@@ -125,7 +125,6 @@ export default {
 }
 </script>
 <style lang='scss'>
-@import url('https://api.tiles.mapbox.com/mapbox-gl-js/v0.48.0/mapbox-gl.css');
 
 
 #map {
@@ -136,61 +135,61 @@ export default {
   height: 100%; /* cross-browser */
 }
 
-.weatherouter * .mapboxgl-popup-close-button{
-  font-size: 18px;
-  position: absolute;
-  right: -3px;
-  top: -3px;
-  color: #FFF;
-  border: 0;
-  cursor: pointer;
-  background-color: transparent;
-}
+// .weatherouter * .mapboxgl-popup-close-button{
+//   font-size: 18px;
+//   position: absolute;
+//   right: -3px;
+//   top: -3px;
+//   color: #FFF;
+//   border: 0;
+//   cursor: pointer;
+//   background-color: transparent;
+// }
 
-.weatherouter * .mapboxgl-popup-content{
-  background-color:rgba(80, 80, 80,0.8);
-  border-radius: 0;
-  border: none;
-  color: #FFF;
-  font-size: 14px;
-  font-family: 'Muli', "Helvetica", Arial, sans-serif;
-  padding: 18px;
-  position: relative;
-  width: 180px;
-  -webkit-box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
-  padding: 8px;
-  pointer-events: auto;
-}
-.weatherouter * .mapboxgl-popup-content ul {
-  padding-left: 0px;
-}
+// .weatherouter * .mapboxgl-popup-content{
+//   background-color:rgba(80, 80, 80,0.8);
+//   border-radius: 0;
+//   border: none;
+//   color: #FFF;
+//   font-size: 14px;
+//   font-family: 'Muli', "Helvetica", Arial, sans-serif;
+//   padding: 18px;
+//   position: relative;
+//   width: 180px;
+//   -webkit-box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
+//   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
+//   padding: 8px;
+//   pointer-events: auto;
+// }
+// .weatherouter * .mapboxgl-popup-content ul {
+//   padding-left: 0px;
+// }
 
-.weatherouter * .mapboxgl-popup-content li{
-  padding:3px;
-  list-style:none;
-}
+// .weatherouter * .mapboxgl-popup-content li{
+//   padding:3px;
+//   list-style:none;
+// }
 
-.weatherouter * .mapboxgl-popup-content h2{
-  font-family: 'Muli', "Helvetica", Arial, sans-serif;
-  margin-top: 4px;
-  font-size: 28px;
-  color: #FFF;
-  padding-bottom:0px !important;
-}
-.weatherouter * .mapboxgl-popup-content ul li strong {
-  color: #FFF;
-  font-size: 16px;
-}
+// .weatherouter * .mapboxgl-popup-content h2{
+//   font-family: 'Muli', "Helvetica", Arial, sans-serif;
+//   margin-top: 4px;
+//   font-size: 28px;
+//   color: #FFF;
+//   padding-bottom:0px !important;
+// }
+// .weatherouter * .mapboxgl-popup-content ul li strong {
+//   color: #FFF;
+//   font-size: 16px;
+// }
 
-button.mapboxgl-popup-close-button::before { 
-    content: "√";
-}
-.weatherouter * .mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
-  -webkit-align-self: center;
-  align-self: center;
-  border-bottom: none;
-  border-top-color:#FFF;
-}
+// button.mapboxgl-popup-close-button::before { 
+//     content: "√";
+// }
+// .weatherouter * .mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
+//   -webkit-align-self: center;
+//   align-self: center;
+//   border-bottom: none;
+//   border-top-color:#FFF;
+// }
 
 </style>

@@ -10,6 +10,8 @@ export default {};
 </script>
 
 <style lang="scss">
+@import url('https://api.tiles.mapbox.com/mapbox-gl-js/v0.48.0/mapbox-gl.css');
+
 .vue-notifyjs.notifications {
   .alert {
     z-index: 10000;

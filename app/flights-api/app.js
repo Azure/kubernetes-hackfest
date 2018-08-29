@@ -22,7 +22,7 @@ appInsights.setup()
     .start()
 
 var app = express()
-
+app.set('etag', 'strong');
 app.use(logger('dev'))
 app.use(bodyParser.json({limit:'2mb'}))
 app.use('/', apiRouter)
@@ -48,6 +48,9 @@ app.use(function(req, res, next) {
     'Access-Control-Allow-Headers',
     'X-Requested-With,content-type'
   )
+
+  res.append('Last-Modified', (new Date()).toUTCString())
+
   next()
 })
 

@@ -104,17 +104,30 @@ export default {
 
       map.on('click', 'flights', function (e) {
 
+        var popUpHtml = '<div class="card border-primary mb-3"><div class="card-header">FLIGHT DETAILS</div>'
+        var popUpTitle ='<div class="card border-primary"><div class="card-body"><h5 class="card-title">{{FLIGHTNUMBER}}</h5></div>'
+        var popUpDetails = '<ul class="list-group">'
+        popUpDetails = popUpDetails.concat('<li class="list-group-item pl-3"><small class="text-muted">ALTITUDE</small></br>{{ALTITUDE}}</li>')
+        popUpDetails = popUpDetails.concat('<li class="list-group-item pl-3"><small class="text-muted">AIR SPEED</small></br>{{AIRSPEEDMPH}}</li>')
+        popUpDetails = popUpDetails.concat('</ul>')
+        var popUpEnd = '</div>'
+
         // FlightNumber":"SWA2926 ","Altitude":11277.6,"AirSpeed":265.44,"Heading":73.22
         var coordinates = e.features[0].geometry.coordinates.slice()
         var detail = e.features[0].properties
-        var header = '<h2>Flight ' + detail.FlightNumber + '</h2><ul>'
-        var alt = '<li>Altitude:<br/><strong>' + detail.Altitude + ' </strong>meters</li>'
-        var altFeet = '<li>Altitude:<br/><strong>' + detail.Altitude*3.2808 + ' </strong>feet</li>'
-        var speed = '<li>Air Speed:<br/><strong>' + detail.AirSpeed + ' </strong>meters/second</li>'
-        var speedMph = '<li>Air Speed:<br/><strong>' + Math.round(detail.AirSpeed * 3600 / 1610.3*1000)/1000  + ' </strong>MPH</li>'
-        var heading = '<li>Heading:<br/><strong>' + detail.Heading + ' </strong>degrees</li>'
-        var end = '<ul>'
-        var html = header.concat(alt, altFeet, speed, speedMph, heading, end)
+        // var header = '<h2>Flight ' + detail.FlightNumber + '</h2><ul>'
+        // var alt = '<li>Altitude:<br/><strong>' + detail.Altitude + ' </strong>meters</li>'
+        // var altFeet = '<li>Altitude:<br/><strong>' + detail.Altitude*3.2808 + ' </strong>feet</li>'
+        // var speed = '<li>Air Speed:<br/><strong>' + detail.AirSpeed + ' </strong>meters/second</li>'
+        // var speedMph = '<li>Air Speed:<br/><strong>' + Math.round(detail.AirSpeed * 3600 / 1610.3*1000)/1000  + ' </strong>MPH</li>'
+        // var heading = '<li>Heading:<br/><strong>' + detail.Heading + ' </strong>degrees</li>'
+        // var end = '<ul>'
+        // var html = header.concat(alt, altFeet, speed, speedMph, heading, end)
+
+        popUpTitle = popUpTitle.replace('{{FLIGHTNUMBER}}', detail.FlightNumber)
+        popUpDetails = popUpDetails.replace('{{ALTITUDE}}', ((Math.round((detail.Altitude*3.2808))*10)/10).toString() + ' FEET')
+        popUpDetails = popUpDetails.replace('{{AIRSPEEDMPH}}', Math.round(detail.AirSpeed * 3600 / 1610.3).toString() + ' MPH')
+        var html =popUpTitle.concat(popUpDetails, popUpEnd)
 
         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
             coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360
@@ -150,7 +163,7 @@ export default {
 }
 </script>
 <style lang='scss'>
-@import url('https://api.tiles.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.css');
+
 
 
 #map {
@@ -160,56 +173,51 @@ export default {
   height:auto !important; /* cross-browser */
   height: 100%; /* cross-browser */
 }
-
-.mapboxgl-popup-close-button{
-  font-size: 25px;
-  position: absolute;
-  right: -3px;
-  top: -3px;
-  color: #1de9b6;
-  border: 0;
-  cursor: pointer;
-  background-color: transparent;
-}
-
 .mapboxgl-popup-content{
-  background-color: rgba(0, 0, 0, 0.9);
-  border-radius: 5px;
-  border: 1px solid rgba(115, 167, 160, 1);
-  color: #FFF;
-  font-size: 14px;
-  padding: 18px;
-  position: relative;
-  width: 300px;
-  -webkit-box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
-  padding: 15px;
-  pointer-events: auto;
+  background: #06204d;
+  box-shadow: none;
+  padding: 8px 2px 0px 2px !important;
 }
-.mapboxgl-popup-content ul {
-  padding-left: 0px;
+.mapboxgl-popup-content * .card {
+  background: none !important;
+}
+.card {
+  background: none !important;
+  box-shadow: none !important;
+  margin-bottom: 2px !important;
+  color: #8bb837 !important;
+}
+h5.card-title{
+  font-size: 22px!important;
+  color:#8eb9ee !important;
+  font-weight: 400 !important;
+  padding: 10px 15px 0px 0px !important;
+}
+ul.list-group{
+  background: #FFF !important;
+}
+li.list-group-item{
+  padding: 4px 10px !important;
+  background: none !important;
+  border: none !important;
+}
+.mapboxgl-popup-tip {
+  border-bottom-color: #06204d !important;
+  border-top-color: #06204d !important;
+}
+.mapboxgl-popup-close-button {
+    position: absolute;
+    right: 0;
+    top: 0;
+    border: 0;
+    border-radius: 0 0 0 0;
+    color:#FFF;
+    font-size: 18px;
+    font-variant: small-caps;
+    cursor: pointer;
+    background-color: transparent;
 }
 
-.mapboxgl-popup-content li{
-  padding:3px;
-  list-style:none;
-}
 
-.mapboxgl-popup-content h2{
-  padding-bottom:18px;
-  margin-top: 4px;
-  font-size: 28px;
-}
-.mapboxgl-popup-content ul li strong {
-  color: #1de9b6;
-  font-size: 16px;
-}
-
-.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
-  -webkit-align-self: center;
-  align-self: center;
-  border-bottom: none;
-  border-top-color: #777;
-}
 
 </style>

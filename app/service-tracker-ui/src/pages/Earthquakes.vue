@@ -178,7 +178,6 @@ export default {
 }
 </script>
 <style lang='scss'>
-@import url('https://api.tiles.mapbox.com/mapbox-gl-js/v0.45.0/mapbox-gl.css');
 
 
 #map {
@@ -189,55 +188,55 @@ export default {
   height: 100%; /* cross-browser */
 }
 
-.mapboxgl-popup-close-button{
-  font-size: 25px;
-  position: absolute;
-  right: -3px;
-  top: -3px;
-  color: #1de9b6;
-  border: 0;
-  cursor: pointer;
-  background-color: transparent;
-}
+// .mapboxgl-popup-close-button{
+//   font-size: 25px;
+//   position: absolute;
+//   right: -3px;
+//   top: -3px;
+//   color: #1de9b6;
+//   border: 0;
+//   cursor: pointer;
+//   background-color: transparent;
+// }
 
-.mapboxgl-popup-content{
-  background-color: rgba(0, 0, 0, 0.9);
-  border-radius: 5px;
-  border: 1px solid rgba(115, 167, 160, 1);
-  color: #FFF;
-  font-size: 14px;
-  padding: 18px;
-  position: relative;
-  width: 300px;
-  -webkit-box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
-  padding: 15px;
-  pointer-events: auto;
-}
-.mapboxgl-popup-content ul {
-  padding-left: 0px;
-}
+// .mapboxgl-popup-content{
+//   background-color: rgba(0, 0, 0, 0.9);
+//   border-radius: 5px;
+//   border: 1px solid rgba(115, 167, 160, 1);
+//   color: #FFF;
+//   font-size: 14px;
+//   padding: 18px;
+//   position: relative;
+//   width: 300px;
+//   -webkit-box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
+//   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
+//   padding: 15px;
+//   pointer-events: auto;
+// }
+// .mapboxgl-popup-content ul {
+//   padding-left: 0px;
+// }
 
-.mapboxgl-popup-content li{
-  padding:3px;
-  list-style:none;
-}
+// .mapboxgl-popup-content li{
+//   padding:3px;
+//   list-style:none;
+// }
 
-.mapboxgl-popup-content h2{
-  padding-bottom:18px;
-  margin-top: 4px;
-  font-size: 28px;
-}
-.mapboxgl-popup-content ul li strong {
-  color: #1de9b6;
-  font-size: 16px;
-}
+// .mapboxgl-popup-content h2{
+//   padding-bottom:18px;
+//   margin-top: 4px;
+//   font-size: 28px;
+// }
+// .mapboxgl-popup-content ul li strong {
+//   color: #1de9b6;
+//   font-size: 16px;
+// }
 
-.mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
-  -webkit-align-self: center;
-  align-self: center;
-  border-bottom: none;
-  border-top-color: #777;
-}
+// .mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
+//   -webkit-align-self: center;
+//   align-self: center;
+//   border-bottom: none;
+//   border-top-color: #777;
+// }
 
 </style>
