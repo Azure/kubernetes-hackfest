@@ -76,6 +76,9 @@ app.use(function(req, res, next) {
     'Access-Control-Allow-Headers',
     'X-Requested-With,content-type'
   )
+
+  res.append('Last-Modified', (new Date()).toUTCString())
+
   next()
 })
 
