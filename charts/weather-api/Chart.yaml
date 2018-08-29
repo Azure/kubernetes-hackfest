@@ -1,0 +1,7 @@
+name: weather-api
+home: https://github.com/Azure/kubernetes-hackfest/tree/master/labs/build-application
+version: 1.0
+description: api for GBB Kubernetes Hackfest
+maintainers: 
+  - name: chzbrgr71
+    email: brianisrunning@gmail.com

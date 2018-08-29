@@ -6,24 +6,29 @@ spec:
   replicas: {{ default 1 .Values.deploy.replicas }}
   selector:
     matchLabels:
-      app: web-ui
+      app: service-tracker-ui
   template:
     metadata:
       labels:
-        app: web-ui
+        app: service-tracker-ui
     spec:
       containers:
-        - image: "{{.Values.deploy.acrServer}}/hackfest/web-ui:{{.Values.deploy.imageTag}}"
+        - image: "{{.Values.deploy.acrServer}}/hackfest/service-tracker-ui:{{.Values.deploy.imageTag}}"
           imagePullPolicy: Always
-          name: web-ui   
+          name: service-tracker-ui
           env:
+            - name: FLIGHT_API
+              value: http://flights-api:3003/latest
+            - name: WEATHER_API
+              value: http://weather-api:3015/styling
+            - name: QUAKES_API
+              value: http://quakes-api:3012/latest
             - name: APPINSIGHTS_INSTRUMENTATIONKEY
+              value: 6dc23005-a1d0-418a-82bd-b232498b5221
+            - name: KUBE_NODE_NAME
               valueFrom:
-                secretKeyRef:
-                  name: cosmos-db-secret
-                  key: appinsights
-            - name: FLIGHTS_SERVICE_URI
-              value: http://node-flights-api:3003/
+                fieldRef:
+                  fieldPath: spec.nodeName
           ports:
           - containerPort: {{.Values.deploy.containerPort}}
             protocol: TCP

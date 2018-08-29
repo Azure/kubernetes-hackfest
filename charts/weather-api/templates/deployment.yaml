@@ -6,16 +6,16 @@ spec:
   replicas: {{ default 1 .Values.deploy.replicas }}
   selector:
     matchLabels:
-      app: flights-api
+      app: weather-api
   template:
     metadata:
       labels:
-        app: flights-api
+        app: weather-api
     spec:
       containers:
-        - image: "{{.Values.deploy.acrServer}}/hackfest/flights-api:{{.Values.deploy.imageTag}}"
+        - image: "{{.Values.deploy.acrServer}}/hackfest/weather-api:{{.Values.deploy.imageTag}}"
           imagePullPolicy: Always
-          name: flights-api
+          name: weather-api
           env:
             - name: APPINSIGHTS_INSTRUMENTATIONKEY
               valueFrom:

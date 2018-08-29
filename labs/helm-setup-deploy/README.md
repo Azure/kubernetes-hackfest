@@ -107,9 +107,11 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     ```
     # Application charts 
 
-    helm upgrade --install node-data-api ./charts/node-data-api
-    helm upgrade --install node-flights-api ./charts/node-flights-api
-    helm upgrade --install web-ui ./charts/web-ui
+    helm upgrade --install data-api ./charts/data-api
+    helm upgrade --install quakes-api ./charts/quakes-api
+    helm upgrade --install weather-api ./charts/weather-api
+    helm upgrade --install flights-api ./charts/flights-api
+    helm upgrade --install service-tracker-ui ./charts/service-tracker-ui
     ```
 
 6. Initialize application
@@ -120,25 +122,25 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     kubectl get pod,svc
 
     NAME                                           READY     STATUS    RESTARTS   AGE
-    pod/node-data-api-deploy-d45ddb647-b5qv2       1/1       Running   0          41m
-    pod/node-flights-api-deploy-787c5bd654-dhw59   1/1       Running   0          24m
-    pod/web-ui-deploy-54979b5759-dg5x9             1/1       Running   0          1m
+    pod/data-api-deploy-d45ddb647-b5qv2       1/1       Running   0          41m
+    pod/flights-api-deploy-787c5bd654-dhw59   1/1       Running   0          24m
+    pod/service-tracker-ui-deploy-54979b5759-dg5x9             1/1       Running   0          1m
 
     NAME                       TYPE           CLUSTER-IP   EXTERNAL-IP      PORT(S)          AGE
     service/kubernetes         ClusterIP      10.0.0.1     <none>           443/TCP          2h
-    service/node-data-api      LoadBalancer   10.0.40.1    138.51.127.106   3009:31173/TCP   58m
-    service/node-flights-api   LoadBalancer   10.0.214.7   137.35.98.30     3003:32481/TCP   24m
-    service/web-ui             LoadBalancer   10.0.129.0   104.41.198.147   80:31014/TCP     1m
+    service/data-api           LoadBalancer   10.0.40.1    138.51.127.106   3009:31173/TCP   58m
+    service/flights-api        LoadBalancer   10.0.214.7   137.35.98.30     3003:32481/TCP   24m
+    service/service-tracker-ui LoadBalancer   10.0.129.0   104.41.198.147   80:31014/TCP     1m
     ```
 
     * Next call one of the api's to initialize the CosmosDB instance
 
     ```
     # get the public IP for the flights API
-    kubectl get service node-flights-api
+    kubectl get service flights-api
 
     NAME               TYPE           CLUSTER-IP   EXTERNAL-IP     PORT(S)          AGE
-    node-flights-api   LoadBalancer   10.0.214.7   137.35.98.30    3003:32481/TCP   21m
+    flights-api   LoadBalancer   10.0.214.7   137.35.98.30    3003:32481/TCP   21m
 
     # browse to that address using the port and path below
     http://<your-public-up>:3003/refresh
@@ -147,10 +149,10 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     * Browse the web UI and profit!
 
     ```
-    kubectl get service web-ui
+    kubectl get service service-tracker-ui
 
-    NAME      TYPE           CLUSTER-IP   EXTERNAL-IP     PORT(S)          AGE
-    web-ui    LoadBalancer   10.0.82.74   40.16.218.139   8080:31346/TCP   8m
+    NAME                TYPE           CLUSTER-IP   EXTERNAL-IP     PORT(S)          AGE
+    service-tracker-ui  LoadBalancer   10.0.82.74   40.16.218.139   8080:31346/TCP   8m
     ```
 
     Open the browser to http://40.76.218.139:8080 (your IP will be different #obvious)
