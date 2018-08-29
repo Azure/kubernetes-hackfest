@@ -2,7 +2,7 @@
 
 service:
   type: LoadBalancer
-  port: 3003
+  port: 3015
 
 deploy:
   name: weather-api
