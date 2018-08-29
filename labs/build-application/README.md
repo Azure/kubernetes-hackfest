@@ -49,11 +49,14 @@ In this lab we will build Docker containers for each of the application componen
         # the $ACRNAME variable should be set from step 1
         echo $ACRNAME
 
-        az acr build -t hackfest/data-api:v3 -r $ACRNAME --no-logs ./app/data-api
-        az acr build -t hackfest/flights-api:v3 -r $ACRNAME --no-logs ./app/flights-api
-        az acr build -t hackfest/quakes-api:v3 -r $ACRNAME --no-logs ./app/quakes-api
-        az acr build -t hackfest/weather-api:v3 -r $ACRNAME --no-logs ./app/weather-api
-        az acr build -t hackfest/service-tracker-ui:v3 -r $ACRNAME --no-logs ./app/service-tracker-ui
+        # set a version (make this anything you would like)
+        export VERSION=v4
+
+        az acr build -t hackfest/data-api:$VERSION -r $ACRNAME --no-logs ./app/data-api
+        az acr build -t hackfest/flights-api:$VERSION -r $ACRNAME --no-logs ./app/flights-api
+        az acr build -t hackfest/quakes-api:$VERSION -r $ACRNAME --no-logs ./app/quakes-api
+        az acr build -t hackfest/weather-api:$VERSION -r $ACRNAME --no-logs ./app/weather-api
+        az acr build -t hackfest/service-tracker-ui:$VERSION -r $ACRNAME --no-logs ./app/service-tracker-ui
         ```
 
     * You can see the status of the builds by running the command below.

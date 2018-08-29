@@ -8,5 +8,5 @@ deploy:
   name: flights-api
   replicas: 1
   acrServer: "briaracr.azurecr.io"
-  imageTag: "v3"
+  imageTag: "v4"
   containerPort: 3003
