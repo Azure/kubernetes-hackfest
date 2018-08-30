@@ -23,7 +23,7 @@ The general workflow/result will be as follows:
 - Rinse and repeat upon each code update via Git
 - Profit
 
-![](jenkins-aks.png)
+![](./img/jenkins-aks.png)
 
 
 #### Setup Github Repo
@@ -32,11 +32,11 @@ In order to trigger this pipeline you will need your own Github account and fork
 
 1. Broswe to https://github.com/azure/kubernetes-hackfest and click "Fork" in the top right.
 
-    ![](github-fork.png)
+    ![](./img/github-fork.png)
 
 2. Grab your clone URL from Github which will look something like: `https://github.com/thedude-lebowski/kubernetes-hackfest.git`
 
-    ![](github-clone.png)
+    ![](./img/github-clone.png)
 
 3. Clone your repo in Azure Cloud Shell.
 
@@ -96,18 +96,19 @@ In order to trigger this pipeline you will need your own Github account and fork
 2. Click on `Credentials`
 3. Select `System` under Credentials
 4. On the right side click the `Global Credentials` drop down and select `Add Credentials`
-5. Enter the following:
-    - Kind = Azure Service Principal
-    - Scope = Global
-    - Subscription ID = use Subscription ID from cluster creation
-    - Client ID =  use Subscription ID from cluster creation
-    - Client Secret = use Client Secret from cluster creation
-    - Tenant ID = use Tenant ID from cluster creation
-    - Azure Environment = Azure
-    - Id = azurecli
-    - Description = Azure CLI Credentials
+5. Enter the following: *Example Below*
+    * Kind = Azure Service Principal
+    * Scope = Global
+    * Subscription ID = use Subscription ID from cluster creation
+    * Client ID =  use Subscription ID from cluster creation
+    * Client Secret = use Client Secret from cluster creation
+    * Tenant ID = use Tenant ID from cluster creation
+    * Azure Environment = Azure
+    * Id = azurecli
+    * Description = Azure CLI Credentials
 6. Click `Verify Service Principal`
 7. Click `Save`
+   ![](./img/az-creds.png)
 
 #### Create Jenkins Multibranch Pipeline
 
@@ -116,6 +117,43 @@ In order to trigger this pipeline you will need your own Github account and fork
 3. Enter "aks-hackfest" for Item Name
 4. Select `Multibrach Pipeline`
 5. Under Branch Sources `Click Add` -> `Git`
+   
+   ![](./img/branch-resource.png)
 6. In Project Replository enter `your forked git repo`
-7. In Build Configuration -> Script Path -> use the following path `labs/cicd-automation/jenkins/Jenkinsfile` 
+7. In Build Configuration -> Script Path -> use the following path `labs/cicd-automation/jenkins/Jenkinsfile`
+   
+   ![](./img/branch-config.png)
 8. Scroll to bottom of page and click `Save`
+
+#### Run Jenkins Multibranch Deployment
+
+1. Go back to Jenkins main page
+2. Select the newly created pipeline
+3. Select `Scan Multibranch Pipeline Now`
+
+This will scan your git repo and run the Jenkinsfile build steps. It will clone the repository, build the docker image, and then deploy the app to your AKS Cluster.
+
+#### View Build Console Logs
+
+1. Select the `master` under branches
+
+   ![](./img/jenkins-master.png)
+2. Select `build #1` under Build History
+
+   ![](./img/build-history.png)
+3. Select `Console Output`
+
+   ![](./img/console-log.png)
+4. Check streaming console output for any errors
+
+#### Verify Deployed Application
+
+1. Confirm pods are running 
+   ```bash
+   kubectl get pods
+   ```
+2. Get service IP of deployed app
+   ```bash
+   kubectl get service/service-tracker-ui
+   ```
+3. Open browser and test application `EXTERNAL-IP:8080`

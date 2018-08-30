@@ -8,6 +8,7 @@ import Card from "./Cards/Card.vue";
 import ObjectCard from "./Cards/ObjectCard.vue";
 import ChartCard from "./Cards/ChartCard.vue";
 import StatsCard from "./Cards/StatsCard.vue";
+import PopupCard from "./Cards/PopupCard.vue";
 
 import SidebarPlugin from "./SidebarPlugin/index";
 
@@ -18,6 +19,7 @@ let components = {
   StatsCard,
   ObjectCard,
   PaperTable,
+  PopupCard,
   DropDown,
   SidebarPlugin
 };
@@ -31,6 +33,7 @@ export {
   StatsCard,
   ObjectCard,
   PaperTable,
+  PopupCard,
   DropDown,
   Button,
   SidebarPlugin
