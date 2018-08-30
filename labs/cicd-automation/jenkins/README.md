@@ -48,9 +48,18 @@ In order to trigger this pipeline you will need your own Github account and fork
     cd kubernetes-hackfest/labs/cicd-automation/jenkins
     ```
 
+4. Modify the Jenkinsfile pipeline
+
+    The pipeline file references your Azure Container Registry in a variable. Edit the `labs/cicd-automation/jenkins/Jenkinsfile` file and modify line 4 of the code: 
+    ```
+    def  ACRNAME = 'youracrname'
+    ```
+
 #### Deploy Jenkins Helm Chart
 
 1. Initialize Helm With RBAC
+
+    > Note: You may have already installed Helm in the earlier lab. You can validate with `helm version`
 
    ```bash
    kubectl apply -f helm-rbac.yaml
@@ -71,13 +80,15 @@ In order to trigger this pipeline you will need your own Github account and fork
    printf $(kubectl get secret --namespace default jenkins-jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
    ```
    ```bash
-   export SERVICE_IP=$(kubectl get svc --namespace default jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+   export SERVICE_IP=$(kubectl get svc --namespace default jenkins-jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
    ```
    ```bash
    echo http://$SERVICE_IP:8080/login
    ```
 
    Login with the password from previous step and the username: admin
+
+   > Note: The Jenkins pod can take a couple minutes to start. Ensure it is `Running` prior to attempting to login.
 
 #### Configure Azure Integration In Jenkins
 
