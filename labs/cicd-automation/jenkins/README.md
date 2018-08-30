@@ -108,7 +108,13 @@ In order to trigger this pipeline you will need your own Github account and fork
     * Description = Azure CLI Credentials
 6. Click `Verify Service Principal`
 7. Click `Save`
+   
    ![](./img/az-creds.png)
+
+#### Edit Jenkinsfile Variable
+1. Edit Jenkinsfile  with the following command `code Jenkinsfile`
+2. Replace the following variable with the Azure Container Registry created previously
+   * def  ACRNAME = '<container_registry_name>'
 
 #### Create Jenkins Multibranch Pipeline
 
@@ -120,7 +126,9 @@ In order to trigger this pipeline you will need your own Github account and fork
    
    ![](./img/branch-resource.png)
 6. In Project Replository enter `your forked git repo`
-7. In Build Configuration -> Script Path -> use the following path `labs/cicd-automation/jenkins/Jenkinsfile`
+7. In Build Configuration -> Script Path -> use the following path 
+   
+   `labs/cicd-automation/jenkins/Jenkinsfile`
    
    ![](./img/branch-config.png)
 8. Scroll to bottom of page and click `Save`
