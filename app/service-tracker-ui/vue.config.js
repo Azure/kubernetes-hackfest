@@ -15,7 +15,7 @@ module.exports = {
   },
  lintOnSave: false,
   devServer: {
-    // show variables at http://localhost:8080/variables
+    // show variables when running http://localhost:8080/variables
     before: function(app) {
       app.get('/variables', (req, res) => {
         var currentEnv = { 
