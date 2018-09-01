@@ -15,6 +15,7 @@ module.exports = {
   },
  lintOnSave: false,
   devServer: {
+    // http://localhost:8080/variables
     before: function(app) {
       app.get('/variables', (req, res) => {
         var currentEnv = { 
