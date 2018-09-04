@@ -204,7 +204,7 @@ This lab creates namespaces that reflect a representative example of an organiza
     kubectl describe ns uat
     kubectl describe ns prod
     ```
-## Next Lab: [Build Application Components](labs/build-application/README.md)
+#### Next Lab: [Build Application Components](labs/build-application/README.md)
 
 ## Troubleshooting / Debugging
 
