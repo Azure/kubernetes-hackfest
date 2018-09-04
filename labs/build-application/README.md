@@ -67,7 +67,9 @@ In this lab we will build Docker containers for each of the application componen
         az acr build-task logs -r $ACRNAME --build-id aa1
         ```
     
-    * Browse to your ACR instance in the Azure portal and validate that the images are in "Repositories." 
+    * Browse to your ACR instance in the Azure portal and validate that the images are in "Repositories."
+
+#### Next Lab: [Helm Setup and Deploy Application](labs/helm-setup-deploy/README.md)
 
 
 ## Troubleshooting / Debugging

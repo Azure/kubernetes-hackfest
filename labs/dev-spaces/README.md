@@ -10,6 +10,8 @@ This lab walks you through working with Azure Dev Spaces for that inner dev loop
 
 1. ?
 
+#### Next Lab: [Azure Dev Spaces](labs/dev-spaces/README.md)
+
 ## Troubleshooting / Debugging
 
 * ?

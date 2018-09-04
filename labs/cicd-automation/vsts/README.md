@@ -114,6 +114,8 @@ In the deployment pipeline, we will create a Helm task to update our application
 
 4. Now kick-off the full CI/CD pipeline by making an edit to the web-ui frontend code in VSTS.
 
+#### Next Lab: [Networking](labs/networking/README.md)
+
 ## Troubleshooting / Debugging
 
 ## Docs / References

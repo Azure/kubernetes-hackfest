@@ -32,3 +32,6 @@ In this lab we will use Kube-Router for Network Policy Management. Kube-Router w
 ## Docs / References
 
 * ?
+
+
+#### Next Lab: [Monitoring and Logging](labs/monitoring-logging/README.md)

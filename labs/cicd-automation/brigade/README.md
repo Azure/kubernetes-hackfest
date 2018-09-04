@@ -245,6 +245,8 @@ To save time, we will only deploy the web-ui application in this lab.
 
 Add these steps. https://github.com/Azure/kashti 
 
+#### Next Lab: [Networking](labs/networking/README.md)
+
 
 ## Troubleshooting / Debugging
 

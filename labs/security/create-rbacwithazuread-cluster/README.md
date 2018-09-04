@@ -100,6 +100,7 @@ This lab creates an AKS Cluster with Azure AD Integration for RBAC.
     # If you login with the aksuser account the request will be denied.
     kubectl get nodes
     ```
+#### Next Lab: [Security](labs/security/secure-tiller/README.md)
 
 ## Troubleshooting / Debugging
 

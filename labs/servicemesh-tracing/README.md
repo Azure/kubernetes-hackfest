@@ -17,3 +17,5 @@ Coming soon.
 ## Docs / References
 
 * ?
+
+#### Next Lab: [Storage](labs/storage/README.md)

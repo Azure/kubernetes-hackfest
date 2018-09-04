@@ -19,3 +19,5 @@ This section contains a number of labs related to Monitoring and Logging AKS Clu
 ## Docs / References
 
 * ?
+
+#### Next Lab: [Service Mesh w/ Distributed Tracing](labs/servicemesh-tracing/README.md)
