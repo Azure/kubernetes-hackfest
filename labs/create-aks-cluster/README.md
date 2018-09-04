@@ -204,6 +204,7 @@ This lab creates namespaces that reflect a representative example of an organiza
     kubectl describe ns uat
     kubectl describe ns prod
     ```
+## Next Lab: [Build Application Components](labs/build-application/README.md)
 
 ## Troubleshooting / Debugging
 
@@ -216,4 +217,3 @@ This lab creates namespaces that reflect a representative example of an organiza
 * [Default CPU Requests and Limits for a Namespace](https://kubernetes.io/docs/tasks/administer-cluster/manage-resources/cpu-default-namespace/)
 * [Configure Min and Max CPU Constraints for a Namespace](https://kubernetes.io/docs/tasks/administer-cluster/manage-resources/cpu-constraint-namespace/)
 * [Configure Memory and CPU Quotas for a Namespace](https://kubernetes.io/docs/tasks/administer-cluster/manage-resources/quota-memory-cpu-namespace/)
-
