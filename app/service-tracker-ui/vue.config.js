@@ -17,16 +17,7 @@ module.exports = {
   devServer: {
     // show variables when running http://localhost:8080/variables
     before: function(app) {
-      class Emitter extends require('events') {
-        constructor() {
-            super()
-        }
-    
-        emit(e) {
-            console.log(e + " emitted")
-            super.emit(...arguments)
-        }
-    }
+      
       app.get('/variables', (req, res) => {
         var currentEnv = { 
           quakes: process.env.QUAKES_API_ROOT,
