@@ -1,0 +1,13 @@
+config:
+  target: 'http://137.135.101.232:3003'
+  phases:
+    - duration: 5
+      arrivalCount: 1
+  defaults:
+    headers:
+      If-None-Match: '*'
+      If-Modified-Since: 'Fri, 1 Jan 2021 07:28:00 GMT'
+scenarios:
+  - flow:
+    - get:
+        url: "/latest"

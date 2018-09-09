@@ -8,6 +8,9 @@ var bodyParser = require('body-parser'),
 if (process.env.NODE_ENV != 'container') {
   require('dotenv').config({path: path.join(__dirname, '.env.local')})
 }
+
+mongoose.set('useCreateIndex', true);
+mongoose.set('useFindAndModify', false);
     
 require('./models/mongo/flights')
 require('./models/mongo/latestFlight')

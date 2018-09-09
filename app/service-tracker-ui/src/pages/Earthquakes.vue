@@ -6,19 +6,6 @@
       </div>
     </div>
 
-    <!-- stat flight cards
-    <div class="row">
-      <div class="col-md-6 col-xl-3" v-for="fstat in flightCards" :key="fstat.objName">
-        <object-card 
-          :obj-name="fstat.objName"
-          :obj-type="fstat.objType"
-          :obj-sub-title="fstat.objSubTitle"
-          :obj-sub-title-icon="fstat.objSubTitleIcon"
-          :obj-info-array="fstat.objInfoArray"
-          :obj-status-icon="fstat.objStatusIcon"
-          :obj-status="fstat.objStatus"/>
-      </div>
-    </div> -->
     <div v-bind:style="{ height: mapHeight + 'px'}">
         <div id='map'></div>
     </div>
@@ -27,7 +14,8 @@
 <script>
 
 /* eslint-disable */
-import mapboxgl from 'mapbox-gl'
+import mapboxgl from 'mapbox-gl/dist/mapbox-gl'
+import moment from 'moment'
 //import { ObjectCard } from "@/components/index"
 
 let map
@@ -115,39 +103,41 @@ export default {
             'layout': {
               'icon-image': obj.icon,
               'icon-size': obj.size,
-              //'text-field': '{mag}',
               'icon-allow-overlap': true,
               'text-allow-overlap':true,
-              // 'text-font': ['Open Sans Semibold', 'Arial Unicode MS Bold'],
-              //'text-size': 10,
-              //'text-offset': [0, 0.6],
-              //'text-anchor': 'top'
             },
-            'paint':{
-              // 'text-color':'#555',
-              // 'text-halo-color':'rgba(255, 255, 255, .50)',
-              // 'text-halo-width':1
-            }
+            'paint':{}
             })
 
       map.on('click', obj.type, function (e) {
+        
+        var pinDetail = e.features[0].properties
+        var popHtml = document.getElementById('popUpHtml').innerHTML
+        var popInfo = document.getElementById('popUpDetailHtml').innerHTML
+        popHtml = popHtml.replace('##title##', pinDetail.mag).replace('##subtitle##', 'MAGNITUDE')
+        var locale = ['No location','note']
+        if ( pinDetail.place.includes(' of ') ) locale = pinDetail.place.split(' of ')
+        var detailHtml = popInfo.replace('##name##',(locale[0] + ' OF').toUpperCase()).replace('##value##', locale[1].toUpperCase())
+        detailHtml = detailHtml.concat(popInfo.replace('##name##','DATE/TIME').replace('##value##', moment(pinDetail.time).format('MM/DD/YYYY HH:mm a')))
+        popHtml = popHtml.replace('##info##', detailHtml)
+
         var coordinates = e.features[0].geometry.coordinates.slice()
-        var detail = e.features[0].properties
-        var header = '<h3>Magnitude: ' + detail.mag + '</h3><ul>'
-        var eventTime = new Date(detail.time)
-        var place = '<li><strong>Location:</strong>&nbsp;' + detail.place + '</li>'
-        var dated = '<li><strong>Date/Time:</strong>&nbsp;' + eventTime + '</li>'
-        var end = '<ul>'
-        var html = header.concat(place, dated, end)
+        
 
         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
             coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360
         }
 
-        new mapboxgl.Popup()
+        var popup = new mapboxgl.Popup()
             .setLngLat(coordinates)
-            .setHTML(html)
+            .setHTML(popHtml)
             .addTo(map)
+
+        document.querySelector("i.closePop").addEventListener("click", () => {
+          popup.remove()
+        })
+
+        map.flyTo({center: e.features[0].geometry.coordinates, zoom: 9, speed: 0.75, curve: 1})
     })
     },
     loadQuakes() {
@@ -187,56 +177,5 @@ export default {
   height:auto !important; /* cross-browser */
   height: 100%; /* cross-browser */
 }
-
-// .mapboxgl-popup-close-button{
-//   font-size: 25px;
-//   position: absolute;
-//   right: -3px;
-//   top: -3px;
-//   color: #1de9b6;
-//   border: 0;
-//   cursor: pointer;
-//   background-color: transparent;
-// }
-
-// .mapboxgl-popup-content{
-//   background-color: rgba(0, 0, 0, 0.9);
-//   border-radius: 5px;
-//   border: 1px solid rgba(115, 167, 160, 1);
-//   color: #FFF;
-//   font-size: 14px;
-//   padding: 18px;
-//   position: relative;
-//   width: 300px;
-//   -webkit-box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
-//   box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
-//   padding: 15px;
-//   pointer-events: auto;
-// }
-// .mapboxgl-popup-content ul {
-//   padding-left: 0px;
-// }
-
-// .mapboxgl-popup-content li{
-//   padding:3px;
-//   list-style:none;
-// }
-
-// .mapboxgl-popup-content h2{
-//   padding-bottom:18px;
-//   margin-top: 4px;
-//   font-size: 28px;
-// }
-// .mapboxgl-popup-content ul li strong {
-//   color: #1de9b6;
-//   font-size: 16px;
-// }
-
-// .mapboxgl-popup-anchor-bottom .mapboxgl-popup-tip {
-//   -webkit-align-self: center;
-//   align-self: center;
-//   border-bottom: none;
-//   border-top-color: #777;
-// }
 
 </style>

@@ -2,57 +2,56 @@
     <section objectCard class="obj-card">
         <div class="obj-card-body">
             <div class="row obj-row-header">
-                <div class="col-10 obj-name">
+                <div class="col-12 obj-name">
                     <h5>{{objName}}</h5>
                     <small class="obj-type"><i :class="objSubTitleIcon"></i>&nbsp;&nbsp;{{objSubTitle}}</small>
                 </div>
             </div>
-            <!-- <div class="row">
-                <div class="col-12 text-right">
-                    <h6><small>details</small></h6>
-                </div>
-            </div> -->
-            <div class="row obj-row-content">
-                <div class="col-12">
-                    <div class="table-responsive">
-                        <table class="table table-hover obj-info-table">
-                            <tbody>
-                                <tr v-for="info in objInfoArray" :key="info.name">
-                                    <td>
-                                        {{info.name}}
-                                    </td>
-                                    <td>
-                                        {{info.value}}
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+
+            <div class="row obj-row-content" v-if="objInfoArray">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" v-for="info in objInfoArray" :key="info.name">
+                        <footer class="blockquote-footer popInfoHead pb-1">{{info.name}}</footer>
+                        <span class="pt-1">{{info.value}}</span></li>
+                </ul>
             </div>
-            <!-- <div class="row">
-                <div class="col-12 text-right">
-                    <h6><small>status</small></h6>
-                </div>
-            </div> -->
+
+            <div class="row obj-row-data-status" v-if="objServiceAvailable">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">
+                        <footer class="blockquote-footer popInfoHead pb-1">LATEST DATA</footer>
+                        <span class="pt-1">{{objLatestTimeStamp}}</span></li>
+                    <li class="list-group-item">
+                        <button type="button" :id="objName" class="btn btn-outline-success btn-sm refreshDataModal" v-on:click="showModal(objName)">
+                            <i class="fas fa-sync-alt text-success pr-1"></i>Refresh Data
+                        </button>
+                    </li>
+                </ul>
+            </div>
+
             <div class="row obj-row-footer">
-                <div class="col-1">
-                    <i :class="objStatusIcon"></i>
-                </div>
                 <div class="col-8">
-                    <span class="obj-status text-left">
+                    <i :class="objStatusIcon"></i><span class="obj-status">
                         {{objStatus}}
                     </span>
                 </div>
+                <div class="col-4">&nbsp;</div>
             </div>
         </div>
+
     </section>
 </template>
 
 <script>
+import modal from 'bootstrap/js/dist/modal'
+import $ from 'jquery'
+let vm
+
+
 export default {
   name: "object-card",
   props: {
+    objLatestTimeStamp: String,
     objName: String, // NAME OF THE OBJECT
     objSubTitle: String, // TYPE or SUBTITLE OF THE OBJECT (POD, NODE, ETC)
     objSubTitleIcon: String, // SMALL ICON (fa fa-xxxx) OF THE OBJECT
@@ -60,7 +59,36 @@ export default {
     objStatusIcon: String, // ICON OF THE STATUS
     objStatusIconClass: String, // COLOR CLASS OF THE ICON OF THE STATUS
     objStatus: String, // ACTUAL STATUS NAME
-    statusColor: "#28a745"
+    statusColor: "#28a745",
+    objServiceAvailable: Boolean
+  },
+  created(){
+      vm = this
+  },
+  data(){
+      return {
+    dyk:['Did you know the Intel i7-6950X has 10 cores?', 
+      'Did you know that .rs is the top-level domain for Serbia?', 
+      'Did you know that Whistler was the codename for the Microsoft Windows XP OS?',
+      'Did you know that Java was developed by Sun Microsystems in 1995?'],
+      facts : {}
+      }
+      
+  },
+  methods:{
+    showModal(name){
+        $('#actionModal').modal('show')
+        vm.facts = setInterval(dykTimer, 6000)
+        this.$parent.refresh(name)
+        function dykTimer() {
+          var itemNum = Math.floor(Math.random() * Math.floor(vm.dyk.length))
+          $('.did-you-know').text(vm.dyk[itemNum])
+        }        
+    },
+    hideModal(){
+        $('#actionModal').modal('hide')
+        clearInterval(vm.facts)
+    }
   }
 };
 </script>

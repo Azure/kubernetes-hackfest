@@ -1,0 +1,17 @@
+config:
+  target: 'http:/'
+  phases:
+    - duration: 5
+      arrivalCount: 1
+  defaults:
+    headers:
+      If-None-Match: '*'
+      If-Modified-Since: 'Fri, 1 Jan 2021 07:28:00 GMT'
+scenarios:
+  - flow:
+    - get:
+        url: "/10.1.0.55:3003/refresh"
+    - get:
+        url: "/10.1.0.55:3012/refresh"
+
+
