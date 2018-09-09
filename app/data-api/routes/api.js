@@ -3,6 +3,7 @@ var applicationInsights = require('applicationinsights'),
     express = require('express'),
     jsonResponse = require('../models/express/jsonResponse'),
     moment = require('moment'),
+    momentDuration = require('moment-duration-format'),
     mongoose = require('mongoose'),
     path = require('path'),
     router = express.Router(),
@@ -27,7 +28,11 @@ router.get('/', (req, res, next) => {
 })
 
 router.get('/status', (req, res, next) => {
-    jsonResponse.json( res, routename, st.OK.code, {} )
+
+    jsonResponse.json( res, routename, st.OK.code, {
+        uptime: moment.duration(Math.floor(process.uptime())*1000).format('h [hrs], m [min]')
+    })
+    
 })
 
 router.get('/get/flights/:timestamp', (req, res, next) => {
@@ -42,15 +47,25 @@ router.get('/get/quakes/:timestamp', (req, res, next) => {
     })
 })
 
+router.get('/get/weather/:timestamp', (req, res, next) => {
+    getWeatherFromDb(req.params.timestamp, (err, result) => {
+        jsonResponse.json( res, 'success', st.OK.code, result )
+    })
+})
+
 router.get('/get/latest/flights', (req, res, next) => {
     getLatestFromDb(LatestFlight, (err, data) => {
-        console.log(err)
         jsonResponse.json( res, 'success', st.OK.code, data )
     })
 })
 
 router.get('/get/latest/quakes', (req, res, next) => {
     getLatestFromDb(LatestQuake, (err, data) => {
+        jsonResponse.json( res, 'success', st.OK.code, data )
+    })
+})
+router.get('/get/latest/weather', (req, res, next) => {
+    getLatestFromDb(LatestWeather, (err, data) => {
         jsonResponse.json( res, 'success', st.OK.code, data )
     })
 })
@@ -101,6 +116,29 @@ router.post('/save/quakes/:timestamp', (req, res, next) => {
 
 } )
 
+router.post('/save/weather/:timestamp', (req, res, next) => {
+    var latest = new LatestWeather({Timestamp: req.params.timestamp})
+    var weather = new Weather({Timestamp: req.params.timestamp, FeatureCollection: req.body})
+
+    async.waterfall([
+        (cb) => {
+            saveToDb(weather, (e,r) => {
+                if (r) {
+                    cb(null, {WeatherLayerCount:weather.FeatureCollection.length, Timestamp: weather.Timestamp})
+                } 
+            })
+        },
+        (weatherDetail, cb) => {
+            saveToDb(latest, (e,r) => {
+                cb(e, weatherDetail)
+            })
+        },
+    ],(err,result) => {
+        jsonResponse.json( res, 'success', st.OK.code, result )
+    } )
+
+} )
+
 
 function saveToDb(data, cb) {
     data.save()
@@ -135,6 +173,15 @@ function getFlightsFromDb(timestamp, cb){
 
 function getQuakesFromDb(timestamp, cb){
     Quakes
+        .findOne({Timestamp: timestamp})
+        .limit(1)
+        .exec( (err, doc) => {
+            cb(err, doc)
+        })
+}
+
+function getWeatherFromDb(timestamp, cb){
+    Weather
         .findOne({Timestamp: timestamp})
         .limit(1)
         .exec( (err, doc) => {

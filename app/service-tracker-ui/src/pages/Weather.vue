@@ -14,7 +14,7 @@
 <script>
 
 /* eslint-disable */
-import mapboxgl from 'mapbox-gl'
+import mapboxgl from 'mapbox-gl/dist/mapbox-gl'
 
 
 let map
@@ -41,7 +41,7 @@ export default {
       'pk.eyJ1Ijoic29ub2pvcmVsIiwiYSI6ImNqaDl1Z25udzAybGMzNnBmbzl4NDBsam0ifQ.itgTNw7IhsoPTwkxiPz7Vw';
     map = new mapboxgl.Map({
       container: 'map',
-      style: 'mapbox://styles/sonojorel/cjlcacpi12j3o2rlnfoq6zj5v',
+      style: 'mapbox://styles/sonojorel/cjhw8422i15g72snx2zsof3s1',
       center: [-79.995888, 40.440624],
       zoom: 4
     })
@@ -86,17 +86,34 @@ export default {
 
       map.on('click', obj.id, function (e) {
         var coordinates = e.features[0].geometry.coordinates.slice()
-        var detail = e.features[0].properties
-        var header = ('<h2>' + detail.Name + '</h2><ul>')
-        var iconInfo = '<li>' + detail.Condition + '</li>'
-        var condInfo = '<li><img src="' + detail.Icon + '" alt="batman sucks"/></li></ul>'
+        
+        var pinDetail = e.features[0].properties
+        var popHtml = document.getElementById('popUpHtml').innerHTML
+        
+        popHtml = popHtml.replace('##title##', pinDetail.Temperature).replace('##subtitle##', pinDetail.Name.toUpperCase())
+
+        var popInfo = document.getElementById('popUpDetailHtml').innerHTML
+        var popInfoHtml = popInfo.replace('##name##','CONDITIONS').replace('##value##', pinDetail.Condition.toUpperCase())
+        var popImage = document.getElementById('popUpDetailImage').innerHTML
+        var popImageHtml = popImage.replace('##image##','<img src="' + pinDetail.Icon + '" alt="batman sucks"/>')
+        var detailHtml = popInfoHtml.concat(popImageHtml)
+        popHtml = popHtml.replace('##info##', detailHtml)
+
+
+        // var detail = e.features[0].properties
+        // var header = ('<h2>' + detail.Name + '</h2><ul>')
+        // var iconInfo = '<li>' + detail.Condition + '</li>'
+        // var condInfo = '<li><img src="' + detail.Icon + '" alt="batman sucks"/></li></ul>'
         while (Math.abs(e.lngLat.lng - coordinates[0]) > 180) {
             coordinates[0] += e.lngLat.lng > coordinates[0] ? 360 : -360
         }
-        new mapboxgl.Popup()
+
+        new mapboxgl.Popup({anchor: 'bottom', offset: [0,-25]})
             .setLngLat(coordinates)
-            .setHTML(header.concat(condInfo, iconInfo))
+            .setHTML(popHtml)
             .addTo(map)
+
+        map.flyTo({center: e.features[0].geometry.coordinates, zoom: 9, speed: 0.75, curve: 1})
     })
 
     },

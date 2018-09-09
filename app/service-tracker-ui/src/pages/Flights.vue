@@ -12,11 +12,8 @@
 </template>
 <script>
 
-import { PopupCard } from "@/components/index";
-
 /* eslint-disable */
-import mapboxgl from 'mapbox-gl'
-import PopupCardVue from '../components/Cards/PopupCard.vue'
+import mapboxgl from 'mapbox-gl/dist/mapbox-gl'
 
 let map
 let vm
@@ -99,11 +96,11 @@ export default {
         var pinDetail = e.features[0].properties
         var popHtml = document.getElementById('popUpHtml').innerHTML
         var popInfo = document.getElementById('popUpDetailHtml').innerHTML
-        popHtml = popHtml.replace('{{title}}', pinDetail.FlightNumber).replace('{{subtitle}}', 'FLIGHT NUMBER')
-        var detailHtml = popInfo.replace('{{name}}','HEADING').replace('{{value}}', pinDetail.Heading + ' DEGREES')
-        detailHtml = detailHtml.concat(popInfo.replace('{{name}}','ALTITUDE').replace('{{value}}', ((Math.round((pinDetail.Altitude*3.2808))*10)/10).toString() + ' FEET'))
-        detailHtml = detailHtml.concat(popInfo.replace('{{name}}','AIR SPEED').replace('{{value}}', Math.round(pinDetail.AirSpeed * 3600 / 1610.3).toString() + ' MPH'))
-        popHtml = popHtml.replace('{{info}}', detailHtml)
+        popHtml = popHtml.replace('##title##', pinDetail.FlightNumber).replace('##subtitle##', 'FLIGHT NUMBER')
+        var detailHtml = popInfo.replace('##name##','HEADING').replace('##value##', pinDetail.Heading + ' DEGREES')
+        detailHtml = detailHtml.concat(popInfo.replace('##name##','ALTITUDE').replace('##value##', ((Math.round((pinDetail.Altitude*3.2808))*10)/10).toString() + ' FEET'))
+        detailHtml = detailHtml.concat(popInfo.replace('##name##','AIR SPEED').replace('##value##', Math.round(pinDetail.AirSpeed * 3600 / 1610.3).toString() + ' MPH'))
+        popHtml = popHtml.replace('##info##', detailHtml)
 
         var coordinates = e.features[0].geometry.coordinates.slice()
         
@@ -121,6 +118,7 @@ export default {
           popup.remove()
         })
         
+        map.flyTo({center: e.features[0].geometry.coordinates, zoom: 9, speed: 0.75, curve: 1})
     })
 
     },
@@ -154,6 +152,14 @@ export default {
   min-height: 100%;
   height:auto !important; /* cross-browser */
   height: 100%; /* cross-browser */
+}
+
+.mapboxgl-map {
+  font-size: 14px;
+  font-family: 'Muli', Arial, sans-serif;
+}
+.mapboxgl-popup{
+  min-width: 150px;
 }
 .mapboxgl-popup-content{
   background: #06204d;
@@ -233,6 +239,11 @@ li.list-group-item{
 }
 .blockquote-footer.popTitleHead{
   color:#ACACAC;
+}
+.blockquote-footer .popInfoHead{
+  color:#555;
+  text-transform: uppercase;
+  font-size: 9px;
 }
 
 </style>

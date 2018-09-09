@@ -1,0 +1,20 @@
+config:
+  target: 'http://localhost:3009'
+  phases:
+    - duration: 60
+      arrivalCount: 10
+  defaults:
+    headers:
+      If-None-Match: '*'
+      If-Modified-Since: 'Fri, 1 Jan 2021 07:28:00 GMT'
+scenarios:
+  - flow:
+    - get:
+        url: "/get/latest/flights"
+        capture:
+          json: "$.payload[0].Timestamp"
+          as: "fstamp"
+    - get:
+        url: "/get/flights/{{ fstamp }}"
+
+
