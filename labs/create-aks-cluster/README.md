@@ -17,92 +17,76 @@
     ```bash
     git clone https://github.com/Azure/kubernetes-hackfest
 
-    cd kubernetes-hackfest/labs/create-aks-cluster
+    cd kubernetes-hackfest/labs
     ```
 
     > Note: In the cloud shell, you are automatically logged into your Azure subscription.
 
 5. Create a unique identifier suffix for resources to be created in this lab.
 
+    ```bash
+     export UNIQUE_SUFFIX=$USER$RANDOM
     ```
-    export UNIQUE_SUFFIX=$USER$RANDOM
-
-    # Check the value
+    #### *** Check the value
+    ```bash
     echo $UNIQUE_SUFFIX
     ```
 
-    **Note this value and it will be used in the next couple labs. The variable may reset if your shell times out, so PLEASE WRITE IT DOWN.**
+    *** Note this value and it will be used in the next couple labs. The variable may reset if your shell times out, so PLEASE WRITE IT DOWN. ***
 
 6. Create an Azure Resource Group in East US.
 
     ```bash
     export RGNAME=kubernetes-hackfest
+    ```
+    ```bash
     export LOCATION=eastus
-    
+    ```
+    ```bash
     az group create -n $RGNAME -l $LOCATION 
     ```
 
-7. Deploy Log Analytics Workspace
-   ```bash
-   export LA_NAME=k8monitor
-   
-   # workspace Name must be unique
-   export WORKSPACENAME=k8logs-$UNIQUE_SUFFIX
-   
-   az group deployment create -n $WORKSPACENAME -g $RGNAME --template-file azuredeploy-loganalytics.json \
-   --parameters workspaceName=$WORKSPACENAME \
-   --parameters location=$LOCATION \
-   --parameters sku="Standalone"
-   ```
-
-   Get Workspace ID 
-   ```bash
-   az group deployment list -g $RGNAME -o tsv  --query "[].id" | grep "k8logs"
-   ```
-   Export WorkspaceID based output above
-   ```bash
-   export WORKSPACEID=<value>
-   ```
-
-8. Create your AKS cluster in the resource group created above with 3 nodes, targeting Kubernetes version 1.10.3, with Container Insights, and HTTP Application Routing Enabled.
+7. Create your AKS cluster in the resource group created above with 3 nodes, targeting Kubernetes version 1.10.3, with Container Insights, and HTTP Application Routing Enabled.
    * Use unique CLUSTERNAME
 
     ```bash
     export CLUSTERNAME=aks-$UNIQUE_SUFFIX
     ```  
 
-    > The below command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT...
+    > The below command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT and grab a coffee...
 
     ```bash
     az aks create -n $CLUSTERNAME -g $RGNAME -c 1 -k 1.10.3 \
     --generate-ssh-keys -l $LOCATION \
     --node-count 3 \
-    --enable-addons http_application_routing,monitoring \
-    --workspace-resource-id $WORKSPACEID
+    --enable-addons http_application_routing,monitoring
     ```
 
-9. Verify your cluster status. The `ProvisioningState` should be `Succeeded`
+8. Verify your cluster status. The `ProvisioningState` should be `Succeeded`
     ```bash
     az aks list -o table
+    ```
 
+    ```bash
     Name                 Location    ResourceGroup         KubernetesVersion    ProvisioningState    Fqdn
     -------------------  ----------  --------------------  -------------------  -------------------  -------------------------------------------------------------------
     ODLaks-v2-gbb-16502  eastus   ODL_aks-v2-gbb-16502  1.8.6                Succeeded odlaks-v2--odlaks-v2-gbb-16-b23acc-17863579.hcp.centralus.azmk8s.io
     ```
 
-10. Get the Kubernetes config files for your new AKS cluster
+9. Get the Kubernetes config files for your new AKS cluster
 
     ```bash
     az aks get-credentials -n $CLUSTERNAME -g $RGNAME
     ```
      
-11. Verify you have API access to your new AKS cluster
+10. Verify you have API access to your new AKS cluster
 
       > Note: It can take 5 minutes for your nodes to appear and be in READY state. You can run `watch kubectl get nodes` to monitor status.
 
      ```bash
      kubectl get nodes
-    
+     ```
+    ```bash
      NAME                       STATUS    ROLES     AGE       VERSION
      aks-nodepool1-26522970-0   Ready     agent     33m       v1.10.3
      ```
@@ -111,12 +95,18 @@
 
      ```bash
      kubectl cluster-info
-
+     ```
+     ```bash
      Kubernetes master is running at https://cluster-dw-kubernetes-hackf-80066e-a44f3eb0.hcp.eastus.azmk8s.io:443
+
      addon-http-application-routing-default-http-backend is running at https://cluster-dw-kubernetes-hackf-80066e-a44f3eb0.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/addon-http-application-routing-default-http-backend/proxy
+
      addon-http-application-routing-nginx-ingress is running at http://168.62.191.18:80 http://168.62.191.18:443
+
      Heapster is running at https://cluster-dw-kubernetes-hackf-80066e-a44f3eb0.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/heapster/proxy
+
      KubeDNS is running at https://cluster-dw-kubernetes-hackf-80066e-a44f3eb0.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+
      kubernetes-dashboard is running at https://cluster-dw-kubernetes-hackf-80066e-a44f3eb0.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kubernetes-dashboard/proxy 
      ```
 
