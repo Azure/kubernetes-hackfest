@@ -17,12 +17,12 @@ spec:
           imagePullPolicy: Always
           name: service-tracker-ui
           env:
-            - name: FLIGHT_API
-              value: http://flights-api:3003/latest
-            - name: WEATHER_API
-              value: http://weather-api:3015/styling
-            - name: QUAKES_API
-              value: http://quakes-api:3012/latest
+            - name: FLIGHT_API_ROOT
+              value: http://flights-api:3003/
+            - name: WEATHER_API_ROOT
+              value: http://weather-api:3015/
+            - name: QUAKES_API_ROOT
+              value: http://quakes-api:3012/
             - name: APPINSIGHTS_INSTRUMENTATIONKEY
               value: 6dc23005-a1d0-418a-82bd-b232498b5221
             - name: KUBE_NODE_NAME

@@ -67,7 +67,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
     ```
     
-    * Replace the `acrServer` value below with the Login server from previous step. You will make this change in all of the charts. 
+    * Replace the `acrServer` value below with the Login server from previous step. You will make this change in all of the charts (except cache-api)
 
     Example:
     ```
@@ -78,10 +78,10 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     port: 3009
 
     deploy:
-    name: node-data-api-deploy
+    name: data-api
     replicas: 1
     acrServer: "youracr.azurecr.io"
-    imageTag: "v1"
+    imageTag: "v4"
     containerPort: 3009
     ```
 
@@ -90,6 +90,8 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 5. Create Kubernetes secrets for access to Cosmos DB and App Insights
 
     For now, we are creating a secret that holds the credentials for our backend database. The application deployment puts these secrets in environment variables. 
+
+    > Note: the MONGODB_URI should be of this format (Ensure you add the `/hackfest?ssl=true`) at the end. `mongodb://cosmosbrian11122:ctumHIz1jC4Mh1hZgWGEcLwlCLjDSCfFekVFHHhuqQxIoJGiQXrIT1TZTllqyB4G0VuI4fb0qESeuHCRJHA==@acrhcosmosbrian11122.documents.azure.com:10255/hackfest?ssl=true`
 
     ```
     # Customize these values from your Cosmos DB instance deployed in a previous lab. Use the ticks provided for strings
@@ -139,20 +141,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     service/weather-api          LoadBalancer   10.0.179.66    23.96.11.49    3003:31951/TCP   8m
     ```
 
-    * Next call one of the api's to initialize the CosmosDB instance
-
-    ```
-    # get the public IP for the flights API
-    kubectl get service flights-api
-
-    NAME          TYPE           CLUSTER-IP     EXTERNAL-IP    PORT(S)          AGE
-    flights-api   LoadBalancer   10.0.210.195   23.96.11.180   3003:30862/TCP   9m
-
-    # browse to that address using the port and path below
-    http://<your-public-up>:3003/refresh
-    ```
-
-    * Browse the web UI and profit!
+    * Browse the web UI. Use the "Refresh" buttons to update the Cosmos database with initial data.
 
     ```
     kubectl get service service-tracker-ui
