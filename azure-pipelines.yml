@@ -10,5 +10,5 @@ variables:
   imageName: 'service-tracker-ui:$(build.buildId)'
 
 steps:
-- script: docker build -f Dockerfile -t $(imageName) kubernetes-hackfest/labs/service-tracker-ui
+- script: docker build -f Dockerfile -t $(imageName) ./app/service-tracker-ui
   displayName: 'docker build service tracker ui'
