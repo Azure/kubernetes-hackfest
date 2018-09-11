@@ -76,10 +76,10 @@ In order to trigger this pipeline you will need your own Github account and fork
 
 2. Get credentials and IP to Login To Jenkins
    ```bash
-   printf $(kubectl get secret --namespace default jenkins-jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
+   printf $(kubectl get secret --namespace default jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
    ```
    ```bash
-   export SERVICE_IP=$(kubectl get svc --namespace default jenkins-jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
+   export SERVICE_IP=$(kubectl get svc --namespace default jenkins --template "{{ range (index .status.loadBalancer.ingress 0) }}{{ . }}{{ end }}")
    ```
    ```bash
    echo http://$SERVICE_IP:8080/login
