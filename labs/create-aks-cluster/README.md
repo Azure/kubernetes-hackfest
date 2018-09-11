@@ -17,7 +17,7 @@
     ```bash
     git clone https://github.com/Azure/kubernetes-hackfest
 
-    cd kubernetes-hackfest/labs
+    cd kubernetes-hackfest/labs/create-aks-cluster
     ```
 
     > Note: In the cloud shell, you are automatically logged into your Azure subscription.
