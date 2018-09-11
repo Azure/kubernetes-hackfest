@@ -1,0 +1,11 @@
+{
+  "name": "load-api",
+  "version": "0.1.6",
+  "private": true,
+  "scripts": {
+    "refresh": "artillery run data-api-load.yaml"
+  },
+  "dependencies": {
+    "artillery": "^1.6.0-23"
+  }
+}

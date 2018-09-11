@@ -11,11 +11,13 @@
     "bootstrap": "^4.0.0",
     "chartist": "^0.11.0",
     "es6-promise": "^4.2.4",
+    "jquery": "^3.3.1",
     "mapbox-gl": "^0.48.0",
+    "moment": "^2.22.2",
     "vue": "^2.5.13",
     "vue-application-insights": "^1.0.3",
     "vue-clickaway": "^2.1.0",
-    "vue-notifyjs": "^0.3.0",
+    "vue-notifyjs": "^0.4.3",
     "vue-router": "^3.0.1"
   },
   "devDependencies": {

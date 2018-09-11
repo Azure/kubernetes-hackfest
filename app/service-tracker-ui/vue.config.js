@@ -6,9 +6,9 @@ module.exports = {
      new webpack.DefinePlugin({
        'process.env': {
          'APPINSIGHTS_INSTRUMENTATIONKEY': JSON.stringify(process.env.APPINSIGHTS_INSTRUMENTATIONKEY),
-         'FLIGHT_API': JSON.stringify(process.env.FLIGHT_API),
-         'WEATHER_API': JSON.stringify(process.env.WEATHER_API),
-         'QUAKES_API': JSON.stringify(process.env.QUAKES_API)
+         'FLIGHT_API': JSON.stringify(process.env.FLIGHT_API_ROOT),
+         'WEATHER_API': JSON.stringify(process.env.WEATHER_API_ROOT),
+         'QUAKES_API': JSON.stringify(process.env.QUAKES_API_ROOT)
        }
      })
    ],
@@ -17,11 +17,12 @@ module.exports = {
   devServer: {
     // show variables when running http://localhost:8080/variables
     before: function(app) {
+      
       app.get('/variables', (req, res) => {
         var currentEnv = { 
-          quakes: process.env.QUAKES_API,
-          weather: process.env.WEATHER_API,
-          flights: process.env.FLIGHT_API,
+          quakes: process.env.QUAKES_API_ROOT,
+          weather: process.env.WEATHER_API_ROOT,
+          flights: process.env.FLIGHT_API_ROOT,
           insights: process.env.APPINSIGHTS_INSTRUMENTATIONKEY
          }
         res.json({ custom: currentEnv })
@@ -29,24 +30,66 @@ module.exports = {
     },
     proxy: {
       '/api/flights/current': {
-        target: process.env.FLIGHT_API,
+        target: process.env.FLIGHT_API_ROOT + 'latest',
         changeOrigin: true,
         pathRewrite: {
           '^/api/flights/current': ''
         }
       },
+      '/api/flights/status': {
+        target: process.env.FLIGHT_API_ROOT + 'status',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api/flights/status': ''
+        }
+      },
+      '/api/flights/refresh': {
+        target: process.env.FLIGHT_API_ROOT + 'refresh',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api/flights/refresh': ''
+        }
+      },
       "/api/weather/current": {
-        target: process.env.WEATHER_API,
+        target: process.env.WEATHER_API_ROOT + 'latest',
         changeOrigin: true,
         pathRewrite: {
           "^/api/weather/current": ""
         }
       },
+      '/api/weather/status': {
+        target: process.env.WEATHER_API_ROOT + 'status',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api/weather/status': ''
+        }
+      },
+      '/api/weather/refresh': {
+        target: process.env.WEATHER_API_ROOT + 'refresh',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api/weather/refresh': ''
+        }
+      },
       "/api/quakes/current": {
-        target: process.env.QUAKES_API,
+        target: process.env.QUAKES_API_ROOT + 'latest',
         changeOrigin: true,
         pathRewrite: {
           "^/api/quakes/current": ""
+        }
+      },
+      '/api/quakes/status': {
+        target: process.env.QUAKES_API_ROOT + 'status',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api/quakes/status': ''
+        }
+      },
+      '/api/quakes/refresh': {
+        target: process.env.QUAKES_API_ROOT + 'refresh',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api/quakes/refresh': ''
         }
       },
       '/api/k8s/nodes': {

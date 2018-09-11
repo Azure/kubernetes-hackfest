@@ -18,6 +18,7 @@
     "hbs": "~4.0.1",
     "http-errors": "~1.6.2",
     "moment": "^2.22.2",
+    "moment-duration-format": "^2.2.2",
     "morgan": "~1.9.0",
     "path": "^0.12.7",
     "request": "^2.88.0",

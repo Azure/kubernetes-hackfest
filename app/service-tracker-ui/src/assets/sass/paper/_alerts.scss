@@ -23,7 +23,7 @@
   }
 
   span[data-notify="icon"] {
-    font-size: 30px;
+    font-size: 14px;
     display: block;
     left: 15px;
     position: absolute;
@@ -52,8 +52,8 @@
 }
 
 .alert-success {
-  background-color: $bg-success;
-  color: $success-states-color;
+  background-color: #FFF;
+  color: #2CA2CA;
 }
 
 .alert-warning {
