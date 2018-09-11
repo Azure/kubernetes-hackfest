@@ -1,4 +1,3 @@
-*** Work IN Progress ***
 # Lab: Jenkins CI/CD
 
 This workshop will guide you through building Continuous Integration (CI) and Continuous Deployment (CD) pipelines with Visual Studio Team Services (VSTS) for use with Azure Kubernetes Service. The pipeline will utilize Azure Container Registry to build the images and Helm for application updating. 
@@ -166,4 +165,4 @@ This will scan your git repo and run the Jenkinsfile build steps. It will clone 
    ```
 3. Open browser and test application `EXTERNAL-IP:8080`
 
-#### Next Lab: [Networking](labs/networking/README.md)
+#### Next Lab: [Networking](../../networking/README.md)
