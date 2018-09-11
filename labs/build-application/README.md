@@ -23,6 +23,11 @@ In this lab we will build Docker containers for each of the application componen
 
         az acr create --resource-group $RGNAME --name $ACRNAME --sku Basic
         ```
+2. Run bash script to authenticate with Azure Container Registry from AKS
+    * Running this script will grant the Service Principal created at cluster creation time access to ACR.
+      ```bash
+       sh reg-acr.sh
+      ```
 
 2. Deploy Cosmos DB
     * In this step, create a Cosmos DB account for the Mongo api. Again, we will create a random, unique name.
