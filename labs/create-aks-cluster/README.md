@@ -27,9 +27,9 @@
     ```bash
      export UNIQUE_SUFFIX=$USER$RANDOM
     ```
-    #### *** Check the value
+    #### *** Write Value To .bashrc to persist through lab
     ```bash
-    echo $UNIQUE_SUFFIX
+    echo export UNIQUE_SUFFIX=$UNIQUE_SUFFIX >> .bashrc
     ```
 
     *** Note this value and it will be used in the next couple labs. The variable may reset if your shell times out, so PLEASE WRITE IT DOWN. ***
