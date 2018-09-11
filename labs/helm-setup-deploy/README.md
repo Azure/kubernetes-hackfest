@@ -152,7 +152,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
     Open the browser to http://40.76.218.139:8080 (your IP will be different #obvious)
 
-#### Next Lab: [CI/CD Automation](labs/cicd-automation/README.md)
+#### Next Lab: [CI/CD Automation](../cicd-automation/README.md)
 
 ## Troubleshooting / Debugging
 
