@@ -166,4 +166,4 @@ This will scan your git repo and run the Jenkinsfile build steps. It will clone 
    ```
 3. Open browser and test application `EXTERNAL-IP:8080`
 
-#### Next Lab: [Networking](labs/networking/README.md)
+#### Next Lab: [Networking](../../networking/README.md)
