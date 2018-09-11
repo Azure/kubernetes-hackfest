@@ -141,7 +141,26 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     service/weather-api          LoadBalancer   10.0.179.66    23.96.11.49    3003:31951/TCP   8m
     ```
 
-    * Browse the web UI. Use the "Refresh" buttons to update the Cosmos database with initial data.
+    * Initialize the CosmosDB database with each API
+
+    ```
+    kubectl get service flights-api
+
+    NAME          TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)          AGE
+    flights-api   LoadBalancer   10.0.177.249   40.117.75.174   3003:32179/TCP   7m
+    ```
+    
+    Hit the "refresh" endpoint using curl: 
+    
+    ```
+    curl http://<EXTERNAL-IP>:3003/refresh
+
+    {"message":"Ok","payload":{"message":"success","payload":{"FlightCount":1120,"Timestamp":"201809110420"}}}
+    ```
+
+    * Repeat this with `quakes-api` and `weather-api`
+
+    * Browse the web UI. Profit
 
     ```
     kubectl get service service-tracker-ui

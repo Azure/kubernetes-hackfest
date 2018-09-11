@@ -43,7 +43,7 @@ export default {
       container: 'map',
       style: 'mapbox://styles/sonojorel/cjhw8422i15g72snx2zsof3s1',
       center: [-79.995888, 40.440624],
-      zoom: 4
+      zoom: 2
     })
 
     map.on('load', () => { 

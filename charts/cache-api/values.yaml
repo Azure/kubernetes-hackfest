@@ -8,5 +8,5 @@ deploy:
   name: cache-api
   replicas: 1
   acrServer: "briaracr.azurecr.io"
-  imageTag: "v4"
+  imageTag: "newone"
   containerPort: 3006
