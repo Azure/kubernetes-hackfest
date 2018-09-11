@@ -123,7 +123,7 @@ kubectl cluster-info dump
 ## Docs / References
 
 
-# Lab 2: Create AKS Cluster Namespaces
+# Lab 1a: Create AKS Cluster Namespaces
 
 This lab creates namespaces that reflect a representative example of an organization's environments. In this case DEV, UAT and PROD. We will also apply the appopriate permissions, limits and resource quotas to each of the namespaces.
 
