@@ -18,6 +18,12 @@ var Flights = mongoose.model('Flights'),
     Weather = mongoose.model('Weather'),
     LatestWeather = mongoose.model('LatestWeather')
 
+
+/**
+ * 
+ * Incorporate telemetry with App Insights
+ * 
+ **/
 var telemetry = applicationInsights.defaultClient
 
 const routename = path.basename(__filename).replace('.js', ' default endpoint for ' + site.name)
@@ -55,7 +61,11 @@ router.get('/get/weather/:timestamp', (req, res, next) => {
 
 router.get('/get/latest/flights', (req, res, next) => {
     getLatestFromDb(LatestFlight, (err, data) => {
-        jsonResponse.json( res, 'success', st.OK.code, data )
+        if(err) {
+            jsonResponse.json(res, 'error', st.ERR.code, err)
+        }else{
+            jsonResponse.json( res, 'success', st.OK.code, data )
+        }
     })
 })
 

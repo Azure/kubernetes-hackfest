@@ -12,7 +12,15 @@ var applicationInsights = require('applicationinsights'),
     st = require('../models/util/status'),
     site = require('../models/util/site')
 
+
+/**
+ * 
+ * Incorporate telemetry with App Insights
+ * 
+ **/
 var telemetry = applicationInsights.defaultClient
+
+
 const routename = path.basename(__filename).replace('.js', ' default endpoint for ' + site.name)
 
 /**
@@ -123,7 +131,7 @@ router.get('/status', (req, res, next) => {
     ],(e,r) => {
         jsonResponse.json( res, routename, st.OK.code, {
             uptime: moment.duration(Math.floor(process.uptime())*1000).format('h [hrs], m [min]'), 
-            latest:moment(r.substr(0, 8) + 'T' + r.substr(8)).format('MM/DD/YYYY HH:mm a')
+            latest:moment(r.substr(0, 8) + 'T' + r.substr(8)).format('MM/DD/YYYY h:mm A')
         })
     })
 

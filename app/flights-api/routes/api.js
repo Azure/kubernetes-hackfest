@@ -12,7 +12,15 @@ var applicationInsights = require('applicationinsights'),
     st = require('../models/util/status'),
     site = require('../models/util/site')
 
+
+/**
+ * 
+ * Incorporate telemetry with App Insights
+ * 
+ **/
+
 var telemetry = applicationInsights.defaultClient
+
 const routename = path.basename(__filename).replace('.js', ' default endpoint for ' + site.name)
 
 /**
@@ -128,23 +136,16 @@ router.get('/refresh', (req, res, next) => {
  * 
  **/
 router.get('/status', (req, res, next) => {
-var start;
-var end;
     async.waterfall([
         (cb) => {
             getFromDataApi('get/latest/flights', (e, d) => {
-                cb(null, d.payload[0].Timestamp)
+                cb(e, d.payload[0].Timestamp)
             })
         }
     ],(e,r) => {
-
-        // var dd = d.substring(0,8) + 'T'
-        // var hh = r.substring(8,4)
-        // console.log(dd)
-        // console.log(hh)
         jsonResponse.json( res, routename, st.OK.code, {
             uptime: moment.duration(Math.floor(process.uptime())*1000).format('h [hrs], m [min]'), 
-            latest:moment(r.substr(0, 8) + 'T' + r.substr(8)).format('MM/DD/YYYY HH:mm a')
+            latest:moment(r.substr(0, 8) + 'T' + r.substr(8)).format('MM/DD/YYYY h:mm A')
         })
     })
 
