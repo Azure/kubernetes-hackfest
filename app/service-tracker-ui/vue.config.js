@@ -1,5 +1,8 @@
 
 const webpack = require('webpack')
+const rp = require('request-promise')
+const async = require('async')
+
 module.exports = {
   configureWebpack: {
    plugins: [
@@ -15,9 +18,7 @@ module.exports = {
   },
  lintOnSave: false,
   devServer: {
-    // show variables when running http://localhost:8080/variables
-    before: function(app) {
-      
+    before: function(app) {      
       app.get('/variables', (req, res) => {
         var currentEnv = { 
           quakes: process.env.QUAKES_API_ROOT,

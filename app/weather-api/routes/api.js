@@ -11,15 +11,14 @@ var applicationInsights = require('applicationinsights'),
     router = express.Router(),
     rp = require('request-promise'),
     st = require('../models/util/status'),
-    site = require('../models/util/site'),
-    weatherCities1000 = require('../resources/accuweather_top_1000_cities_us'),
-    weatherTop1000US = require('../resources/aw_top1000_cities_pk'),
-    weatherCities25 = require('../resources/aw_top25_cities_us'),
-    
-    styleExample = require('../resources/styleExample')
+    site = require('../models/util/site')
     
 
-
+/**
+ * 
+ * Incorporate telemetry with App Insights
+ * 
+ **/
 var telemetry = applicationInsights.defaultClient
 
 const routename = path.basename(__filename).replace('.js', ' default endpoint for ' + site.name)
@@ -42,120 +41,10 @@ router.get('/status', (req, res, next) => {
     ],(e,r) => {
         jsonResponse.json( res, routename, st.OK.code, {
             uptime: moment.duration(Math.floor(process.uptime())*1000).format('h [hrs], m [min]'), 
-            latest:moment(r.substr(0, 8) + 'T' + r.substr(8)).format('MM/DD/YYYY HH:mm a')
+            latest:moment(r.substr(0, 8) + 'T' + r.substr(8)).format('MM/DD/YYYY h:mm A')
         })
     })
     
-})
-
-
-/* GET JSON :: Current weather, top 100 cities worldwide */
-router.get('/current', (req, res, next) => {
-    // var event = 'no_cache'
-    var Top1000
-    console.log(path.join(__dirname,'../resources') + '/aw_top1000_geojson.txt')
-    fs.readFileSync(path.join(__dirname,'../resources') + '/aw_top1000_geojson.txt', 'utf8', (err, data)=>{
-        //Top1000 = data
-        console.log(err)
-        console.log(data)
-    })
-    var layers = []
-    var layerBlue = {id: 'mapblue', textColor:'#37EEFF', features:[]}
-    var layerYellow = {id: 'mapyellow', textColor:'#ffee38', features:[]}
-    var layerYellowOrange = {id: 'mapyelloworange', textColor:'#ffc038', features:[]}
-    var layerOrange = {id: 'maporange', textColor:'#ff8138', features:[]}
-    var layerRed = {id: 'mapred', textColor:'#ff6338', features:[]}
-    var layerBrightRed = {id: 'mapbrightred', textColor:'#ff0000', features:[]}
-
-
-    // getWeatherCities((err,data) => {
-        async.each(Top1000, (feature, callback) => {
-
-            console.log('Temp is ', feature.properties.Temperature)
-            var f = {}
-            
-                if (feature.properties.Temperature <= 65){
-                    f = feature
-                    f.properties['Temperature'] = f.properties.Temperature.toString() + '°'
-                    layerBlue.features.push(f)
-                    console.log('adding to blue')
-                }
-                if (feature.properties.Temperature > 65 && feature.properties.Temperature <= 72) {
-                    f = feature
-                    f.properties['Temperature'] = f.properties.Temperature.toString() + '°'
-                    layerYellow.features.push(f)
-                    console.log('adding to yellow')
-                }
-                if (feature.properties.Temperature > 72 && feature.properties.Temperature <= 79) {
-                    f = feature
-                    f.properties['Temperature'] = f.properties.Temperature.toString() + '°'
-                    layerYellowOrange.features.push(f)
-                    console.log('adding to yelloworange')
-                }
-                if (feature.properties.Temperature > 79 && feature.properties.Temperature <= 88) {
-                    f = feature
-                    f.properties['Temperature'] = f.properties.Temperature.toString() + '°'
-                    layerOrange.features.push(f)
-                    console.log('adding to orange')
-                }
-                if (feature.properties.Temperature > 88 && feature.properties.Temperature <= 97) {
-                    f = feature
-                    f.properties['Temperature'] = f.properties.Temperature.toString() + '°'
-                    layerRed.features.push(f)
-                    console.log('adding to red')
-                }
-                if (feature.properties.Temperature > 97){
-                    f = feature
-                    f.properties['Temperature'] = f.properties.Temperature.toString() + '°'
-                    layerBrightRed.features.push(f)
-                    console.log('adding to bright red')
-                }
-            
-
-            callback()
-
-
-        }, (err) => {
-            if(!err){
-                layers.push(layerBlue, layerYellow, layerYellowOrange, layerOrange, layerRed, layerBrightRed)
-                jsonResponse.json( res, st.OK.msg, st.OK.code, layers)
-            }
-            
-        })
-        
-    // })
-
-
-    // getQuakesData( event, (err, data) => {
-    //     if (err) { 
-    //         jsonResponse.json( res, st.ERR.msg, st.ERR.code, err)
-    //         next()
-    //     }
-    //     jsonResponse.json( res, st.OK.msg, st.OK.code, data)
-    // })
-})
-
-router.get('/cityPositions', (req, res, next) => {
-    var weatherLocales = []
-    getWeatherCities((err, data) =>{
-        async.each(data, (locale, callback) => {
-            var lat = locale.geometry.coordinates[1]
-            var long = locale.geometry.coordinates[0]
-            getGeoPositionKey(lat, long, (e, d) => {
-                locale.properties['AWPositionKey'] = d.Key
-                weatherLocales.push(locale)
-                callback()
-            })
-        }, (err) => {
-            if(err){
-                console.log(err)
-                jsonResponse.json( res, st.ERR.msg, st.ERR.code, err)
-            }else{
-                console.log('all locales processed successfully')
-                jsonResponse.json( res, st.OK.msg, st.OK.code, weatherLocales)
-            }
-        })
-    })
 })
 
 /* GET JSON :: All Weather - db version */
@@ -204,6 +93,32 @@ router.get('/refresh', (req, res, next) => {
     })
 
 })
+
+
+router.get('/cityPositions', (req, res, next) => {
+    var weatherLocales = []
+    getWeatherCities((err, data) =>{
+        async.each(data, (locale, callback) => {
+            var lat = locale.geometry.coordinates[1]
+            var long = locale.geometry.coordinates[0]
+            getGeoPositionKey(lat, long, (e, d) => {
+                locale.properties['AWPositionKey'] = d.Key
+                weatherLocales.push(locale)
+                callback()
+            })
+        }, (err) => {
+            if(err){
+                console.log(err)
+                jsonResponse.json( res, st.ERR.msg, st.ERR.code, err)
+            }else{
+                console.log('all locales processed successfully')
+                jsonResponse.json( res, st.OK.msg, st.OK.code, weatherLocales)
+            }
+        })
+    })
+})
+
+
 
 function getWeatherCities(cb) {
     console.log(weatherCities1000.length)
