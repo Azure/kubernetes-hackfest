@@ -50,7 +50,7 @@ This lab is about setting up the Ingress Controller and configuring the differen
 
     ```bash
     chmod +x configure-publicip-dns.sh
-    ./configureaksingressdns.sh
+    ./configure-publicip-dns.sh
     ```
 
 6. Install Cert Mgr with RBAC
