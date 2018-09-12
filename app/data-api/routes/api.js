@@ -18,7 +18,6 @@ var Flights = mongoose.model('Flights'),
     Weather = mongoose.model('Weather'),
     LatestWeather = mongoose.model('LatestWeather')
 
-
 /**
  * 
  * Incorporate telemetry with App Insights
@@ -34,11 +33,9 @@ router.get('/', (req, res, next) => {
 })
 
 router.get('/status', (req, res, next) => {
-
     jsonResponse.json( res, routename, st.OK.code, {
         uptime: moment.duration(Math.floor(process.uptime())*1000).format('h [hrs], m [min]')
     })
-    
 })
 
 router.get('/get/flights/:timestamp', (req, res, next) => {
