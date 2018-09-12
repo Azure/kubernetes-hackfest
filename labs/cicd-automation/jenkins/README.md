@@ -67,7 +67,7 @@ In order to trigger this pipeline you will need your own Github account and fork
    ```bash
    helm init --service-account tiller
    ```
-2. 
+2. Install Jenkins Using Helm
    ```bash
    helm install stable/jenkins --name jenkins -f values.yaml
    ```
