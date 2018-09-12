@@ -86,7 +86,7 @@ This lab is about setting up the Ingress Controller and configuring the differen
     kubectl get endpoints
     ```
 
-#### Next Lab: [Network Policy](labs/networking/network-policy/README.md)
+#### Next Lab: [Network Policy](../network-policy/README.md)
 
 ## Troubleshooting / Debugging
 
