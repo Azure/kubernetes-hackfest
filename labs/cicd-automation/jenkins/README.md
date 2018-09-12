@@ -58,7 +58,7 @@ In order to trigger this pipeline you will need your own Github account and fork
 
 1. Initialize Helm With RBAC
 
-    > Note: You may have already installed Helm in the earlier lab. You can validate with `helm version`
+    > Note: You may have already installed Helm in the earlier lab. If you have already installed Helm skip to step 2. You can validate if Helm is installed with `helm version`
 
    ```bash
    kubectl apply -f helm-rbac.yaml
@@ -67,14 +67,14 @@ In order to trigger this pipeline you will need your own Github account and fork
    ```bash
    helm init --service-account tiller
    ```
-
+2. 
    ```bash
    helm install stable/jenkins --name jenkins -f values.yaml
    ```
 
    This will take a couple of minutes to fully deploy
 
-2. Get credentials and IP to Login To Jenkins
+3. Get credentials and IP to Login To Jenkins
    ```bash
    printf $(kubectl get secret --namespace default jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
    ```
