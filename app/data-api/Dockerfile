@@ -1,7 +1,7 @@
 FROM node:10.9.0-alpine
 
 WORKDIR /usr/src/app
-COPY ./package*.json ./
+COPY ./app/data-api/package*.json ./
 RUN npm ci
 
 ENV NODE_ENV "development"
