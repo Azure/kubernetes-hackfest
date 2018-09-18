@@ -54,10 +54,10 @@
 7. Create an Azure Resource Group in East US.
 
     ```bash
-    export RGNAME=kubernetes-hackfest
+    echo export RGNAME=kubernetes-hackfest >> ~/.bashrc
     ```
     ```bash
-    export LOCATION=eastus
+    echo export LOCATION=eastus >> ~/.bashrc
     ```
     ```bash
     az group create -n $RGNAME -l $LOCATION 
@@ -68,16 +68,16 @@
     Use unique CLUSTERNAME
 
     ```bash
-    export CLUSTERNAME=aks-$UNIQUE_SUFFIX
+    echo export CLUSTERNAME=aks-$UNIQUE_SUFFIX >> ~/.bashrc
     ```  
     For "appID" and "clientSecret" use the output from step 5
     
     ```bash
-    export APPID=<appID>
+    echo export APPID=<appID> >> ~/.bashrc
     ```
     
     ```bash
-    export CLIENTSECRET=<clientSecret>
+    echo export CLIENTSECRET=<clientSecret> >> ~/.bashrc
     ```
     > The below command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT and grab a coffee...
 
