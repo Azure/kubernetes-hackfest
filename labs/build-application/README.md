@@ -25,8 +25,10 @@ In this lab we will build Docker containers for each of the application componen
         ```
 2. Run bash script to authenticate with Azure Container Registry from AKS
     * Running this script will grant the Service Principal created at cluster creation time access to ACR.
-      ```bash
-       sh reg-acr.sh
+      ```
+      cd ~/kubernetes-hackfest/labs/build-application
+
+       sh reg-acr.sh $RGNAME $CLUSTERNAME $ACRNAME
       ```
 
 2. Deploy Cosmos DB
