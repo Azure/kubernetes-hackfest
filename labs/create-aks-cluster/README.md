@@ -22,8 +22,25 @@
 
     > Note: In the cloud shell, you are automatically logged into your Azure subscription.
 
-5. Create a unique identifier suffix for resources to be created in this lab.
+5. Create Azure Service Prinicpal to use through the labs
 
+    ```bash
+    az ad sp create-for-rbac --skip-assignment
+    ```
+    This will return the following
+
+    ```
+   "appId": "7248f250-0000-0000-0000-dbdeb8400d85",
+   "displayName": "azure-cli-2017-10-15-02-20-15",
+   "name": "http://azure-cli-2017-10-15-02-20-15",
+   "password": "77851d2c-0000-0000-0000-cb3ebc97975a",
+   "tenant": "72f988bf-0000-0000-0000-2d7cd011db47"
+   ```
+
+   !!!IMPORTANT!!! - Please copy this information down as you'll need it for labs going forward 
+
+6. Create a  unique identifier suffix for resources to be created in this lab.
+    
     ```bash
      export UNIQUE_SUFFIX=$USER$RANDOM
     ```
@@ -34,7 +51,7 @@
 
     *** Note this value and it will be used in the next couple labs. The variable may reset if your shell times out, so PLEASE WRITE IT DOWN. ***
 
-6. Create an Azure Resource Group in East US.
+7. Create an Azure Resource Group in East US.
 
     ```bash
     export RGNAME=kubernetes-hackfest
@@ -46,7 +63,7 @@
     az group create -n $RGNAME -l $LOCATION 
     ```
 
-7. Create your AKS cluster in the resource group created above with 3 nodes, targeting Kubernetes version 1.10.3, with Container Insights, and HTTP Application Routing Enabled.
+8. Create your AKS cluster in the resource group created above with 3 nodes, targeting Kubernetes version 1.10.3, with Container Insights, and HTTP Application Routing Enabled. You will use the Service Principal information from step 5.
    * Use unique CLUSTERNAME
 
     ```bash
@@ -57,12 +74,14 @@
 
     ```bash
     az aks create -n $CLUSTERNAME -g $RGNAME -k 1.10.3 \
+    --service-principal <appId> \
+    --client-secret <password> \
     --generate-ssh-keys -l $LOCATION \
     --node-count 3 \
     --enable-addons http_application_routing,monitoring
     ```
 
-8. Verify your cluster status. The `ProvisioningState` should be `Succeeded`
+9. Verify your cluster status. The `ProvisioningState` should be `Succeeded`
     ```bash
     az aks list -o table
     ```
@@ -73,13 +92,13 @@
     ODLaks-v2-gbb-16502  eastus   ODL_aks-v2-gbb-16502  1.8.6                Succeeded odlaks-v2--odlaks-v2-gbb-16-b23acc-17863579.hcp.centralus.azmk8s.io
     ```
 
-9. Get the Kubernetes config files for your new AKS cluster
+10. Get the Kubernetes config files for your new AKS cluster
 
     ```bash
     az aks get-credentials -n $CLUSTERNAME -g $RGNAME
     ```
      
-10. Verify you have API access to your new AKS cluster
+11. Verify you have API access to your new AKS cluster
 
       > Note: It can take 5 minutes for your nodes to appear and be in READY state. You can run `watch kubectl get nodes` to monitor status.
 
