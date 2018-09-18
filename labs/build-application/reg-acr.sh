@@ -1,10 +1,3 @@
-#!/bin/bash
-
-AKS_RESOURCE_GROUP=$1
-AKS_CLUSTER_NAME=$2
-ACR_NAME=$3
-
-#accept incoming values of Resource Group, Cluster Name and ACR Name
 
 # Get the id of the service principal configured for AKS
 CLIENT_ID=$(az aks show --resource-group $AKS_RESOURCE_GROUP --name $AKS_CLUSTER_NAME --query "servicePrincipalProfile.clientId" --output tsv)
