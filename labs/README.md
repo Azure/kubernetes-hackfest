@@ -1,6 +1,6 @@
 ## Labs
 
-1. [Create AKS Cluster](labs/create-aks-cluster/README.md)
+1. [Create AKS Cluster](create-aks-cluster/README.md)
 2. [Build Application Components](labs/build-application/README.md)
 3. [Helm Setup and Deploy Application](labs/helm-setup-deploy/README.md)
 4. [CI/CD Automation](labs/cicd-automation/README.md)
