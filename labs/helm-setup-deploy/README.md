@@ -67,10 +67,16 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
     ```
     
-    * Replace the `acrServer` value below with the Login server from previous step. You will make this change in all of the charts (except cache-api)
-
+    * Replace the `acrServer` value below with the Login server from previous step. You will make this change in all of the charts below (except cache-api)
+    <!--->
+    [charts/service-tracker-ui/values.yaml](../../charts/service-tracker-ui/values.yaml)
+    [charts/service-tracker-ui/values.yaml](../../charts/weather-api/values.yaml)
+    [charts/service-tracker-ui/values.yaml](../../charts/service-tracker-ui/values.yaml)
+    [charts/service-tracker-ui/values.yaml](../../charts/service-tracker-ui/values.yaml)
+    [charts/service-tracker-ui/values.yaml](../../charts/service-tracker-ui/values.yaml)
+    --->
     Example:
-    ```
+    ```yaml
     # Default values for chart
 
     service:

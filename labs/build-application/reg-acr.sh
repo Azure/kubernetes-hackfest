@@ -1,9 +1,9 @@
 #!/bin/bash
 
-AKS_RESOURCE_GROUP=myAKSResourceGroup
+AKS_RESOURCE_GROUP=$RGNAME
 AKS_CLUSTER_NAME=myAKSCluster
 ACR_RESOURCE_GROUP=myACRResourceGroup
-ACR_NAME=myACRRegistry
+ACR_NAME=acrhackfest$UNIQUE_SUFFIX
 
 # Get the id of the service principal configured for AKS
 CLIENT_ID=$(az aks show --resource-group $AKS_RESOURCE_GROUP --name $AKS_CLUSTER_NAME --query "servicePrincipalProfile.clientId" --output tsv)
