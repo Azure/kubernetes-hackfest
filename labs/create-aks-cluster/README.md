@@ -69,6 +69,14 @@
     ```bash
     export CLUSTERNAME=aks-$UNIQUE_SUFFIX
     ```  
+    For <appID> and <clientSecret> use the output from step 5
+    
+    ```bash
+    export APPID=<appID>
+    ```
+    
+    ```bash
+    export CLIENTSECRET=<clientSecret>
 
     > The below command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT and grab a coffee...
 
