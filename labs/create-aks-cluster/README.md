@@ -64,12 +64,13 @@
     ```
 
 8. Create your AKS cluster in the resource group created above with 3 nodes, targeting Kubernetes version 1.10.3, with Container Insights, and HTTP Application Routing Enabled. You will use the Service Principal information from step 5.
-   * Use unique CLUSTERNAME
+
+    Use unique CLUSTERNAME
 
     ```bash
     export CLUSTERNAME=aks-$UNIQUE_SUFFIX
     ```  
-    For <appID> and <clientSecret> use the output from step 5
+    For "appID" and "clientSecret" use the output from step 5
     
     ```bash
     export APPID=<appID>
