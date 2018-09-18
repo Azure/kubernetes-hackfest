@@ -79,6 +79,9 @@
     ```bash
     echo export CLIENTSECRET=<clientSecret> >> ~/.bashrc
     ```
+    ```bash
+    source ~/.bashrc
+    ```
     > The below command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT and grab a coffee...
 
     ```bash
