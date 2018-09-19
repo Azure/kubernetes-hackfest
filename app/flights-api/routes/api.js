@@ -2,12 +2,12 @@ var applicationInsights = require('applicationinsights'),
     async = require('async'),
     cacheServiceUri = process.env.CACHE_SERVICE_URI,
     dataServiceUri = process.env.DATA_SERVICE_URI,
+    dayjs = require('dayjs'),
     express = require('express'),
     jsonResponse = require('../models/express/jsonResponse'),
-    moment = require('moment'),
-    momentDuration = require('moment-duration-format'),
     path = require('path'),
     router = express.Router(),
+    relativeTime = require('dayjs/plugin/relativeTime'),
     rp = require('request-promise'),
     st = require('../models/util/status'),
     site = require('../models/util/site')
@@ -19,7 +19,7 @@ var applicationInsights = require('applicationinsights'),
  * 
  **/
 
-var telemetry = applicationInsights.defaultClient
+let telemetry = applicationInsights.defaultClient
 
 const routename = path.basename(__filename).replace('.js', ' default endpoint for ' + site.name)
 
@@ -31,6 +31,139 @@ const routename = path.basename(__filename).replace('.js', ' default endpoint fo
  **/
 router.get('/', (req, res, next) => {
     jsonResponse.json( res, routename, st.OK.code, {} )
+})
+
+
+/** 
+ * 
+ * HTTP GET /status
+ * JSON
+ * ENDPOINT FOR DASHBOARD SERVICE STATUS
+ * 
+ **/
+router.get('/status', (req, res, next) => {
+    async.waterfall([
+        (cb) => {
+            getFromDataApi('get/latest/flights', (e, d) => {
+                if(e){
+                    handleError(site.name +'/status :: error retrieving data')
+                    cb(e, null)
+                }
+                else{
+                    if(d.payload!=null){
+                        cb(null, d.payload[0].Timestamp)
+                    }else{
+                        handleError(site.name +'/status :: no data in cosmosdb')
+                        cb(site.ERR_NO_DATA, null)
+                    }
+                }  
+            })
+        }
+    ],(e,r) => {
+        if(e){
+            if (e === site.ERR_NO_DATA){
+                res.status(204).end()
+            } else {
+                jsonResponse.json(res, st.ERR.msg, st.ERR.code, e)
+            }
+        }else{
+            jsonResponse.json( res, routename, st.OK.code, {
+                uptime: dayjs(global.start).from(dayjs((Math.floor(process.uptime())*1000) + global.start), true),
+                latest:dayjs(Number(r)).format('MM/DD/YYYY h:mm A')
+            })
+        }
+    })
+
+})
+
+/**
+ * 
+ * HTTP GET /latest
+ * JSON
+ * USES DATABASE
+ * NO CACHE
+ * 
+ **/
+router.get('/latest', (req, res, next) => {
+
+    async.waterfall([
+        (cb) => {
+            getFromDataApi('get/latest/flights', (e, d) => {
+                if(e){
+                    handleError(site.name +'/latest :: error retrieving latest timestamp')
+                    cb(e, null)
+                }else{
+                    cb(null, d.payload[0].Timestamp)
+                }
+                
+            })
+        },
+        (timestamp, cb) => {
+            getFromDataApi('get/flights/' + timestamp, (e, d) => {
+                if(e){
+                    handleError(site.name +'/latest :: error retrieving flights with timestamp')
+                    cb(e, null)
+                }else{
+                    cb(null, d.payload.FeatureCollection)
+                }
+                
+            })
+
+        }
+    ],(e,r) => {
+        if(e) {
+            jsonResponse.json( res, st.ERR.msg, st.ERR.code, e )
+        }
+        jsonResponse.json( res, st.OK.msg, st.OK.code, r)
+    })
+
+})
+
+/**
+ * 
+ * HTTP GET /refresh
+ * JSON
+ * API CALL TO OPENSKY
+ * SAVE TO DATABASE
+ * NO CACHE
+ * 
+ **/
+router.get('/refresh', (req, res, next) => {
+    var querypath = 'all'
+    
+    async.waterfall([
+        (cb) => {
+            getFlightData(querypath, 'refreshflightdata', (err, data) => {
+                if (err){
+                    handleError(site.name +'/refresh :: error retrieving data: ')
+                }
+                else{
+                    cb(null, data)
+                }
+            })
+        },
+        (data, cb) => {
+            cb(null, data, dayjs().valueOf())
+        },
+        (data, timestamp, cb) => {
+            buildGeoJson(data.states, (err, result) => { 
+                cb(null, result, timestamp)
+            })
+        },
+        (data, key, cb) => {
+            saveToDataApi(key, data, (e,r) => { 
+                cb(null, r)
+            } )
+        }], 
+        (e, r) => {
+            if(e){
+                jsonResponse.json( res, st.ERR.msg, st.ERR.code, e)
+            }
+            else{
+                jsonResponse.json( res, st.OK.msg, st.OK.code, r)
+            }
+    })
+
 })
 
 /**
@@ -58,106 +191,12 @@ router.get('/current', (req, res, next) => {
     })
 })
 
-/**
- * 
- * HTTP GET /latest
- * JSON
- * USES DATABASE
- * NO CACHE
- * 
- **/
-router.get('/latest', (req, res, next) => {
-
-    async.waterfall([
-        (cb) => {
-            getFromDataApi('get/latest/flights', (e, d) => {
-                cb(null, d.payload[0].Timestamp)
-            })
-        },
-        (timestamp, cb) => {
-            getFromDataApi('get/flights/' + timestamp, (e, d) => {
-                cb(null, d.payload.FeatureCollection)
-            })
-
-        }
-    ],(e,r) => {
-        jsonResponse.json( res, st.OK.msg, st.OK.code, r)
-    })
-
-})
-
-/**
- * 
- * HTTP GET /refresh
- * JSON
- * API CALL TO OPENSKY FOR FLIGHTS
- * SAVE TO DATABASE
- * NO CACHE
- * 
- **/
-router.get('/refresh', (req, res, next) => {
-    var querypath = 'all'
-    
-    async.waterfall([
-        (cb) => {
-            getFlightData(querypath, 'refreshflightdata', (err, data) => {
-                cb(null, data)
-            })
-        },
-        (data, cb) => {
-            cb(null, data, moment.unix(data.time).format('YYYYMMDDHHmm').toString())
-        },
-        (data, timestamp, cb) => {
-            buildGeoJson(data.states, (err, result) => { 
-                cb(null, result, timestamp)
-            })
-        },
-        (data, key, cb) => {
-            // console.log('posted cache item - time ', key)
-            //var flights = JSON.stringify(data.states)
-            // var out = data.toString()
-
-            saveToDataApi(key, data, (e,r) => { 
-                cb(null, r)
-            } )
-
-        }], 
-        (e, r) => {
-            jsonResponse.json( res, st.OK.msg, st.OK.code, r)
-    })
-
-})
-
-/** 
- * 
- * HTTP GET /status
- * JSON
- * ENDPOINT FOR DASHBOARD SERVICE STATUS
- * 
- **/
-router.get('/status', (req, res, next) => {
-    async.waterfall([
-        (cb) => {
-            getFromDataApi('get/latest/flights', (e, d) => {
-                cb(e, d.payload[0].Timestamp)
-            })
-        }
-    ],(e,r) => {
-        jsonResponse.json( res, routename, st.OK.code, {
-            uptime: moment.duration(Math.floor(process.uptime())*1000).format('h [hrs], m [min]'), 
-            latest:moment(r.substr(0, 8) + 'T' + r.substr(8)).format('MM/DD/YYYY h:mm A')
-        })
-    })
-
-})
 
 /* OPENSKY API */
 function getFlightData(querypath, event, cb) {
-    console.log('rp to opensky:', querypath)
 
     // telemetry.trackEvent({name: event})
     var opt = { uri: 'https://opensky-network.org/api/states/' + querypath,
-        headers: { 'User-Agent': 'Request-Promise' },
         json: true
     }
     
@@ -166,6 +205,7 @@ function getFlightData(querypath, event, cb) {
         cb(null, data)
     })
     .catch(err => {
+        handleError(site.name +' func - getFlightData :: error retrieving flights from opensky')
         cb(err, null)
     })
     
@@ -176,8 +216,6 @@ function postCacheItem(key, data, event, cb){
     // telemetry.trackEvent({name: event})
     var url = cacheServiceUri + 'set/' + key
     var obj = JSON.stringify(data);
-    console.log(url)
-    console.log(obj)
     var opt = { method: 'POST',
         uri: url,
         headers: { 'User-Agent': 'Request-Promise' },
@@ -211,14 +249,10 @@ function getCacheItem(key, cb){
 
 /* DB API SAVE CALL */
 function saveToDataApi(timestamp, data, cb) {
-    // telemetry.trackEvent({name: event})
     var url = dataServiceUri + 'save/flights/' + timestamp
-    
-    console.log(url)
     
     var opt = { method: 'POST',
         uri: url,
-        headers: { 'User-Agent': 'Request-Promise' },
         body: data,
         json: true
     }
@@ -228,28 +262,33 @@ function saveToDataApi(timestamp, data, cb) {
         cb(null, out)
     })
     .catch(err => {
+        handleError(site.name +' func - saveToDataApi :: error saving flights to DB:')
         cb(err, null)
     })
 }
 
 /* DB API GET CALL */
 function getFromDataApi(path, cb){
+    
     var url = dataServiceUri + path
     
-    console.log(url)
-    
-    var opt = { uri: url,
-        headers: { 'User-Agent': 'Request-Promise' },
-        json: true
-    }
+    var opt = { uri: url, json: true, resolveWithFullResponse: true  }
 
     rp(opt)
-      .then(out => {
-        cb(null, out)
+    .then( out => {
+        if( out.statusCode === 200){
+            cb(null, out.body)
+        }
+        if( out.statusCode === 204){
+            cb(null, {payload:null})
+        }
+        
     })
-    .catch(err => {
+    .catch( err => {
+        handleError(site.name +' func - getFromDataApi :: error retrieving data' + err)
         cb(err, null)
     })
+
 }
 
 /* BUILD THE GEOJSON ELEMENTS FROM FLIGHTS */
@@ -286,13 +325,17 @@ function buildGeoJson(flights, cb){
 
     }, (err) => {
         if(err){
-            console.log(err)
+
             cb(err, null)
         }else{
-            console.log('all flights processed successfully')
             cb(null, flightGeoJson)
         }
     })
+}
+
+function handleError(message) {
+    console.log(message)
+    telemetry.trackException({exception: message})
 }
 
 module.exports = router

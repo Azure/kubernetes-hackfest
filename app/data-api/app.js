@@ -1,13 +1,31 @@
 var bodyParser = require('body-parser'),
     createError = require('http-errors'),
+    dayjs = require('dayjs'),
     express = require('express'),
     logger = require('morgan'),
     mongoose = require('mongoose'),
-    path = require('path')
- 
+    path = require('path'),
+    relativeTime = require('dayjs/plugin/relativeTime')
+
+dayjs.extend(relativeTime)
+
+global.start = dayjs().valueOf()
+
 if (process.env.NODE_ENV != 'container') {
   require('dotenv').config({path: path.join(__dirname, '.env.local')})
 }
+
+const appInsights = require('applicationinsights')
+
+appInsights.setup()
+  .setAutoDependencyCorrelation(true)
+  .setAutoCollectRequests(true)
+  .setAutoCollectPerformance(true)
+  .setAutoCollectExceptions(true)
+  .setAutoCollectDependencies(true)
+  .setAutoCollectConsole(true)
+  .setUseDiskRetryCaching(true)
+  .start()
 
 mongoose.set('useCreateIndex', true);
 mongoose.set('useFindAndModify', false);
@@ -21,25 +39,10 @@ require('./models/mongo/latestWeather')
     
 mongoose.Promise = global.Promise
 
-var apiRouter = require('./routes/api')
-
-
-
 var app = express()
 
 if (process.env.NODE_ENV != 'local') {
-
-  const appInsights = require('applicationinsights')
-  appInsights.setup()
-      .setAutoDependencyCorrelation(true)
-      .setAutoCollectRequests(true)
-      .setAutoCollectPerformance(true)
-      .setAutoCollectExceptions(true)
-      .setAutoCollectDependencies(true)
-      .setAutoCollectConsole(true)
-      .setUseDiskRetryCaching(true)
-      .start()
-
+  
   mongoose.connect(process.env.MONGODB_URI, {
     user: process.env.MONGODB_USER,
     pass: process.env.MONGODB_PASSWORD,
@@ -51,32 +54,37 @@ else{
   mongoose.connect('mongodb://localhost/demo:27017', {useNewUrlParser: true})
 }
 
+var apiRouter = require('./routes/api')
+
 var db = mongoose.connection
 
 db.on('error', (err) => {
-  //appInsights.defaultClient.trackEvent({name: 'MongoConnError'})
+  appInsights.defaultClient.trackEvent({name: 'MongoConnError'})
   console.log(err)
 })
 
 db.once('open', () => {
-  //appInsights.defaultClient.trackEvent({name: 'MongoConnSuccess'})
+  appInsights.defaultClient.trackEvent({name: 'MongoConnSuccess'})
   console.log('connection success with Mongo')
 })
 
+
+app.set('etag', 'strong');
 app.use(logger('dev'))
 app.use(bodyParser.json({limit:'2mb'}))
 app.use('/', apiRouter)
 
-// catch 404 and forward to error handler
+
+
+
 app.use(function(req, res, next) {
   next(createError(404))
 })
 
 app.use(function(req, res, next) {
   
-  /* AppInsights request tracking for GET and POST */
   if ( req.method === 'GET' || req.method === 'POST' ) {
-    //appInsights.defaultClient.trackNodeHttpRequest({request: req, response: res})
+    appInsights.defaultClient.trackNodeHttpRequest({request: req, response: res})
   }
 
   res.setHeader('Access-Control-Allow-Origin', '*')

@@ -1,7 +1,7 @@
 FROM node:10.9.0-alpine
 
 WORKDIR /usr/src/app
-COPY ./app/service-tracker-ui/package*.json ./
+COPY package*.json ./
 RUN npm ci
 
 COPY . .

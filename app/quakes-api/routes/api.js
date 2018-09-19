@@ -2,12 +2,12 @@ var applicationInsights = require('applicationinsights'),
     async = require('async'),
     cacheServiceUri = process.env.CACHE_SERVICE_URI,
     dataServiceUri = process.env.DATA_SERVICE_URI,
+    dayjs = require('dayjs'),
     express = require('express'),
     jsonResponse = require('../models/express/jsonResponse'),
-    moment = require('moment'),
-    momentDuration = require('moment-duration-format'),
     path = require('path'),
     router = express.Router(),
+    relativeTime = require('dayjs/plugin/relativeTime'),
     rp = require('request-promise'),
     st = require('../models/util/status'),
     site = require('../models/util/site')
@@ -32,6 +32,49 @@ const routename = path.basename(__filename).replace('.js', ' default endpoint fo
 router.get('/', (req, res, next) => {
     jsonResponse.json( res, routename, st.OK.code, {} )
 })
+
+/** 
+ * 
+ * HTTP GET /status
+ * JSON
+ * ENDPOINT FOR DASHBOARD SERVICE STATUS
+ * 
+ **/
+router.get('/status', (req, res, next) => {
+    async.waterfall([
+        (cb) => {
+            getFromDataApi('get/latest/quakes', (e, d) => {
+                if(e){
+                    handleError(site.name +'/status :: error retrieving data')
+                    cb(e, null)
+                }
+                else{
+                    if(d.payload!=null){
+                        cb(null, d.payload[0].Timestamp)
+                    }else{
+                        handleError(site.name +'/status :: no data in cosmosdb')
+                        cb(site.ERR_NO_DATA, null)
+                    }
+                }  
+            })
+        }
+    ],(e,r) => {
+        if(e){
+            if (e === site.ERR_NO_DATA){
+                res.status(204).end()
+            } else {
+                jsonResponse.json(res, st.ERR.msg, st.ERR.code, e)
+            }
+        }else{
+            jsonResponse.json( res, routename, st.OK.code, {
+                uptime: dayjs(global.start).from(dayjs((Math.floor(process.uptime())*1000) + global.start), true),
+                latest:dayjs(Number(r)).format('MM/DD/YYYY h:mm A')
+            })
+        }
+    })
+
+})
+
 
 /**
  * 
@@ -65,15 +108,28 @@ router.get('/latest', (req, res, next) => {
     async.waterfall([
         (cb) => {
             getFromDataApi('get/latest/quakes', (e, d) => {
-                cb(null, d.payload[0].Timestamp)
+                if(e){
+                    handleError(site.name +'/latest :: error retrieving latest timestamp')
+                    cb(e, null)
+                }else{
+                    cb(null, d.payload[0].Timestamp)
+                }
             })
         },
         (timestamp, cb) => {
             getFromDataApi('get/quakes/' + timestamp, (e, d) => {
-                cb(null, d.payload.FeatureCollection)
+                if(e){
+                    handleError(site.name +'/latest :: error retrieving quakes with timestamp')
+                    cb(e, null)
+                }else{
+                    cb(null, d.payload.FeatureCollection)
+                }
             })
         }
     ],(e,r) => {
+        if(e) {
+            jsonResponse.json( res, st.ERR.msg, st.ERR.code, e )
+        }
         jsonResponse.json( res, st.OK.msg, st.OK.code, r)
     })
 
@@ -97,7 +153,7 @@ router.get('/refresh', (req, res, next) => {
             })
         },
         (data, cb) => {
-            cb(null, data, moment(data.metadata.generated).format('YYYYMMDDHHmm').toString())
+            cb(null, data, dayjs().valueOf())
         },
         (data, timestamp, cb) => {
             cb(null, data.features, timestamp)
@@ -113,29 +169,7 @@ router.get('/refresh', (req, res, next) => {
 
 })
 
-/** 
- * 
- * HTTP GET /status
- * JSON
- * ENDPOINT FOR DASHBOARD SERVICE STATUS
- * 
- **/
-router.get('/status', (req, res, next) => {
-    
-    async.waterfall([
-        (cb) => {
-            getFromDataApi('get/latest/quakes', (e, d) => {
-                cb(null, d.payload[0].Timestamp)
-            })
-        }
-    ],(e,r) => {
-        jsonResponse.json( res, routename, st.OK.code, {
-            uptime: moment.duration(Math.floor(process.uptime())*1000).format('h [hrs], m [min]'), 
-            latest:moment(r.substr(0, 8) + 'T' + r.substr(8)).format('MM/DD/YYYY h:mm A')
-        })
-    })
 
-})
 
 /* USGS API */
 function getQuakesData(event, cb) {
@@ -197,14 +231,10 @@ function getCacheItem(key, cb){
 
 /* DB API SAVE CALL */
 function saveToDataApi(timestamp, data, cb) {
-    // telemetry.trackEvent({name: event})
     var url = dataServiceUri + 'save/quakes/' + timestamp
-    
-    console.log(url)
     
     var opt = { method: 'POST',
         uri: url,
-        headers: { 'User-Agent': 'Request-Promise' },
         body: data,
         json: true
     }
@@ -214,26 +244,39 @@ function saveToDataApi(timestamp, data, cb) {
         cb(null, out)
     })
     .catch(err => {
+        handleError(site.name +' func - saveToDataApi :: error saving flights to DB:')
         cb(err, null)
     })
 }
 
 /* DB API GET CALL */
 function getFromDataApi(path, cb){
+    
     var url = dataServiceUri + path
     
-    var opt = { uri: url,
-        headers: { 'User-Agent': 'Request-Promise' },
-        json: true
-    }
+    var opt = { uri: url, json: true, resolveWithFullResponse: true  }
 
     rp(opt)
-      .then(out => {
-        cb(null, out)
+    .then( out => {
+        if( out.statusCode === 200){
+            cb(null, out.body)
+        }
+        if( out.statusCode === 204){
+            cb(null, {payload:null})
+        }
+        
     })
-    .catch(err => {
+    .catch( err => {
+        handleError(site.name +' func - getFromDataApi :: error retrieving data' + err)
         cb(err, null)
     })
+
 }
+
+function handleError(message) {
+    console.log(message)
+    telemetry.trackException({exception: message})
+}
+
 
 module.exports = router

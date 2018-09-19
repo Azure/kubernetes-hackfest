@@ -2,16 +2,18 @@ var applicationInsights = require('applicationinsights'),
     async = require('async'),
     cacheServiceUri = process.env.CACHE_SERVICE_URI,
     dataServiceUri = process.env.DATA_SERVICE_URI,
+    dayjs = require('dayjs'),
     express = require('express'),
     fs = require('fs'),
     jsonResponse = require('../models/express/jsonResponse'),
-    moment = require('moment'),
-    momentDuration = require('moment-duration-format'),
     path = require('path'),
     router = express.Router(),
+    relativeTime = require('dayjs/plugin/relativeTime'),
     rp = require('request-promise'),
     st = require('../models/util/status'),
     site = require('../models/util/site')
+
+    dayjs.extend(relativeTime)
     
 
 /**
@@ -25,70 +27,134 @@ const routename = path.basename(__filename).replace('.js', ' default endpoint fo
 
 const weatherIconBaseUrl = 'https://developer.accuweather.com/sites/default/files/'
 
-/* GET JSON :: Route Base Endpoint */
+/**
+ * 
+ * HTTP GET /
+ * default endpoint
+ * 
+ **/
 router.get('/', (req, res, next) => {
     jsonResponse.json( res, routename, st.OK.code, {} )
 })
 
+/** 
+ * 
+ * HTTP GET /status
+ * JSON
+ * ENDPOINT FOR DASHBOARD SERVICE STATUS
+ * 
+ **/
 router.get('/status', (req, res, next) => {
-
     async.waterfall([
         (cb) => {
             getFromDataApi('get/latest/weather', (e, d) => {
-                cb(null, d.payload[0].Timestamp)
+                if(e){
+                    handleError(site.name +'/status :: error retrieving data')
+                    cb(e, null)
+                }
+                else{
+                    if(d.payload!=null){
+                        cb(null, d.payload[0].Timestamp)
+                    }else{
+                        handleError(site.name +'/status :: no data in cosmosdb')
+                        cb(site.ERR_NO_DATA, null)
+                    }
+                }  
             })
         }
     ],(e,r) => {
-        jsonResponse.json( res, routename, st.OK.code, {
-            uptime: moment.duration(Math.floor(process.uptime())*1000).format('h [hrs], m [min]'), 
-            latest:moment(r.substr(0, 8) + 'T' + r.substr(8)).format('MM/DD/YYYY h:mm A')
-        })
+        if(e){
+            if (e === site.ERR_NO_DATA){
+                res.status(204).end()
+            } else {
+                jsonResponse.json(res, st.ERR.msg, st.ERR.code, e)
+            }
+        }else{
+            jsonResponse.json( res, routename, st.OK.code, {
+                uptime: dayjs(global.start).from(dayjs((Math.floor(process.uptime())*1000) + global.start), true),
+                latest:dayjs(Number(r)).format('MM/DD/YYYY h:mm A')
+            })
+        }
     })
-    
+
 })
 
-/* GET JSON :: All Weather - db version */
+/**
+ * 
+ * HTTP GET /latest
+ * JSON
+ * USES DATABASE
+ * NO CACHE
+ * 
+ **/
 router.get('/latest', (req, res, next) => {
 
     async.waterfall([
         (cb) => {
             getFromDataApi('get/latest/weather', (e, d) => {
-                cb(null, d.payload[0].Timestamp)
+                if(e){
+                    handleError(site.name +'/latest :: error retrieving latest timestamp')
+                    cb(e, null)
+                }else{
+                    cb(null, d.payload[0].Timestamp)
+                }
             })
         },
         (timestamp, cb) => {
             getFromDataApi('get/weather/' + timestamp, (e, d) => {
-                cb(null, d.payload.FeatureCollection)
+                if(e){
+                    handleError(site.name +'/latest :: error retrieving weather with timestamp')
+                    cb(e, null)
+                }else{
+                    cb(null, d.payload.FeatureCollection)
+                }
             })
 
         }
     ],(e,r) => {
+        if(e) {
+            jsonResponse.json( res, st.ERR.msg, st.ERR.code, e )
+        }
         jsonResponse.json( res, st.OK.msg, st.OK.code, r)
     })
 
 })
 
+/**
+ * 
+ * HTTP GET /refresh
+ * JSON
+ * API CALL TO ACCUWEATHER
+ * SAVE TO DATABASE
+ * NO CACHE
+ * 
+ **/
 router.get('/refresh', (req, res, next) => {
 
     async.waterfall([
         (cb) => {
             getWeatherTopCities(150, (e,d) => {
+                if(e) cb(e, null)
                 cb(null, d)
             })
         },
         (data, cb) => {
-            var currenttime = moment().format('YYYYMMDDHHmm').toString()
             buildGeoJson(data, (e,d) => {
-                cb(null, d, currenttime)
+                if(e) cb(e, null)
+                cb(null, d, dayjs().valueOf())
             })
         },
         (data, key, cb) => {
             saveToDataApi(key, data, (e,r) => { 
+                if(e) cb(e, null)
                 cb(null, r)
             } )
         }
     ],(e,r) => {
-        console.log(r)
+        if(e){
+            res.status(500).end()
+            next()
+        }
         jsonResponse.json( res, st.OK.msg, st.OK.code, r)
     })
 
@@ -117,7 +183,6 @@ router.get('/cityPositions', (req, res, next) => {
         })
     })
 })
-
 
 
 function getWeatherCities(cb) {
@@ -156,26 +221,19 @@ function getWeatherCities(cb) {
 }
 
 function getWeatherTopCities(count, cb){
-    console.log('rp to accuweather:')
 
-    // telemetry.trackEvent({name: event})
-    var opt = { uri: 'http://dataservice.accuweather.com/currentconditions/v1/topcities/' + count + '?apikey=lfl6t1f1pQQ87ZMA8FdjRTemDJtgeiYe',
-        headers: { 'User-Agent': 'Request-Promise' },
-        json: true
-    }
+    var opt = { uri: 'http://dataservice.accuweather.com/currentconditions/v1/topcities/' + count + '?apikey=lfl6t1f1pQQ87ZMA8FdjRTemDJtgeiYe', json: true }
     
     try {
         rp(opt)
-    .then(data => {
-        cb(null, data)
-    })
-    .catch(err => {
-        console.log(err)
-        cb(err, null)
-    })
-        
-    } catch (error) {
-        console.log(error)
+        .then(data => {
+            cb(null, data)
+        })
+        .catch(err => {
+            cb(err, null)
+        })
+    }
+    catch (error) {
         cb(error, null)
     }
     
@@ -216,27 +274,21 @@ function buildGeoJson(data, cb){
 
         if (city.Temperature.Imperial.Value  <= 65){
             layerBlue.features.push(feature)
-            console.log('adding to blue')
         }
         if (city.Temperature.Imperial.Value > 65 && city.Temperature.Imperial.Value <= 72) {
             layerYellow.features.push(feature)
-            console.log('adding to yellow')
         }
         if (city.Temperature.Imperial.Value > 72 && city.Temperature.Imperial.Value <= 79) {
             layerYellowOrange.features.push(feature)
-            console.log('adding to yelloworange')
         }
         if (city.Temperature.Imperial.Value > 79 && city.Temperature.Imperial.Value <= 88) {
             layerOrange.features.push(feature)
-            console.log('adding to orange')
         }
         if (city.Temperature.Imperial.Value > 88 && city.Temperature.Imperial.Value <= 97) {
             layerRed.features.push(feature)
-            console.log('adding to red')
         }
         if (city.Temperature.Imperial.Value > 97){
             layerBrightRed.features.push(feature)
-            console.log('adding to bright red')
         }
         
         callback()
@@ -245,7 +297,6 @@ function buildGeoJson(data, cb){
         if(err){
             cb(err, null)
         }else{
-            console.log('all locales processed successfully')
             geoJsonArray.push(layerBlue, layerYellow, layerYellowOrange, layerOrange, layerRed, layerBrightRed)
             cb(null, geoJsonArray)
         }
@@ -329,14 +380,10 @@ function postCacheItem(key, data, event, cb){
 }
 
 function saveToDataApi(timestamp, data, cb) {
-    // telemetry.trackEvent({name: event})
     var url = dataServiceUri + 'save/weather/' + timestamp
-    
-    console.log(url)
     
     var opt = { method: 'POST',
         uri: url,
-        headers: { 'User-Agent': 'Request-Promise' },
         body: data,
         json: true
     }
@@ -346,29 +393,41 @@ function saveToDataApi(timestamp, data, cb) {
         cb(null, out)
     })
     .catch(err => {
+        handleError(site.name +' func - saveToDataApi :: error saving flights to DB:')
         cb(err, null)
     })
 }
 
+/* DB API GET CALL */
 function getFromDataApi(path, cb){
+    
     var url = dataServiceUri + path
     
-    console.log(url)
-    
-    var opt = { uri: url,
-        headers: { 'User-Agent': 'Request-Promise' },
-        json: true
-    }
+    var opt = { uri: url, json: true, resolveWithFullResponse: true  }
 
     rp(opt)
-      .then(out => {
-        cb(null, out)
+    .then( out => {
+        if( out.statusCode === 200){
+            cb(null, out.body)
+        }
+        if( out.statusCode === 204){
+            cb(null, {payload:null})
+        }
+        
     })
-    .catch(err => {
+    .catch( err => {
+        handleError(site.name +' func - getFromDataApi :: error retrieving data' + err)
         cb(err, null)
     })
+
 }
 
+
+
+function handleError(message) {
+    console.log(message)
+    telemetry.trackException({exception: message})
+}
 
 
 module.exports = router
