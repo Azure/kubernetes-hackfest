@@ -9,21 +9,13 @@ metadata:
 spec:
   tls:
   - hosts:
-    - khaksingress.eastus.cloudapp.azure.com
+    - <DNSNAMEHERE>.eastus.cloudapp.azure.com
     secretName: tls-secret
   rules:
-  - host: khaksingress.eastus.cloudapp.azure.com
+  - host: <DNSNAMEHERE>.eastus.cloudapp.azure.com
     http:
       paths:
       - path: /
         backend:
-          serviceName: aks-helloworld
-          servicePort: 80
-      - path: /app1
-        backend:
-          serviceName: aks-helloworld
-          servicePort: 80
-      - path: /app2
-        backend:
-          serviceName: kh-ingress-demo
-          servicePort: 80
+          serviceName: service-tracker-ui
+          servicePort: 8080
