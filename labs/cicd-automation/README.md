@@ -3,7 +3,7 @@
 In this lab you will setup pipelines for automating application creation and deployment. In the lab, you will be able to choose the platform you want to use for pipeline automation: 
 
 * Jenkins
-* Visual Studio Team Services
+* Azure DevOps
 * Brigade
 
 ## Prerequisites 
@@ -20,7 +20,7 @@ Click below to find the instructions for the CI/CD platform of your choice:
 
 [Jenkins](jenkins/README.md)
 
-[Visual Studio Team Services](vsts/README.md)
+[Azure DevOps](azure-devops/README.md)
 
 [Brigade](brigade/README.md)
 

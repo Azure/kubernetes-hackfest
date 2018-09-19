@@ -8,5 +8,5 @@ deploy:
   name: service-tracker-ui
   replicas: 1
   acrServer: "youracr.azurecr.io"
-  imageTag: "newone"
+  imageTag: "1.0"
   containerPort: 8080

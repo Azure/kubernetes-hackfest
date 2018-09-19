@@ -27,22 +27,29 @@
     ```bash
     az ad sp create-for-rbac --skip-assignment
     ```
-    This will return the following
+    This will return the following. !!!IMPORTANT!!! - Please copy this information down as you'll need it for labs going forward.
 
+    ```bash
+    "appId": "7248f250-0000-0000-0000-dbdeb8400d85",
+    "displayName": "azure-cli-2017-10-15-02-20-15",
+    "name": "http://azure-cli-2017-10-15-02-20-15",
+    "password": "77851d2c-0000-0000-0000-cb3ebc97975a",
+    "tenant": "72f988bf-0000-0000-0000-2d7cd011db47"
     ```
-   "appId": "7248f250-0000-0000-0000-dbdeb8400d85",
-   "displayName": "azure-cli-2017-10-15-02-20-15",
-   "name": "http://azure-cli-2017-10-15-02-20-15",
-   "password": "77851d2c-0000-0000-0000-cb3ebc97975a",
-   "tenant": "72f988bf-0000-0000-0000-2d7cd011db47"
-   ```
 
-   !!!IMPORTANT!!! - Please copy this information down as you'll need it for labs going forward 
+    Set the values from above as variables **(replace <appId> and <password> with your values)**.
+
+    DON'T MESS THIS STEP UP. REPLACE THE VALUES IN BRACKETS!!!
+
+    ```bash
+    echo export APPID=<appId> >> ~/.bashrc
+    echo export CLIENTSECRET=<password> >> ~/.bashrc
+    ```
 
 6. Create a  unique identifier suffix for resources to be created in this lab.
     
     ```bash
-     export UNIQUE_SUFFIX=$USER$RANDOM
+    export UNIQUE_SUFFIX=$USER$RANDOM
     ```
     #### *** Write Value To .bashrc to persist through lab
     ```bash
@@ -54,10 +61,13 @@
 7. Create an Azure Resource Group in East US.
 
     ```bash
-    export RGNAME=kubernetes-hackfest
+    echo export RGNAME=kubernetes-hackfest >> ~/.bashrc
     ```
     ```bash
-    export LOCATION=eastus
+    echo export LOCATION=eastus >> ~/.bashrc
+    ```
+    ```bash
+    source ~/.bashrc
     ```
     ```bash
     az group create -n $RGNAME -l $LOCATION 
@@ -68,16 +78,11 @@
     Use unique CLUSTERNAME
 
     ```bash
-    export CLUSTERNAME=aks-$UNIQUE_SUFFIX
+    echo export CLUSTERNAME=aks-$UNIQUE_SUFFIX >> ~/.bashrc
     ```  
-    For "appID" and "clientSecret" use the output from step 5
     
     ```bash
-    export APPID=<appID>
-    ```
-    
-    ```bash
-    export CLIENTSECRET=<clientSecret>
+    source ~/.bashrc
     ```
     > The below command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT and grab a coffee...
 
@@ -108,7 +113,7 @@
     ```
      
 11. Verify you have API access to your new AKS cluster
-
+    
       > Note: It can take 5 minutes for your nodes to appear and be in READY state. You can run `watch kubectl get nodes` to monitor status.
 
      ```bash

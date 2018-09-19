@@ -33,11 +33,20 @@ In order to trigger this pipeline you will need your own Github account and fork
 
     ![](./img/github-fork.png)
 
-2. Grab your clone URL from Github which will look something like: `https://github.com/thedude-lebowski/kubernetes-hackfest.git`
+2. Modify the Jenkinsfile pipeline Within Github Fork (Needs to be done from Github)
+
+    The pipeline file references your Azure Container Registry in a variable. Edit the `labs/cicd-automation/jenkins/Jenkinsfile` file and modify line 4 of the code: 
+    ```
+    def  ACRNAME = 'youracrname'
+    ```
+
+    ![](./img/modify_acr.png)
+
+3. Grab your clone URL from Github which will look something like: `https://github.com/thedude-lebowski/kubernetes-hackfest.git`
 
     ![](./img/github-clone.png)
 
-3. Clone your repo in Azure Cloud Shell.
+4. Clone your repo in Azure Cloud Shell.
 
     > Note: If you have cloned the repo in earlier labs, the directory name will conflict. You can either delete the old one or just rename it before this step.
 
@@ -45,13 +54,6 @@ In order to trigger this pipeline you will need your own Github account and fork
     git clone https://github.com/<your-github-account>/kubernetes-hackfest.git
 
     cd kubernetes-hackfest/labs/cicd-automation/jenkins
-    ```
-
-4. Modify the Jenkinsfile pipeline
-
-    The pipeline file references your Azure Container Registry in a variable. Edit the `labs/cicd-automation/jenkins/Jenkinsfile` file and modify line 4 of the code: 
-    ```
-    def  ACRNAME = 'youracrname'
     ```
 
 #### Deploy Jenkins Helm Chart
@@ -118,7 +120,7 @@ In order to trigger this pipeline you will need your own Github account and fork
 #### Create Jenkins Multibranch Pipeline
 
 1. Open Jenkins Main Admin Interface
-2. Click `Create New Project`
+2. Click `New Item`
 3. Enter "aks-hackfest" for Item Name
 4. Select `Multibrach Pipeline`
 5. Under Branch Sources `Click Add` -> `Git`
