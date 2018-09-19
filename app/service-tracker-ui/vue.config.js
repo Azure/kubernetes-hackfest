@@ -18,7 +18,11 @@ module.exports = {
   },
  lintOnSave: false,
   devServer: {
-    before: function(app) {      
+    disableHostCheck: true,
+    host: '0.0.0.0',
+    port: 8080,
+    // show variables when running http://localhost:8080/variables
+    before: function(app) {
       app.get('/variables', (req, res) => {
         var currentEnv = { 
           quakes: process.env.QUAKES_API_ROOT,

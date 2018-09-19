@@ -7,8 +7,29 @@ pool:
   vmImage: 'Ubuntu 16.04'
 
 variables:
-  imageName: 'service-tracker-ui:$(build.buildId)'
+  imageNameS: 'service-tracker-ui:latest'
+  imageNameQ: 'quakes-api:latest'
+  imageNameW: 'weather-api:latest'
+  imageNameD: 'data-api:latest'
+  imageNameF: 'flights-api:latest'
+  imageNameC: 'cache-api:latest'
 
 steps:
-- script: docker build -f Dockerfile -t $(imageName) ./app/service-tracker-ui/Dockerfile
-  displayName: 'docker build service tracker ui'
+- script: |
+    docker build -f app/service-tracker-ui/Dockerfile -t azcloudnative/$(imageNameS) app/service-tracker-ui
+    docker build -f app/quakes-api/Dockerfile -t azcloudnative/$(imageNameQ) app/quakes-api
+    docker build -f app/weather-api/Dockerfile -t azcloudnative/$(imageNameW) app/weather-api
+    docker build -f app/data-api/Dockerfile -t azcloudnative/$(imageNameD) app/data-api
+    docker build -f app/flights-api/Dockerfile -t azcloudnative/$(imageNameF) app/flights-api
+    docker build -f app/cache-api/Dockerfile -t azcloudnative/$(imageNameC) app/cache-api
+
+- script: docker login -u $(dockerUser) -p $(dockerPass)
+  displayName: 'Docker Login'
+  
+- script: |
+    docker push azcloudnative/$(imageNameS)
+    docker push azcloudnative/$(imageNameW)
+    docker push azcloudnative/$(imageNameD)
+    docker push azcloudnative/$(imageNameF)
+    docker push azcloudnative/$(imageNameC)
+    docker push azcloudnative/$(imageNameQ)
