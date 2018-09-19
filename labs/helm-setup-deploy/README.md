@@ -32,8 +32,8 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
         ```
     
         ```bash
-        Client: &version.Version{SemVer:"v2.9.1", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}
-        Server: &version.Version{SemVer:"v2.9.1", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}
+        Client: &version.Version{SemVer:"v2.10.0", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}
+        Server: &version.Version{SemVer:"v2.10.0", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}
         ```
 
         > It can take a minute or so for Tiller to start
@@ -73,17 +73,18 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
     ```
     
-    * Replace the `acrServer` value below with the Login server from previous step. You will make this change in all of the charts below (except cache-api)
-    
+    * Replace the `acrServer` value below with the Login server from previous step. In the Azure Cloud Shell, select the file editor '{}'.  Navigate to the yaml files below.  To save changes, select the elipticals on the right hand side and select Save. You will make this change in all of the charts below (except cache-api)
+    <!--->
     [charts/service-tracker-ui/values.yaml](../../charts/service-tracker-ui/values.yaml)
 
-    [charts/service-tracker-ui/values.yaml](../../charts/weather-api/values.yaml)
+    [charts/weather-api/values.yaml](../../charts/weather-api/values.yaml)
 
-    [charts/service-tracker-ui/values.yaml](../../charts/service-tracker-ui/values.yaml)
+    [charts/flights-api/values.yaml](../../charts/flights-api/values.yaml)
 
-    [charts/service-tracker-ui/values.yaml](../../charts/service-tracker-ui/values.yaml)
-    
-    [charts/service-tracker-ui/values.yaml](../../charts/service-tracker-ui/values.yaml)
+    [charts/quakes-api/values.yaml](../../charts/quakes-api/values.yaml)
+
+    [charts/data-api/values.yaml](../../charts/data-api/values.yaml)
+    --->
 
     Example:
     ```yaml
@@ -127,10 +128,9 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
     export MONGODB_PASSWORD='outputFromAboveCommand'
     ```
-
+    
+    Use Instrumentation Key from previous exercise:      
     ```bash
-    Use Instrumentation Key from previous exercise        
-
     export APPINSIGHTS_INSTRUMENTATIONKEY=''
     ```
     ```bash
