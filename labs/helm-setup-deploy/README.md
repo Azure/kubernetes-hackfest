@@ -41,7 +41,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     * Use "Node.js Application" for the app type
     * Select "kubernetes-hackfest" for the Resource Group
     * Use "East US" for location
-    * When this is completed, click on "Getting Started" and note the Instrumentation Key
+    * When this is completed, click on "Essentials" and note the Instrumentation Key
 
 3. Review the Helm Chart components
 
@@ -67,13 +67,17 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
     ```
     
-    * Replace the `acrServer` value below with the Login server from previous step. You will make this change in all of the charts below (except cache-api)
+    * Replace the `acrServer` value below with the Login server from previous step. In the Azure Cloud Shell, select the file editor '{}'.  Navigate to the yaml files below.  To save changes, select the elipticals on the right hand side and select Save. You will make this change in all of the charts below (except cache-api)
     <!--->
     [charts/service-tracker-ui/values.yaml](../../charts/service-tracker-ui/values.yaml)
-    [charts/service-tracker-ui/values.yaml](../../charts/weather-api/values.yaml)
-    [charts/service-tracker-ui/values.yaml](../../charts/service-tracker-ui/values.yaml)
-    [charts/service-tracker-ui/values.yaml](../../charts/service-tracker-ui/values.yaml)
-    [charts/service-tracker-ui/values.yaml](../../charts/service-tracker-ui/values.yaml)
+
+    [charts/weather-api/values.yaml](../../charts/weather-api/values.yaml)
+
+    [charts/flights-api/values.yaml](../../charts/flights-api/values.yaml)
+
+    [charts/quakes-api/values.yaml](../../charts/quakes-api/values.yaml)
+
+    [charts/data-api/values.yaml](../../charts/data-api/values.yaml)
     --->
     Example:
     ```yaml
@@ -100,7 +104,10 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     > Note: the MONGODB_URI should be of this format **(Ensure you add the `/hackfest?ssl=true`)** at the end. `mongodb://cosmosbrian11122:ctumHIz1jC4Mh1hZgWGEcLwlCLjDSCfFekVFHHhuqQxIoJGiQXrIT1TZTllqyB4G0VuI4fb0qESeuHCRJHA==@acrhcosmosbrian11122.documents.azure.com:10255/hackfest?ssl=true`
 
     ```
-    # Customize these values from your Cosmos DB instance deployed in a previous lab. Use the ticks provided for strings
+    # Customize these values from your Cosmos DB instance deployed in a previous lab. Use the ticks provided for strings.
+
+    To find the values, open the Azure Portal and navigate to Resource Group->CosmosDB account.  On the left hand side, select Connection String.  Note that the Primary Connection String should be used, though it needs to be modified to match the string above.
+
     export MONGODB_URI=''
     export MONGODB_USER=''
     export MONGODB_PASSWORD=''

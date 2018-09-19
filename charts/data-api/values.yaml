@@ -7,6 +7,6 @@ service:
 deploy:
   name: data-api
   replicas: 1
-  acrServer: "briaracr.azurecr.io"
+  acrServer: "youracr.azurecr.io"
   imageTag: "newone"
   containerPort: 3009
