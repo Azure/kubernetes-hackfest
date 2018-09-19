@@ -97,7 +97,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     name: data-api
     replicas: 1
     acrServer: "youracr.azurecr.io"
-    imageTag: "v4"
+    imageTag: "1.0"
     containerPort: 3009
     ```
 
@@ -109,13 +109,31 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
     > Note: the MONGODB_URI should be of this format **(Ensure you add the `/hackfest?ssl=true`)** at the end. `mongodb://cosmosbrian11122:ctumHIz1jC4Mh1hZgWGEcLwlCLjDSCfFekVFHHhuqQxIoJGiQXrIT1TZTllqyB4G0VuI4fb0qESeuHCRJHA==@acrhcosmosbrian11122.documents.azure.com:10255/hackfest?ssl=true`
 
+    
+    *Customize these values from your Cosmos DB instance deployed in a previous lab. Use the ticks provided for strings
+    
+    ```bash
+    az cosmosdb list-connection-strings --name $COSMOSNAME --resource-group $RGNAME
+    
+    export MONGODB_URI='outputFromAboveCommand'
     ```
-    # Customize these values from your Cosmos DB instance deployed in a previous lab. Use the ticks provided for strings
-    export MONGODB_URI=''
-    export MONGODB_USER=''
-    export MONGODB_PASSWORD=''
-    export APPINSIGHTS_INSTRUMENTATIONKEY=''
+    ```bash
+    az cosmosdb show --name $COSMOSNAME --resource-group $RGNAME --query "name" -o tsv
 
+    export MONGODB_USER='outputFromAboveCommand'
+    ```
+    ```bash
+    az cosmosdb list-keys --name $COSMOSNAME --resource-group $RGNAME --query "primaryMasterKey" -o tsv
+
+    export MONGODB_PASSWORD='outputFromAboveCommand'
+    ```
+
+    ```bash
+    Use Instrumentation Key from previous exercise        
+
+    export APPINSIGHTS_INSTRUMENTATIONKEY=''
+    ```
+    ```bash
     kubectl create secret generic cosmos-db-secret --from-literal=uri=$MONGODB_URI --from-literal=user=$MONGODB_USER --from-literal=pwd=$MONGODB_PASSWORD --from-literal=appinsights=$APPINSIGHTS_INSTRUMENTATIONKEY
     ```
 
