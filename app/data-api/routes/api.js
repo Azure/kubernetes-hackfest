@@ -1,14 +1,16 @@
 var applicationInsights = require('applicationinsights'),
     async = require('async'),
+    dayjs = require('dayjs'),
     express = require('express'),
     jsonResponse = require('../models/express/jsonResponse'),
-    moment = require('moment'),
-    momentDuration = require('moment-duration-format'),
     mongoose = require('mongoose'),
     path = require('path'),
+    relativeTime = require('dayjs/plugin/relativeTime')
     router = express.Router(),
     st = require('../models/util/status'),
     site = require('../models/util/site')
+
+    dayjs.extend(relativeTime)
 
 /* Models and Telemetry event info */
 var Flights = mongoose.model('Flights'),
@@ -18,6 +20,11 @@ var Flights = mongoose.model('Flights'),
     Weather = mongoose.model('Weather'),
     LatestWeather = mongoose.model('LatestWeather')
 
+/**
+ * 
+ * Incorporate telemetry with App Insights
+ * 
+ **/
 var telemetry = applicationInsights.defaultClient
 
 const routename = path.basename(__filename).replace('.js', ' default endpoint for ' + site.name)
@@ -28,46 +35,59 @@ router.get('/', (req, res, next) => {
 })
 
 router.get('/status', (req, res, next) => {
-
     jsonResponse.json( res, routename, st.OK.code, {
-        uptime: moment.duration(Math.floor(process.uptime())*1000).format('h [hrs], m [min]')
+        uptime: dayjs(global.start).from(dayjs((Math.floor(process.uptime())*1000) + global.start), true)
     })
-    
 })
 
 router.get('/get/flights/:timestamp', (req, res, next) => {
-    getFlightsFromDb(req.params.timestamp, (err, result) => {
+    
+    getDataObjFromDb(Flights,req.params.timestamp, (err, result) => {
         jsonResponse.json( res, 'success', st.OK.code, result )
     })
+
 })
 
 router.get('/get/quakes/:timestamp', (req, res, next) => {
-    getQuakesFromDb(req.params.timestamp, (err, result) => {
+
+    getDataObjFromDb(Quakes,req.params.timestamp, (err, result) => {
         jsonResponse.json( res, 'success', st.OK.code, result )
     })
+
 })
 
 router.get('/get/weather/:timestamp', (req, res, next) => {
-    getWeatherFromDb(req.params.timestamp, (err, result) => {
-        jsonResponse.json( res, 'success', st.OK.code, result )
+
+    getDataObjFromDb(Weather, req.params.timestamp, (err, data) => {
+        if(err) {
+            jsonResponse.json(res, st.ERR.msg, st.ERR.code, err)
+        }else{
+            if(data.length > 0){
+                jsonResponse.json( res, st.OK.msg, st.OK.code, data )
+            }
+            else{
+                jsonResponse.json( res, st.EMPTY.msg, st.EMPTY.code, data )
+            }
+        }
     })
+
 })
 
-router.get('/get/latest/flights', (req, res, next) => {
-    getLatestFromDb(LatestFlight, (err, data) => {
-        jsonResponse.json( res, 'success', st.OK.code, data )
-    })
-})
+router.get('/get/latest/:datatype', (req, res, next) => {
 
-router.get('/get/latest/quakes', (req, res, next) => {
-    getLatestFromDb(LatestQuake, (err, data) => {
-        jsonResponse.json( res, 'success', st.OK.code, data )
+    getLatestObjFromDb(determineObj(req.params.datatype), (err, data) => {
+        if(err) {
+            jsonResponse.json(res, st.ERR.msg, st.ERR.code, err)
+        }else{
+            if(data.length > 0){
+                jsonResponse.json( res, st.OK.msg, st.OK.code, data )
+            }
+            else{
+                res.status(204).end()
+            }
+        }
     })
-})
-router.get('/get/latest/weather', (req, res, next) => {
-    getLatestFromDb(LatestWeather, (err, data) => {
-        jsonResponse.json( res, 'success', st.OK.code, data )
-    })
+
 })
 
 router.post('/save/flights/:timestamp', (req, res, next) => {
@@ -76,14 +96,14 @@ router.post('/save/flights/:timestamp', (req, res, next) => {
 
     async.waterfall([
         (cb) => {
-            saveToDb(flights, (e,r) => {
+            saveDataObjToDb(flights, (e,r) => {
                 if (r) {
                     cb(null, {FlightCount:flights.FeatureCollection.length, Timestamp: flights.Timestamp})
                 } 
             })
         },
         (flightDetail, cb) => {
-            saveToDb(latest, (e,r) => {
+            saveDataObjToDb(latest, (e,r) => {
                 cb(e, flightDetail)
             })
         },
@@ -99,14 +119,14 @@ router.post('/save/quakes/:timestamp', (req, res, next) => {
 
     async.waterfall([
         (cb) => {
-            saveToDb(quakes, (e,r) => {
+            saveDataObjToDb(quakes, (e,r) => {
                 if (r) {
                     cb(null, {QuakeCount:quakes.FeatureCollection.length, Timestamp: quakes.Timestamp})
                 } 
             })
         },
         (quakeDetail, cb) => {
-            saveToDb(latest, (e,r) => {
+            saveDataObjToDb(latest, (e,r) => {
                 cb(e, quakeDetail)
             })
         },
@@ -122,14 +142,14 @@ router.post('/save/weather/:timestamp', (req, res, next) => {
 
     async.waterfall([
         (cb) => {
-            saveToDb(weather, (e,r) => {
+            saveDataObjToDb(weather, (e,r) => {
                 if (r) {
                     cb(null, {WeatherLayerCount:weather.FeatureCollection.length, Timestamp: weather.Timestamp})
                 } 
             })
         },
         (weatherDetail, cb) => {
-            saveToDb(latest, (e,r) => {
+            saveDataObjToDb(latest, (e,r) => {
                 cb(e, weatherDetail)
             })
         },
@@ -140,63 +160,75 @@ router.post('/save/weather/:timestamp', (req, res, next) => {
 } )
 
 
-function saveToDb(data, cb) {
-    data.save()
+function saveDataObjToDb(data, cb) {
+    data
+        .save()
         .then( (doc) => {
             cb(null, true) 
         } )
         .catch( (err) => {
-            console.log(err)
+            if (err) handleError(site.name +' func - saveDataObjToDb :: error saving data')
             cb(err, false)
         } )
 }
 
-function getFromDb(obj, query, cb) {
-    obj.find(query)
-    .then( (doc) => {
-        cb(null, doc)
-    } )
-    .catch( (err) => {
-        console.log(err)
-        cb(err, false)
-    } )
-}
-
-function getFlightsFromDb(timestamp, cb){
-    Flights
-        .findOne({Timestamp: timestamp})
-        .limit(1)
-        .exec( (err, doc) => {
-            cb(err, doc)
-        })
-}
-
-function getQuakesFromDb(timestamp, cb){
-    Quakes
-        .findOne({Timestamp: timestamp})
-        .limit(1)
-        .exec( (err, doc) => {
-            cb(err, doc)
-        })
-}
-
-function getWeatherFromDb(timestamp, cb){
-    Weather
-        .findOne({Timestamp: timestamp})
-        .limit(1)
-        .exec( (err, doc) => {
-            cb(err, doc)
-        })
-}
-
-function getLatestFromDb(obj, cb) {
+function getDataObjFromDb(obj, timestamp, cb){
     obj
-        .find()
-        .sort({ Timestamp: -1 })
+        .findOne({Timestamp: timestamp})
         .limit(1)
         .exec( (err, doc) => {
-          cb(err, doc)
+            if (err) handleError(site.name +' func - getDataObjFromDb :: error retrieving data')
+            cb(err, doc)
         })
 }
+
+function determineObj(objName){
+    switch(objName){
+        case 'flights':
+            return LatestFlight
+        case 'quakes':
+            return LatestQuake
+        case 'weather':
+            return LatestWeather
+        default:
+            break
+    }
+
+}
+
+// function getQuakesFromDb(timestamp, cb){
+//     Quakes
+//         .findOne({Timestamp: timestamp})
+//         .limit(1)
+//         .exec( (err, doc) => {
+//             cb(err, doc)
+//         })
+// }
+
+// function getWeatherFromDb(timestamp, cb){
+//     Weather
+//         .findOne({Timestamp: timestamp})
+//         .limit(1)
+//         .exec( (err, doc) => {
+//             cb(err, doc)
+//         })
+// }
+
+function getLatestObjFromDb(obj, cb) {
+    obj.find()
+    .sort({Timestamp: -1 })
+    .limit(1)
+    .exec( (err, doc) => {
+        if (err) handleError(site.name +' func - getLatestObjFromDb :: error retrieving data')
+        cb(err, doc)
+    })
+
+}
+
+function handleError(message) {
+    console.log(message)
+    telemetry.trackException({exception: message})
+}
+
 
 module.exports = router

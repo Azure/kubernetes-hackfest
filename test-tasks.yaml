@@ -1,0 +1,22 @@
+version: 1.0-preview-1
+steps:
+- build: -t {{.Run.Registry}}/data-api:{{.Run.ID}} -f ./app/data-api/Dockerfile ./app/data-api/
+- push: 
+    - {{.Run.Registry}}/data-api:{{.Run.ID}}
+    - {{.Run.Registry}}/data-api:latest
+- build: -t {{.Run.Registry}}/flights-api:{{.Run.ID}} -f ./app/flights-api/Dockerfile ./app/flights-api/
+- push: 
+    - {{.Run.Registry}}/flights-api:{{.Run.ID}}
+    - {{.Run.Registry}}/flights-api:latest
+- build: -t {{.Run.Registry}}/quakes-api:{{.Run.ID}} -f ./app/quakes-api/Dockerfile ./app/quakes-api/
+- push: 
+    - {{.Run.Registry}}/quakes-api:{{.Run.ID}}
+    - {{.Run.Registry}}/quakes-api:latest
+- build: -t {{.Run.Registry}}/weather-api:{{.Run.ID}} -f ./app/weather-api/Dockerfile ./app/weather-api/
+- push: 
+    - {{.Run.Registry}}/weather-api:{{.Run.ID}}
+    - {{.Run.Registry}}/weather-api:latest
+- build: -t {{.Run.Registry}}/web-ui:{{.Run.ID}} -f ./app/service-tracker-ui/Dockerfile ./app/service-tracker-ui/
+- push: 
+    - {{.Run.Registry}}/web-ui:{{.Run.ID}}
+    - {{.Run.Registry}}/web-ui:latest

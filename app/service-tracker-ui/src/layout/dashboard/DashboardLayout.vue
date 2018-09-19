@@ -5,7 +5,7 @@
         <sidebar-link to="/dashboard" name="Dashboard" icon="ti-panel"/>
         <sidebar-link to="/flights" name="Flights" icon="fas fa-plane"/>
         <sidebar-link to="/quakes" name="Earthquakes" icon="fas fa-globe-asia"/>
-        <sidebar-link to="/weather" name="Weather" icon="fas fa-globe-asia"/>
+        <sidebar-link to="/weather" name="Weather" icon="fas fa-sun"/>
         <sidebar-link to="/profile" name="Profile" icon="ti-user"/>
       </template>
       <mobile-menu>

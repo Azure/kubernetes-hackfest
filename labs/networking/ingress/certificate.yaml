@@ -5,13 +5,13 @@ metadata:
 spec:
   secretName: tls-secret
   dnsNames:
-  - khaksingress.eastus.cloudapp.azure.com
+  - <DNSNAMEHERE>.eastus.cloudapp.azure.com
   acme:
     config:
     - http01:
         ingressClass: nginx
       domains:
-      - khaksingress.eastus.cloudapp.azure.com
+      - <DNSNAMEHERE>.eastus.cloudapp.azure.com
   issuerRef:
     name: letsencrypt-aks
     kind: ClusterIssuer
