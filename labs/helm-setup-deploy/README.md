@@ -16,17 +16,22 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     Helm helps you manage Kubernetes applications — Helm Charts helps you define, install, and upgrade even the most complex Kubernetes application. Helm has a CLI component and a server side component called Tiller. 
     * Initialize Helm and Tiller:
 
-        ```
+        ```bash
         cd ~/kubernetes-hackfest
+        ```
+        ```bash
         kubectl apply -f ./labs/helm-setup-deploy/rbac-config.yaml
-
+        ```
+        ```bash
         helm init --service-account tiller --upgrade
         ```
 
     * Validate the install (in this case, we are using Helm version 2.9.1):
-        ```
+        ```bash
         helm version
-
+        ```
+    
+        ```bash
         Client: &version.Version{SemVer:"v2.9.1", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}
         Server: &version.Version{SemVer:"v2.9.1", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}
         ```
@@ -35,13 +40,14 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
 2. Create Application Insights Instance
 
-    * In your Azure portal, click "Create a resource" and pick "Application Insights"
-    * Click Create
+    * In your Azure portal, click "Create a resource", select "Developer tools", and choose "Application Insights"
     * Pick a unique name (you can use the unique identifier created in the 1st lab)
     * Use "Node.js Application" for the app type
     * Select "kubernetes-hackfest" for the Resource Group
     * Use "East US" for location
-    * When this is completed, click on "Getting Started" and note the Instrumentation Key
+    * When this is completed, select "All services", and search for "Application Insights" 
+    * Select your newly created Application Insights instance
+    * On the Overview Page take note of the Instrumentation Key
 
 3. Review the Helm Chart components
 
@@ -68,13 +74,17 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     ```
     
     * Replace the `acrServer` value below with the Login server from previous step. You will make this change in all of the charts below (except cache-api)
-    <!--->
+    
     [charts/service-tracker-ui/values.yaml](../../charts/service-tracker-ui/values.yaml)
+
     [charts/service-tracker-ui/values.yaml](../../charts/weather-api/values.yaml)
+
     [charts/service-tracker-ui/values.yaml](../../charts/service-tracker-ui/values.yaml)
+
     [charts/service-tracker-ui/values.yaml](../../charts/service-tracker-ui/values.yaml)
+    
     [charts/service-tracker-ui/values.yaml](../../charts/service-tracker-ui/values.yaml)
-    --->
+
     Example:
     ```yaml
     # Default values for chart

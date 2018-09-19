@@ -13,34 +13,33 @@ In this lab we will build Docker containers for each of the application componen
 1. Create Azure Container Registry (ACR)
     * Use the same resource group that was created for AKS (in lab 1)
     * In this step, you will need a unique name for your ACR instance. Use the following step to create the ACR name and then deploy.
-
-        ```
-        # Use the UNIQUE_SUFFIX from the first lab. Validate that the value is still set.
-        echo $UNIQUE_SUFFIX
-
-        export RGNAME=kubernetes-hackfest
+        ```bash
         export ACRNAME=acrhackfest$UNIQUE_SUFFIX
-
+        ```
+        ```bash
         az acr create --resource-group $RGNAME --name $ACRNAME --sku Basic
         ```
 2. Run bash script to authenticate with Azure Container Registry from AKS
     * Running this script will grant the Service Principal created at cluster creation time access to ACR.
-      ```
+      ```bash
       cd ~/kubernetes-hackfest/labs/build-application
-
+      ```
+      ```bash
        sh reg-acr.sh $RGNAME $CLUSTERNAME $ACRNAME
       ```
 
 2. Deploy Cosmos DB
     * In this step, create a Cosmos DB account for the Mongo api. Again, we will create a random, unique name.
         
-        ```
         # Use the UNIQUE_SUFFIX from the first lab. Validate that the value is still set.
-        echo $UNIQUE_SUFFIX
 
-        export RGNAME=kubernetes-hackfest
-        export COSMOSNAME=cosmos$UNIQUE_SUFFIX
-
+        ```bash
+        echo export COSMOSNAME=cosmos$UNIQUE_SUFFIX >> ~/.bashrc
+        ```
+        ```bash
+        source ~/.bashrc
+        ```
+        ```bash
         az cosmosdb create --name $COSMOSNAME --resource-group $RGNAME --kind MongoDB
         ```
     
@@ -50,15 +49,14 @@ In this lab we will build Docker containers for each of the application componen
 3. Create Docker containers in ACR
     * In this step we will create a Docker container image for each of our microservices. We will use ACR Builder functionality to build and store these images in the cloud. 
 
-        ```
+        ```bash
         cd ~/kubernetes-hackfest
-
-        # the $ACRNAME variable should be set from step 1
-        echo $ACRNAME
-
+        ```
         # set a version (make this anything you would like)
+        ```bash
         export VERSION=v4
-
+        ```
+        ```bash
         az acr build -t hackfest/data-api:$VERSION -r $ACRNAME --no-logs ./app/data-api
         az acr build -t hackfest/flights-api:$VERSION -r $ACRNAME --no-logs ./app/flights-api
         az acr build -t hackfest/quakes-api:$VERSION -r $ACRNAME --no-logs ./app/quakes-api
@@ -68,9 +66,10 @@ In this lab we will build Docker containers for each of the application componen
 
     * You can see the status of the builds by running the command below.
         
-        ```
+        ```bash
         az acr build-task list-builds -r $ACRNAME -o table
-
+        ```
+        ```bash
         az acr build-task logs -r $ACRNAME --build-id aa1
         ```
     
