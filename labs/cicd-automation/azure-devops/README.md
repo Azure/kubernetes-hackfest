@@ -75,7 +75,7 @@ The general workflow/result will be as follows:
 13. Enable Continuous integration for the build definition. Edit the build definition and you will find this setting under "Triggers"
 
 
-#### Create Deployment Pipeline
+#### Create Deployment Pipeline (Brian)
 
 In the deployment pipeline, we will create a Helm task to update our application. To save time, we will only deploy the web-ui application in this lab. 
 
