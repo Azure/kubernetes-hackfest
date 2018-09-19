@@ -7,11 +7,6 @@ service:
 deploy:
   name: data-api
   replicas: 1
-<<<<<<< HEAD
-  acrServer: "briaracr.azurecr.io"
-  imageTag: "v4"
-=======
   acrServer: "youracr.azurecr.io"
   imageTag: "1.0"
->>>>>>> e71d99301b775a8036d6541ca333a029881299c2
   containerPort: 3009
