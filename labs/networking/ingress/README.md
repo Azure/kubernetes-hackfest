@@ -8,6 +8,7 @@ This lab is about setting up the Ingress Controller and configuring the differen
 * Complete previous labs for [AKS](../../create-aks-cluster/README.md) and [ACR](../../build-application/README.md).
 
 ## Instructions
+Step 1 & 2 Only Needed if you did not complete Helm Setup In previous labs. Skip to step 3 if it was already completed.
 
 1. Setup Service Account and Permissions in teh Cluster for Tiller
 
@@ -50,7 +51,7 @@ This lab is about setting up the Ingress Controller and configuring the differen
 
     ```bash
     chmod +x configure-publicip-dns.sh
-    ./configureaksingressdns.sh
+    ./configure-publicip-dns.sh
     ```
 
 6. Install Cert Mgr with RBAC
@@ -75,8 +76,6 @@ This lab is about setting up the Ingress Controller and configuring the differen
     ```
 
 9. Apply Ingress Rules
-    * Update Ingress Rules in [app-ingress.yaml](./app-ingress.yaml) to align to web-ui, auth-api and flights-api
-    * Apply Ingress Rules
 
     ```bash
     # Apply Ingress Routes
@@ -85,8 +84,10 @@ This lab is about setting up the Ingress Controller and configuring the differen
     kubectl get ingress
     kubectl get endpoints
     ```
+10. Check Ingress Route Works
 
-#### Next Lab: [Network Policy](labs/networking/network-policy/README.md)
+    * Open dnsname.eastus.cloudapp.azure.com
+#### Next Lab: [Network Policy](../network-policy/README.md)
 
 ## Troubleshooting / Debugging
 

@@ -33,11 +33,20 @@ In order to trigger this pipeline you will need your own Github account and fork
 
     ![](./img/github-fork.png)
 
-2. Grab your clone URL from Github which will look something like: `https://github.com/thedude-lebowski/kubernetes-hackfest.git`
+2. Modify the Jenkinsfile pipeline Within Github Fork (Needs to be done from Github)
+
+    The pipeline file references your Azure Container Registry in a variable. Edit the `labs/cicd-automation/jenkins/Jenkinsfile` file and modify line 4 of the code: 
+    ```
+    def  ACRNAME = 'youracrname'
+    ```
+
+    ![](./img/modify_acr.png)
+
+3. Grab your clone URL from Github which will look something like: `https://github.com/thedude-lebowski/kubernetes-hackfest.git`
 
     ![](./img/github-clone.png)
 
-3. Clone your repo in Azure Cloud Shell.
+4. Clone your repo in Azure Cloud Shell.
 
     > Note: If you have cloned the repo in earlier labs, the directory name will conflict. You can either delete the old one or just rename it before this step.
 
@@ -47,18 +56,11 @@ In order to trigger this pipeline you will need your own Github account and fork
     cd kubernetes-hackfest/labs/cicd-automation/jenkins
     ```
 
-4. Modify the Jenkinsfile pipeline
-
-    The pipeline file references your Azure Container Registry in a variable. Edit the `labs/cicd-automation/jenkins/Jenkinsfile` file and modify line 4 of the code: 
-    ```
-    def  ACRNAME = 'youracrname'
-    ```
-
 #### Deploy Jenkins Helm Chart
 
 1. Initialize Helm With RBAC
 
-    > Note: You may have already installed Helm in the earlier lab. You can validate with `helm version`
+    > Note: You may have already installed Helm in the earlier lab. If you have already installed Helm skip to step 2. You can validate if Helm is installed with `helm version`
 
    ```bash
    kubectl apply -f helm-rbac.yaml
@@ -67,14 +69,14 @@ In order to trigger this pipeline you will need your own Github account and fork
    ```bash
    helm init --service-account tiller
    ```
-
+2. Install Jenkins Using Helm
    ```bash
    helm install stable/jenkins --name jenkins -f values.yaml
    ```
 
    This will take a couple of minutes to fully deploy
 
-2. Get credentials and IP to Login To Jenkins
+3. Get credentials and IP to Login To Jenkins
    ```bash
    printf $(kubectl get secret --namespace default jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
    ```
@@ -118,7 +120,7 @@ In order to trigger this pipeline you will need your own Github account and fork
 #### Create Jenkins Multibranch Pipeline
 
 1. Open Jenkins Main Admin Interface
-2. Click `Create New Project`
+2. Click `New Item`
 3. Enter "aks-hackfest" for Item Name
 4. Select `Multibrach Pipeline`
 5. Under Branch Sources `Click Add` -> `Git`

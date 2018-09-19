@@ -16,32 +16,38 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     Helm helps you manage Kubernetes applications — Helm Charts helps you define, install, and upgrade even the most complex Kubernetes application. Helm has a CLI component and a server side component called Tiller. 
     * Initialize Helm and Tiller:
 
-        ```
+        ```bash
         cd ~/kubernetes-hackfest
+        ```
+        ```bash
         kubectl apply -f ./labs/helm-setup-deploy/rbac-config.yaml
-
+        ```
+        ```bash
         helm init --service-account tiller --upgrade
         ```
 
     * Validate the install (in this case, we are using Helm version 2.9.1):
-        ```
+        ```bash
         helm version
-
-        Client: &version.Version{SemVer:"v2.9.1", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}
-        Server: &version.Version{SemVer:"v2.9.1", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}
+        ```
+    
+        ```bash
+        Client: &version.Version{SemVer:"v2.10.0", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}
+        Server: &version.Version{SemVer:"v2.10.0", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}
         ```
 
         > It can take a minute or so for Tiller to start
 
 2. Create Application Insights Instance
 
-    * In your Azure portal, click "Create a resource" and pick "Application Insights"
-    * Click Create
+    * In your Azure portal, click "Create a resource", select "Developer tools", and choose "Application Insights"
     * Pick a unique name (you can use the unique identifier created in the 1st lab)
     * Use "Node.js Application" for the app type
     * Select "kubernetes-hackfest" for the Resource Group
     * Use "East US" for location
-    * When this is completed, click on "Getting Started" and note the Instrumentation Key
+    * When this is completed, select "All services", and search for "Application Insights" 
+    * Select your newly created Application Insights instance
+    * On the Overview Page take note of the Instrumentation Key
 
 3. Review the Helm Chart components
 
@@ -67,10 +73,21 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
     ```
     
-    * Replace the `acrServer` value below with the Login server from previous step. You will make this change in all of the charts (except cache-api)
+    * Replace the `acrServer` value below with the Login server from previous step. In the Azure Cloud Shell, select the file editor '{}'.  Navigate to the yaml files below.  To save changes, select the elipticals on the right hand side and select Save. You will make this change in all of the charts below (except cache-api)
+    <!--->
+    [charts/service-tracker-ui/values.yaml](../../charts/service-tracker-ui/values.yaml)
+
+    [charts/weather-api/values.yaml](../../charts/weather-api/values.yaml)
+
+    [charts/flights-api/values.yaml](../../charts/flights-api/values.yaml)
+
+    [charts/quakes-api/values.yaml](../../charts/quakes-api/values.yaml)
+
+    [charts/data-api/values.yaml](../../charts/data-api/values.yaml)
+    --->
 
     Example:
-    ```
+    ```yaml
     # Default values for chart
 
     service:
@@ -81,7 +98,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     name: data-api
     replicas: 1
     acrServer: "youracr.azurecr.io"
-    imageTag: "v4"
+    imageTag: "1.0"
     containerPort: 3009
     ```
 
@@ -91,15 +108,32 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
     For now, we are creating a secret that holds the credentials for our backend database. The application deployment puts these secrets in environment variables. 
 
-    > Note: the MONGODB_URI should be of this format (Ensure you add the `/hackfest?ssl=true`) at the end. `mongodb://cosmosbrian11122:ctumHIz1jC4Mh1hZgWGEcLwlCLjDSCfFekVFHHhuqQxIoJGiQXrIT1TZTllqyB4G0VuI4fb0qESeuHCRJHA==@acrhcosmosbrian11122.documents.azure.com:10255/hackfest?ssl=true`
+    > Note: the MONGODB_URI should be of this format **(Ensure you add the `/hackfest?ssl=true`)** at the end. `mongodb://cosmosbrian11122:ctumHIz1jC4Mh1hZgWGEcLwlCLjDSCfFekVFHHhuqQxIoJGiQXrIT1TZTllqyB4G0VuI4fb0qESeuHCRJHA==@acrhcosmosbrian11122.documents.azure.com:10255/hackfest?ssl=true`
 
+    
+    *Customize these values from your Cosmos DB instance deployed in a previous lab. Use the ticks provided for strings
+    
+    ```bash
+    az cosmosdb list-connection-strings --name $COSMOSNAME --resource-group $RGNAME
+    
+    export MONGODB_URI='outputFromAboveCommand'
     ```
-    # Customize these values from your Cosmos DB instance deployed in a previous lab. Use the ticks provided for strings
-    export MONGODB_URI=''
-    export MONGODB_USER=''
-    export MONGODB_PASSWORD=''
-    export APPINSIGHTS_INSTRUMENTATIONKEY=''
+    ```bash
+    az cosmosdb show --name $COSMOSNAME --resource-group $RGNAME --query "name" -o tsv
 
+    export MONGODB_USER='outputFromAboveCommand'
+    ```
+    ```bash
+    az cosmosdb list-keys --name $COSMOSNAME --resource-group $RGNAME --query "primaryMasterKey" -o tsv
+
+    export MONGODB_PASSWORD='outputFromAboveCommand'
+    ```
+    
+    Use Instrumentation Key from previous exercise:      
+    ```bash
+    export APPINSIGHTS_INSTRUMENTATIONKEY=''
+    ```
+    ```bash
     kubectl create secret generic cosmos-db-secret --from-literal=uri=$MONGODB_URI --from-literal=user=$MONGODB_USER --from-literal=pwd=$MONGODB_PASSWORD --from-literal=appinsights=$APPINSIGHTS_INSTRUMENTATIONKEY
     ```
 

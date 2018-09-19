@@ -14,65 +14,70 @@ In this lab we will build Docker containers for each of the application componen
     * Use the same resource group that was created for AKS (in lab 1)
     * In this step, you will need a unique name for your ACR instance. Use the following step to create the ACR name and then deploy.
 
-        ```
-        # Use the UNIQUE_SUFFIX from the first lab. Validate that the value is still set.
-        echo $UNIQUE_SUFFIX
+    ```bash
+    # Use the UNIQUE_SUFFIX from the first lab. Validate that the value is still set.
+    echo $UNIQUE_SUFFIX
+    ```
+    ```bash
+    echo export ACRNAME=acrhackfest$UNIQUE_SUFFIX >> ~/.bashrc
+    ```
+    ```bash
+    source ~/.bashrc
+    ```
+    ```bash
+    az acr create --resource-group $RGNAME --name $ACRNAME --sku Basic
+    ```
 
-        export RGNAME=kubernetes-hackfest
-        export ACRNAME=acrhackfest$UNIQUE_SUFFIX
-
-        az acr create --resource-group $RGNAME --name $ACRNAME --sku Basic
-        ```
 2. Run bash script to authenticate with Azure Container Registry from AKS
-    * Running this script will grant the Service Principal created at cluster creation time access to ACR.
-      ```bash
-       sh reg-acr.sh
-      ```
+    
+    Running this script will grant the Service Principal created at cluster creation time access to ACR.
+
+    ```bash
+    cd ~/kubernetes-hackfest/labs/build-application
+
+    sh reg-acr.sh $RGNAME $CLUSTERNAME $ACRNAME
+    ```
 
 2. Deploy Cosmos DB
-    * In this step, create a Cosmos DB account for the Mongo api. Again, we will create a random, unique name.
-        
-        ```
-        # Use the UNIQUE_SUFFIX from the first lab. Validate that the value is still set.
-        echo $UNIQUE_SUFFIX
-
-        export RGNAME=kubernetes-hackfest
-        export COSMOSNAME=cosmos$UNIQUE_SUFFIX
-
-        az cosmosdb create --name $COSMOSNAME --resource-group $RGNAME --kind MongoDB
-        ```
     
-    * You can validate your Cosmos instance in the portal. The credentials and connect string will be used in the next lab.
+    In this step, create a Cosmos DB account for the Mongo api. Again, we will create a random, unique name.
+        
+    ```bash
+    echo export COSMOSNAME=cosmos$UNIQUE_SUFFIX >> ~/.bashrc
+    ```
+    ```bash
+    source ~/.bashrc
+    ```
+    ```bash
+    az cosmosdb create --name $COSMOSNAME --resource-group $RGNAME --kind MongoDB
+    ```
+    
+    You can validate your Cosmos instance in the portal. The credentials and connect string will be used in the next lab.
 
 
 3. Create Docker containers in ACR
-    * In this step we will create a Docker container image for each of our microservices. We will use ACR Builder functionality to build and store these images in the cloud. 
-
-        ```
-        cd ~/kubernetes-hackfest
-
-        # the $ACRNAME variable should be set from step 1
-        echo $ACRNAME
-
-        # set a version (make this anything you would like)
-        export VERSION=v4
-
-        az acr build -t hackfest/data-api:$VERSION -r $ACRNAME --no-logs ./app/data-api
-        az acr build -t hackfest/flights-api:$VERSION -r $ACRNAME --no-logs ./app/flights-api
-        az acr build -t hackfest/quakes-api:$VERSION -r $ACRNAME --no-logs ./app/quakes-api
-        az acr build -t hackfest/weather-api:$VERSION -r $ACRNAME --no-logs ./app/weather-api
-        az acr build -t hackfest/service-tracker-ui:$VERSION -r $ACRNAME --no-logs ./app/service-tracker-ui
-        ```
-
-    * You can see the status of the builds by running the command below.
-        
-        ```
-        az acr build-task list-builds -r $ACRNAME -o table
-
-        az acr build-task logs -r $ACRNAME --build-id aa1
-        ```
     
-    * Browse to your ACR instance in the Azure portal and validate that the images are in "Repositories."
+    In this step we will create a Docker container image for each of our microservices. We will use ACR Builder functionality to build and store these images in the cloud. 
+
+    ```bash
+    cd ~/kubernetes-hackfest
+
+    az acr build -t hackfest/data-api:1.0 -r $ACRNAME --no-logs ./app/data-api
+    az acr build -t hackfest/flights-api:1.0 -r $ACRNAME --no-logs ./app/flights-api
+    az acr build -t hackfest/quakes-api:1.0 -r $ACRNAME --no-logs ./app/quakes-api
+    az acr build -t hackfest/weather-api:1.0 -r $ACRNAME --no-logs ./app/weather-api
+    az acr build -t hackfest/service-tracker-ui:1.0 -r $ACRNAME --no-logs ./app/service-tracker-ui
+    ```
+
+    You can see the status of the builds by running the command below.
+        
+    ```
+    az acr build-task list-builds -r $ACRNAME -o table
+
+    az acr build-task logs -r $ACRNAME --build-id aa1
+    ```
+    
+    Browse to your ACR instance in the Azure portal and validate that the images are in "Repositories."
 
 #### Next Lab: [Helm Setup and Deploy Application](../helm-setup-deploy/README.md)
 
