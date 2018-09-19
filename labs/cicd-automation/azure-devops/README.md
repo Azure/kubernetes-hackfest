@@ -1,6 +1,6 @@
 # Lab: Azure DevOps CI/CD
 
-This workshop will guide you through building Continuous Integration (CI) and Continuous Deployment (CD) pipelines with Visual Studio Team Services (VSTS) for use with Azure Kubernetes Service. The pipeline will utilize Azure Container Registry to build the images and Helm for application updating. 
+This workshop will guide you through building Continuous Integration (CI) and Continuous Deployment (CD) pipelines with Azure DevOps for use with Azure Kubernetes Service. The pipeline will utilize Azure Container Registry to build the images and Helm for application updating. 
 
 ## Prerequisites 
 
@@ -13,7 +13,7 @@ This workshop will guide you through building Continuous Integration (CI) and Co
 
 The general workflow/result will be as follows:
 
-- Push code to source control (Github)
+- Push code to source control
 - Trigger a continuous integration (CI) build pipeline when project code is updated via Git
 - Package app code into a container image (Docker Image) created and stored with Azure Container Registry
 - Trigger a continuous deployment (CD) release pipeline upon a successful build
@@ -24,13 +24,13 @@ The general workflow/result will be as follows:
 ![](workflow.png)
 
 
-#### Setup VSTS and Project
+#### Setup Azure DevOps Project
 
-1. Create a VSTS account. Follow the steps here: https://docs.microsoft.com/en-us/vsts/organizations/accounts/create-account-msa-or-work-student?view=vsts 
+1. Create a Azure DevOps organization/account. Follow the steps here: https://docs.microsoft.com/en-us/azure/devops/user-guide/sign-up-invite-teammates?view=vsts
 
-2. Create New Project in VSTS
+2. Create New Project in Azure DevOps
 
-    * Name your project "vsts-aks" and give it a description.
+    * Name your project "azure-devops-aks" and give it a description.
     * Leave the Version control as Git
 
     ![](vsts-new-project.png)
