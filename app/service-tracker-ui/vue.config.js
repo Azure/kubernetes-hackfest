@@ -15,6 +15,9 @@ module.exports = {
   },
  lintOnSave: false,
   devServer: {
+    disableHostCheck: true,
+    host: '0.0.0.0',
+    port: 8080,
     // show variables when running http://localhost:8080/variables
     before: function(app) {
       
