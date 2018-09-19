@@ -149,6 +149,7 @@ export default {
         this.serviceCards.push({objServiceAvailable:true,objLatestTimeStamp:data.payload.latest, objName:svc.toProperCase(),objSubTitle:'Microservice', objInfoArray: info, objSubTitleIcon:'fas fa-project-diagram text-muted', objStatusIcon: 'fas fa-check-circle text-success', objStatus:'Available' })
       })
       .catch((e) =>{
+        console.log(e)
         this.serviceCards.push({objServiceAvailable:false, objName:svc.toProperCase(),objSubTitle:'Microservice', objSubTitleIcon:'fas fa-project-diagram text-muted', objStatusIcon: 'fas fa-check-circle text-danger', objStatus:'Error' })
       })
 

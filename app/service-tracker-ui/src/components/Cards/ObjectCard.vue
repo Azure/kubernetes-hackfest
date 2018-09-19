@@ -16,11 +16,14 @@
                 </ul>
             </div>
 
-            <div class="row obj-row-data-status" v-if="objServiceAvailable">
+            <div class="row obj-row-data-status">
                 <ul class="list-group list-group-flush">
-                    <li class="list-group-item">
+                    <li class="list-group-item" v-if="objServiceAvailable">
                         <footer class="blockquote-footer popInfoHead pb-1">LATEST DATA</footer>
                         <span class="pt-1">{{objLatestTimeStamp}}</span></li>
+                    <li class="list-group-item" v-else>
+                        <footer class="blockquote-footer popInfoHead pb-1">NO DATA PRESENT</footer>
+                        <span class="pt-1">Click Refresh</span></li>
                     <li class="list-group-item">
                         <button type="button" :id="objName" class="btn btn-outline-success btn-sm refreshDataModal" v-on:click="showModal(objName)">
                             <i class="fas fa-sync-alt text-success pr-1"></i>Refresh Data

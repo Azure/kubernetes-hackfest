@@ -2,138 +2,164 @@ var applicationInsights = require('applicationinsights'),
     async = require('async'),
     cacheServiceUri = process.env.CACHE_SERVICE_URI,
     dataServiceUri = process.env.DATA_SERVICE_URI,
+    dayjs = require('dayjs'),
     express = require('express'),
     fs = require('fs'),
     jsonResponse = require('../models/express/jsonResponse'),
-    moment = require('moment'),
-    momentDuration = require('moment-duration-format'),
     path = require('path'),
     router = express.Router(),
+    relativeTime = require('dayjs/plugin/relativeTime'),
     rp = require('request-promise'),
     st = require('../models/util/status'),
-    site = require('../models/util/site'),
-    weatherCities1000 = require('../resources/accuweather_top_1000_cities_us'),
-    weatherTop1000US = require('../resources/aw_top1000_cities_pk'),
-    weatherCities25 = require('../resources/aw_top25_cities_us'),
-    
-    styleExample = require('../resources/styleExample')
+    site = require('../models/util/site')
+
+    dayjs.extend(relativeTime)
     
 
-
+/**
+ * 
+ * Incorporate telemetry with App Insights
+ * 
+ **/
 var telemetry = applicationInsights.defaultClient
 
 const routename = path.basename(__filename).replace('.js', ' default endpoint for ' + site.name)
 
 const weatherIconBaseUrl = 'https://developer.accuweather.com/sites/default/files/'
 
-/* GET JSON :: Route Base Endpoint */
+/**
+ * 
+ * HTTP GET /
+ * default endpoint
+ * 
+ **/
 router.get('/', (req, res, next) => {
     jsonResponse.json( res, routename, st.OK.code, {} )
 })
 
+/** 
+ * 
+ * HTTP GET /status
+ * JSON
+ * ENDPOINT FOR DASHBOARD SERVICE STATUS
+ * 
+ **/
 router.get('/status', (req, res, next) => {
+    async.waterfall([
+        (cb) => {
+            getFromDataApi('get/latest/weather', (e, d) => {
+                if(e){
+                    handleError(site.name +'/status :: error retrieving data')
+                    cb(e, null)
+                }
+                else{
+                    if(d.payload!=null){
+                        cb(null, d.payload[0].Timestamp)
+                    }else{
+                        handleError(site.name +'/status :: no data in cosmosdb')
+                        cb(site.ERR_NO_DATA, null)
+                    }
+                }  
+            })
+        }
+    ],(e,r) => {
+        if(e){
+            if (e === site.ERR_NO_DATA){
+                res.status(204).end()
+            } else {
+                jsonResponse.json(res, st.ERR.msg, st.ERR.code, e)
+            }
+        }else{
+            jsonResponse.json( res, routename, st.OK.code, {
+                uptime: dayjs(global.start).from(dayjs((Math.floor(process.uptime())*1000) + global.start), true),
+                latest:dayjs(Number(r)).format('MM/DD/YYYY h:mm A')
+            })
+        }
+    })
+
+})
+
+/**
+ * 
+ * HTTP GET /latest
+ * JSON
+ * USES DATABASE
+ * NO CACHE
+ * 
+ **/
+router.get('/latest', (req, res, next) => {
 
     async.waterfall([
         (cb) => {
             getFromDataApi('get/latest/weather', (e, d) => {
-                cb(null, d.payload[0].Timestamp)
+                if(e){
+                    handleError(site.name +'/latest :: error retrieving latest timestamp')
+                    cb(e, null)
+                }else{
+                    cb(null, d.payload[0].Timestamp)
+                }
             })
+        },
+        (timestamp, cb) => {
+            getFromDataApi('get/weather/' + timestamp, (e, d) => {
+                if(e){
+                    handleError(site.name +'/latest :: error retrieving weather with timestamp')
+                    cb(e, null)
+                }else{
+                    cb(null, d.payload.FeatureCollection)
+                }
+            })
+
         }
     ],(e,r) => {
-        jsonResponse.json( res, routename, st.OK.code, {
-            uptime: moment.duration(Math.floor(process.uptime())*1000).format('h [hrs], m [min]'), 
-            latest:moment(r.substr(0, 8) + 'T' + r.substr(8)).format('MM/DD/YYYY HH:mm a')
-        })
+        if(e) {
+            jsonResponse.json( res, st.ERR.msg, st.ERR.code, e )
+        }
+        jsonResponse.json( res, st.OK.msg, st.OK.code, r)
     })
-    
+
 })
 
+/**
+ * 
+ * HTTP GET /refresh
+ * JSON
+ * API CALL TO ACCUWEATHER
+ * SAVE TO DATABASE
+ * NO CACHE
+ * 
+ **/
+router.get('/refresh', (req, res, next) => {
 
-/* GET JSON :: Current weather, top 100 cities worldwide */
-router.get('/current', (req, res, next) => {
-    // var event = 'no_cache'
-    var Top1000
-    console.log(path.join(__dirname,'../resources') + '/aw_top1000_geojson.txt')
-    fs.readFileSync(path.join(__dirname,'../resources') + '/aw_top1000_geojson.txt', 'utf8', (err, data)=>{
-        //Top1000 = data
-        console.log(err)
-        console.log(data)
+    async.waterfall([
+        (cb) => {
+            getWeatherTopCities(150, (e,d) => {
+                if(e) cb(e, null)
+                cb(null, d)
+            })
+        },
+        (data, cb) => {
+            buildGeoJson(data, (e,d) => {
+                if(e) cb(e, null)
+                cb(null, d, dayjs().valueOf())
+            })
+        },
+        (data, key, cb) => {
+            saveToDataApi(key, data, (e,r) => { 
+                if(e) cb(e, null)
+                cb(null, r)
+            } )
+        }
+    ],(e,r) => {
+        if(e){
+            res.status(500).end()
+            next()
+        }
+        jsonResponse.json( res, st.OK.msg, st.OK.code, r)
     })
-    var layers = []
-    var layerBlue = {id: 'mapblue', textColor:'#37EEFF', features:[]}
-    var layerYellow = {id: 'mapyellow', textColor:'#ffee38', features:[]}
-    var layerYellowOrange = {id: 'mapyelloworange', textColor:'#ffc038', features:[]}
-    var layerOrange = {id: 'maporange', textColor:'#ff8138', features:[]}
-    var layerRed = {id: 'mapred', textColor:'#ff6338', features:[]}
-    var layerBrightRed = {id: 'mapbrightred', textColor:'#ff0000', features:[]}
 
-
-    // getWeatherCities((err,data) => {
-        async.each(Top1000, (feature, callback) => {
-
-            console.log('Temp is ', feature.properties.Temperature)
-            var f = {}
-            
-                if (feature.properties.Temperature <= 65){
-                    f = feature
-                    f.properties['Temperature'] = f.properties.Temperature.toString() + '°'
-                    layerBlue.features.push(f)
-                    console.log('adding to blue')
-                }
-                if (feature.properties.Temperature > 65 && feature.properties.Temperature <= 72) {
-                    f = feature
-                    f.properties['Temperature'] = f.properties.Temperature.toString() + '°'
-                    layerYellow.features.push(f)
-                    console.log('adding to yellow')
-                }
-                if (feature.properties.Temperature > 72 && feature.properties.Temperature <= 79) {
-                    f = feature
-                    f.properties['Temperature'] = f.properties.Temperature.toString() + '°'
-                    layerYellowOrange.features.push(f)
-                    console.log('adding to yelloworange')
-                }
-                if (feature.properties.Temperature > 79 && feature.properties.Temperature <= 88) {
-                    f = feature
-                    f.properties['Temperature'] = f.properties.Temperature.toString() + '°'
-                    layerOrange.features.push(f)
-                    console.log('adding to orange')
-                }
-                if (feature.properties.Temperature > 88 && feature.properties.Temperature <= 97) {
-                    f = feature
-                    f.properties['Temperature'] = f.properties.Temperature.toString() + '°'
-                    layerRed.features.push(f)
-                    console.log('adding to red')
-                }
-                if (feature.properties.Temperature > 97){
-                    f = feature
-                    f.properties['Temperature'] = f.properties.Temperature.toString() + '°'
-                    layerBrightRed.features.push(f)
-                    console.log('adding to bright red')
-                }
-            
-
-            callback()
-
-
-        }, (err) => {
-            if(!err){
-                layers.push(layerBlue, layerYellow, layerYellowOrange, layerOrange, layerRed, layerBrightRed)
-                jsonResponse.json( res, st.OK.msg, st.OK.code, layers)
-            }
-            
-        })
-        
-    // })
-
-
-    // getQuakesData( event, (err, data) => {
-    //     if (err) { 
-    //         jsonResponse.json( res, st.ERR.msg, st.ERR.code, err)
-    //         next()
-    //     }
-    //     jsonResponse.json( res, st.OK.msg, st.OK.code, data)
-    // })
 })
+
 
 router.get('/cityPositions', (req, res, next) => {
     var weatherLocales = []
@@ -158,52 +184,6 @@ router.get('/cityPositions', (req, res, next) => {
     })
 })
 
-/* GET JSON :: All Weather - db version */
-router.get('/latest', (req, res, next) => {
-
-    async.waterfall([
-        (cb) => {
-            getFromDataApi('get/latest/weather', (e, d) => {
-                cb(null, d.payload[0].Timestamp)
-            })
-        },
-        (timestamp, cb) => {
-            getFromDataApi('get/weather/' + timestamp, (e, d) => {
-                cb(null, d.payload.FeatureCollection)
-            })
-
-        }
-    ],(e,r) => {
-        jsonResponse.json( res, st.OK.msg, st.OK.code, r)
-    })
-
-})
-
-router.get('/refresh', (req, res, next) => {
-
-    async.waterfall([
-        (cb) => {
-            getWeatherTopCities(150, (e,d) => {
-                cb(null, d)
-            })
-        },
-        (data, cb) => {
-            var currenttime = moment().format('YYYYMMDDHHmm').toString()
-            buildGeoJson(data, (e,d) => {
-                cb(null, d, currenttime)
-            })
-        },
-        (data, key, cb) => {
-            saveToDataApi(key, data, (e,r) => { 
-                cb(null, r)
-            } )
-        }
-    ],(e,r) => {
-        console.log(r)
-        jsonResponse.json( res, st.OK.msg, st.OK.code, r)
-    })
-
-})
 
 function getWeatherCities(cb) {
     console.log(weatherCities1000.length)
@@ -241,26 +221,19 @@ function getWeatherCities(cb) {
 }
 
 function getWeatherTopCities(count, cb){
-    console.log('rp to accuweather:')
 
-    // telemetry.trackEvent({name: event})
-    var opt = { uri: 'http://dataservice.accuweather.com/currentconditions/v1/topcities/' + count + '?apikey=lfl6t1f1pQQ87ZMA8FdjRTemDJtgeiYe',
-        headers: { 'User-Agent': 'Request-Promise' },
-        json: true
-    }
+    var opt = { uri: 'http://dataservice.accuweather.com/currentconditions/v1/topcities/' + count + '?apikey=lfl6t1f1pQQ87ZMA8FdjRTemDJtgeiYe', json: true }
     
     try {
         rp(opt)
-    .then(data => {
-        cb(null, data)
-    })
-    .catch(err => {
-        console.log(err)
-        cb(err, null)
-    })
-        
-    } catch (error) {
-        console.log(error)
+        .then(data => {
+            cb(null, data)
+        })
+        .catch(err => {
+            cb(err, null)
+        })
+    }
+    catch (error) {
         cb(error, null)
     }
     
@@ -301,27 +274,21 @@ function buildGeoJson(data, cb){
 
         if (city.Temperature.Imperial.Value  <= 65){
             layerBlue.features.push(feature)
-            console.log('adding to blue')
         }
         if (city.Temperature.Imperial.Value > 65 && city.Temperature.Imperial.Value <= 72) {
             layerYellow.features.push(feature)
-            console.log('adding to yellow')
         }
         if (city.Temperature.Imperial.Value > 72 && city.Temperature.Imperial.Value <= 79) {
             layerYellowOrange.features.push(feature)
-            console.log('adding to yelloworange')
         }
         if (city.Temperature.Imperial.Value > 79 && city.Temperature.Imperial.Value <= 88) {
             layerOrange.features.push(feature)
-            console.log('adding to orange')
         }
         if (city.Temperature.Imperial.Value > 88 && city.Temperature.Imperial.Value <= 97) {
             layerRed.features.push(feature)
-            console.log('adding to red')
         }
         if (city.Temperature.Imperial.Value > 97){
             layerBrightRed.features.push(feature)
-            console.log('adding to bright red')
         }
         
         callback()
@@ -330,7 +297,6 @@ function buildGeoJson(data, cb){
         if(err){
             cb(err, null)
         }else{
-            console.log('all locales processed successfully')
             geoJsonArray.push(layerBlue, layerYellow, layerYellowOrange, layerOrange, layerRed, layerBrightRed)
             cb(null, geoJsonArray)
         }
@@ -414,14 +380,10 @@ function postCacheItem(key, data, event, cb){
 }
 
 function saveToDataApi(timestamp, data, cb) {
-    // telemetry.trackEvent({name: event})
     var url = dataServiceUri + 'save/weather/' + timestamp
-    
-    console.log(url)
     
     var opt = { method: 'POST',
         uri: url,
-        headers: { 'User-Agent': 'Request-Promise' },
         body: data,
         json: true
     }
@@ -431,29 +393,41 @@ function saveToDataApi(timestamp, data, cb) {
         cb(null, out)
     })
     .catch(err => {
+        handleError(site.name +' func - saveToDataApi :: error saving flights to DB:')
         cb(err, null)
     })
 }
 
+/* DB API GET CALL */
 function getFromDataApi(path, cb){
+    
     var url = dataServiceUri + path
     
-    console.log(url)
-    
-    var opt = { uri: url,
-        headers: { 'User-Agent': 'Request-Promise' },
-        json: true
-    }
+    var opt = { uri: url, json: true, resolveWithFullResponse: true  }
 
     rp(opt)
-      .then(out => {
-        cb(null, out)
+    .then( out => {
+        if( out.statusCode === 200){
+            cb(null, out.body)
+        }
+        if( out.statusCode === 204){
+            cb(null, {payload:null})
+        }
+        
     })
-    .catch(err => {
+    .catch( err => {
+        handleError(site.name +' func - getFromDataApi :: error retrieving data' + err)
         cb(err, null)
     })
+
 }
 
+
+
+function handleError(message) {
+    console.log(message)
+    telemetry.trackException({exception: message})
+}
 
 
 module.exports = router
