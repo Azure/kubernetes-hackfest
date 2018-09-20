@@ -19,7 +19,7 @@ In this lab we will use Kube-Router for Network Policy Management. Kube-Router w
 #### Install Kube-Router
 1. Run the following commands to deploy kube-router on your cluster
    ```
-   cd kubernetes-hackfest/labsnetworking/network-policy
+   cd kubernetes-hackfest/labs/networking/network-policy
    ```
    ```bash
    kubectl apply -f kube-router.yaml
