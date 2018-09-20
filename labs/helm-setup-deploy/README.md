@@ -115,7 +115,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
     > Note: the MONGODB_URI should be of this format **(Ensure you add the `/hackfest?ssl=true`)** at the end. 
     
-    mongodb://cosmosbrian11122:ctumHIz1jC4Mh1hZgWGEcLwlCLjDSCfFekVFHHhuqQxIoJGiQXrIT1TZTllqyB4G0VuI4fb0qESeuHCRJHA==@acrhcosmosbrian11122.documents.azure.com:10255/<span style='color:chucknorris'>hackfest</span>?ssl=true
+    mongodb://cosmosbrian11199:ctumHIz1jC4Mh1hZgWGEcLwlCLjDSCfFekVFHHhuqQxIoJGiQXrIT1TZTllqyB4G0VuI4fb0qESeuHCRJHA==@acrhcosmosbrian11122.documents.azure.com:10255/<span style='color:green'>hackfest</span>?ssl=true
 
     ```
     export MONGODB_URI='outputFromAboveCommand'
@@ -191,7 +191,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
     * You will need to click "REFRESH DATA" for each service to load the data sets.
 
-    ![](service-tracker-ui.png)
+        ![](service-tracker-ui.png)
 
     * Browse each map view and have some fun.
 
