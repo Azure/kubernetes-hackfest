@@ -7,7 +7,7 @@
 ## Instructions
 
 1. Login to Azure Portal at http://portal.azure.com.
-2. Open the Azure Cloud Shell
+2. Open the Azure Cloud Shell and choose Bash Shell (do not choose Powershell)
 
     ![Azure Cloud Shell](img-cloud-shell.png "Azure Cloud Shell")
 

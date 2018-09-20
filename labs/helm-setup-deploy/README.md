@@ -64,43 +64,42 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
     * Get the value of your ACR Login Server:
 
-    ```
-    az acr list -o table --query "[].loginServer"
+        ```
+        az acr list -o table --query "[].loginServer"
 
-    Result
-    -------------------
-    youracr.azurecr.io
+        Result
+        -------------------
+        youracr.azurecr.io
 
-    ```
+        ```
     
     * Replace the `acrServer` value below with the Login server from previous step. In the Azure Cloud Shell, select the file editor '{}'.  Navigate to the yaml files below.  To save changes, select the elipticals on the right hand side and select Save. You will make this change in all of the charts below (except cache-api)
-    <!--->
-    [charts/service-tracker-ui/values.yaml](../../charts/service-tracker-ui/values.yaml)
+    
+        [charts/service-tracker-ui/values.yaml](../../charts/service-tracker-ui/values.yaml)
 
-    [charts/weather-api/values.yaml](../../charts/weather-api/values.yaml)
+        [charts/weather-api/values.yaml](../../charts/weather-api/values.yaml)
 
-    [charts/flights-api/values.yaml](../../charts/flights-api/values.yaml)
+        [charts/flights-api/values.yaml](../../charts/flights-api/values.yaml)
 
-    [charts/quakes-api/values.yaml](../../charts/quakes-api/values.yaml)
+        [charts/quakes-api/values.yaml](../../charts/quakes-api/values.yaml)
 
-    [charts/data-api/values.yaml](../../charts/data-api/values.yaml)
-    --->
+        [charts/data-api/values.yaml](../../charts/data-api/values.yaml)
 
-    Example:
-    ```yaml
-    # Default values for chart
+        Example:
+        ```yaml
+        # Default values for chart
 
-    service:
-    type: LoadBalancer
-    port: 3009
+        service:
+        type: LoadBalancer
+        port: 3009
 
-    deploy:
-    name: data-api
-    replicas: 1
-    acrServer: "youracr.azurecr.io"
-    imageTag: "1.0"
-    containerPort: 3009
-    ```
+        deploy:
+        name: data-api
+        replicas: 1
+        acrServer: "youracr.azurecr.io"
+        imageTag: "1.0"
+        containerPort: 3009
+        ```
 
     * Valdiate that the `imageTag` parameter matches the tag you created in Azure Container Registry in the previous lab.
 
@@ -108,14 +107,17 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
     For now, we are creating a secret that holds the credentials for our backend database. The application deployment puts these secrets in environment variables. 
 
-    > Note: the MONGODB_URI should be of this format **(Ensure you add the `/hackfest?ssl=true`)** at the end. `mongodb://cosmosbrian11122:ctumHIz1jC4Mh1hZgWGEcLwlCLjDSCfFekVFHHhuqQxIoJGiQXrIT1TZTllqyB4G0VuI4fb0qESeuHCRJHA==@acrhcosmosbrian11122.documents.azure.com:10255/hackfest?ssl=true`
-
-    
-    *Customize these values from your Cosmos DB instance deployed in a previous lab. Use the ticks provided for strings
+    * Customize these values from your Cosmos DB instance deployed in a previous lab. Use the ticks provided for strings
     
     ```bash
     az cosmosdb list-connection-strings --name $COSMOSNAME --resource-group $RGNAME
+    ```
+
+    > Note: the MONGODB_URI should be of this format **(Ensure you add the `/hackfest?ssl=true`)** at the end. 
     
+    mongodb://cosmosbrian11199:ctumHIz1jC4Mh1hZgWGEcLwlCLjDSCfFekVFHHhuqQxIoJGiQXrIT1TZTllqyB4G0VuI4fb0qESeuHCRJHA==@acrhcosmosbrian11122.documents.azure.com:10255/<strong style="font-size:24px; font-family:courier; color:#308e48">hackfest</strong>?ssl=true
+
+    ```
     export MONGODB_URI='outputFromAboveCommand'
     ```
     ```bash
@@ -133,6 +135,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     ```bash
     export APPINSIGHTS_INSTRUMENTATIONKEY=''
     ```
+
     ```bash
     kubectl create secret generic cosmos-db-secret --from-literal=uri=$MONGODB_URI --from-literal=user=$MONGODB_USER --from-literal=pwd=$MONGODB_PASSWORD --from-literal=appinsights=$APPINSIGHTS_INSTRUMENTATIONKEY
     ```
@@ -175,26 +178,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     service/weather-api          LoadBalancer   10.0.179.66    23.96.11.49    3003:31951/TCP   8m
     ```
 
-    * Initialize the CosmosDB database with each API
-
-    ```
-    kubectl get service flights-api
-
-    NAME          TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)          AGE
-    flights-api   LoadBalancer   10.0.177.249   40.117.75.174   3003:32179/TCP   7m
-    ```
-    
-    Hit the "refresh" endpoint using curl: 
-    
-    ```
-    curl http://<EXTERNAL-IP>:3003/refresh
-
-    {"message":"Ok","payload":{"message":"success","payload":{"FlightCount":1120,"Timestamp":"201809110420"}}}
-    ```
-
-    * Repeat this with `quakes-api` and `weather-api`
-
-    * Browse the web UI. Profit
+    * Browse to the web UI
 
     ```
     kubectl get service service-tracker-ui
@@ -204,6 +188,12 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     ```
 
     Open the browser to http://40.76.218.139:8080 (your IP will be different #obvious)
+
+    * You will need to click "REFRESH DATA" for each service to load the data sets.
+
+        ![](service-tracker-ui.png)
+
+    * Browse each map view and have some fun.
 
 #### Next Lab: [CI/CD Automation](../cicd-automation/README.md)
 
