@@ -125,7 +125,7 @@ In the deployment pipeline, we will create a Helm task to update our application
 
 4. Now kick-off the full CI/CD pipeline by making an edit to the service-tracker-ui frontend code in the Azure DevOps code repo.
 
-#### Next Lab: [Networking](labs/networking/README.md)
+#### Next Lab: [Networking](../../networking/README.md)
 
 ## Troubleshooting / Debugging
 
