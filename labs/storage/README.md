@@ -20,4 +20,4 @@ This section contains a number of labs related to Storage decisions that are mad
 
 * ?
 
-#### Next Lab: [Security](labs/security/README.md)
+#### Next Lab: [Security](../security/README.md)
