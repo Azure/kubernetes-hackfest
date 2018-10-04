@@ -108,7 +108,7 @@ In the deployment pipeline, we will create a Helm task to update our application
     * For Chart path, click the "..." button and browse to the "service-trakcer-ui" chart in the charts directory
     * For the Release Name, enter `service-tracker-ui`
     * For Set Values you will need to fix the ACR server to match your ACR server name and the imageTag needs to be set. 
-        Eg - `acrServer=acrhackfestbrian123.azurecr.io,imageTag=vsts-$(Build.BuildId)`
+        Eg - `deploy.acrServer=acrhackfestbrian3299.azurecr.io,deploy.imageTag=vsts-$(Build.BuildId)`
 
     ![](azure-do-helm-task.png)
 
