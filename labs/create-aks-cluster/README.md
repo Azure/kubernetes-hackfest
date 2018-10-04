@@ -87,7 +87,7 @@
     > The below command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT and grab a coffee...
 
     ```bash
-    az aks create -n $CLUSTERNAME -g $RGNAME -k 1.10.3 \
+    az aks create -n $CLUSTERNAME -g $RGNAME -k 1.11.3 \
     --service-principal $APPID \
     --client-secret $CLIENTSECRET \
     --generate-ssh-keys -l $LOCATION \
