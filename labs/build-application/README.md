@@ -74,7 +74,7 @@ In this lab we will build Docker containers for each of the application componen
     ```
     az acr task list-runs -r $ACRNAME -o table
 
-    az acr task logs -r $ACRNAME --build-id aa1
+    az acr task logs -r $ACRNAME --run-id aa1
     ```
     
     Browse to your ACR instance in the Azure portal and validate that the images are in "Repositories."
