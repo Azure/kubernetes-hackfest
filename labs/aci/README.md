@@ -45,23 +45,25 @@ This section shows how to extend your AKS Cluster to leverage the power of Azure
     * AKS does not support Windows Containers today, but we can deploy Windows workloads via the AKS Cluster ACI Connector.
 
     ```bash
+    az provider show -n Microsoft.ContainerInstance
+    az provider register -n Microsoft.ContainerInstance  
     # Check to see that the ACI Connector pods are running
-    k get pods -o wide
+    kubectl get pods -o wide
     # See that the ACI Node is set to NoSchedule
-    k describe node virtual-kubelet-akslab-aci-connector-win | grep -i taint
+    kubectl describe node virtual-kubelet-akslab-aci-connector-win | grep -i taint
     # Take a look at hte iis-pod.yaml manifest and take note of the nodeName and tolerations
     code iis-pod.yaml
     # Deploy the IIS Pod to the Dev Namespace
     # Note: This will take a while as Windows Containers are BIG
-    k apply -f iis-pod.yaml
+    kubectl apply -f iis-pod.yaml
     # Check that the pod is Running
     # Reminder: This can take a while (5 to 10 mins)
-    k get pods -o wide
+    kubectl get pods -o wide
     # List ACI and get Public IP Endpoint
     az container list -o table
     az container show -g "MC_${RG}_${NAME}_${LOC}" -n default-iis-winsvrcore --query "{IP:ipAddress.ip,ProvisioningState:provisioningState}" -o table
     # Delete Windows IIS Container
-    k delete -f iis-pod.yaml
+    kubectl delete -f iis-pod.yaml
     # Remove Connector
     az aks remove-connector -g ${RG} -n ${NAME} --connector-name akslab-aci-connector --os-type Both --graceful
     ```
