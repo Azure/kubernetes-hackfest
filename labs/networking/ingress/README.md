@@ -13,6 +13,7 @@ Step 1 & 2 Only Needed if you did not complete Helm Setup In previous labs. Skip
 1. Setup Service Account and Permissions in teh Cluster for Tiller
 
     ```bash
+    cd /kubernetes-hackfest/labs/networking/ingress 
     kubectl apply -f tiller-rbac-config.yaml
     ```
 
