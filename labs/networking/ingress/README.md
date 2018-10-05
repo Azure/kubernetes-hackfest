@@ -77,7 +77,8 @@ Step 1 & 2 Only Needed if you did not complete Helm Setup In previous labs. Skip
     ```
 
 9. Apply Ingress Rules
-
+    * Update DNS values in [app-ingress.yaml](./app-ingress.yaml)
+    
     ```bash
     # Apply Ingress Routes
     kubectl apply -f app-ingress.yaml
