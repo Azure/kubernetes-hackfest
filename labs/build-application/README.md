@@ -17,14 +17,13 @@ In this lab we will build Docker containers for each of the application componen
     ```bash
     # Use the UNIQUE_SUFFIX from the first lab. Validate that the value is still set.
     echo $UNIQUE_SUFFIX
-    ```
-    ```bash
+    # Set Azure Container Registry Name
+    export ACRNAME=acrhackfest$UNIQUE_SUFFIX
+    # Check ACR Name (Can Only Container lowercase)
+    echo $ACRNAME
+    # Persist for Later Sessions in Case of Timeout
     echo export ACRNAME=acrhackfest$UNIQUE_SUFFIX >> ~/.bashrc
-    ```
-    ```bash
-    source ~/.bashrc
-    ```
-    ```bash
+    # Create Azure Container Registry
     az acr create --resource-group $RGNAME --name $ACRNAME --sku Basic
     ```
 
@@ -43,12 +42,12 @@ In this lab we will build Docker containers for each of the application componen
     In this step, create a Cosmos DB account for the Mongo api. Again, we will create a random, unique name.
         
     ```bash
+    export COSMOSNAME=cosmos$UNIQUE_SUFFIX
+    # Check COSMOS Name
+    echo $COSMOSNAME
+    # Persist for Later Sessions in Case of Timeout
     echo export COSMOSNAME=cosmos$UNIQUE_SUFFIX >> ~/.bashrc
-    ```
-    ```bash
-    source ~/.bashrc
-    ```
-    ```bash
+    # Create Cosmos DB
     az cosmosdb create --name $COSMOSNAME --resource-group $RGNAME --kind MongoDB
     ```
     

@@ -42,6 +42,7 @@
     DON'T MESS THIS STEP UP. REPLACE THE VALUES IN BRACKETS!!!
 
     ```bash
+    # Persist for Later Sessions in Case of Timeout
     echo export APPID=<appId> >> ~/.bashrc
     echo export CLIENTSECRET=<password> >> ~/.bashrc
     ```
@@ -49,44 +50,50 @@
 6. Create a  unique identifier suffix for resources to be created in this lab.
     
     ```bash
-    export UNIQUE_SUFFIX=$USER$RANDOM
-    ```
-    #### *** Write Value To .bashrc to persist through lab
-    ```bash
+    UNIQUE_SUFFIX=$USER$RANDOM
+    # Remove Underscores and Dashes (Not Allowed in AKS and ACR Names)
+    UNIQUE_SUFFIX="${UNIQUE_SUFFIX//_}"
+    UNIQUE_SUFFIX="${UNIQUE_SUFFIX//-}"
+    export ${UNIQUE_SUFFIX}
+    # Check Unique Suffix Value (Should be No Underscores or Dashes)
+    echo ${UNIQUE_SUFFIX}
+    # Persist for Later Sessions in Case of Timeout
     echo export UNIQUE_SUFFIX=$UNIQUE_SUFFIX >> ~/.bashrc
     ```
 
-    *** Note this value and it will be used in the next couple labs. The variable may reset if your shell times out, so PLEASE WRITE IT DOWN. ***
+    *** Note this value as it will be used in the next couple labs. ***
 
 7. Create an Azure Resource Group in East US.
 
     ```bash
+    # Set Resource Group Name
+    export RGNAME=kubernetes-hackfest
+    # Persist for Later Sessions in Case of Timeout
     echo export RGNAME=kubernetes-hackfest >> ~/.bashrc
-    ```
-    ```bash
+    # Set Region (Location)
+    export LOCATION=eastus
+    # Persist for Later Sessions in Case of Timeout
     echo export LOCATION=eastus >> ~/.bashrc
-    ```
-    ```bash
-    source ~/.bashrc
-    ```
-    ```bash
-    az group create -n $RGNAME -l $LOCATION 
+    # Create Resource Group
+    az group create -n $RGNAME -l $LOCATION
     ```
 
 8. Create your AKS cluster in the resource group created above with 3 nodes, targeting Kubernetes version 1.10.3, with Container Insights, and HTTP Application Routing Enabled. You will use the Service Principal information from step 5.
 
-    Use unique CLUSTERNAME
+    Use Unique CLUSTERNAME
 
     ```bash
-    echo export CLUSTERNAME=aks-$UNIQUE_SUFFIX >> ~/.bashrc
+    # Set AKS Cluster Name
+    export CLUSTERNAME=aks${UNIQUE_SUFFIX}
+    # Check AKS Cluster Name
+    echo $CLUSTERNAME
+    # Persist for Later Sessions in Case of Timeout
+    echo export CLUSTERNAME=aks${UNIQUE_SUFFIX} >> ~/.bashrc
     ```  
-    
-    ```bash
-    source ~/.bashrc
-    ```
     > The below command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT and grab a coffee...
 
     ```bash
+    # Create AKS Cluster
     az aks create -n $CLUSTERNAME -g $RGNAME -k 1.11.3 \
     --service-principal $APPID \
     --client-secret $CLIENTSECRET \
