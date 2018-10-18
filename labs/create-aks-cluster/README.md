@@ -230,11 +230,12 @@ This lab creates namespaces that reflect a representative example of an organiza
     kubectl describe ns dev
     ```
 
-5. Clean up quotas
+5. Clean up limits, quotas, pods
 
     ```
     kubectl delete -f namespace-limitranges.yaml
     kubectl delete -f namespace-quotas.yaml
+    kubectl delete po nginx-limittest nginx-quotatest -n dev
 
     kubectl describe ns dev
     kubectl describe ns uat
