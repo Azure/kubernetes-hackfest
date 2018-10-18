@@ -43,8 +43,10 @@
 
     ```bash
     # Persist for Later Sessions in Case of Timeout
-    echo export APPID=<appId> >> ~/.bashrc
-    echo export CLIENTSECRET=<password> >> ~/.bashrc
+    APPID=<appId>
+    echo export APPID=$APPID >> ~/.bashrc
+    CLIENTSECRET=<password>
+    echo export CLIENTSECRET=$CLIENTSECRET >> ~/.bashrc
     ```
 
 6. Create a  unique identifier suffix for resources to be created in this lab.
