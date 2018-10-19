@@ -10,8 +10,8 @@ config:
 scenarios:
   - flow:
     - get:
-        url: "/10.1.0.55:3003/refresh"
+        url: "/40.114.88.134:3003/refresh"
     - get:
-        url: "/10.1.0.55:3012/refresh"
+        url: "/40.114.95.4:3012/refresh"
 
 

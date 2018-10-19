@@ -1,4 +1,4 @@
-name: web-ui
+name: service-tracker-ui
 home: https://github.com/Azure/kubernetes-hackfest/tree/master/labs/build-application
 version: 1.0
 description: web app for GBB Kubernetes Hackfest

@@ -6,14 +6,32 @@
 
 ## Instructions
 
-1. Login to Azure Portal at http://portal.azure.com.
-2. Open the Azure Cloud Shell
+You will need to use the Azure Cloud Shell to perform the labs in this workshop. 
+There are two options to access the Cloud Shell, via direct link, or via the azure portal.
+
+> **Option One** Direct Link to Shell (login when prompted)
+
+- Click the Link Below
+
+    <kbd>CTRL</kbd> + click (Windows) | <kbd>⌘ Command</kbd> + click (Mac) to launch
+    in a new tab
+   
+    [![Launch Cloud Shell](https://shell.azure.com/images/launchcloudshell.png "Launch Cloud Shell")](https://shell.azure.com/bash)
+
+- It will prompt you to log in using your Azure Account
+
+> **Option Two** Via the Azure Portal
+
+- Login to Azure Portal at http://portal.azure.com.
+- Open the Azure Cloud Shell by clicking the console icon in the top nav as shown below
 
     ![Azure Cloud Shell](img-cloud-shell.png "Azure Cloud Shell")
 
-3. The first time Cloud Shell is started will require you to create a storage account.
+### Now that you are using Cloud Shell
 
-4. Once your cloud shell is started, clone the workshop repo into the cloud shell environment
+1. The first time Cloud Shell is started will require you to create a storage account.
+
+2. Once your cloud shell is started, clone the workshop repo into the cloud shell environment
     ```bash
     git clone https://github.com/Azure/kubernetes-hackfest
 
@@ -22,7 +40,7 @@
 
     > Note: In the cloud shell, you are automatically logged into your Azure subscription.
 
-5. Create Azure Service Prinicpal to use through the labs
+3. Create Azure Service Prinicpal to use through the labs
 
     ```bash
     az ad sp create-for-rbac --skip-assignment
@@ -46,7 +64,7 @@
     echo export CLIENTSECRET=<password> >> ~/.bashrc
     ```
 
-6. Create a  unique identifier suffix for resources to be created in this lab.
+4. Create a  unique identifier suffix for resources to be created in this lab.
     
     ```bash
     export UNIQUE_SUFFIX=$USER$RANDOM
@@ -58,7 +76,7 @@
 
     *** Note this value and it will be used in the next couple labs. The variable may reset if your shell times out, so PLEASE WRITE IT DOWN. ***
 
-7. Create an Azure Resource Group in East US.
+5. Create an Azure Resource Group in East US.
 
     ```bash
     echo export RGNAME=kubernetes-hackfest >> ~/.bashrc
@@ -73,7 +91,7 @@
     az group create -n $RGNAME -l $LOCATION 
     ```
 
-8. Create your AKS cluster in the resource group created above with 3 nodes, targeting Kubernetes version 1.10.3, with Container Insights, and HTTP Application Routing Enabled. You will use the Service Principal information from step 5.
+6. Create your AKS cluster in the resource group created above with 3 nodes, targeting Kubernetes version 1.10.3, with Container Insights, and HTTP Application Routing Enabled. You will use the Service Principal information from step 5.
 
     Use unique CLUSTERNAME
 
@@ -95,7 +113,7 @@
     --enable-addons http_application_routing,monitoring
     ```
 
-9. Verify your cluster status. The `ProvisioningState` should be `Succeeded`
+7. Verify your cluster status. The `ProvisioningState` should be `Succeeded`
     ```bash
     az aks list -o table
     ```
@@ -106,13 +124,13 @@
     ODLaks-v2-gbb-16502  eastus   ODL_aks-v2-gbb-16502  1.8.6                Succeeded odlaks-v2--odlaks-v2-gbb-16-b23acc-17863579.hcp.centralus.azmk8s.io
     ```
 
-10. Get the Kubernetes config files for your new AKS cluster
+8. Get the Kubernetes config files for your new AKS cluster
 
     ```bash
     az aks get-credentials -n $CLUSTERNAME -g $RGNAME
     ```
      
-11. Verify you have API access to your new AKS cluster
+9. Verify you have API access to your new AKS cluster
     
       > Note: It can take 5 minutes for your nodes to appear and be in READY state. You can run `watch kubectl get nodes` to monitor status.
 

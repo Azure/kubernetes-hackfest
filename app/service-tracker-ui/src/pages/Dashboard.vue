@@ -211,12 +211,12 @@ export default {
 
   },
   methods:{
-    showNotification(msg){
+    showNotification(msg, msgType){
       this.$notify({
         message: msg,
         horizontalAlign: 'center',
         verticalAlign: 'top',
-        type: 'success',
+        type: msgType,
         closeOnClick: true,
         timeout: 5000
       })
@@ -227,7 +227,8 @@ export default {
       .then((refRes) => {
         if(refRes.ok) {
           vm.$refs[name][0].hideModal()
-          vm.showNotification(name + ' data refreshed successfully')
+          vm.$appInsights.trackEvent("dashboard_refresh", { value: name.toLowerCase() })
+          vm.showNotification(name + ' data refreshed successfully', 'success')
           return refRes.json()
         }
         throw new Error('Network response was not ok.')
@@ -236,7 +237,7 @@ export default {
         console.log(data.payload.payload.Timestamp)
       })
       .catch((e) =>{
-        alert('oh snap, something went wrong with')
+        vm.showNotification(name + ' data refresh failed', 'error')
         console.log(e)
       })
     }

@@ -13,7 +13,7 @@ spec:
         app: weather-api
     spec:
       containers:
-        - image: "{{.Values.deploy.acrServer}}/hackfest/weather-api:{{.Values.deploy.imageTag}}"
+        - image: "{{.Values.deploy.acrServer}}/k8s-demo/weather-api:{{.Values.deploy.imageTag}}"
           imagePullPolicy: Always
           name: weather-api
           env:

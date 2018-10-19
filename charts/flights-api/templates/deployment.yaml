@@ -13,7 +13,7 @@ spec:
         app: flights-api
     spec:
       containers:
-        - image: "{{.Values.deploy.acrServer}}/hackfest/flights-api:{{.Values.deploy.imageTag}}"
+        - image: "{{.Values.deploy.acrServer}}/k8s-demo/flights-api:{{.Values.deploy.imageTag}}"
           imagePullPolicy: Always
           name: flights-api
           env:
