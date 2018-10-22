@@ -1,11 +1,10 @@
+const mongoose = require('mongoose');
 
-var mongoose = require('mongoose')
-
-var Schema = mongoose.Schema
+var Schema = mongoose.Schema;
 
 var latestSchema = new Schema({
-    Timestamp: String,
-    Created: {type: Date, default: Date.now}
-})
+  Timestamp: String,
+  Created: { type: Date, default: Date.now }
+});
 
-mongoose.model('LatestWeather', latestSchema, 'LatestWeather')
+mongoose.model('LatestWeather', latestSchema, 'LatestWeather');

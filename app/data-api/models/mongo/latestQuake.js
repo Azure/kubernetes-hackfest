@@ -1,11 +1,10 @@
+const mongoose = require('mongoose');
 
-var mongoose = require('mongoose')
+const Schema = mongoose.Schema;
 
-var Schema = mongoose.Schema
+const latestSchema = new Schema({
+  Timestamp: String,
+  Created: { type: Date, default: Date.now }
+});
 
-var latestSchema = new Schema({
-    Timestamp: String,
-    Created: {type: Date, default: Date.now}
-})
-
-mongoose.model('LatestQuake', latestSchema, 'LatestQuake')
+mongoose.model('LatestQuake', latestSchema, 'LatestQuake');

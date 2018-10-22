@@ -1,11 +1,11 @@
-var express = require('express');
-var bcrypt = require('bcryptjs');
-var salt = bcrypt.genSaltSync(10);
-var jwt = require('jwt-simple');
-var moment = require('moment');
-var mongoose = require('mongoose');
-var router = express.Router();
-var TOKEN_SECRET = 'J0eyB0mb';
+const express = require('express');
+const bcrypt = require('bcryptjs');
+const salt = bcrypt.genSaltSync(10);
+const jwt = require('jwt-simple');
+const moment = require('moment');
+const mongoose = require('mongoose');
+const router = express.Router();
+const TOKEN_SECRET = 'J0eyB0mb';
 
 var userSchema = new mongoose.Schema({
   email: { type: String, unique: true, lowercase: true },
@@ -132,14 +132,13 @@ router.post('/loginLocal', function(req, res, next) {
  |--------------------------------------------------------------------------
  */
 router.post('/login', function(req, res, next) {
-
   var pass = req.body._pass;
 
   User.findOne({ email: req.body._email }, function(err, user) {
     if (!user) {
       return res.json({ msg: 'Invalid email and/or password -e' }).status(200);
     }
-    
+
     comparePassword(pass, user.password, function(error, isMatch) {
       if (isMatch) {
         res.json({ token: createJWT(user._id) }).status(200);
@@ -147,7 +146,6 @@ router.post('/login', function(req, res, next) {
         res.json({ msg: 'Invalid email and/or password -p' }).status(401);
       }
     });
-
   });
 });
 
