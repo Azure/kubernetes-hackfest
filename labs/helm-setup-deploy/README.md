@@ -191,11 +191,12 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
     * Browse each map view and have some fun.
 
-#### Next Lab: [CI/CD Automation](../cicd-automation/README.md)
-
 ## Troubleshooting / Debugging
 
+* Make sure Helm version on the client and server are the same to ensure compatibility.
 
 ## Docs / References
 
-* Helm. http://helm.sh
+* [Helm](http://helm.sh)
+
+#### Next Lab: [CI/CD Automation](labs/cicd-automation/README.md)

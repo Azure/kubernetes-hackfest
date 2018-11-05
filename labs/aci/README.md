@@ -76,3 +76,5 @@ This section shows how to extend your AKS Cluster to leverage the power of Azure
 
 * [az aks install-connector](https://docs.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest#az-aks-install-connector)
 * [Bursting from AKS to ACI Sample](https://azure.microsoft.com/en-us/resources/samples/virtual-kubelet-aci-burst/)
+
+#### Next Lab: [Azure Dev Spaces](labs/dev-spaces/README.md)

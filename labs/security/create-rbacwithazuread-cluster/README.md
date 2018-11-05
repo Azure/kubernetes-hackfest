@@ -2,7 +2,7 @@
 
 This lab creates an AKS Cluster with Azure AD Integration for RBAC.
 
-## Prerequisites 
+## Prerequisites
 
 1. N/A
 
@@ -100,7 +100,6 @@ This lab creates an AKS Cluster with Azure AD Integration for RBAC.
     # If you login with the aksuser account the request will be denied.
     kubectl get nodes
     ```
-#### Next Lab: [Security](labs/security/secure-tiller/README.md)
 
 ## Troubleshooting / Debugging
 
@@ -113,3 +112,5 @@ This lab creates an AKS Cluster with Azure AD Integration for RBAC.
 * [What is an Azure AD Tenant?](https://msdn.microsoft.com/library/azure/jj573650.aspx#Anchor_0)
 * [Creating Azure AD Users](https://docs.microsoft.com/en-us/power-bi/developer/create-an-azure-active-directory-tenant#create-some-users-in-your-azure-active-directory-tenant)
 * [Kubernetes RBAC Authorization](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
+
+#### Next Lab: [Security - Tiller](labs/security/secure-tiller/README.md)
