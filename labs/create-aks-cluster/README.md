@@ -112,7 +112,7 @@
     ```bash
     Name                 Location    ResourceGroup         KubernetesVersion    ProvisioningState    Fqdn
     -------------------  ----------  --------------------  -------------------  -------------------  -------------------------------------------------------------------
-    ODLaks-v2-gbb-16502  eastus   ODL_aks-v2-gbb-16502  1.8.6                Succeeded odlaks-v2--odlaks-v2-gbb-16-b23acc-17863579.hcp.centralus.azmk8s.io
+    ODLaks-v2-gbb-16502  eastus   ODL_aks-v2-gbb-16502  1.11.3                Succeeded odlaks-v2--odlaks-v2-gbb-16-b23acc-17863579.hcp.centralus.azmk8s.io
     ```
 
 10. Get the Kubernetes config files for your new AKS cluster
@@ -130,7 +130,7 @@
      ```
     ```bash
      NAME                       STATUS    ROLES     AGE       VERSION
-     aks-nodepool1-26522970-0   Ready     agent     33m       v1.10.3
+     aks-nodepool1-26522970-0   Ready     agent     33m       v1.11.3
      ```
  
      To see more details about your cluster:
