@@ -14,8 +14,10 @@ This section contains a number of labs related to Securing the AKS cluster. They
 
 ## Troubleshooting / Debugging
 
-* ?
+* N/A
 
 ## Docs / References
 
-* ?
+* N/A
+
+#### Next Lab: [Service Broker](labs/service-broker/README.md)

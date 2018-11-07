@@ -67,7 +67,6 @@ This lab walksthrough how to secure tiller in a single namespace to restrict acc
     # Test Helm Deployment to dev Namespace
     KUBECONFIG=/tmp/kube/k8s-tiller-dev-conf helm install --tls --tls-ca-cert ca.cert.pem --tls-cert helm.cert.pem --tls-key helm.key.pem --namespace dev stable/mysql --tiller-namespace dev
     ```
-#### Next Lab: [Service Broker](labs/service-broker/README.md)
 
 ## Troubleshooting / Debugging
 
@@ -77,3 +76,5 @@ This lab walksthrough how to secure tiller in a single namespace to restrict acc
 
 * [Helm Docs](https://docs.helm.sh)
 * [Using SSL Between Helm Client and Tiller Server](https://docs.helm.sh/using_helm/#using-ssl-between-helm-and-tiller)
+
+#### Next Lab: [Service Broker](labs/service-broker/README.md)

@@ -11,8 +11,6 @@ This section shows how to work with Online Service Broker for Azure (OSBA) for h
 
 1. ?
 
-#### Next Lab: [Azure Container Instance](labs/aci/README.md)
-
 ## Troubleshooting / Debugging
 
 * ?
@@ -20,3 +18,5 @@ This section shows how to work with Online Service Broker for Azure (OSBA) for h
 ## Docs / References
 
 * ?
+
+#### Next Lab: [Azure Container Instance](labs/aci/README.md)

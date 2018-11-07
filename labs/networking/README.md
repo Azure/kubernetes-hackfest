@@ -14,8 +14,10 @@ This section contains a number of labs related to Networking decisions that are 
 
 ## Troubleshooting / Debugging
 
-* ?
+* N/A
 
 ## Docs / References
 
-* ?
+* N/A
+
+#### Next Lab: [Monitoring and Logging](labs/monitoring-logging/README.md)

@@ -14,10 +14,10 @@ This section contains a number of labs related to Storage decisions that are mad
 
 ## Troubleshooting / Debugging
 
-* ?
+* N/A
 
 ## Docs / References
 
-* ?
+* N/A
 
-#### Next Lab: [Security](../security/README.md)
+#### Next Lab: [Security](labs/security/README.md)
