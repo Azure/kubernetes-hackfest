@@ -32,4 +32,4 @@ Click below to find the instructions for the CI/CD platform of your choice:
 
 * N/A
 
-#### Next Lab: [Networking](labs/networking/README.md)
+#### Next Lab: [Networking](../networking/README.md)

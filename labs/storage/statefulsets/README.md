@@ -4,7 +4,10 @@ Coming soon.
 
 ## Prerequisites
 
-* Complete previous labs for [AKS](../../create-aks-cluster/README.md) and [ACR](../../build-application/README.md).
+* Complete previous labs:
+    * [Azure Kubernetes Service](../create-aks-cluster/README.md)
+    * [Build Application Components in Azure Container Registry](../build-application/README.md)
+    * [Helm Setup and Deploy Application](../helm-setup-deploy/README.md)
 
 ## Instructions
 
@@ -18,4 +21,4 @@ Coming soon.
 
 * ?
 
-#### Next Lab: [Security](labs/security/README.md)
+#### Next Lab: [Security](../../security/README.md)

@@ -60,14 +60,14 @@ This lab creates an AKS Cluster with Azure AD Integration for RBAC.
     NAME="${USERINITIALS}aksrbac"
     az group create --name $RG --location $LOC
 
-    PATH-TO-SSH-PUBLICKEY="~/.ssh/id_rsa.pub"
+    PATH_TO_SSH_PUBLICKEY="~/.ssh/id_rsa.pub"
     # Create AKS with RBAC Cluster
     az aks create -g $RG -n $NAME --enable-rbac \
-        -k 1.10.3 --node-count 1 --ssh-key-value ${PATH-TO-SSH-PUBLICKEY} \
-        --aad-server-app-id ${SERVER-APP-ID} \
-        --aad-server-app-secret ${SERVER-APP-SECRET} \
-        --aad-client-app-id ${CLIENT-APP-ID} \
-        --aad-tenant-id ${AZUREAD-TENANT-ID} --no-wait
+        -k 1.10.3 --node-count 1 --ssh-key-value $PATH_TO_SSH_PUBLICKEY \
+        --aad-server-app-id $SERVER-APP-ID \
+        --aad-server-app-secret $SERVER-APP-SECRET \
+        --aad-client-app-id $CLIENT-APP-ID \
+        --aad-tenant-id $AZUREAD-TENANT-ID --no-wait
     ```
 
 5. Create Two User Accounts in Azure AD
@@ -113,4 +113,4 @@ This lab creates an AKS Cluster with Azure AD Integration for RBAC.
 * [Creating Azure AD Users](https://docs.microsoft.com/en-us/power-bi/developer/create-an-azure-active-directory-tenant#create-some-users-in-your-azure-active-directory-tenant)
 * [Kubernetes RBAC Authorization](https://kubernetes.io/docs/reference/access-authn-authz/rbac/)
 
-#### Next Lab: [Security - Tiller](labs/security/secure-tiller/README.md)
+#### Next Lab: [Security - Tiller](../../service-broker/README.md)

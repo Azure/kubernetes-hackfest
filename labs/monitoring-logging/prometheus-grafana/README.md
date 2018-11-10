@@ -1,6 +1,7 @@
 # Lab: Adding Prometheus and Grafana to AKS Cluster
 
 This lab will walkthrough using the Core OS Prometheus Operator to add Monitoring and Visualization capabilities to our AKS Cluster. The Operator will be installed using HELM.
+
 ![Prometheus Operator](img-prometheus-operator.png)
 
 ## Prerequisites
@@ -109,14 +110,14 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
     Open up a brower to http://<your-public-ip>:9090 and you will see the Prometheus dashboard
 
     * Screenshot of Default Prometheus UI
-    
+
     ![Default Prometheus UI](img-prometheus-ui.png)
 
     ```bash
     # Get your public IP address for the Prometheus Alert Manager (if <pending>, you must wait...)
     kubectl get service kube-prometheus-alertmanager -n monitoring
     ```
-    
+
     Open up a brower to http://<your-public-ip>:9093 and you will see the Prometheus dashboard
 
     * Screenshot of Default Alert Manager UI
@@ -202,3 +203,5 @@ k get secret prometheus-kube-prometheus -n monitoring -o json | jq -r '.data["pr
 * [Core OS Prometheus Operator](https://github.com/coreos/prometheus-operator/blob/v0.17.0/Documentation/user-guides/getting-started.md)
 * [Crash Course to Monitoring K8s](https://www.sumologic.com/blog/cloud/how-to-monitor-kubernetes/)
 * [Prometheus Operator Alerting](https://github.com/coreos/prometheus-operator/blob/v0.17.0/Documentation/user-guides/alerting.md)
+
+#### Next Lab: [Service Mesh w/ Distributed Tracing](../../servicemesh-tracing/README.md)

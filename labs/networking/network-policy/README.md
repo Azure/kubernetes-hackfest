@@ -4,13 +4,15 @@ In this lab we will setup Kube-Router and Network Policies to enforce communicat
 
 ## Prerequisites
 
-* Clone this repo in Azure Cloud Shell.
 * Complete previous labs:
-    * [Azure Kubernetes Service](../create-aks-cluster/README.md)
-    * [Build Application Components in Azure Container Registry](../build-application/README.md)
+    * [Azure Kubernetes Service](../../create-aks-cluster/README.md)
+    * [Build Application Components in Azure Container Registry](../../build-application/README.md)
+    * [Helm Setup and Deploy Application](../../helm-setup-deploy/README.md)
 
 ## Kubernetes and Kube-Router Overview
+
 Kubernetes networking has following security model:
+
 * Every Pod can talk to every other Pod by default so a Pod can receive traffic from any one
 * Default allow behaviour can be changed to default deny on per namespace basis. When a namespace is configured with isolation tye of DefaultDeny no traffic is allowed to the pods in that namespace
 * When a namespace is configured with DefaultDeny isolation type, network policies can be configured in the namespace to whitelist the traffic to the pods in that namespace
@@ -138,4 +140,4 @@ In this lab we will use Kube-Router for Network Policy Management. Kube-Router w
 * [Kube-Router Docs](https://www.kube-router.io/)
 * [Kube-Router Repo](https://github.com/cloudnativelabs/kube-router)
 
-#### Next Lab: [Monitoring and Logging](labs/monitoring-logging/README.md)
+#### Next Lab: [Monitoring and Logging](../../monitoring-logging/README.md)

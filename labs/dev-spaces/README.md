@@ -4,8 +4,10 @@ This lab walks you through working with Azure Dev Spaces for that inner dev loop
 
 ## Prerequisites
 
-* Complete previous labs for [AKS](../../create-aks-cluster/README.md) and [ACR](../../build-application/README.md).
-* Ensure AKS Cluster has http_application_routing add-on
+* Clone this repo in Azure Cloud Shell.
+* Complete previous labs:
+    * [Azure Kubernetes Service](../create-aks-cluster/README.md)
+    * [Build Application Components in Azure Container Registry](../build-application/README.md)
 
 ## Instructions
 

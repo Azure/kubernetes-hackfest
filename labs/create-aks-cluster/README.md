@@ -1,8 +1,10 @@
 # Lab 1: Create AKS Cluster
 
-## Prerequisites 
+In this lab we will create our Azure Kubernetes Services (AKS) distributed compute cluster.
 
-1. Azure Account
+## Prerequisites
+
+* Azure Account
 
 ## Instructions
 
@@ -50,15 +52,14 @@
     ```
 
 6. Create a  unique identifier suffix for resources to be created in this lab.
-    
+
     ```bash
     UNIQUE_SUFFIX=$USER$RANDOM
     # Remove Underscores and Dashes (Not Allowed in AKS and ACR Names)
     UNIQUE_SUFFIX="${UNIQUE_SUFFIX//_}"
     UNIQUE_SUFFIX="${UNIQUE_SUFFIX//-}"
-    export ${UNIQUE_SUFFIX}
     # Check Unique Suffix Value (Should be No Underscores or Dashes)
-    echo ${UNIQUE_SUFFIX}
+    echo $UNIQUE_SUFFIX
     # Persist for Later Sessions in Case of Timeout
     echo export UNIQUE_SUFFIX=$UNIQUE_SUFFIX >> ~/.bashrc
     ```
@@ -69,11 +70,11 @@
 
     ```bash
     # Set Resource Group Name
-    export RGNAME=kubernetes-hackfest
+    RGNAME=kubernetes-hackfest
     # Persist for Later Sessions in Case of Timeout
     echo export RGNAME=kubernetes-hackfest >> ~/.bashrc
     # Set Region (Location)
-    export LOCATION=eastus
+    LOCATION=eastus
     # Persist for Later Sessions in Case of Timeout
     echo export LOCATION=eastus >> ~/.bashrc
     # Create Resource Group
@@ -86,8 +87,8 @@
 
     ```bash
     # Set AKS Cluster Name
-    export CLUSTERNAME=aks${UNIQUE_SUFFIX}
-    # Check AKS Cluster Name
+    CLUSTERNAME=aks${UNIQUE_SUFFIX}
+    # Look at AKS Cluster Name for Future Reference
     echo $CLUSTERNAME
     # Persist for Later Sessions in Case of Timeout
     echo export CLUSTERNAME=aks${UNIQUE_SUFFIX} >> ~/.bashrc
@@ -120,9 +121,9 @@
     ```bash
     az aks get-credentials -n $CLUSTERNAME -g $RGNAME
     ```
-     
+
 11. Verify you have API access to your new AKS cluster
-    
+
       > Note: It can take 5 minutes for your nodes to appear and be in READY state. You can run `watch kubectl get nodes` to monitor status.
 
      ```bash
@@ -153,9 +154,9 @@
      ```
 
      You should now have a Kubernetes cluster running with 3 nodes. You do not see the master servers for the cluster because these are managed by Microsoft. The Control Plane services which manage the Kubernetes cluster such as scheduling, API access, configuration data store and object controllers are all provided as services to the nodes.
-     
 
 ## Troubleshooting / Debugging
+
 <!--To further debug and diagnose cluster problems, use `cluster-info dump` command
 
 `cluster-info dump` dumps cluster info out suitable for debugging and diagnosing cluster problems.  By default, dumps everything to stdout. You can optionally specify a directory with --output-directory.  If you specify a directory, kubernetes will build a set of files in that directory.  By default only dumps things in the 'kube-system' namespace, but you can switch to a different namespace with the --namespaces flag, or specify --all-namespaces to dump all namespaces.
@@ -169,7 +170,7 @@ kubectl cluster-info dump
 
 ## Docs / References
 
-[Troubleshoot Kubernetes Clusters](https://kubernetes.io/docs/tasks/debug-application-cluster/debug-cluster/)
+* [Troubleshoot Kubernetes Clusters](https://kubernetes.io/docs/tasks/debug-application-cluster/debug-cluster/)
 
 # Lab 1a: Create AKS Cluster Namespaces
 
@@ -256,4 +257,4 @@ This lab creates namespaces that reflect a representative example of an organiza
 * [Configure Min and Max CPU Constraints for a Namespace](https://kubernetes.io/docs/tasks/administer-cluster/manage-resources/cpu-constraint-namespace/)
 * [Configure Memory and CPU Quotas for a Namespace](https://kubernetes.io/docs/tasks/administer-cluster/manage-resources/quota-memory-cpu-namespace/)
 
-#### Next Lab: [Build Application Components](labs/build-application/README.md)
+#### Next Lab: [Build Application Components](../build-application/README.md)

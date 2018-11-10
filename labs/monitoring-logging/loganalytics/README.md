@@ -4,11 +4,10 @@ This section shows how to leverage Azure Monitor for Containers for gaining Moni
 
 ## Prerequisites
 
-* Clone this repo in Azure Cloud Shell.
 * Complete previous labs:
-    * [Azure Kubernetes Service](../create-aks-cluster/README.md)
-    * [Build Application Components in Azure Container Registry](../build-application/README.md)
-    * [Helm Setup and Deploy Application](../helm-setup-deploy/README.md)
+    * [Azure Kubernetes Service](../../create-aks-cluster/README.md)
+    * [Build Application Components in Azure Container Registry](../../build-application/README.md)
+    * [Helm Setup and Deploy Application](../../helm-setup-deploy/README.md)
 
 ## Instructions
 
@@ -152,4 +151,4 @@ This section shows how to leverage Azure Monitor for Containers for gaining Moni
 * [Understand AKS Cluster Performance](https://docs.microsoft.com/en-us/azure/monitoring/monitoring-container-insights-analyze?toc=%2fazure%2fmonitoring%2ftoc.json)
 * [View kubelet Logs](https://docs.microsoft.com/en-us/azure/aks/kubelet-logs)
 
-#### Next Lab: [Service Mesh w/ Distributed Tracing](labs/servicemesh-tracing/README.md)
+#### Next Lab: [Service Mesh w/ Distributed Tracing](../../servicemesh-tracing/README.md)

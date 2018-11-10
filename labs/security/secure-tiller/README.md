@@ -4,8 +4,10 @@ This lab walksthrough how to secure tiller in a single namespace to restrict acc
 
 ## Prerequisites
 
-* Clone this repo in Azure Cloud Shell.
-* Complete previous labs for [AKS](../../create-aks-cluster/README.md) and [ACR](../../build-application/README.md).
+* Complete previous labs:
+    * [Azure Kubernetes Service](../../create-aks-cluster/README.md)
+    * [Build Application Components in Azure Container Registry](../../build-application/README.md)
+    * [Helm Setup and Deploy Application](../../helm-setup-deploy/README.md)
 
 ## Instructions
 
@@ -77,4 +79,4 @@ This lab walksthrough how to secure tiller in a single namespace to restrict acc
 * [Helm Docs](https://docs.helm.sh)
 * [Using SSL Between Helm Client and Tiller Server](https://docs.helm.sh/using_helm/#using-ssl-between-helm-and-tiller)
 
-#### Next Lab: [Service Broker](labs/service-broker/README.md)
+#### Next Lab: [Service Broker](../../service-broker/README.md)

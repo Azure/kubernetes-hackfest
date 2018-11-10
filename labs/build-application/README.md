@@ -1,12 +1,11 @@
 # Lab: Build Application Components
 
-In this lab we will build Docker containers for each of the application components and setup the back-end database. 
+In this lab we will build Docker containers for each of the application components and setup the back-end database.
 
-## Prerequisites 
+## Prerequisites
 
-* Clone this repo in Azure Cloud Shell.
 * Complete previous labs:
-    * [AKS](../create-aks-cluster/README.md)
+    * [Azure Kubernetes Service](../create-aks-cluster/README.md)
 
 ## Instructions
 
@@ -28,7 +27,7 @@ In this lab we will build Docker containers for each of the application componen
     ```
 
 2. Run bash script to authenticate with Azure Container Registry from AKS
-    
+
     Running this script will grant the Service Principal created at cluster creation time access to ACR.
 
     ```bash
@@ -37,10 +36,10 @@ In this lab we will build Docker containers for each of the application componen
     sh reg-acr.sh $RGNAME $CLUSTERNAME $ACRNAME
     ```
 
-2. Deploy Cosmos DB
-    
+3. Deploy Cosmos DB
+
     In this step, create a Cosmos DB account for the Mongo api. Again, we will create a random, unique name.
-        
+
     ```bash
     export COSMOSNAME=cosmos$UNIQUE_SUFFIX
     # Check COSMOS Name
@@ -50,12 +49,11 @@ In this lab we will build Docker containers for each of the application componen
     # Create Cosmos DB
     az cosmosdb create --name $COSMOSNAME --resource-group $RGNAME --kind MongoDB
     ```
-    
+
     You can validate your Cosmos instance in the portal. The credentials and connect string will be used in the next lab.
 
+4. Create Docker containers in ACR
 
-3. Create Docker containers in ACR
-    
     In this step we will create a Docker container image for each of our microservices. We will use ACR Builder functionality to build and store these images in the cloud. 
 
     ```bash
@@ -69,15 +67,14 @@ In this lab we will build Docker containers for each of the application componen
     ```
 
     You can see the status of the builds by running the command below.
-        
-    ```
+
+    ```bash
     az acr task list-runs -r $ACRNAME -o table
 
     az acr task logs -r $ACRNAME --run-id aa1
     ```
-    
-    Browse to your ACR instance in the Azure portal and validate that the images are in "Repositories."
 
+    Browse to your ACR instance in the Azure portal and validate that the images are in "Repositories."
 
 ## Troubleshooting / Debugging
 
@@ -87,4 +84,4 @@ In this lab we will build Docker containers for each of the application componen
 
 * Azure Container Registry Docs. https://docs.microsoft.com/en-us/azure/container-registry 
 
-#### Next Lab: [Helm Setup and Deploy Application](labs/helm-setup-deploy/README.md)
+#### Next Lab: [Helm Setup and Deploy Application](../helm-setup-deploy/README.md)
