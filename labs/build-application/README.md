@@ -30,10 +30,34 @@ In this lab we will build Docker containers for each of the application componen
 
     Running this script will grant the Service Principal created at cluster creation time access to ACR.
 
+    **NOTE: If the below role assignment fails due to permissions, we will do it the hard way and create an Image Pull Secret.**
+
     ```bash
     cd ~/kubernetes-hackfest/labs/build-application
 
     sh reg-acr.sh $RGNAME $CLUSTERNAME $ACRNAME
+    ```
+
+    ```bash
+    # !!!!!!!!!!
+    # Only do these steps if the above Service Principal Role Assignment fails.
+    # !!!!!!!!!!
+
+    # Extract Container Registry details needed for Login
+    # Login Server
+    az acr show -n ${ACRNAME} --query "{acrLoginServer:loginServer}" -o table
+    # Registry Username and Password
+    az acr credential show -n ${ACRNAME}
+
+    # Use the login and credential information from above
+    kubectl create secret docker-registry regcred \
+      --docker-server=<LOGIN SERVER GOES HERE> \
+      --docker-username=<USERNAME GOES HERE> \
+      --docker-password=<PASSWORD GOES HERE>
+
+    # !!!!!!!!!!
+    # Only do these steps if the above Service Principal Role Assignment fails.
+    # !!!!!!!!!!
     ```
 
 3. Deploy Cosmos DB

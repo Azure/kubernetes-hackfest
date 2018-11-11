@@ -98,6 +98,44 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
     * Valdiate that the `imageTag` parameter matches the tag you created in Azure Container Registry in the previous lab.
 
+    **NOTE: Only do iIf the Service Principal role assignment in Build Application lab failed. You will need to add the Docker Registry secret that was created to each deployment via a mechanism called an imagePullSecret.**
+
+    * Add `imagePullSecret` to each deployment.yaml file for each Microservice.
+
+        [charts/service-tracker-ui/templates/deployment.yaml](../../charts/service-tracker-ui/templates/deployment.yaml)
+
+        [charts/weather-api/templates/deployment.yaml](../../charts/weather-api/templates/deployment.yaml)
+
+        [charts/flights-api/templates/deployment.yaml](../../charts/flights-api/templates/deployment.yaml)
+
+        [charts/quakes-api/templates/deployment.yaml](../../charts/quakes-api/templates/deployment.yaml)
+
+        [charts/data-api/templates/deployment.yaml](../../charts/data-api/templates/deployment.yaml)
+
+        Example Before:
+        ```yaml
+        ...
+
+        containers:
+          - image: "{{.Values.deploy.acrServer}}/hackfest/cache-api:{{.Values.deploy.imageTag}}"
+            imagePullPolicy: Always
+
+        ...
+        ```
+
+        Example After (2 imagePullSecrets lines added):
+        ```yaml
+        ...
+
+        imagePullSecrets:
+        - name: regcred
+        containers:
+          - image: "{{.Values.deploy.acrServer}}/hackfest/cache-api:{{.Values.deploy.imageTag}}"
+            imagePullPolicy: Always
+
+        ...
+        ```
+
 5. Create Kubernetes secrets for access to Cosmos DB and App Insights
 
     For now, we are creating a secret that holds the credentials for our backend database. The application deployment puts these secrets in environment variables. 
