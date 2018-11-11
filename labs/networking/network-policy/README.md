@@ -35,7 +35,7 @@ In this lab we will use Kube-Router for Network Policy Management. Kube-Router w
 
     ```bash
     kubectl apply -f ./labs/networking/network-policy/deny-all.yaml
-    kubectl get networkpolicy -n dev
+    kubectl get networkpolicy
     ```
 
 3. Test out the Application by going to the Dashboard and clicking on the Refresh Data button for one of the APIs. You should see that the Refresh is taking an extra long time and eventually comes back with an error. This is becuase you have denied all Ingress to Pods, which means all traffic into the Cluster.
@@ -46,7 +46,7 @@ In this lab we will use Kube-Router for Network Policy Management. Kube-Router w
 
     ```bash
     # Log into the Pod
-    kubectl exec -it $(kubectl get pod -n dev -l "app=quakes-api" -o jsonpath='{.items[0].metadata.name}') -- /bin/sh
+    kubectl exec -it $(kubectl get pod -l "app=quakes-api" -o jsonpath='{.items[0].metadata.name}') -- /bin/sh
     # Once inside the Pod try to do a nslookup on the flights API
     nslookup flights-api
     ```
@@ -64,14 +64,14 @@ In this lab we will use Kube-Router for Network Policy Management. Kube-Router w
     exit
     ```
 
-5. As we can see from above all ingress and egress traffic from Pods has been blocked. Let's enable traffic between Pods in the **dev** Namespace. First, take a look at the [allow dev namespaces file](allow-dev-namespaces.yaml) and notice the Ingress (from: synatx) and Egress (to: syntax) are allowed in the **dev** namespace.
+5. As we can see from above all ingress and egress traffic from Pods has been blocked. Let's enable traffic between Pods in the **default** Namespace. First, take a look at the [allow default namespace file](allow-default-namespace.yaml) and notice the Ingress (from: synatx) and Egress (to: syntax) are allowed in the **default** namespace.
 
     ```bash
     # Apply the Allow Network Policy
-    kubectl apply -f ./labs/networking/network-policy/allow-dev-namespace.yaml
-    kubectl get networkpolicy -n dev
+    kubectl apply -f ./labs/networking/network-policy/allow-default-namespace.yaml
+    kubectl get networkpolicy
     # Let's Test the nslookup again
-    kubectl exec -it $(kubectl get pod -n dev -l "app=quakes-api" -o jsonpath='{.items[0].metadata.name}') -- /bin/sh
+    kubectl exec -it $(kubectl get pod -l "app=quakes-api" -o jsonpath='{.items[0].metadata.name}') -- /bin/sh
     # Once inside the Pod try to do a nslookup on the flights API
     nslookup flights-api
     ```
@@ -93,13 +93,13 @@ In this lab we will use Kube-Router for Network Policy Management. Kube-Router w
 
     ```bash
     # Delete Previous Network Allow Policy
-    kubectl delete -f ./labs/networking/network-policy/allow-dev-namespace.yaml
-    kubectl get networkpolicy -n dev
+    kubectl delete -f ./labs/networking/network-policy/allow-default-namespace.yaml
+    kubectl get networkpolicy
     # Apply the Allow Network Policy
-    kubectl apply -f ./labs/networking/network-policy/allow-dev-namespace-with-egress.yaml
-    kubectl get networkpolicy -n dev
+    kubectl apply -f ./labs/networking/network-policy/allow-default-namespace-with-egress.yaml
+    kubectl get networkpolicy
     # Let's Test the nslookup again
-    kubectl exec -it $(kubectl get pod -n dev -l "app=quakes-api" -o jsonpath='{.items[0].metadata.name}') -- /bin/sh
+    kubectl exec -it $(kubectl get pod -l "app=quakes-api" -o jsonpath='{.items[0].metadata.name}') -- /bin/sh
     # Once inside the Pod try to do a nslookup on the flights API
     nslookup flights-api
     ```
@@ -126,8 +126,8 @@ In this lab we will use Kube-Router for Network Policy Management. Kube-Router w
 
     ```bash
     # Cleanup Network Policies
-    kubectl delete networkpolicy -n dev --all
-    kubectl get networkpolicy -n dev
+    kubectl delete networkpolicy --all
+    kubectl get networkpolicy
     ```
 
 ## Troubleshooting / Debugging

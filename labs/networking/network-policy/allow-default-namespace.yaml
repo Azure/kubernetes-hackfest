@@ -1,16 +1,17 @@
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  name: np-allow-dev-namespace-egress
-  namespace: dev
+  name: np-allow-default-namespace
+  namespace: default
 spec:
   podSelector: {}
   ingress:
   - from:
     - namespaceSelector:
         matchLabels:
-          project: dev
+          project: default
   egress:
-  - {}
-  policyTypes:
-  - Egress
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          project: default
