@@ -51,7 +51,7 @@ The general workflow/result will be as follows:
 
 5. Leave the name as "azure-devops-aks-CI"
 
-6. Change the Agent queue to use the "Hosted Linux Preview"
+6. Change the Agent queue to use the "Hosted Ubuntu 1604"
 
 7. Click the plus sign by Phase 1 to add a task
 
@@ -113,13 +113,15 @@ In the deployment pipeline, we will create a Helm task to update our application
 
 10. Click on "1 job, 0 task" to view stage tasks
 
-11. Click on "Agent job" and change the agent pool to "Hosted Linux Preview" in the drop down
+11. Click on "Agent job" and change the agent pool to "Hosted Ubuntu 1604" in the drop down
 
 12. On the Agent job, click the "+" to add a Task
 
-13. Search for "helm" and add the task called "Package and deploy Helm charts"
+13. Search for "helm" and add the task called "Helm Tool Installer" as first task
 
-14. Click on the task (named "helm ls") to configure all of the settings for the release
+14. Next, Search for "helm" and add the task called "Package and deploy Helm charts"
+
+15. Click on the task (named "helm ls") to configure all of the settings for the release
     
     * Select your Azure subscription in the dropdown and click "Authorize"
     * Select the Resource Group and AKS Cluster
