@@ -21,6 +21,15 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   service_principal {
     client_id     = "${var.APPID}"
     client_secret = "${var.CLIENTSECRET}"
+  }
+}
+
+resource "azurerm_container_registry" "registry" {
+  name                = "${var.ACRNAME}"
+  resource_group_name = "${var.RGNAME}"
+  location            = "${var.location}"
+  admin_enabled       = true
+  sku                 = "basic"
 }
 
 output "id" {
@@ -46,3 +55,20 @@ output "cluster_ca_certificate" {
 output "host" {
   value = "${azurerm_kubernetes_cluster.cluster.kube_config.0.host}"
 }
+
+output "reg_id" {
+  value = "${data.azurerm_container_registry.registry.id}"
+}
+
+output "login_server" {
+  value = "${data.azurerm_container_registry.registry.login_server}"
+}
+
+output "admin_username" {
+  value = "${data.azurerm_container_registry.registry.admin_password}"
+}
+
+output "admin_password" {
+  value = "${data.azurerm_container_registry.registry.admin_password}"
+}
+

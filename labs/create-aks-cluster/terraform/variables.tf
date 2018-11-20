@@ -1,15 +1,20 @@
-variable "RGNAME" {}
 variable "APPID" {}
 variable "CLIENTSECRET" {}
 variable "UNIQUE_SUFFIX" {}
 variable "CLUSTERNAME" {}
 variable "DNSNAME" {}
+variable "ACRNAME" {}
+
 
 variable "location" {
   description = "location of cluster"
   default     = "eastus"
 }
 
+variable "RGNAME" {
+  description = "Resource Group Name"
+  default     = "kubernetes-hackfest"
+}
 variable "appid" {
   description = "name of cluster"
   default     = "akstf01"

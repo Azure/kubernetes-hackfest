@@ -70,16 +70,16 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
 
     ```bash
     # Set Resource Group Name
-    TF_VAR_RGNAME=kubernetes-hackfest
+    RGNAME=kubernetes-hackfest
     # Persist for Later Sessions in Case of Timeout
-    echo export TF_VAR_RGNAME=kubernetes-hackfest >> ~/.bashrc
+    echo export RGNAME=kubernetes-hackfest >> ~/.bashrc
     # Set Region (Location)
     LOCATION=eastus
     # Persist for Later Sessions in Case of Timeout
     echo export LOCATION=eastus >> ~/.bashrc
     ```
 
-8. Create cluster name used for the AKS cluster and create cluster with Terraform
+8. Create cluster variable name used for the AKS cluster
 
     Use Unique CLUSTERNAME
 
@@ -95,8 +95,22 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     # Persist for Later Sessions in Case of Timeout
     echo export TF_VAR_DNSNAME=aks${UNIQUE_SUFFIX} >> ~/.bashrc
     ```
+9. Create Variables For Azure Container Registry (ACR)
+    * Use the same resource group that was created for AKS (in lab 1)
+    * In this step, you will need a unique name for your ACR instance. Use the following step to create the ACR name and then deploy.
 
-    Intialize Terraform
+    ```bash
+    # Use the UNIQUE_SUFFIX from the first lab. Validate that the value is still set.
+    echo $UNIQUE_SUFFIX
+    # Set Azure Container Registry Name
+    export TF_VAR_ACRNAME=acrhackfest$UNIQUE_SUFFIX
+    # Check ACR Name (Can Only Container lowercase)
+    echo $TF_VAR_ACRNAME
+    # Persist for Later Sessions in Case of Timeout
+    echo export TF_VAR_ACRNAME=acrhackfest$UNIQUE_SUFFIX >> ~/.bashrc
+    ```
+
+10. Deploy AKS and Azure Container Registry with Terraform
 
     ```bash
     terraform init
@@ -123,7 +137,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     --node-count 3
     ```
 
-9. Verify your cluster status. The `ProvisioningState` should be `Succeeded`
+11. Verify your cluster status. The `ProvisioningState` should be `Succeeded`
     ```bash
     az aks list -o table
     ```
@@ -134,13 +148,13 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     ODLaks-v2-gbb-16502  eastus   ODL_aks-v2-gbb-16502  1.11.3                Succeeded odlaks-v2--odlaks-v2-gbb-16-b23acc-17863579.hcp.centralus.azmk8s.io
     ```
 
-10. Get the Kubernetes config files for your new AKS cluster
+12. Get the Kubernetes config files for your new AKS cluster
 
     ```bash
     az aks get-credentials -n $CLUSTERNAME -g $RGNAME
     ```
 
-11. Verify you have API access to your new AKS cluster
+13. Verify you have API access to your new AKS cluster
 
       > Note: It can take 5 minutes for your nodes to appear and be in READY state. You can run `watch kubectl get nodes` to monitor status.
 

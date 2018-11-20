@@ -23,6 +23,7 @@ In this lab we will build Docker containers for each of the application componen
     # Persist for Later Sessions in Case of Timeout
     echo export ACRNAME=acrhackfest$UNIQUE_SUFFIX >> ~/.bashrc
     # Create Azure Container Registry
+    ** Skip This Step Of You Used Terraform To Deploy AKS **
     az acr create --resource-group $RGNAME --name $ACRNAME --sku Basic
     ```
 
