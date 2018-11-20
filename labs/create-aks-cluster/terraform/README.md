@@ -90,6 +90,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     echo $TF_VAR_CLUSTERNAME
     # Persist for Later Sessions in Case of Timeout
     echo export TF_VAR_CLUSTERNAME=aks${UNIQUE_SUFFIX} >> ~/.bashrc
+    echo export CLUSTERNAME=aks${UNIQUE_SUFFIX} >> ~/.bashrc
     # Create DNS Name For Cluster
     TF_VAR_DNSNAME=aks${UNIQUE_SUFFIX}
     # Persist for Later Sessions in Case of Timeout
