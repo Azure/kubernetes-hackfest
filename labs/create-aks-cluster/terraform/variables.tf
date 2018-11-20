@@ -15,11 +15,6 @@ variable "appid" {
   default     = "akstf01"
 }
 
-variable "dns_prefix" {
-  description = "dns prefix of cluster"
-  default     = "aks-tf-cluster"
-}
-
 variable "kubernetes_version" {
   description = "Kubernetes Version"
   default     = "1.11.3"
