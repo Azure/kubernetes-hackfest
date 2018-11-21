@@ -1,10 +1,9 @@
-variable "appid" {}
-variable "clientsecret" {}
-variable "rgname" {}
-variable "unique_suffix" {}
-variable "clustername" {}
-variable "dnsname" {}
-variable "acrname" {}
+variable "APPID" {}
+variable "CLIENTSECRET" {}
+variable "UNIQUE_SUFFIX" {}
+variable "CLUSTERNAME" {}
+variable "DNSNAME" {}
+variable "ACRNAME" {}
 
 
 variable "location" {
