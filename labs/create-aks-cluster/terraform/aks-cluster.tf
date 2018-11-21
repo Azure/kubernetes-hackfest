@@ -57,18 +57,18 @@ output "host" {
 }
 
 output "reg_id" {
-  value = "${data.azurerm_container_registry.registry.id}"
+  value = "${azurerm_container_registry.registry.id}"
 }
 
 output "login_server" {
-  value = "${data.azurerm_container_registry.registry.login_server}"
+  value = "${azurerm_container_registry.registry.login_server}"
 }
 
 output "admin_username" {
-  value = "${data.azurerm_container_registry.registry.admin_password}"
+  value = "${azurerm_container_registry.registry.admin_password}"
 }
 
 output "admin_password" {
-  value = "${data.azurerm_container_registry.registry.admin_password}"
+  value = "${azurerm_container_registry.registry.admin_password}"
 }
 
