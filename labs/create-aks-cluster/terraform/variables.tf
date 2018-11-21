@@ -1,4 +1,4 @@
-variable "TF_VAR_APPID" {}
+variable "APPID" {}
 variable "CLIENTSECRET" {}
 variable "UNIQUE_SUFFIX" {}
 variable "CLUSTERNAME" {}
