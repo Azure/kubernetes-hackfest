@@ -1,9 +1,10 @@
-variable "APPID" {}
-variable "CLIENTSECRET" {}
-variable "UNIQUE_SUFFIX" {}
-variable "CLUSTERNAME" {}
-variable "DNSNAME" {}
-variable "ACRNAME" {}
+variable "appid" {}
+variable "clientsecret" {}
+variable "rgname" {}
+variable "unique_suffix" {}
+variable "clustername" {}
+variable "dnsname" {}
+variable "acrname" {}
 
 
 variable "location" {
@@ -15,11 +16,6 @@ variable "RGNAME" {
   description = "Resource Group Name"
   default     = "kubernetes-hackfest"
 }
-variable "appid" {
-  description = "name of cluster"
-  default     = "akstf01"
-}
-
 variable "kubernetes_version" {
   description = "Kubernetes Version"
   default     = "1.11.3"
