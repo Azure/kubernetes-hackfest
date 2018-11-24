@@ -13,16 +13,15 @@ This workshop will guide you through building Continuous Integration (CI) and Co
 
 The general workflow/result will be as follows:
 
-- Push code to source control
-- Trigger a continuous integration (CI) build pipeline when project code is updated via Git
-- Package app code into a container image (Docker Image) created and stored with Azure Container Registry
-- Trigger a continuous deployment (CD) release pipeline upon a successful build
-- Deploy container image to AKS upon successful a release (via Helm chart)
-- Rinse and repeat upon each code update via Git
-- Profit
+* Push code to source control
+* Trigger a continuous integration (CI) build pipeline when project code is updated via Git
+* Package app code into a container image (Docker Image) created and stored with Azure Container Registry
+* Trigger a continuous deployment (CD) release pipeline upon a successful build
+* Deploy container image to AKS upon successful a release (via Helm chart)
+* Rinse and repeat upon each code update via Git
+* Profit
 
-![](workflow.png)
-
+![Azure DevOps Workflow](workflow.png)
 
 #### Setup Azure DevOps Project
 
@@ -33,32 +32,40 @@ The general workflow/result will be as follows:
     * Name your project "azure-devops-aks" and give it a description.
     * Leave the Version control as Git
 
-    ![](azure-do-new-project.png)
+    ![Azure DevOps New Project](azure-do-new-project.png)
 
 3. On the next screen, choose "import a repository" and use the source from this repo
 
-    ![](azure-do-import.png)
+    ![Azure DevOps Import](azure-do-import.png)
 
 #### Create Build Pipeline
 
 1. Create an empty build pipeline. Hover over "Build and release" and select "Builds"
+
 2. Click the "New pipeline" button
+
 3. In "Select a source," use `Azure Repos Git` and ensure it is pointing to your newly built repo (this is the default)
     > Note that we are using the master branch here. Normally we would use other branches and PR's. For simplicity, we are using master just for this lab.
 
 4. Select to "start with an Empty job"
+
 5. Leave the name as "azure-devops-aks-CI"
-6. Change the Agent queue to use the "Hosted Linux Preview"
+
+6. Change the Agent queue to use the "Hosted Ubuntu 1604"
+
 7. Click the plus sign by Phase 1 to add a task
+
 8. Search tasks for "Azure" and add the Azure CLI task
 
-    ![](azure-do-azurecli.png)
+    ![Azure DevOps Azure CLI](azure-do-azurecli.png)
 
 9. Click on the Azure CLI task and choose your Azure subscription and `Authorize`
+
 10. Choose "Inline script" and enter the following (be sure to replace the ACR name with yours). Notice how we create a dynamic image tag using our build ID from VSTS.
 
-    ```
-    export ACRNAME=<replace>
+    ```bash
+    # Check ACRNAME Exists and what it is
+    echo $ACRNAME
     export IMAGETAG=vsts-$(Build.BuildId)
 
     az acr build -t hackfest/data-api:$IMAGETAG -r $ACRNAME --no-logs ./app/data-api
@@ -70,12 +77,13 @@ The general workflow/result will be as follows:
 
 11. Add another task and search for "Publish Build Artifacts". Use "charts" for the artifact name and browse to the charts folder for the "Path to publish"
 
-    ![](azure-do-artifact.png)
+    ![Azure DevOps Artifact](azure-do-artifact.png)
 
-11. Test this by clicking "Save & queue" and providing a comment
-12. Click on "Builds" to check result
-13. Enable Continuous integration for the build definition. Edit the build definition and you will find this setting under "Triggers"
+12. Test this by clicking "Save & queue" and providing a comment
 
+13. Click on "Builds" to check result
+
+14. Enable Continuous integration for the build definition. Edit the build definition and you will find this setting under "Triggers"
 
 #### Create Deployment Pipeline
 
@@ -84,22 +92,36 @@ In the deployment pipeline, we will create a Helm task to update our application
     > Note: To save time, we will only deploy the service-tracker-ui application in this lab. 
 
 1. Hover over "Build and release" and select "Releases"
+
 2. Click the "New pipeline" button
+
 3. Select to "start with an Empty job"
+
 4. Name the pipeline "AKS Helm Deploy" (it will default to "New release pipeline")
+
 5. Click on "+ Add" next to Artifacts
+
 6. In "Source (build pipeline)", select the build we created earlier (should be named "azure-devops-aks-CI")
 
-    ![](azure-do-release-artifact.png)
+    ![Azure DevOps Release Artifact](azure-do-release-artifact.png)
 
 7. Click on the lightning bolt next to the Artifact we just created and enable "Continuous deployment trigger"
+
 8. Click on "Stage 1" in the Stages box.
+
 9. Name the stage "dev"
+
 10. Click on "1 job, 0 task" to view stage tasks
-11. Click on "Agent job" and change the agent pool to "Hosted Linux Preview" in the drop down
+
+11. Click on "Agent job" and change the agent pool to "Hosted Ubuntu 1604" in the drop down
+
 12. On the Agent job, click the "+" to add a Task
-13. Search for "helm" and add the task called "Package and deploy Helm charts"
-14. Click on the task (named "helm ls") to configure all of the settings for the release
+
+13. Search for "helm" and add the task called "Helm Tool Installer" as first task
+
+14. Next, Search for "helm" and add the task called "Package and deploy Helm charts"
+
+15. Click on the task (named "helm ls") to configure all of the settings for the release
     
     * Select your Azure subscription in the dropdown and click "Authorize"
     * Select the Resource Group and AKS Cluster
@@ -107,28 +129,31 @@ In the deployment pipeline, we will create a Helm task to update our application
     * For Chart type select "File Path"
     * For Chart path, click the "..." button and browse to the "service-trakcer-ui" chart in the charts directory
     * For the Release Name, enter `service-tracker-ui`
-    * For Set Values you will need to fix the ACR server to match your ACR server name and the imageTag needs to be set. 
+    * For Set Values you will need to fix the ACR server to match your ACR server name and the imageTag needs to be set.
         Eg - `deploy.acrServer=acrhackfestbrian3299.azurecr.io,deploy.imageTag=vsts-$(Build.BuildId)`
 
-    ![](azure-do-helm-task.png)
+    ![Azure DevOps Helm Task](azure-do-helm-task.png)
 
 #### Run a test build
 
 1. In Azure DevOps, click on Builds and click the "Queue" button
+
 2. Monitor the builds and wait for the build to complete
 
-    ![](azure-do-build.png)
+    ![Azure DevOps Build](azure-do-build.png)
 
 3. The release will automatically start when the build is complete (be patient, this can take some time). Review the results as it is complete. 
 
-    ![](azure-do-release.png)
+    ![Azure DevOps Release](azure-do-release.png)
 
 4. Now kick-off the full CI/CD pipeline by making an edit to the service-tracker-ui frontend code in the Azure DevOps code repo.
 
-#### Next Lab: [Networking](../../networking/README.md)
-
 ## Troubleshooting / Debugging
+
+* N/A
 
 ## Docs / References
 
 * Blog post by Jessica Dean. http://jessicadeen.com/tech/microsoft/how-to-deploy-to-kubernetes-using-helm-and-vsts 
+
+#### Next Lab: [Networking](../../networking/README.md)

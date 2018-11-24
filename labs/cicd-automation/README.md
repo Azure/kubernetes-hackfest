@@ -6,7 +6,7 @@ In this lab you will setup pipelines for automating application creation and dep
 * Azure DevOps
 * Brigade
 
-## Prerequisites 
+## Prerequisites
 
 * Clone this repo in Azure Cloud Shell.
 * Complete previous labs:
@@ -24,10 +24,12 @@ Click below to find the instructions for the CI/CD platform of your choice:
 
 [Brigade](brigade/README.md)
 
-
-
 ## Troubleshooting / Debugging
 
+* N/A
 
 ## Docs / References
 
+* N/A
+
+#### Next Lab: [Networking](../networking/README.md)

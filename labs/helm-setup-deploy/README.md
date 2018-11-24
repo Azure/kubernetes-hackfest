@@ -2,7 +2,7 @@
 
 In this lab we will setup Helm in our AKS cluster and deploy our application with Helm charts.
 
-## Prerequisites 
+## Prerequisites
 
 * Clone this repo in Azure Cloud Shell.
 * Complete previous labs:
@@ -12,17 +12,13 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 ## Instructions
 
 1. Initialize Helm
-    
+
     Helm helps you manage Kubernetes applications — Helm Charts helps you define, install, and upgrade even the most complex Kubernetes application. Helm has a CLI component and a server side component called Tiller. 
     * Initialize Helm and Tiller:
 
         ```bash
         cd ~/kubernetes-hackfest
-        ```
-        ```bash
         kubectl apply -f ./labs/helm-setup-deploy/rbac-config.yaml
-        ```
-        ```bash
         helm init --service-account tiller --upgrade
         ```
 
@@ -30,7 +26,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
         ```bash
         helm version
         ```
-    
+
         ```bash
         Client: &version.Version{SemVer:"v2.10.0", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}
         Server: &version.Version{SemVer:"v2.10.0", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}
@@ -57,14 +53,13 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
     The `templates` folder holds the yaml files for the specific kubernetes resources for our application. Here you will see how Helm inserts the parameters into resources with this bracketed notation: eg -  `{{.Values.deploy.image}}`
 
-
 4. Customize Chart Parameters
 
     In each chart we will need to update the values file with our specific Azure Container Registry. 
 
     * Get the value of your ACR Login Server:
 
-        ```
+        ```bash
         az acr list -o table --query "[].loginServer"
 
         Result
@@ -72,7 +67,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
         youracr.azurecr.io
 
         ```
-    
+
     * Replace the `acrServer` value below with the Login server from previous step. In the Azure Cloud Shell, select the file editor '{}'.  Navigate to the yaml files below.  To save changes, select the elipticals on the right hand side and select Save. You will make this change in all of the charts below (except cache-api)
     
         [charts/service-tracker-ui/values.yaml](../../charts/service-tracker-ui/values.yaml)
@@ -103,35 +98,75 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
     * Valdiate that the `imageTag` parameter matches the tag you created in Azure Container Registry in the previous lab.
 
+    **NOTE: Only do iIf the Service Principal role assignment in Build Application lab failed. You will need to add the Docker Registry secret that was created to each deployment via a mechanism called an imagePullSecret.**
+
+    * Add `imagePullSecret` to each deployment.yaml file for each Microservice.
+
+        [charts/service-tracker-ui/templates/deployment.yaml](../../charts/service-tracker-ui/templates/deployment.yaml)
+
+        [charts/weather-api/templates/deployment.yaml](../../charts/weather-api/templates/deployment.yaml)
+
+        [charts/flights-api/templates/deployment.yaml](../../charts/flights-api/templates/deployment.yaml)
+
+        [charts/quakes-api/templates/deployment.yaml](../../charts/quakes-api/templates/deployment.yaml)
+
+        [charts/data-api/templates/deployment.yaml](../../charts/data-api/templates/deployment.yaml)
+
+        Example Before:
+        ```yaml
+        ...
+
+        containers:
+          - image: "{{.Values.deploy.acrServer}}/hackfest/cache-api:{{.Values.deploy.imageTag}}"
+            imagePullPolicy: Always
+
+        ...
+        ```
+
+        Example After (2 imagePullSecrets lines added):
+        ```yaml
+        ...
+
+        imagePullSecrets:
+        - name: regcred
+        containers:
+          - image: "{{.Values.deploy.acrServer}}/hackfest/cache-api:{{.Values.deploy.imageTag}}"
+            imagePullPolicy: Always
+
+        ...
+        ```
+
 5. Create Kubernetes secrets for access to Cosmos DB and App Insights
 
     For now, we are creating a secret that holds the credentials for our backend database. The application deployment puts these secrets in environment variables. 
 
     * Customize these values from your Cosmos DB instance deployed in a previous lab. Use the ticks provided for strings
-    
+
     ```bash
     az cosmosdb list-connection-strings --name $COSMOSNAME --resource-group $RGNAME
     ```
 
     > Note: the MONGODB_URI should be of this format **(Ensure you add the `/hackfest?ssl=true`)** at the end. 
-    
+
     mongodb://cosmosbrian11199:ctumHIz1jC4Mh1hZgWGEcLwlCLjDSCfFekVFHHhuqQxIoJGiQXrIT1TZTllqyB4G0VuI4fb0qESeuHCRJHA==@acrhcosmosbrian11122.documents.azure.com:10255/<strong style="font-size:24px; font-family:courier; color:#308e48">hackfest</strong>?ssl=true
 
-    ```
+    ```bash
     export MONGODB_URI='outputFromAboveCommand'
     ```
+
     ```bash
     az cosmosdb show --name $COSMOSNAME --resource-group $RGNAME --query "name" -o tsv
 
     export MONGODB_USER='outputFromAboveCommand'
     ```
+
     ```bash
     az cosmosdb list-keys --name $COSMOSNAME --resource-group $RGNAME --query "primaryMasterKey" -o tsv
 
     export MONGODB_PASSWORD='outputFromAboveCommand'
     ```
-    
-    Use Instrumentation Key from previous exercise:      
+
+    Use Instrumentation Key from previous exercise:
     ```bash
     export APPINSIGHTS_INSTRUMENTATIONKEY=''
     ```
@@ -140,13 +175,12 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     kubectl create secret generic cosmos-db-secret --from-literal=uri=$MONGODB_URI --from-literal=user=$MONGODB_USER --from-literal=pwd=$MONGODB_PASSWORD --from-literal=appinsights=$APPINSIGHTS_INSTRUMENTATIONKEY
     ```
 
-
 6. Deploy Charts
 
     Install each chart as below:
 
-    ```
-    # Application charts 
+    ```bash
+    # Application charts
 
     helm upgrade --install data-api ./charts/data-api
     helm upgrade --install quakes-api ./charts/quakes-api
@@ -155,11 +189,11 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     helm upgrade --install service-tracker-ui ./charts/service-tracker-ui
     ```
 
-6. Initialize application
+7. Initialize application
 
     * First check to see if pods and services are working correctly
 
-    ```
+    ```bash
     kubectl get pod,svc
 
     NAME                                      READY     STATUS    RESTARTS   AGE
@@ -180,7 +214,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
     * Browse to the web UI
 
-    ```
+    ```bash
     kubectl get service service-tracker-ui
 
     NAME                TYPE           CLUSTER-IP   EXTERNAL-IP     PORT(S)          AGE
@@ -191,15 +225,16 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
     * You will need to click "REFRESH DATA" for each service to load the data sets.
 
-        ![](service-tracker-ui.png)
+        ![Service Tracker UI](service-tracker-ui.png)
 
     * Browse each map view and have some fun.
 
-#### Next Lab: [CI/CD Automation](../cicd-automation/README.md)
-
 ## Troubleshooting / Debugging
 
+* Make sure Helm version on the client and server are the same to ensure compatibility.
 
 ## Docs / References
 
-* Helm. http://helm.sh
+* [Helm](http://helm.sh)
+
+#### Next Lab: [CI/CD Automation](../cicd-automation/README.md)

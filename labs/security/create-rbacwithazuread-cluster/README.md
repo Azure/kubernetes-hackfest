@@ -2,7 +2,7 @@
 
 This lab creates an AKS Cluster with Azure AD Integration for RBAC.
 
-## Prerequisites 
+## Prerequisites
 
 1. N/A
 
@@ -60,14 +60,14 @@ This lab creates an AKS Cluster with Azure AD Integration for RBAC.
     NAME="${USERINITIALS}aksrbac"
     az group create --name $RG --location $LOC
 
-    PATH-TO-SSH-PUBLICKEY="~/.ssh/id_rsa.pub"
+    PATH_TO_SSH_PUBLICKEY="~/.ssh/id_rsa.pub"
     # Create AKS with RBAC Cluster
     az aks create -g $RG -n $NAME --enable-rbac \
-        -k 1.10.3 --node-count 1 --ssh-key-value ${PATH-TO-SSH-PUBLICKEY} \
-        --aad-server-app-id ${SERVER-APP-ID} \
-        --aad-server-app-secret ${SERVER-APP-SECRET} \
-        --aad-client-app-id ${CLIENT-APP-ID} \
-        --aad-tenant-id ${AZUREAD-TENANT-ID} --no-wait
+        -k 1.10.3 --node-count 1 --ssh-key-value $PATH_TO_SSH_PUBLICKEY \
+        --aad-server-app-id $SERVER-APP-ID \
+        --aad-server-app-secret $SERVER-APP-SECRET \
+        --aad-client-app-id $CLIENT-APP-ID \
+        --aad-tenant-id $AZUREAD-TENANT-ID --no-wait
     ```
 
 5. Create Two User Accounts in Azure AD
@@ -100,7 +100,6 @@ This lab creates an AKS Cluster with Azure AD Integration for RBAC.
     # If you login with the aksuser account the request will be denied.
     kubectl get nodes
     ```
-#### Next Lab: [Security](labs/security/secure-tiller/README.md)
 
 ## Troubleshooting / Debugging
 

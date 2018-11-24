@@ -1,8 +1,8 @@
 # Lab: CI/CD with Brigade and Helm
 
-This workshop will guide you through building a Continuous Integration (CI) and Continuous Deployment (CD) pipeline using the open source platform Brigade. The pipeline will utilize Azure Container Registry to build the images and Helm for application updating.   
+This workshop will guide you through building a Continuous Integration (CI) and Continuous Deployment (CD) pipeline using the open source platform Brigade. The pipeline will utilize Azure Container Registry to build the images and Helm for application updating.
 
-## Prerequisites 
+## Prerequisites
 
 * Complete previous labs:
     * [Azure Kubernetes Service](../../create-aks-cluster/README.md)
@@ -13,12 +13,12 @@ This workshop will guide you through building a Continuous Integration (CI) and 
 
 The general workflow/result will be as follows:
 
-- Push code to source control (Github)
-- Trigger a continuous integration (CI) build pipeline when project code is updated via Git
-- Package app code into a container image (Docker Image) created and stored with Azure Container Registry
-- Trigger a continuous deployment (CD) release pipeline upon a successful build
-- Deploy container image to AKS upon successful a release (via Helm chart)
-- Rinse and repeat upon each code update via Git
+* Push code to source control (Github)
+* Trigger a continuous integration (CI) build pipeline when project code is updated via Git
+* Package app code into a container image (Docker Image) created and stored with Azure Container Registry
+* Trigger a continuous deployment (CD) release pipeline upon a successful build
+* Deploy container image to AKS upon successful a release (via Helm chart)
+* Rinse and repeat upon each code update via Git
 
 #### Setup Github Repo
 
@@ -26,17 +26,17 @@ In order to trigger this pipeline you will need your own Github account and fork
 
 1. Broswe to https://github.com/azure/kubernetes-hackfest and click "Fork" in the top right. 
 
-    ![](github-fork.png)
+    ![Brigade GitHub Fork](github-fork.png)
 
 2. Grab your clone URL from Github which will look something like: `https://github.com/thedude-lebowski/kubernetes-hackfest.git`
 
-    ![](github-clone.png)
+    ![Brigade GitHub Clone](github-clone.png)
 
 3. Clone your repo in Azure Cloud Shell.
 
     > Note: If you have cloned the repo in earlier labs, the directory name will conflict. You can either delete the old one or just rename it before this step. 
 
-    ```
+    ```bash
     git clone https://github.com/<your-github-account>/kubernetes-hackfest.git
 
     cd kubernetes-hackfest
@@ -46,13 +46,13 @@ In order to trigger this pipeline you will need your own Github account and fork
 
 1. Update helm repo
 
-    ```
+    ```bash
     helm repo add brigade https://azure.github.io/brigade
     ```
 
 2. Install brigade chart into it's own namespace
 
-    ```
+    ```bash
     kubectl create ns brigade
 
     helm install -n brigade brigade/brigade --namespace brigade
@@ -71,7 +71,7 @@ In order to trigger this pipeline you will need your own Github account and fork
 
 #### Setup Brigade Project
 
-Brigade uses projects to define the configuration for pipelines. Brigade Projects are also installed with a Helm chart. In this section, we will create a YAML file to configure the brigade project Helm chart. 
+Brigade uses projects to define the configuration for pipelines. Brigade Projects are also installed with a Helm chart. In this section, we will create a YAML file to configure the brigade project Helm chart.
 
 1. Create a brigade project YAML file.
 
@@ -106,10 +106,10 @@ Brigade uses projects to define the configuration for pipelines. Brigade Project
         * In your Github, click on `Settings` and `Developer settings`
         * Select `Personal sccess tokens`
         * Select `Generate new token`
-            ![](github-dev-settings.png)
+            ![Brigade GitHub Settings](github-dev-settings.png)
 
         * Enter `brigade-project` for the description and give access to the `repo`
-            ![](github-token.png)
+            ![Brigade GitHubToken](github-token.png)
 
         > Note: More details on Brigade and Github integration are here: https://github.com/Azure/brigade/blob/master/docs/topics/github.md 
 
@@ -122,7 +122,7 @@ Brigade uses projects to define the configuration for pipelines. Brigade Project
     * Create an Azure service principal with rights to your ACR Resource Group. 
         * You can get your subscription ID in the Azure portal or running `az account list -o table`
 
-            ```
+            ```bash
             export AZSUBID="471d33fd-a776-405b-947c-467c291dc741"
             export RGNAME=kubernetes-hackfest
 
@@ -159,11 +159,11 @@ Brigade uses projects to define the configuration for pipelines. Brigade Project
 
 2. Create your brigade project
 
-    ```
+    ```bash
     # from the directory where your file from step #1 was created
 
     helm install --name brig-proj-hackfest brigade/brigade-project -f brig-proj-hackfest.yaml --namespace brigade
-    ``` 
+    ```
 
     > Note: There is a ```brig``` CLI client that allows you to view your brigade projects. More details here: <https://github.com/Azure/brigade/tree/master/brig>
 
@@ -172,12 +172,16 @@ Brigade uses projects to define the configuration for pipelines. Brigade Project
 To save time, we will only deploy the web-ui application in this lab. 
 
 1. In the Azure cloud shell, ```cd ~/kubernetes-hackfest``` and create a file called ```brigade.js```
-2. Edit `brigade.js` in cloud shell 
+
+2. Edit `brigade.js` in cloud shell
+
 3. Paste the contents from the sample [brigade.js](./brigade.js) file in this file
+
 4. Review the pipeline steps in the javascript
+
 5. Commit the new file to your Github repository
 
-    ```
+    ```bash
     git add .
     git add -A
     git commit -m "added brigade pipeline script"
@@ -190,7 +194,7 @@ To save time, we will only deploy the web-ui application in this lab.
 
 1. Get a URL for your Brigade Gateway
 
-    ```
+    ```bash
     kubectl get service brigade-brigade-github-gw -n brigade
 
     NAME                 TYPE           CLUSTER-IP    EXTERNAL-IP     PORT(S)          AGE
@@ -199,29 +203,37 @@ To save time, we will only deploy the web-ui application in this lab.
     # use these commands to create the full URL
 
     export GH_WEBHOOK=http://$(kubectl get svc brigade-brigade-github-gw -n brigade -o jsonpath='{.status.loadBalancer.ingress[0].ip}'):7744/events/github
-    
+
     echo $GH_WEBHOOK
     ```
 
     The webhook URL should look something like: http://13.67.129.228:7744/events/github You will use this in the next step.
 
 2. In your forked Github repo, click on Settings
+
 3. Click Webhooks
+
 4. Click `Add webhook`
+
 5. Set the `Payload URL` to the URL created in step 1
+
 6. Set the `Content type` to `application/json`
+
 7. Set the `Secret` to the value from your `brig-proj-hackfest.yaml` called "sharedSecret"
+
 8. Set the `Which events...` to `Let me select individual events` and check `Push` and `Pull request`
 
-    ![](github-webhook.png)
+    ![Brigade GitHub Webhook](github-webhook.png)
 
 9. Click the `Add webhook` button
 
 #### Test the CI/CD Pipeline
 
 1. Make a code change in the web-ui application source code.
+
 2. Push the update to Github and validate the build in brigade.
-    ```
+
+    ```bash
     kubectl get pod -n brigade
 
     NAME                                                READY     STATUS      RESTARTS   AGE
@@ -239,19 +251,21 @@ To save time, we will only deploy the web-ui application in this lab.
     ```
 
 3. Check the `web-ui` application pods and ensure they were updated with the new imageTag created in the build.
+
 4. If it worked, celebrate and go get a beer.
 
 #### Add Kashti Web Dashboard (Optional)
 
-Add these steps. https://github.com/Azure/kashti 
-
-#### Next Lab: [Networking](labs/networking/README.md)
-
+* [Add these steps](https://github.com/Azure/kashti)
 
 ## Troubleshooting / Debugging
 
+* N/A
+
 ## Docs / References
 
-Brigade web site. http://brigade.sh 
-Brigade Source. https://github.com/Azure/brigade 
-Original Blog Post. https://open.microsoft.com/2017/10/23/announcing-brigade-event-driven-scripting-kubernetes 
+* [Brigade web site](http://brigade.sh)
+* [Brigade Source] https://github.com/Azure/brigade 
+* [Original Blog Post](https://open.microsoft.com/2017/10/23/announcing-brigade-event-driven-scripting-kubernetes)
+
+#### Next Lab: [Networking](../../networking/README.md)

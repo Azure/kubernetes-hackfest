@@ -1,0 +1,15 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: np-allow-default-namespace-ingress
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: service-tracker-ui
+  ingress:
+  - from: []
+  egress:
+  - {}
+  policyTypes:
+  - Egress
