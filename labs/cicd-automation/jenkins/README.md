@@ -40,13 +40,19 @@ In order to trigger this pipeline you will need your own Github account and fork
     def  ACRNAME = 'youracrname'
     ```
 
+3.  Your newly forked repo will have the default ACR URL hardcoded in the Helm chart for the service-tracker-ui app (which was manually updated locally in step 4 of the 'Lab: Helm Setup and Deploy Application' lab). This needs to be updated on line 10 of ./charts/service-tracker-ui/values.yaml in your fork of the repo.
+
+    ```bash
+    acrServer: "<update this with your acr name>.azurecr.io"
+    ```
+
     ![Jenkins Modify ACR](./img/modify_acr.png)
 
-3. Grab your clone URL from Github which will look something like: `https://github.com/thedude-lebowski/kubernetes-hackfest.git`
+4. Grab your clone URL from Github which will look something like: `https://github.com/thedude-lebowski/kubernetes-hackfest.git`
 
     ![Jenkins GitHub Clone](./img/github-clone.png)
 
-4. Clone your repo in Azure Cloud Shell.
+5. Clone your repo in Azure Cloud Shell.
 
     > Note: If you have cloned the repo in earlier labs, the directory name will conflict. You can either delete the old one or just rename it before this step.
 
