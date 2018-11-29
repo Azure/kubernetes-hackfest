@@ -43,8 +43,8 @@ Step 1 & 2 Only Needed if you did not complete Helm Setup In previous labs. Skip
     kubectl get service -l app=nginx-ingress --namespace kube-system
     ```
 
-    * Replace IP with Public IP Address above
-    * Replace DNSNAME with DNS name to be used
+    * Replace IP with Public IP Address above in the configure-public-dns.sh file.
+    * Replace DNSNAME with DNS name to be used in the configure-public-dns-sh file.
 
     ```bash
     # Set DNSNAME to be used later
