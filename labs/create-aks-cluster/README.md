@@ -24,7 +24,25 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
 
     > Note: In the cloud shell, you are automatically logged into your Azure subscription.
 
-5. Create Azure Service Prinicpal to use through the labs
+5. Ensure you are using the correct Azure subscription you want to deploy AKS to.
+    ```
+    # View subscriptions
+    az account list
+    ```
+    ```
+   # Verify selected subscription
+   az account show
+   ```
+
+   ```
+   # Set correct subscription (if needed)
+   az account set --subscription <subscription_id>
+
+   # Verify correct subscription is now set
+   az account show
+   ```
+
+6. Create Azure Service Prinicpal to use through the labs
 
     ```bash
     az ad sp create-for-rbac --skip-assignment
@@ -51,7 +69,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     echo export CLIENTSECRET=$CLIENTSECRET >> ~/.bashrc
     ```
 
-6. Create a  unique identifier suffix for resources to be created in this lab.
+7. Create a  unique identifier suffix for resources to be created in this lab.
 
     ```bash
     UNIQUE_SUFFIX=$USER$RANDOM
@@ -66,7 +84,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
 
     *** Note this value as it will be used in the next couple labs. ***
 
-7. Create an Azure Resource Group in East US.
+8. Create an Azure Resource Group in East US.
 
     ```bash
     # Set Resource Group Name
@@ -81,7 +99,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     az group create -n $RGNAME -l $LOCATION
     ```
 
-8. Create your AKS cluster in the resource group created above with 3 nodes, targeting Kubernetes version 1.10.3, with Container Insights, and HTTP Application Routing Enabled. You will use the Service Principal information from step 5.
+9. Create your AKS cluster in the resource group created above with 3 nodes, targeting Kubernetes version 1.10.3, with Container Insights, and HTTP Application Routing Enabled. You will use the Service Principal information from step 5.
 
     Use Unique CLUSTERNAME
 
@@ -105,7 +123,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     --enable-addons http_application_routing,monitoring
     ```
 
-9. Verify your cluster status. The `ProvisioningState` should be `Succeeded`
+10. Verify your cluster status. The `ProvisioningState` should be `Succeeded`
     ```bash
     az aks list -o table
     ```
@@ -116,13 +134,13 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     ODLaks-v2-gbb-16502  eastus   ODL_aks-v2-gbb-16502  1.11.4                Succeeded odlaks-v2--odlaks-v2-gbb-16-b23acc-17863579.hcp.centralus.azmk8s.io
     ```
 
-10. Get the Kubernetes config files for your new AKS cluster
+11. Get the Kubernetes config files for your new AKS cluster
 
     ```bash
     az aks get-credentials -n $CLUSTERNAME -g $RGNAME
     ```
 
-11. Verify you have API access to your new AKS cluster
+12. Verify you have API access to your new AKS cluster
 
       > Note: It can take 5 minutes for your nodes to appear and be in READY state. You can run `watch kubectl get nodes` to monitor status.
 
