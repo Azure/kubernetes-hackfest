@@ -97,7 +97,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
 
     ```bash
     # Create AKS Cluster
-    az aks create -n $CLUSTERNAME -g $RGNAME -k 1.11.3 \
+    az aks create -n $CLUSTERNAME -g $RGNAME -k 1.11.4 \
     --service-principal $APPID \
     --client-secret $CLIENTSECRET \
     --generate-ssh-keys -l $LOCATION \
@@ -113,7 +113,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     ```bash
     Name                 Location    ResourceGroup         KubernetesVersion    ProvisioningState    Fqdn
     -------------------  ----------  --------------------  -------------------  -------------------  -------------------------------------------------------------------
-    ODLaks-v2-gbb-16502  eastus   ODL_aks-v2-gbb-16502  1.11.3                Succeeded odlaks-v2--odlaks-v2-gbb-16-b23acc-17863579.hcp.centralus.azmk8s.io
+    ODLaks-v2-gbb-16502  eastus   ODL_aks-v2-gbb-16502  1.11.4                Succeeded odlaks-v2--odlaks-v2-gbb-16-b23acc-17863579.hcp.centralus.azmk8s.io
     ```
 
 10. Get the Kubernetes config files for your new AKS cluster
