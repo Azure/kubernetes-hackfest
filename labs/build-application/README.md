@@ -90,12 +90,12 @@ In this lab we will build Docker containers for each of the application componen
     az acr build -t hackfest/service-tracker-ui:1.0 -r $ACRNAME --no-logs ./app/service-tracker-ui
     ```
 
-    You can see the status of the builds by running the command below.
+    You can see the status of the builds by running the command below.  Replace [runid] below with a runid value from the list.
 
     ```bash
     az acr task list-runs -r $ACRNAME -o table
 
-    az acr task logs -r $ACRNAME --run-id aa1
+    az acr task logs -r $ACRNAME --run-id [runid]
     ```
 
     Browse to your ACR instance in the Azure portal and validate that the images are in "Repositories."
