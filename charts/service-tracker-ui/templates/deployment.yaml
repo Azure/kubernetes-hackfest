@@ -18,11 +18,11 @@ spec:
           name: service-tracker-ui
           resources:
             requests:
-              memory: "64Mi"
-              cpu: "100m"
+              memory: "512Mi"
+              cpu: "1.0"
             limits:
-              memory: "128Mi"
-              cpu: "500m"
+              memory: "1024Mi"
+              cpu: "2.0"
           env:
             - name: FLIGHT_API_ROOT
               value: http://flights-api:3003/
