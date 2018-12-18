@@ -16,6 +16,13 @@ spec:
         - image: "{{.Values.deploy.acrServer}}/hackfest/flights-api:{{.Values.deploy.imageTag}}"
           imagePullPolicy: Always
           name: flights-api
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
           env:
             - name: APPINSIGHTS_INSTRUMENTATIONKEY
               valueFrom:

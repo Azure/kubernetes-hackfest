@@ -16,6 +16,13 @@ spec:
         - image: "{{.Values.deploy.acrServer}}/hackfest/quakes-api:{{.Values.deploy.imageTag}}"
           imagePullPolicy: Always
           name: quakes-api
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
           env:
             - name: APPINSIGHTS_INSTRUMENTATIONKEY
               valueFrom:
