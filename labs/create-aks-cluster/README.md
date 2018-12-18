@@ -70,6 +70,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     ```
 
 7. Create a  unique identifier suffix for resources to be created in this lab.
+   **NOTE** - this must be all lowercase.  Resources created later in later labs require this.
 
     ```bash
     UNIQUE_SUFFIX=$USER$RANDOM
@@ -201,6 +202,18 @@ This lab creates namespaces that reflect a representative example of an organiza
 ## Instructions
 
 1. Create Three Namespaces
+
+   Modify the 3 files that contain the namespaces for the lab.
+    ```bash
+    #Edit the yaml file
+    nano create-namespaces.yaml
+    ```
+
+    Update the metadata:name value so that it is unique.  For example, prepend it with your initials or first initial and lastname (ex - rrossdev, rrossuat, rrossprod).
+
+    After completing this change, **Ctrl+O** then **Enter**.  **Ctrl+X** to close the editor.
+
+    Repeat this for the namespace-limitranges.yaml and namespace-quotas.yaml files.
 
     ```bash
     # Create namespaces
