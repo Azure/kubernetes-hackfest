@@ -1,11 +1,10 @@
+const mongoose = require('mongoose');
 
-var mongoose = require('mongoose')
-
-var Schema = mongoose.Schema
+var Schema = mongoose.Schema;
 
 var weatherSchema = new Schema({
-    Timestamp: String,
-    FeatureCollection: mongoose.Schema.Types.Mixed
-})
+  Timestamp: String,
+  FeatureCollection: mongoose.Schema.Types.Mixed
+});
 
-mongoose.model('Weather', weatherSchema, 'Weather')
+mongoose.model('Weather', weatherSchema, 'Weather');

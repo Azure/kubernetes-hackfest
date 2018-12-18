@@ -1,22 +1,23 @@
-
-const webpack = require('webpack')
-const rp = require('request-promise')
-const async = require('async')
+const webpack = require('webpack');
+const rp = require('request-promise');
+const async = require('async');
 
 module.exports = {
   configureWebpack: {
-   plugins: [
-     new webpack.DefinePlugin({
-       'process.env': {
-         'APPINSIGHTS_INSTRUMENTATIONKEY': JSON.stringify(process.env.APPINSIGHTS_INSTRUMENTATIONKEY),
-         'FLIGHT_API': JSON.stringify(process.env.FLIGHT_API_ROOT),
-         'WEATHER_API': JSON.stringify(process.env.WEATHER_API_ROOT),
-         'QUAKES_API': JSON.stringify(process.env.QUAKES_API_ROOT)
-       }
-     })
-   ],
+    plugins: [
+      new webpack.DefinePlugin({
+        'process.env': {
+          APPINSIGHTS_INSTRUMENTATIONKEY: JSON.stringify(
+            process.env.APPINSIGHTS_INSTRUMENTATIONKEY
+          ),
+          FLIGHT_API: JSON.stringify(process.env.FLIGHT_API_ROOT),
+          WEATHER_API: JSON.stringify(process.env.WEATHER_API_ROOT),
+          QUAKES_API: JSON.stringify(process.env.QUAKES_API_ROOT)
+        }
+      })
+    ]
   },
- lintOnSave: false,
+  lintOnSave: false,
   devServer: {
     disableHostCheck: true,
     host: '0.0.0.0',
@@ -24,14 +25,14 @@ module.exports = {
     // show variables when running http://localhost:8080/variables
     before: function(app) {
       app.get('/variables', (req, res) => {
-        var currentEnv = { 
+        var currentEnv = {
           quakes: process.env.QUAKES_API_ROOT,
           weather: process.env.WEATHER_API_ROOT,
           flights: process.env.FLIGHT_API_ROOT,
           insights: process.env.APPINSIGHTS_INSTRUMENTATIONKEY
-         }
-        res.json({ custom: currentEnv })
-      })
+        };
+        res.json({ custom: currentEnv });
+      });
     },
     proxy: {
       '/api/flights/current': {
@@ -55,11 +56,11 @@ module.exports = {
           '^/api/flights/refresh': ''
         }
       },
-      "/api/weather/current": {
+      '/api/weather/current': {
         target: process.env.WEATHER_API_ROOT + 'latest',
         changeOrigin: true,
         pathRewrite: {
-          "^/api/weather/current": ""
+          '^/api/weather/current': ''
         }
       },
       '/api/weather/status': {
@@ -76,11 +77,11 @@ module.exports = {
           '^/api/weather/refresh': ''
         }
       },
-      "/api/quakes/current": {
+      '/api/quakes/current': {
         target: process.env.QUAKES_API_ROOT + 'latest',
         changeOrigin: true,
         pathRewrite: {
-          "^/api/quakes/current": ""
+          '^/api/quakes/current': ''
         }
       },
       '/api/quakes/status': {

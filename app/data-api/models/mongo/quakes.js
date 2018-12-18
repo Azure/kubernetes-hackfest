@@ -1,11 +1,10 @@
+const mongoose = require('mongoose');
 
-var mongoose = require('mongoose')
-
-var Schema = mongoose.Schema
+var Schema = mongoose.Schema;
 
 var quakeSchema = new Schema({
-    Timestamp: String,
-    FeatureCollection: mongoose.Schema.Types.Mixed
-})
+  Timestamp: String,
+  FeatureCollection: mongoose.Schema.Types.Mixed
+});
 
-mongoose.model('Quakes', quakeSchema, 'Quakes')
+mongoose.model('Quakes', quakeSchema, 'Quakes');
