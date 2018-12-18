@@ -17,11 +17,6 @@ spec:
           imagePullPolicy: Always
           name: data-api
           env:
-            - name: MONGODB_URI
-              valueFrom:
-                secretKeyRef:
-                  name: cosmos-db-secret
-                  key: uri
             - name: MONGODB_USER
               valueFrom:
                 secretKeyRef:

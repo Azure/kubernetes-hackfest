@@ -22,30 +22,19 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
         helm init --service-account tiller --upgrade
         ```
 
-    * Validate the install (in this case, we are using Helm version 2.9.1):
+    * Validate the install (the Helm version may be newer in your lab):
         ```bash
         helm version
         ```
 
         ```bash
-        Client: &version.Version{SemVer:"v2.10.0", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}
-        Server: &version.Version{SemVer:"v2.10.0", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}
+        Client: &version.Version{SemVer:"v2.11.0", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}
+        Server: &version.Version{SemVer:"v2.11.0", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}
         ```
 
-        > It can take a minute or so for Tiller to start
+        > Note: It can take a minute or so for Tiller to start
 
-2. Create Application Insights Instance
-
-    * In your Azure portal, click "Create a resource", select "Developer tools", and choose "Application Insights"
-    * Pick a unique name (you can use the unique identifier created in the 1st lab)
-    * Use "Node.js Application" for the app type
-    * Select "kubernetes-hackfest" for the Resource Group
-    * Use "East US" for location
-    * When this is completed, select "All services", and search for "Application Insights" 
-    * Select your newly created Application Insights instance
-    * On the Overview Page take note of the Instrumentation Key
-
-3. Review the Helm Chart components
+2. Review the Helm Chart components
 
     In this repo, there is a folder for `charts` with a sub-folder for each specific app chart. In our case each application has its own chart. 
 
@@ -53,7 +42,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
     The `templates` folder holds the yaml files for the specific kubernetes resources for our application. Here you will see how Helm inserts the parameters into resources with this bracketed notation: eg -  `{{.Values.deploy.image}}`
 
-4. Customize Chart Parameters
+3. Customize Chart Parameters
 
     In each chart we will need to update the values file with our specific Azure Container Registry. 
 
@@ -98,9 +87,9 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
     * Valdiate that the `imageTag` parameter matches the tag you created in Azure Container Registry in the previous lab.
 
-    **NOTE: Only do iIf the Service Principal role assignment in Build Application lab failed. You will need to add the Docker Registry secret that was created to each deployment via a mechanism called an imagePullSecret.**
+    * Add `imagePullSecret` to each deployment.yaml file for each microservice
 
-    * Add `imagePullSecret` to each deployment.yaml file for each Microservice.
+        **NOTE: Only do iIf the Service Principal role assignment in Build Application lab failed. You will need to add the Docker Registry secret that was created to each deployment via a mechanism called an imagePullSecret.**
 
         [charts/service-tracker-ui/templates/deployment.yaml](../../charts/service-tracker-ui/templates/deployment.yaml)
 
@@ -136,46 +125,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
         ...
         ```
 
-5. Create Kubernetes secrets for access to Cosmos DB and App Insights
-
-    For now, we are creating a secret that holds the credentials for our backend database. The application deployment puts these secrets in environment variables. 
-
-    * Customize these values from your Cosmos DB instance deployed in a previous lab. Use the ticks provided for strings
-
-    ```bash
-    az cosmosdb list-connection-strings --name $COSMOSNAME --resource-group $RGNAME
-    ```
-
-    > Note: the MONGODB_URI should be of this format **(Ensure you add the `/hackfest?ssl=true`)** at the end. 
-
-    mongodb://cosmosbrian11199:ctumHIz1jC4Mh1hZgWGEcLwlCLjDSCfFekVFHHhuqQxIoJGiQXrIT1TZTllqyB4G0VuI4fb0qESeuHCRJHA==@acrhcosmosbrian11122.documents.azure.com:10255/<strong style="font-size:24px; font-family:courier; color:#308e48">hackfest</strong>?ssl=true
-
-    ```bash
-    export MONGODB_URI='outputFromAboveCommand'
-    ```
-
-    ```bash
-    az cosmosdb show --name $COSMOSNAME --resource-group $RGNAME --query "name" -o tsv
-
-    export MONGODB_USER='outputFromAboveCommand'
-    ```
-
-    ```bash
-    az cosmosdb list-keys --name $COSMOSNAME --resource-group $RGNAME --query "primaryMasterKey" -o tsv
-
-    export MONGODB_PASSWORD='outputFromAboveCommand'
-    ```
-
-    Use Instrumentation Key from previous exercise:
-    ```bash
-    export APPINSIGHTS_INSTRUMENTATIONKEY=''
-    ```
-
-    ```bash
-    kubectl create secret generic cosmos-db-secret --from-literal=uri=$MONGODB_URI --from-literal=user=$MONGODB_USER --from-literal=pwd=$MONGODB_PASSWORD --from-literal=appinsights=$APPINSIGHTS_INSTRUMENTATIONKEY
-    ```
-
-6. Deploy Charts
+4. Deploy Charts
 
     Install each chart as below:
 
@@ -189,7 +139,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     helm upgrade --install service-tracker-ui ./charts/service-tracker-ui
     ```
 
-7. Initialize application
+5. Initialize application
 
     * First check to see if pods and services are working correctly
 

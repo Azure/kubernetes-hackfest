@@ -60,7 +60,20 @@ In this lab we will build Docker containers for each of the application componen
     # !!!!!!!!!!
     ```
 
-3. Deploy Cosmos DB
+3. Create Application Insights Instance
+
+    * In your Azure portal, click "Create a resource", select "Developer tools", and choose "Application Insights"
+    * Pick a unique name (you can use the unique identifier created in the 1st lab)
+    * Use "Node.js Application" for the app type
+    * Select "kubernetes-hackfest" for the Resource Group
+    * Use "East US" for location
+    * When this is completed, select "All services", and search for "Application Insights" 
+    * Select your newly created Application Insights instance
+    * On the Overview Page take note of the Instrumentation Key 
+
+        ![App Insights](app-insights.png "App Insights")
+
+4. Deploy Cosmos DB
 
     In this step, create a Cosmos DB account for the Mongo api. Again, we will create a random, unique name.
 
@@ -76,7 +89,32 @@ In this lab we will build Docker containers for each of the application componen
 
     You can validate your Cosmos instance in the portal. The credentials and connect string will be used in the next lab.
 
-4. Create Docker containers in ACR
+5. Create Kubernetes secrets for access to CosmosDB and App Insights
+
+    You will use a secret to hold the credentials for our backend database and Azure App Insights. In the next lab, you will use this secret as a part of your deployment manifests.
+
+    Once the secret is created, these envvars are no longer needed. 
+
+    * Set the CosmosDB user and password
+
+    ```bash
+    export MONGODB_USER=$(az cosmosdb show --name $COSMOSNAME --resource-group $RGNAME --query "name" -o tsv)
+    ```
+
+    ```bash
+    export MONGODB_PASSWORD=$(az cosmosdb list-keys --name $COSMOSNAME --resource-group $RGNAME --query "primaryMasterKey" -o tsv)
+    ```
+
+    Use Instrumentation Key from step 3 above.
+    ```bash
+    export APPINSIGHTS_INSTRUMENTATIONKEY='replace-me'
+    ```
+
+    ```bash
+    kubectl create secret generic cosmos-db-secret --from-literal=user=$MONGODB_USER --from-literal=pwd=$MONGODB_PASSWORD --from-literal=appinsights=$APPINSIGHTS_INSTRUMENTATIONKEY
+    ```
+
+6. Create Docker containers in ACR
 
     In this step we will create a Docker container image for each of our microservices. We will use ACR Builder functionality to build and store these images in the cloud. 
 
