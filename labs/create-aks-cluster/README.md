@@ -19,7 +19,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     ```bash
     git clone https://github.com/Azure/kubernetes-hackfest
 
-    cd kubernetes-hackfest/labs/create-aks-cluster
+    cd ~/kubernetes-hackfest
     ```
 
     > Note: In the cloud shell, you are automatically logged into your Azure subscription.
@@ -30,17 +30,17 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     az account list
     ```
     ```
-   # Verify selected subscription
-   az account show
-   ```
+    # Verify selected subscription
+    az account show
+    ```
 
-   ```
-   # Set correct subscription (if needed)
-   az account set --subscription <subscription_id>
+    ```
+    # Set correct subscription (if needed)
+    az account set --subscription <subscription_id>
 
-   # Verify correct subscription is now set
-   az account show
-   ```
+    # Verify correct subscription is now set
+    az account show
+    ```
 
 6. Create Azure Service Prinicpal to use through the labs
 
@@ -173,48 +173,25 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
 
      You should now have a Kubernetes cluster running with 3 nodes. You do not see the master servers for the cluster because these are managed by Microsoft. The Control Plane services which manage the Kubernetes cluster such as scheduling, API access, configuration data store and object controllers are all provided as services to the nodes.
 
-## Troubleshooting / Debugging
+## Namespaces Setup
 
-<!--To further debug and diagnose cluster problems, use `cluster-info dump` command
+This lab creates namespaces that reflect a representative example of an organization's environments. In this case dev, uat and prod. We will also apply the appopriate permissions, limits and resource quotas to each of the namespaces.
 
-`cluster-info dump` dumps cluster info out suitable for debugging and diagnosing cluster problems.  By default, dumps everything to stdout. You can optionally specify a directory with --output-directory.  If you specify a directory, kubernetes will build a set of files in that directory.  By default only dumps things in the 'kube-system' namespace, but you can switch to a different namespace with the --namespaces flag, or specify --all-namespaces to dump all namespaces.
-
-The command also dumps the logs of all of the pods in the cluster, these logs are dumped into different directories based on namespace and pod name.
-
-```bash
-kubectl cluster-info dump
-```
--->
-
-## Docs / References
-
-* [Troubleshoot Kubernetes Clusters](https://kubernetes.io/docs/tasks/debug-application-cluster/debug-cluster/)
-
-# Lab 1a: Create AKS Cluster Namespaces
-
-This lab creates namespaces that reflect a representative example of an organization's environments. In this case DEV, UAT and PROD. We will also apply the appopriate permissions, limits and resource quotas to each of the namespaces.
-
-## Prerequisites
-
-1. Build AKS Cluster (from above)
-
-## Instructions
-
-1. Create Three Namespaces
+1. Create three namespaces
 
     ```bash
     # Create namespaces
-    kubectl apply -f create-namespaces.yaml
+    kubectl apply -f ~/kubernetes-hackfest/labs/create-aks-cluster/create-namespaces.yaml
 
     # Look at namespaces
     kubectl get ns
     ```
 
-2. Assign CPU, Memory and Storage Limits to Namespaces
+2. Assign CPU, memory and storage limits to namespaces
 
     ```bash
     # Create namespace limits
-    kubectl apply -f namespace-limitranges.yaml
+    kubectl apply -f ~/kubernetes-hackfest/labs/create-aks-cluster/namespace-limitranges.yaml
 
     # Get list of namespaces and drill into one
     kubectl get ns
@@ -225,7 +202,7 @@ This lab creates namespaces that reflect a representative example of an organiza
 
     ```bash
     # Create namespace quotas
-    kubectl apply -f namespace-quotas.yaml
+    kubectl apply -f ~/kubernetes-hackfest/labs/create-aks-cluster/namespace-quotas.yaml
 
     # Get list of namespaces and drill into one
     kubectl get ns
@@ -237,15 +214,20 @@ This lab creates namespaces that reflect a representative example of an organiza
     ```bash
     # Test Limits - Forbidden due to assignment of CPU too low
     kubectl run nginx-limittest --image=nginx --restart=Never --replicas=1 --port=80 --requests='cpu=100m,memory=256Mi' -n dev
+
     # Test Limits - Pass due to automatic assignment within limits via defaults
     kubectl run nginx-limittest --image=nginx --restart=Never --replicas=1 --port=80 -n dev
+    
     # Check running pod and dev Namespace Allocations
     kubectl get po -n dev
     kubectl describe ns dev
+    
     # Test Quotas - Forbidden due to memory quota exceeded
     kubectl run nginx-quotatest --image=nginx --restart=Never --replicas=1 --port=80 --requests='cpu=500m,memory=1Gi' -n dev
+    
     # Test Quotas - Pass due to memory within quota
     kubectl run nginx-quotatest --image=nginx --restart=Never --replicas=1 --port=80 --requests='cpu=500m,memory=512Mi' -n dev
+    
     # Check running pod and dev Namespace Allocations
     kubectl get po -n dev
     kubectl describe ns dev
@@ -253,9 +235,9 @@ This lab creates namespaces that reflect a representative example of an organiza
 
 5. Clean up limits, quotas, pods
 
-    ```
-    kubectl delete -f namespace-limitranges.yaml
-    kubectl delete -f namespace-quotas.yaml
+    ```bash
+    kubectl delete -f ~/kubernetes-hackfest/labs/create-aks-cluster/namespace-limitranges.yaml
+    kubectl delete -f ~/kubernetes-hackfest/labs/create-aks-cluster/namespace-quotas.yaml
     kubectl delete po nginx-limittest nginx-quotatest -n dev
 
     kubectl describe ns dev
@@ -263,16 +245,25 @@ This lab creates namespaces that reflect a representative example of an organiza
     kubectl describe ns prod
     ```
 
+6. Create namespace for our application. This will be used in subsequent labs.
+
+    ```bash
+    kubectl create ns hackfest
+    ```
+
+
 ## Troubleshooting / Debugging
 
+* To further debug and diagnose cluster problems, use `kubectl cluster-info dump` command.
 * The limits and quotas of a namespace can be found via the **kubectl describe ns <...>** command. You will also be able to see current allocations.
 * If pods are not deploying then check to make sure that CPU, Memory and Storage amounts are within the limits and do not exceed the overall quota of the namespace.
 
 ## Docs / References
 
+* [Troubleshoot Kubernetes Clusters](https://kubernetes.io/docs/tasks/debug-application-cluster/debug-cluster)
 * [Kubernetes Namespaces](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
 * [Default CPU Requests and Limits for a Namespace](https://kubernetes.io/docs/tasks/administer-cluster/manage-resources/cpu-default-namespace/)
 * [Configure Min and Max CPU Constraints for a Namespace](https://kubernetes.io/docs/tasks/administer-cluster/manage-resources/cpu-constraint-namespace/)
 * [Configure Memory and CPU Quotas for a Namespace](https://kubernetes.io/docs/tasks/administer-cluster/manage-resources/quota-memory-cpu-namespace/)
 
-#### Next Lab: [Build Application Components](../build-application/README.md)
+#### Next Lab: [Build Application Components and Prerequisites](../build-application/README.md)

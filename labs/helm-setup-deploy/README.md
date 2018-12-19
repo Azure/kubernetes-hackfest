@@ -17,8 +17,8 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     * Initialize Helm and Tiller:
 
         ```bash
-        cd ~/kubernetes-hackfest
-        kubectl apply -f ./labs/helm-setup-deploy/rbac-config.yaml
+        cd 
+        kubectl apply -f ~/kubernetes-hackfest/labs/helm-setup-deploy/rbac-config.yaml
         helm init --service-account tiller --upgrade
         ```
 
@@ -127,16 +127,24 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
 4. Deploy Charts
 
+    Ensure namespace was created earlier:
+    ```bash
+    kubectl get ns hackfest
+
+    NAME       STATUS    AGE
+    hackfest   Active    4m
+    ```
+
     Install each chart as below:
 
     ```bash
     # Application charts
 
-    helm upgrade --install data-api ./charts/data-api
-    helm upgrade --install quakes-api ./charts/quakes-api
-    helm upgrade --install weather-api ./charts/weather-api
-    helm upgrade --install flights-api ./charts/flights-api
-    helm upgrade --install service-tracker-ui ./charts/service-tracker-ui
+    helm upgrade --install data-api ~/kubernetes-hackfest/charts/data-api --namespace hackfest
+    helm upgrade --install quakes-api ~/kubernetes-hackfest/charts/quakes-api --namespace hackfest
+    helm upgrade --install weather-api ~/kubernetes-hackfest/charts/weather-api --namespace hackfest
+    helm upgrade --install flights-api ~/kubernetes-hackfest/charts/flights-api --namespace hackfest
+    helm upgrade --install service-tracker-ui ~/kubernetes-hackfest/charts/service-tracker-ui --namespace hackfest
     ```
 
 5. Initialize application
@@ -144,7 +152,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     * First check to see if pods and services are working correctly
 
     ```bash
-    kubectl get pod,svc
+    kubectl get pod,svc -n hackfest
 
     NAME                                      READY     STATUS    RESTARTS   AGE
     pod/data-api-555688c8d-xb76d              1/1       Running   0          1m
@@ -165,7 +173,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     * Browse to the web UI
 
     ```bash
-    kubectl get service service-tracker-ui
+    kubectl get service service-tracker-ui -n hackfest
 
     NAME                TYPE           CLUSTER-IP   EXTERNAL-IP     PORT(S)          AGE
     service-tracker-ui  LoadBalancer   10.0.82.74   40.16.218.139   8080:31346/TCP   8m

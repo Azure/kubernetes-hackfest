@@ -1,4 +1,4 @@
-# Lab: Build Application Components
+# Lab: Build Application Components and Prerequisites
 
 In this lab we will build Docker containers for each of the application components and setup the back-end database.
 
@@ -111,7 +111,7 @@ In this lab we will build Docker containers for each of the application componen
     ```
 
     ```bash
-    kubectl create secret generic cosmos-db-secret --from-literal=user=$MONGODB_USER --from-literal=pwd=$MONGODB_PASSWORD --from-literal=appinsights=$APPINSIGHTS_INSTRUMENTATIONKEY
+    kubectl create secret generic cosmos-db-secret --from-literal=user=$MONGODB_USER --from-literal=pwd=$MONGODB_PASSWORD --from-literal=appinsights=$APPINSIGHTS_INSTRUMENTATIONKEY -n hackfest
     ```
 
 6. Create Docker containers in ACR
