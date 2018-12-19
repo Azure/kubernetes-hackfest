@@ -42,12 +42,18 @@ mongoose.Promise = global.Promise;
 
 const app = express();
 
+var mongoPrefix = "mongodb://"
+var user = process.env.MONGODB_USER
+var password = process.env.MONGODB_PASSWORD
+
+var cosmosConnectString = mongoPrefix.concat(user,`:`,password,`@`,user,`.documents.azure.com:10255/hackfest?ssl=true`)
+
 if (process.env.NODE_ENV != 'local') {
   mongoose.connect(
-    process.env.MONGODB_URI,
+    cosmosConnectString,
     {
-      user: process.env.MONGODB_USER,
-      pass: process.env.MONGODB_PASSWORD,
+      user: user,
+      pass: password,
       useNewUrlParser: true
     }
   );

@@ -16,6 +16,13 @@ spec:
         - image: "{{.Values.deploy.acrServer}}/hackfest/quakes-api:{{.Values.deploy.imageTag}}"
           imagePullPolicy: Always
           name: quakes-api
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
           env:
             - name: APPINSIGHTS_INSTRUMENTATIONKEY
               valueFrom:
@@ -23,9 +30,9 @@ spec:
                   name: cosmos-db-secret
                   key: appinsights
             - name: DATA_SERVICE_URI
-              value: http://data-api:3009/
+              value: http://data-api.hackfest.svc.cluster.local:3009/
             - name: CACHE_SERVICE_URI
-              value: http://cache-api:3006/       
+              value: http://cache-api.hackfest.svc.cluster.local:3006/       
           ports:
           - containerPort: {{.Values.deploy.containerPort}}
             protocol: TCP

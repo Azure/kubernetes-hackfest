@@ -16,7 +16,7 @@ The following are the basic requirements to **start** the labs. Individual labs 
 ## Labs
 
 1. [Create AKS Cluster](labs/create-aks-cluster/README.md)
-2. [Build Application Components](labs/build-application/README.md)
+2. [Build Application Components and Prerequisites](labs/build-application/README.md)
 3. [Helm Setup and Deploy Application](labs/helm-setup-deploy/README.md)
 4. [CI/CD Automation](labs/cicd-automation/README.md)
 5. [Networking](labs/networking/README.md)

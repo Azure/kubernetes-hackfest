@@ -12,7 +12,6 @@ variables:
   imageNameW: 'weather-api:latest'
   imageNameD: 'data-api:latest'
   imageNameF: 'flights-api:latest'
-  imageNameC: 'cache-api:latest'
 
 steps:
 - script: |
@@ -21,7 +20,6 @@ steps:
     docker build -f app/weather-api/Dockerfile -t azcloudnative/$(imageNameW) app/weather-api
     docker build -f app/data-api/Dockerfile -t azcloudnative/$(imageNameD) app/data-api
     docker build -f app/flights-api/Dockerfile -t azcloudnative/$(imageNameF) app/flights-api
-    docker build -f app/cache-api/Dockerfile -t azcloudnative/$(imageNameC) app/cache-api
 
 - script: docker login -u $(dockerUser) -p $(dockerPass)
   displayName: 'Docker Login'
@@ -31,5 +29,4 @@ steps:
     docker push azcloudnative/$(imageNameW)
     docker push azcloudnative/$(imageNameD)
     docker push azcloudnative/$(imageNameF)
-    docker push azcloudnative/$(imageNameC)
     docker push azcloudnative/$(imageNameQ)
