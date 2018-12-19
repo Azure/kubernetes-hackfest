@@ -29,18 +29,20 @@ The general workflow/result will be as follows:
 
 2. Create New Project in Azure DevOps
 
-    * Name your project "azure-devops-aks" and give it a description.
+    * Name your project "kubernetes-hackfest" and give it a description.
     * Leave the Version control as Git
 
     ![Azure DevOps New Project](azure-do-new-project.png)
 
-3. On the next screen, choose "import a repository" and use the source from this repo
+3. On the next screen, click "Repos" and then "import a repository"
 
+    Enter `https://github.com/Azure/kubernetes-hackfest` for the Clone URL and click "Import"
+    
     ![Azure DevOps Import](azure-do-import.png)
 
 #### Create Build Pipeline
 
-1. Create an empty build pipeline. Hover over "Build and release" and select "Builds"
+1. In Azure DevOps, click on "Pipelines" on the left menu and then click "Builds"
 
 2. Click the "New pipeline" button
 
@@ -49,11 +51,11 @@ The general workflow/result will be as follows:
 
 4. Select to "start with an Empty job"
 
-5. Leave the name as "azure-devops-aks-CI"
+5. Leave the name as "kubernetes-hackfest-CI"
 
-6. Change the Agent queue to use the "Hosted Ubuntu 1604"
+6. Change the Agent pool to use the "Hosted Ubuntu 1604"
 
-7. Click the plus sign by Phase 1 to add a task
+7. Click the plus sign by "Agent job 1" to add a task
 
 8. Search tasks for "Azure" and add the Azure CLI task
 
@@ -61,12 +63,14 @@ The general workflow/result will be as follows:
 
 9. Click on the Azure CLI task and choose your Azure subscription and `Authorize`
 
-10. Choose "Inline script" and enter the following (be sure to replace the ACR name with yours). Notice how we create a dynamic image tag using our build ID from VSTS.
+10. For "Script Location" choose "Inline script" and enter the following (be sure to replace the ACR name with yours). 
+
+    > Note: We are creating a dynamic image tag using our build ID from Azure DevOps.
 
     ```bash
-    # Check ACRNAME Exists and what it is
-    echo $ACRNAME
-    export IMAGETAG=vsts-$(Build.BuildId)
+    # set your Azure Container Registry name below
+    export ACRNAME=
+    export IMAGETAG=azuredevops-$(Build.BuildId)
 
     az acr build -t hackfest/data-api:$IMAGETAG -r $ACRNAME --no-logs ./app/data-api
     az acr build -t hackfest/flights-api:$IMAGETAG -r $ACRNAME --no-logs ./app/flights-api
@@ -75,13 +79,15 @@ The general workflow/result will be as follows:
     az acr build -t hackfest/service-tracker-ui:$IMAGETAG -r $ACRNAME --no-logs ./app/service-tracker-ui  
     ```
 
-11. Add another task and search for "Publish Build Artifacts". Use "charts" for the artifact name and browse to the charts folder for the "Path to publish"
+    ![Azure DevOps CLI](azure-do-cli.png)
+
+11. Add another task to "Agent job 1" and search for "Publish Build Artifacts". Use "charts" for the artifact name and browse to the charts folder for the "Path to publish"
 
     ![Azure DevOps Artifact](azure-do-artifact.png)
 
 12. Test this by clicking "Save & queue" and providing a comment
 
-13. Click on "Builds" to check result
+13. Click on "Builds" to check result. It can take a bit of time for all of the steps to complete. 
 
 14. Enable Continuous integration for the build definition. Edit the build definition and you will find this setting under "Triggers"
 
@@ -91,7 +97,7 @@ In the deployment pipeline, we will create a Helm task to update our application
 
     > Note: To save time, we will only deploy the service-tracker-ui application in this lab. 
 
-1. Hover over "Build and release" and select "Releases"
+1. In Azure DevOps, click on "Pipelines" on the left menu and then click "Releases"
 
 2. Click the "New pipeline" button
 
@@ -101,7 +107,7 @@ In the deployment pipeline, we will create a Helm task to update our application
 
 5. Click on "+ Add" next to Artifacts
 
-6. In "Source (build pipeline)", select the build we created earlier (should be named "azure-devops-aks-CI")
+6. In "Source (build pipeline)", select the build we created earlier (should be named "kubernetes-hackfest-CI")
 
     ![Azure DevOps Release Artifact](azure-do-release-artifact.png)
 
@@ -113,26 +119,29 @@ In the deployment pipeline, we will create a Helm task to update our application
 
 10. Click on "1 job, 0 task" to view stage tasks
 
-11. Click on "Agent job" and change the agent pool to "Hosted Ubuntu 1604" in the drop down
+11. Click on "Agent job" and change the Agent pool to "Hosted Ubuntu 1604" in the drop down
 
 12. On the Agent job, click the "+" to add a Task
 
-13. Search for "helm" and add the task called "Helm Tool Installer" as first task
+13. Search for "helm" and add the task called "Helm Tool Installer" as first task. Click Add
 
-14. Next, Search for "helm" and add the task called "Package and deploy Helm charts"
+14. Next, Search for "helm" and add the task called "Package and deploy Helm charts". Click Add
 
 15. Click on the task (named "helm ls") to configure all of the settings for the release
     
     * Select your Azure subscription in the dropdown and click "Authorize"
     * Select the Resource Group and AKS Cluster
+    * For Namespace, enter "hackfest"
     * For the Command select "upgrade"
     * For Chart type select "File Path"
     * For Chart path, click the "..." button and browse to the "service-trakcer-ui" chart in the charts directory
     * For the Release Name, enter `service-tracker-ui`
     * For Set Values you will need to fix the ACR server to match your ACR server name and the imageTag needs to be set.
-        Eg - `deploy.acrServer=acrhackfestbrian3299.azurecr.io,deploy.imageTag=vsts-$(Build.BuildId)`
+        Eg - `deploy.acrServer=acrhackfestbrian13932.azurecr.io,deploy.imageTag=azuredevops-$(Build.BuildId)`
 
     ![Azure DevOps Helm Task](azure-do-helm-task.png)
+
+    * Click "Save"
 
 #### Run a test build
 
@@ -146,11 +155,14 @@ In the deployment pipeline, we will create a Helm task to update our application
 
     ![Azure DevOps Release](azure-do-release.png)
 
-4. Now kick-off the full CI/CD pipeline by making an edit to the service-tracker-ui frontend code in the Azure DevOps code repo.
+4. Validate that your newly built image was deployed in your AKS cluster. Eg - `kubectl describe pod...`
+
+5. Now kick-off the full CI/CD pipeline by making an edit to the service-tracker-ui frontend code in the Azure DevOps code repo.
 
 ## Troubleshooting / Debugging
 
-* N/A
+* We've seen issues where people forgot to use the hackfest namespace in Kubernetes. 
+* Ensure that are using the "Hosted Ubuntu 1604" image in Azure DevOps. 
 
 ## Docs / References
 

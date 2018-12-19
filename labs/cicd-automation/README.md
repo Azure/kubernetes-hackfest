@@ -30,6 +30,6 @@ Click below to find the instructions for the CI/CD platform of your choice:
 
 ## Docs / References
 
-* N/A
+* Article, "What is CI/CD?" https://dzone.com/articles/what-is-cicd 
 
 #### Next Lab: [Networking](../networking/README.md)
