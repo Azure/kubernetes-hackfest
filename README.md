@@ -15,18 +15,24 @@ The following are the basic requirements to **start** the labs. Individual labs 
 
 ## Labs
 
+#### Start with:
 1. [Create AKS Cluster](labs/create-aks-cluster/README.md)
 2. [Build Application Components and Prerequisites](labs/build-application/README.md)
 3. [Helm Setup and Deploy Application](labs/helm-setup-deploy/README.md)
-4. [CI/CD Automation](labs/cicd-automation/README.md)
-5. [Networking](labs/networking/README.md)
-6. [Monitoring and Logging](labs/monitoring-logging/README.md)
-7. [Service Mesh (Coming Soon)](labs/servicemesh-tracing/README.md)
-8. [Storage (Coming Soon)](labs/storage/README.md)
-9. [Security](labs/security/README.md)
-10. [Service Broker (Coming Soon)](labs/service-broker/README.md)
-11. [Azure Container Instance](labs/aci/README.md)
-12. [Azure Dev Spaces](labs/dev-spaces/README.md)
+
+#### Additional exercises (in no order):
+* [CI/CD Automation](labs/cicd-automation/README.md)
+* [Networking](labs/networking/README.md)
+* [Security](labs/security/README.md)
+* [Monitoring and Logging](labs/monitoring-logging/README.md)
+* [Azure Container Instance](labs/aci/README.md)
+* [Azure Dev Spaces](labs/dev-spaces/README.md)
+
+#### Coming soon:
+* [Service Mesh](labs/servicemesh-tracing/README.md)
+* [Storage](labs/storage/README.md)
+* [Service Broker](labs/service-broker/README.md)
+
 
 
 
