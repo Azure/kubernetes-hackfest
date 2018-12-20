@@ -32,7 +32,7 @@ events.on("push", (brigadeEvent, project) => {
     helm.storage.enabled = false
     helm.image = "chzbrgr71/k8s-helm:v2.9.1"
     helm.tasks = [
-        `helm upgrade --install web-ui ./src/charts/service-tracker-ui --namespace default --set deploy.imageTag=${imageTag}`
+        `helm upgrade --install web-ui ./src/charts/service-tracker-ui --namespace hackfest --set deploy.imageTag=${imageTag}`
     ]
 
     // create a brigade group and run

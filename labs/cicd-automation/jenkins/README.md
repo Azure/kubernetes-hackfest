@@ -37,7 +37,7 @@ In order to trigger this pipeline you will need your own Github account and fork
     The pipeline file references your Azure Container Registry in a variable. Edit the `labs/cicd-automation/jenkins/Jenkinsfile` file and modify line 4 of the code: 
 
     ```bash
-    def  ACRNAME = 'youracrname'
+    def ACRNAME = 'youracrname'
     ```
 
 3.  Your newly forked repo will have the default ACR URL hardcoded in the Helm chart for the service-tracker-ui app (which was manually updated locally in step 4 of the 'Lab: Helm Setup and Deploy Application' lab). This needs to be updated on line 10 of ./charts/service-tracker-ui/values.yaml in your fork of the repo.
@@ -64,16 +64,14 @@ In order to trigger this pipeline you will need your own Github account and fork
 
 #### Deploy Jenkins Helm Chart
 
-1. Initialize Helm With RBAC
+1. Validate helm. Helm was configured in the lab 3.
 
-    > Note: You may have already installed Helm in the earlier lab. If you have already installed Helm skip to step 2. You can validate if Helm is installed with `helm version`
+    ```bash
+    helm version
 
-   ```bash
-   # Apply RBAC to Tiller, which is used by Helm
-   kubectl apply -f helm-rbac.yaml
-
-   helm init --service-account tiller
-   ```
+    Client: &version.Version{SemVer:"v2.12.0", GitCommit:"2e55dbe1fdb5fdb96b75ff144a339489417b146b", GitTreeState:"clean"}
+    Server: &version.Version{SemVer:"v2.12.0", GitCommit:"d325d2a9c179b33af1a024cdb5a4472b6288016a", GitTreeState:"clean"}
+    ```
 
 2. Install Jenkins Using Helm
 
@@ -186,23 +184,23 @@ This will scan your git repo and run the Jenkinsfile build steps. It will clone 
 1. Confirm pods are running 
 
    ```bash
-   kubectl get pods
+   kubectl get pods -n hackfest
    ```
 
 2. Get service IP of deployed app
 
    ```bash
-   kubectl get service/service-tracker-ui
+   kubectl get service/service-tracker-ui -n hackfest
    ```
 
 3. Open browser and test application `EXTERNAL-IP:8080`
 
 ## Troubleshooting / Debugging
 
-* N/A
+
 
 ## Docs / References
 
-* N/A
+* Docs. https://docs.microsoft.com/en-us/azure/aks/jenkins-continuous-deployment 
 
 #### Next Lab: [Networking](../../networking/README.md)
