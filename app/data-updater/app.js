@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const rp = require('request-promise');
 const async = require('async');
 const jsonResponse = require('./models/express/jsonResponse');
+const dayjs = require('dayjs');
 
 appInsights
   .setup()
@@ -14,8 +15,6 @@ appInsights
   .setAutoCollectConsole(true)
   .setUseDiskRetryCaching(true)
   .start();
-
-var telemetry = appInsights.defaultClient;
 
 mongoose.set('useCreateIndex', true);
 mongoose.set('useFindAndModify', false);
@@ -67,12 +66,11 @@ async.waterfall([
     });
   },
   function(cb) {
-    telemetry.trackEvent({name: "opensky flights retrieval"})
+    appInsights.defaultClient.trackEvent({name: "opensky flights retrieval"})
     var opt = {
       uri: 'https://opensky-network.org/api/states/all',
       json: true
     };
-  
     rp(opt)
       .then(data => {
         cb(null, data);
@@ -83,29 +81,23 @@ async.waterfall([
       });
   },
   function (data, cb) {
-    console.log(data.states.length, "flights sent to be coded")
+    console.log(data.states.length + ' flights sent to be encoded')
     buildGeoJson (data.states, (err, flights) => {
         cb(null, flights)
       })
+  },
+  function (flights, cb) {
+    var timestamp = dayjs().valueOf()
+    var latest = new LatestFlight({ Timestamp: timestamp });
+    var flights = new Flights({
+      Timestamp: timestamp,
+      FeatureCollection: flights
+    });
+    flights.save()
+    latest.save()
+    cb(null)
   }
-],function (err, result) {
-  console.log(result.length)
-  process.exit(0)
-});
-
-  
-/*Flights
-  .find({"Timestamp":"1545169109655"})
-  .limit(1)
-  .exec((err, doc) => {
-    if (err)
-      handleError(
-        ' func - getDataObjFromDb :: error retrieving data'
-      );
-    console.log('Currently have ', doc[0].FeatureCollection.length, ' flights');
-    process.exit(0)
-  });
-  */
+]);
 
 /* BUILD THE GEOJSON ELEMENTS FROM FLIGHTS */
 function buildGeoJson(flights, cb) {
@@ -157,5 +149,5 @@ function buildGeoJson(flights, cb) {
 
 function handleError(message) {
     console.log(message);
-    telemetry.trackException({ exception: message });
+    appInsights.defaultClient.trackException({ exception: message });
 }
