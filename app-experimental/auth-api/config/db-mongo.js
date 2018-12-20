@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 mongoose.Promise = require('bluebird');
-var authTypes = require('./options');
+const authTypes = require('./options');
 require('dotenv').config();
 
-var connectOptions = { autoIndex: false, useNewUrlParser: true };
+const connectOptions = { autoIndex: false, useNewUrlParser: true };
 
-var URI = process.env.MONGODB_URI;
+const URI = process.env.MONGODB_URI;
 
 const reconnectTimeout = 10000; // ms.
 
@@ -48,9 +48,8 @@ function connect() {
     .catch(() => {});
 }
 
-
-exports.connectToDatabase = function(authType){
-    if ( authType == authTypes.COSMOSDB || authType == authTypes.MONGODB ) {
-        connect();
-    }
-}
+exports.connectToDatabase = function(authType) {
+  if (authType == authTypes.COSMOSDB || authType == authTypes.MONGODB) {
+    connect();
+  }
+};

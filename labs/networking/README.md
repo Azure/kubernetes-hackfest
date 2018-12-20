@@ -4,8 +4,10 @@ This section contains a number of labs related to Networking decisions that are 
 
 ## Prerequisites
 
-* Clone this repo in Azure Cloud Shell.
-* Complete previous labs for [AKS](../create-aks-cluster/README.md) and [ACR](../build-application/README.md).
+* Complete previous labs:
+    * [Azure Kubernetes Service](../create-aks-cluster/README.md)
+    * [Build Application Components in Azure Container Registry](../build-application/README.md)
+    * [Helm Setup and Deploy Application](../helm-setup-deploy/README.md)
 
 ## Options
 
@@ -14,8 +16,10 @@ This section contains a number of labs related to Networking decisions that are 
 
 ## Troubleshooting / Debugging
 
-* ?
+* N/A
 
 ## Docs / References
 
-* ?
+* N/A
+
+#### Next Lab: [Monitoring and Logging](../monitoring-logging/README.md)

@@ -1,11 +1,11 @@
-FROM node:8.11.2-alpine
+FROM node:10.9.0-alpine
 
 WORKDIR /usr/src/app
-COPY src/package*.json ./
-RUN npm install
+COPY package*.json ./
+RUN npm ci
 
-COPY src/ .
+COPY . .
+ENV NODE_ENV "development"
+EXPOSE 3003
 
-EXPOSE 3000
-
-CMD [ "npm", "start" ]
+CMD [ "npm", "run", "container" ]

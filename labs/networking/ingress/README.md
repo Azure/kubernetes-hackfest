@@ -4,15 +4,19 @@ This lab is about setting up the Ingress Controller and configuring the differen
 
 ## Prerequisites
 
-* Clone this repo in Azure Cloud Shell.
-* Complete previous labs for [AKS](../../create-aks-cluster/README.md) and [ACR](../../build-application/README.md).
+* Complete previous labs:
+    * [Azure Kubernetes Service](../../create-aks-cluster/README.md)
+    * [Build Application Components in Azure Container Registry](../../build-application/README.md)
+    * [Helm Setup and Deploy Application](../../helm-setup-deploy/README.md)
 
 ## Instructions
+
 Step 1 & 2 Only Needed if you did not complete Helm Setup In previous labs. Skip to step 3 if it was already completed.
 
-1. Setup Service Account and Permissions in teh Cluster for Tiller
+1. Setup Service Account and Permissions in the Cluster for Tiller
 
     ```bash
+    cd /kubernetes-hackfest/labs/networking/ingress
     kubectl apply -f tiller-rbac-config.yaml
     ```
 
@@ -39,8 +43,8 @@ Step 1 & 2 Only Needed if you did not complete Helm Setup In previous labs. Skip
     kubectl get service -l app=nginx-ingress --namespace kube-system
     ```
 
-    * Replace IP with Public IP Address above
-    * Replace DNSNAME with DNS name to be used
+    * Replace IP with Public IP Address above in the configure-public-dns.sh file.
+    * Replace DNSNAME with DNS name to be used in the configure-public-dns-sh file.
 
     ```bash
     # Set DNSNAME to be used later
@@ -76,6 +80,7 @@ Step 1 & 2 Only Needed if you did not complete Helm Setup In previous labs. Skip
     ```
 
 9. Apply Ingress Rules
+    * Update DNS values in [app-ingress.yaml](./app-ingress.yaml)
 
     ```bash
     # Apply Ingress Routes
@@ -84,10 +89,10 @@ Step 1 & 2 Only Needed if you did not complete Helm Setup In previous labs. Skip
     kubectl get ingress
     kubectl get endpoints
     ```
+
 10. Check Ingress Route Works
 
     * Open dnsname.eastus.cloudapp.azure.com
-#### Next Lab: [Network Policy](../network-policy/README.md)
 
 ## Troubleshooting / Debugging
 
@@ -97,3 +102,5 @@ Step 1 & 2 Only Needed if you did not complete Helm Setup In previous labs. Skip
 ## Docs / References
 
 * [What is an Ingress Controller?](https://kubernetes.io/docs/concepts/services-networking/ingress/)
+
+#### Next Lab: [Network Policy](../network-policy/README.md)

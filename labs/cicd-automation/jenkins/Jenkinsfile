@@ -58,7 +58,7 @@ spec:
       steps{
         container('helm') {
         // Uses Help to deploy and sets variables for ACR
-          sh("helm upgrade --install service-tracker-ui ./charts/service-tracker-ui --set deploy.imageTag=${imageTag},deploy.acrserver=${ACRNAME}.${ACRNAME}")
+          sh("helm upgrade --install service-tracker-ui ./charts/service-tracker-ui --set deploy.imageTag=${imageTag},deploy.acrserver=${ACRNAME}.${ACRURL} --namespace hackfest")
           //sh("helm upgrade --install service-tracker-ui ./charts/service-tracker-ui")
           //sh("echo http://`kubectl get service/${feSvcName} -o jsonpath='{.status.loadBalancer.ingress[0].ip}'` > ${feSvcName}")
         }

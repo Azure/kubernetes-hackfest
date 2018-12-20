@@ -2,10 +2,13 @@
 
 This section shows how to extend your AKS Cluster to leverage the power of Azure Container Instance (ACI) and Serverless Containers. Serverless Containers allow you to quickly provision a Container without having to setup any additional infrastructure. It is great for burst capacity scenarios or scenarios where you might only need something to run for a short period of time.
 
+It is also good for running Windows Containers without having to setup additional infrastructure.
+
 ## Prerequisites
 
-* Clone this repo in Azure Cloud Shell.
-* Complete previous labs for [AKS](../create-aks-cluster/README.md) and [ACR](../build-application/README.md).
+* Complete previous labs:
+    * [Azure Kubernetes Service](../create-aks-cluster/README.md)
+    * [Build Application Components in Azure Container Registry](../build-application/README.md)
 
 ## Instructions
 
@@ -33,7 +36,7 @@ This section shows how to extend your AKS Cluster to leverage the power of Azure
     LOC="eastus"
     NAME="${USERINITIALS}aksrbac"
     # Install ACI Connector
-    az aks install-connector -g ${RG} -n ${NAME} --connector-name akslab-aci-connector --os-type Both
+    az aks install-connector -g $RG -n $NAME --connector-name akslab-aci-connector --os-type Both
     # Check to see the new Nodes that have been added to the AKS Cluster
     kubectl get nodes -o wide
     # Check list of Helm Packages and take note of ACI Connectors
@@ -45,23 +48,25 @@ This section shows how to extend your AKS Cluster to leverage the power of Azure
     * AKS does not support Windows Containers today, but we can deploy Windows workloads via the AKS Cluster ACI Connector.
 
     ```bash
+    az provider show -n Microsoft.ContainerInstance
+    az provider register -n Microsoft.ContainerInstance  
     # Check to see that the ACI Connector pods are running
-    k get pods -o wide
+    kubectl get pods -o wide
     # See that the ACI Node is set to NoSchedule
-    k describe node virtual-kubelet-akslab-aci-connector-win | grep -i taint
+    kubectl describe node virtual-kubelet-akslab-aci-connector-win | grep -i taint
     # Take a look at hte iis-pod.yaml manifest and take note of the nodeName and tolerations
     code iis-pod.yaml
     # Deploy the IIS Pod to the Dev Namespace
     # Note: This will take a while as Windows Containers are BIG
-    k apply -f iis-pod.yaml
+    kubectl apply -f iis-pod.yaml
     # Check that the pod is Running
     # Reminder: This can take a while (5 to 10 mins)
-    k get pods -o wide
+    kubectl get pods -o wide
     # List ACI and get Public IP Endpoint
     az container list -o table
     az container show -g "MC_${RG}_${NAME}_${LOC}" -n default-iis-winsvrcore --query "{IP:ipAddress.ip,ProvisioningState:provisioningState}" -o table
     # Delete Windows IIS Container
-    k delete -f iis-pod.yaml
+    kubectl delete -f iis-pod.yaml
     # Remove Connector
     az aks remove-connector -g ${RG} -n ${NAME} --connector-name akslab-aci-connector --os-type Both --graceful
     ```
@@ -76,3 +81,4 @@ This section shows how to extend your AKS Cluster to leverage the power of Azure
 
 * [az aks install-connector](https://docs.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest#az-aks-install-connector)
 * [Bursting from AKS to ACI Sample](https://azure.microsoft.com/en-us/resources/samples/virtual-kubelet-aci-burst/)
+

@@ -1,0 +1,21 @@
+{
+  "name": "data-updater",
+  "version": "1.0.0",
+  "description": "batch program to update database",
+  "bin": "./app.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Azure/kubernetes-hackfest.git"
+  },
+  "author": "Brian Redmond",
+  "homepage": "https://github.com/Azure/kubernetes-hackfest#readme",
+  "dependencies": {
+    "applicationinsights": "^1.0.4",
+    "async": "^2.6.1",
+    "express": "~4.16.0",
+    "mongoose": "^5.2.13",
+    "request": "^2.88.0",
+    "request-promise": "^4.2.2",
+    "dayjs": "^1.7.5"
+  }
+}

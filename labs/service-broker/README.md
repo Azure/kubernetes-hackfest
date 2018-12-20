@@ -4,14 +4,14 @@ This section shows how to work with Online Service Broker for Azure (OSBA) for h
 
 ## Prerequisites
 
-* Clone this repo in Azure Cloud Shell.
-* Complete previous labs for [AKS](../create-aks-cluster/README.md) and [ACR](../build-application/README.md).
+* Complete previous labs:
+    * [Azure Kubernetes Service](../create-aks-cluster/README.md)
+    * [Build Application Components in Azure Container Registry](../build-application/README.md)
+    * [Helm Setup and Deploy Application](../helm-setup-deploy/README.md)
 
 ## Instructions
 
 1. ?
-
-#### Next Lab: [Azure Container Instance](labs/aci/README.md)
 
 ## Troubleshooting / Debugging
 
@@ -20,3 +20,5 @@ This section shows how to work with Online Service Broker for Azure (OSBA) for h
 ## Docs / References
 
 * ?
+
+#### Next Lab: [Azure Container Instance](../aci/README.md)

@@ -16,13 +16,20 @@ spec:
         - image: "{{.Values.deploy.acrServer}}/k8s-demo/service-tracker:{{.Values.deploy.imageTag}}"
           imagePullPolicy: Always
           name: service-tracker-ui
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "1.0"
+            limits:
+              memory: "1024Mi"
+              cpu: "2.0"
           env:
             - name: FLIGHT_API_ROOT
-              value: http://flights-api:3003/
+              value: http://flights-api.hackfest.svc.cluster.local:3003/
             - name: WEATHER_API_ROOT
-              value: http://weather-api:3015/
+              value: http://weather-api.hackfest.svc.cluster.local:3015/
             - name: QUAKES_API_ROOT
-              value: http://quakes-api:3012/
+              value: http://quakes-api.hackfest.svc.cluster.local:3012/
             - name: APPINSIGHTS_INSTRUMENTATIONKEY
               value: 6dc23005-a1d0-418a-82bd-b232498b5221
             - name: KUBE_NODE_NAME
@@ -32,4 +39,4 @@ spec:
           ports:
           - containerPort: {{.Values.deploy.containerPort}}
             protocol: TCP
-      restartPolicy: Always
+      restartPolicy: Always        
