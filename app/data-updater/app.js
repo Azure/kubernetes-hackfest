@@ -57,47 +57,58 @@ db.on('error', err => {
   console.log(err);
 });
 
-async.waterfall([
-  function (cb) {
-    db.once('open', () => {
-      appInsights.defaultClient.trackEvent({ name: 'MongoConnSuccess' });
-      console.log('connection success with Mongo');
-      cb(null)
-    });
-  },
-  function(cb) {
-    appInsights.defaultClient.trackEvent({name: "opensky flights retrieval"})
-    var opt = {
-      uri: 'https://opensky-network.org/api/states/all',
-      json: true
-    };
-    rp(opt)
-      .then(data => {
-        cb(null, data);
-      })
-      .catch(err => {
-        handleError('error retrieving flights from opensky');
-        cb(err, null);
+db.once('open', () => {
+  appInsights.defaultClient.trackEvent({ name: 'MongoConnSuccess' });
+  console.log('connection success with CosmosDB');
+});
+
+var intervalTimeMS = process.env.UPDATE_INTERVAL;
+
+setInterval(updateFlights, intervalTimeMS);
+
+function updateFlights(){
+  console.log('starting to update')
+  async.waterfall([
+    function(cb) {
+      appInsights.defaultClient.trackEvent({name: "opensky flights retrieval"})
+      var opt = {
+        uri: 'https://opensky-network.org/api/states/all',
+        json: true
+      };
+      rp(opt)
+        .then(data => {
+          cb(null, data);
+        })
+        .catch(err => {
+          handleError('error retrieving flights from opensky');
+          cb(err, null);
+        });
+    },
+    function (data, cb) {
+      console.log('received', data.states.length, 'flights from OpenSky')
+      buildGeoJson (data.states, (err, flights) => {
+          cb(null, flights)
+        })
+    },
+    function (flights, cb) {
+      console.log('trying to save flights to CosmosDB')
+      var timestamp = dayjs().valueOf()
+      var latest = new LatestFlight({ Timestamp: timestamp });
+      var flights = new Flights({
+        Timestamp: timestamp,
+        FeatureCollection: flights
       });
-  },
-  function (data, cb) {
-    console.log(data.states.length + ' flights sent to be encoded')
-    buildGeoJson (data.states, (err, flights) => {
-        cb(null, flights)
-      })
-  },
-  function (flights, cb) {
-    var timestamp = dayjs().valueOf()
-    var latest = new LatestFlight({ Timestamp: timestamp });
-    var flights = new Flights({
-      Timestamp: timestamp,
-      FeatureCollection: flights
-    });
-    flights.save()
-    latest.save()
-    cb(null)
-  }
-]);
+      flights.save()
+      latest.save()
+      cb(null)
+    }
+  ],
+  function(err, result) {
+    console.log('successfully updated flights collection');
+    console.log('sleeping ' + String((intervalTimeMS / 1000)) + ' seconds')
+  });
+}
+
 
 /* BUILD THE GEOJSON ELEMENTS FROM FLIGHTS */
 function buildGeoJson(flights, cb) {
