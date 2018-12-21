@@ -1,84 +1,67 @@
-# Lab: Azure Container Instance
-
-This section shows how to extend your AKS Cluster to leverage the power of Azure Container Instance (ACI) and Serverless Containers. Serverless Containers allow you to quickly provision a Container without having to setup any additional infrastructure. It is great for burst capacity scenarios or scenarios where you might only need something to run for a short period of time.
-
-It is also good for running Windows Containers without having to setup additional infrastructure.
+# Lab: Azure Container Instances and AKS Virtual Nodes
 
 ## Prerequisites
 
 * Complete previous labs:
     * [Azure Kubernetes Service](../create-aks-cluster/README.md)
     * [Build Application Components in Azure Container Registry](../build-application/README.md)
+    * [Helm Setup and Deploy Application](../helm-setup-deploy/README.md)
 
 ## Instructions
 
-1. Setup Helm for dev Namespace
+This lab has 2 components. First we will use Azure Container Instances to deploy a batch process to periodically update our CosmosDB collection. Then we will use the AKS Virtual Nodes feature to scale out our application using ACI.
 
-    * Ensure Helm is setup correctly for an RBAC enabled cluster.
+### Azure Container Instance
 
-    ```bash
-    # Grant Tiller appopriate Cluster Permissions for Deployment
-    kubectl apply -f rbac-config.yaml
-    # Initialize Helm
-    helm init --service-account=tiller
-    # Check to see that tiller is Running
-    kubectl get all --all-namespaces | grep tiller
-    ```
-
-2. Install ACI Connector
-
-    * Install the AKS Cluster ACI Connector to be able to extend the cluster and deploy workloads to Serverless Containers.
+1. Create container for batch processing
 
     ```bash
-    # Environment Setup
-    USERINITIALS="<REPLACE-WITH-USER-INITIALS>"
-    RG="${USERINITIALS}aksrbac-rg"
-    LOC="eastus"
-    NAME="${USERINITIALS}aksrbac"
-    # Install ACI Connector
-    az aks install-connector -g $RG -n $NAME --connector-name akslab-aci-connector --os-type Both
-    # Check to see the new Nodes that have been added to the AKS Cluster
-    kubectl get nodes -o wide
-    # Check list of Helm Packages and take note of ACI Connectors
-    helm list
+    az acr build -t hackfest/data-updater:1.0 -r $ACRNAME --no-logs ~/kubernetes-hackfest/app/data-updater
     ```
 
-3. Deploy Windows Workload via ACI to dev Namespace
+2. Gather environment variables needed for running ACI
 
-    * AKS does not support Windows Containers today, but we can deploy Windows workloads via the AKS Cluster ACI Connector.
+    This container uses the following envvars to run. You may need to look these up in the Azure portal or use commands from lab 2 to obtain.
 
     ```bash
-    az provider show -n Microsoft.ContainerInstance
-    az provider register -n Microsoft.ContainerInstance  
-    # Check to see that the ACI Connector pods are running
-    kubectl get pods -o wide
-    # See that the ACI Node is set to NoSchedule
-    kubectl describe node virtual-kubelet-akslab-aci-connector-win | grep -i taint
-    # Take a look at hte iis-pod.yaml manifest and take note of the nodeName and tolerations
-    code iis-pod.yaml
-    # Deploy the IIS Pod to the Dev Namespace
-    # Note: This will take a while as Windows Containers are BIG
-    kubectl apply -f iis-pod.yaml
-    # Check that the pod is Running
-    # Reminder: This can take a while (5 to 10 mins)
-    kubectl get pods -o wide
-    # List ACI and get Public IP Endpoint
-    az container list -o table
-    az container show -g "MC_${RG}_${NAME}_${LOC}" -n default-iis-winsvrcore --query "{IP:ipAddress.ip,ProvisioningState:provisioningState}" -o table
-    # Delete Windows IIS Container
-    kubectl delete -f iis-pod.yaml
-    # Remove Connector
-    az aks remove-connector -g ${RG} -n ${NAME} --connector-name akslab-aci-connector --os-type Both --graceful
+    # set these values for your lab
+    export MONGODB_USER=
+    export MONGODB_PASSWORD=
+    export APPINSIGHTS_INSTRUMENTATIONKEY=
     ```
+
+3. Create ACI using the Azure CLI. Note: You can also complete this step using the Azure portal
+
+    ```bash
+    az container create --name data-updater --image $ACRNAME/hackfest/data-updater:1.0 --resource-group $RGNAME --location eastus --cpu 1 --memory 2 -e MONGODB_USER=$MONGODB_USER -e MONGODB_PASSWORD=$MONGODB_PASSWORD -e APPINSIGHTS_INSTRUMENTATIONKEY=$APPINSIGHTS_INSTRUMENTATIONKEY -e UPDATE_INTERVAL=180000
+    ```
+
+    > Note: we are also using an envvar called UPDATE_INTERVAL to determine how often the update will occur in milliseconds.
+
+4. Check the status of your ACI in the Azure portal
+
+
+
+5. Validate the ACI logs and verify your Flights collection is being updated.
+
+
+
+
+### Azure Kubernetes Service Virtual Nodes
+
+
+
+
+
+
+
 
 ## Troubleshooting / Debugging
 
-* Check to make sure that both the Windows and Linux nodes show as Ready.
-* Check to make sure the ACI Connector Pods for both Windows and Linux are running. If not, check the logs for errors.
-* Be patient on the Creation of the Windows Container as it is a large image and takes a while to download.
+* 
 
 ## Docs / References
 
-* [az aks install-connector](https://docs.microsoft.com/en-us/cli/azure/aks?view=azure-cli-latest#az-aks-install-connector)
-* [Bursting from AKS to ACI Sample](https://azure.microsoft.com/en-us/resources/samples/virtual-kubelet-aci-burst/)
-
+* ACI Docs. https://docs.microsoft.com/en-us/azure/container-instances/container-instances-overview 
+* AKS Virtual Nodes. https://docs.microsoft.com/en-us/azure/aks/virtual-nodes-cli
+* Virtual Kubelet. https://github.com/virtual-kubelet/virtual-kubelet 

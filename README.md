@@ -25,7 +25,7 @@ The following are the basic requirements to **start** the labs. Individual labs 
 * [Networking](labs/networking/README.md)
 * [Security](labs/security/README.md)
 * [Monitoring and Logging](labs/monitoring-logging/README.md)
-* [Azure Container Instance](labs/aci/README.md)
+* [Azure Container Instances and AKS Virtual Nodes](labs/aci/README.md)
 * [Azure Dev Spaces](labs/dev-spaces/README.md)
 
 #### Coming soon:

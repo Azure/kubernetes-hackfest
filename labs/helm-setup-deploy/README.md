@@ -17,7 +17,6 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     * Initialize Helm and Tiller:
 
         ```bash
-        cd 
         kubectl apply -f ~/kubernetes-hackfest/labs/helm-setup-deploy/rbac-config.yaml
         helm init --service-account tiller --upgrade
         ```
