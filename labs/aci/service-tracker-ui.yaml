@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-tracker-ui-aci
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: service-tracker-ui
+  template:
+    metadata:
+      labels:
+        app: service-tracker-ui
+    spec:
+      containers:
+        - image: chzbrgr71/service-tracker-ui:1.0
+          imagePullPolicy: Always
+          name: service-tracker-ui
+          env:
+            - name: FLIGHT_API_ROOT
+              value: http://flights-api.hackfest.svc.cluster.local:3003/
+            - name: WEATHER_API_ROOT
+              value: http://weather-api.hackfest.svc.cluster.local:3015/
+            - name: QUAKES_API_ROOT
+              value: http://quakes-api.hackfest.svc.cluster.local:3012/
+            - name: APPINSIGHTS_INSTRUMENTATIONKEY
+              value: 4d49c908-17b6-4bc7-af5c-d19452132fcc
+          ports:
+          - containerPort: 3009
+            protocol: TCP
+      restartPolicy: Always 
+      nodeSelector:
+        kubernetes.io/role: agent
+        beta.kubernetes.io/os: linux
+        type: virtual-kubelet
+      tolerations:
+      - key: virtual-kubelet.io/provider
+        operator: Exists
+      - key: azure.com/aci
+        effect: NoSchedule       
