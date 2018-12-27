@@ -27,6 +27,7 @@ This lab has 2 components. First we will use Azure Container Instances to deploy
 
     ```bash
     # create azure key vault instance
+
     AKV_NAME=keyvault${UNIQUE_SUFFIX}
     echo $AKV_NAME
     echo export AKV_NAME=keyvault${UNIQUE_SUFFIX} >> ~/.bashrc
@@ -36,7 +37,8 @@ This lab has 2 components. First we will use Azure Container Instances to deploy
 
     Next create a service principal, store it's password in AKV (the registry *password*)
     ```bash
-    # note that we can use the service principal created in lab 1 for this.
+    # note that we could use the service principal created in lab 1 for this
+
     az keyvault secret set \
     --vault-name $AKV_NAME \
     --name $ACRNAME-pull-pwd \
@@ -62,9 +64,10 @@ This lab has 2 components. First we will use Azure Container Instances to deploy
 
     ```bash
     # set these values for your lab
-    export MONGODB_USER=
-    export MONGODB_PASSWORD=
-    export APPINSIGHTS_INSTRUMENTATIONKEY=
+
+    export MONGODB_USER=<replace>
+    export MONGODB_PASSWORD=<replace>
+    export APPINSIGHTS_INSTRUMENTATIONKEY=<replace>
     ```
 
 4. Create ACI using the Azure CLI. Note: You can also complete this step using the Azure portal
@@ -95,7 +98,7 @@ This lab has 2 components. First we will use Azure Container Instances to deploy
 
 ### Azure Kubernetes Service Virtual Nodes
 
-To rapidly scale application workloads in an Azure Kubernetes Service (AKS) cluster, you can use virtual nodes. With virtual nodes, you have quick provisioning of pods, and only pay per second for their execution time. You don't need to wait for Kubernetes cluster autoscaler to deploy VM compute nodes to run the additional pods.
+To rapidly scale application workloads in an Azure Kubernetes Service (AKS) cluster, you can use Virtual Nodes. With Virtual Nodes, you have quick provisioning of pods, and only pay per second for their execution time. You don't need to wait for Kubernetes cluster autoscaler to deploy VM compute nodes to run the additional pods.
 
 For this lab, we are creating a new AKS cluster. Depending on your quota, you may need to delete your existing AKS cluster. 
 
@@ -142,7 +145,7 @@ For this lab, we are creating a new AKS cluster. Depending on your quota, you ma
 
     Create a unique cluster name. This cannot be the same name used in lab #1
     ```bash
-    export AKSNAME=
+    export AKSNAME=<replace>
     export SUBNET=$(az network vnet subnet show --resource-group $RGNAME --vnet-name myVnet --name myAKSSubnet --query id -o tsv)
     ```
     
@@ -151,7 +154,7 @@ For this lab, we are creating a new AKS cluster. Depending on your quota, you ma
     az aks create \
         --resource-group $RGNAME \
         --name $AKSNAME \
-        --node-count 1 \
+        --node-count 3 \
         --network-plugin azure \
         --service-cidr 10.0.0.0/16 \
         --dns-service-ip 10.0.0.10 \
@@ -194,11 +197,55 @@ For this lab, we are creating a new AKS cluster. Depending on your quota, you ma
     kubectl get nodes
 
     NAME                       STATUS   ROLES   AGE     VERSION
-    aks-nodepool1-56333375-0   Ready    agent   2m51s   v1.9.11
-    virtual-node-aci-linux     Ready    agent   7s      v1.11.2
+    aks-nodepool1-56333375-0   Ready    agent   5d19h   v1.9.11
+    aks-nodepool1-56333375-1   Ready    agent   5d18h   v1.9.11
+    aks-nodepool1-56333375-2   Ready    agent   5d18h   v1.9.11
+    virtual-node-aci-linux     Ready    agent   5d19h   v1.11.2
     ```
 
-7. Create deployment targeting virtual node
+7. Deploy the original application to AKS
+
+    These steps are the same as labs 2 and 3. We need to repeat for this new cluster.
+
+    a. Create the secret used for our credentials
+
+    ```bash
+    export MONGODB_USER=$(az cosmosdb show --name $COSMOSNAME --resource-group $RGNAME --query "name" -o tsv)
+    ```
+
+    ```bash
+    export MONGODB_PASSWORD=$(az cosmosdb list-keys --name $COSMOSNAME --resource-group $RGNAME --query "primaryMasterKey" -o tsv)
+    ```
+
+    ```bash
+    # from the Azure Portal
+
+    export APPINSIGHTS_INSTRUMENTATIONKEY=<replace>
+    ```
+
+    ```bash
+    kubectl create secret generic cosmos-db-secret --from-literal=user=$MONGODB_USER --from-literal=pwd=$MONGODB_PASSWORD --from-literal=appinsights=$APPINSIGHTS_INSTRUMENTATIONKEY -n hackfest
+    ```
+
+    b. Create namespace for our application
+
+    ```bash
+    kubectl create ns hackfest
+    ```
+
+    c. Install each chart as below:
+
+    ```bash
+    helm upgrade --install data-api ~/kubernetes-hackfest/charts/data-api --namespace hackfest
+    helm upgrade --install quakes-api ~/kubernetes-hackfest/charts/quakes-api --namespace hackfest
+    helm upgrade --install weather-api ~/kubernetes-hackfest/charts/weather-api --namespace hackfest
+    helm upgrade --install flights-api ~/kubernetes-hackfest/charts/flights-api --namespace hackfest
+    helm upgrade --install service-tracker-ui ~/kubernetes-hackfest/charts/service-tracker-ui --namespace hackfest
+    ```
+
+    d. Validate that the service-tracker-ui is up and running. Eg - browse to http://your-public-ip:8080 
+
+8. Create a new deployment targeting virtual node
 
     Edit the file `service-tracker-ui.yaml` in the `/kubernetes-hackfest/labs/aci` directory.
 
@@ -210,24 +257,28 @@ For this lab, we are creating a new AKS cluster. Depending on your quota, you ma
 
     Create the new deployment
     ```bash
-    kubectl apply -f ./labs/aci/service-tracker-ui.yaml -n hackfest
+    kubectl apply -f ~/kubernetes-hackfest/labs/aci/service-tracker-ui.yaml -n hackfest
     ```
 
     Validate that the pod is running on the virtual node and verify that you have an ACI in the Azure portal
     ```bash
     kubectl get pod -n hackfest -o wide
 
-    NAME                                      READY     STATUS    RESTARTS   AGE       IP            NODE
-    data-api-7c97ffc64b-8spp4                 1/1       Running   5          1d        10.240.0.7    aks-nodepool1-56333375-0
-    flights-api-c6fdc889c-bkdqm               1/1       Running   0          1d        10.240.0.25   aks-nodepool1-56333375-0
-    quakes-api-7bfc7b5b4b-xtt66               1/1       Running   0          1d        10.240.0.41   aks-nodepool1-56333375-2
-    service-tracker-ui-aci-684984d764-45lcx   1/1       Running   0          8m        10.241.0.6    virtual-node-aci-linux
-    service-tracker-ui-aci-684984d764-h8ln4   1/1       Running   0          8m        10.241.0.5    virtual-node-aci-linux
-    service-tracker-ui-aci-684984d764-zhrw4   1/1       Running   0          10m       10.241.0.4    virtual-node-aci-linux
-    weather-api-867bdcb845-h5mpn              1/1       Running   0          1d        10.240.0.14   aks-nodepool1-56333375-0
+    NAME                                      READY   STATUS    RESTARTS   AGE     IP            NODE                       NOMINATED NODE
+    data-api-7c97ffc64b-vkcjh                 1/1     Running   1          12m     10.240.0.70   aks-nodepool1-56333375-1   <none>
+    flights-api-c6fdc889c-cljbb               1/1     Running   0          11m     10.240.0.40   aks-nodepool1-56333375-2   <none>
+    quakes-api-7bfc7b5b4b-c7zqb               1/1     Running   0          11m     10.240.0.50   aks-nodepool1-56333375-2   <none>
+    service-tracker-ui-5c968cfb86-v6c5k       1/1     Running   0          11m     10.240.0.68   aks-nodepool1-56333375-1   <none>
+    service-tracker-ui-aci-6f5f74b5fb-8s7qq   1/1     Running   0          2m18s   10.241.0.4    virtual-node-aci-linux     <none>
+    service-tracker-ui-aci-6f5f74b5fb-h5ftf   1/1     Running   0          2m18s   10.241.0.6    virtual-node-aci-linux     <none>
+    service-tracker-ui-aci-6f5f74b5fb-qw629   1/1     Running   0          2m18s   10.241.0.5    virtual-node-aci-linux     <none>
+    weather-api-867bdcb845-lfm6c              1/1     Running   0          11m     10.240.0.83   aks-nodepool1-56333375-1   <none>
     ```
 
-    For testing purposes, delete your existing service-tracker-ui deployment. Your web app should still work properly because the deployment has the same labels.
+9. Remove the existing local AKS pod and validate
+
+    Delete your existing service-tracker-ui deployment. Your web app should still work properly because the deployment has the same labels (the service will remain in place)
+
     ```bash
     kubectl delete deploy service-tracker-ui -n hackfest
     ```
