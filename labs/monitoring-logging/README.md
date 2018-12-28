@@ -11,15 +11,20 @@ This section contains a number of labs related to Monitoring and Logging AKS Clu
 
 ## Options
 
-1. [Azure Log Analytics](loganalytics/README.md)
+1. [Azure Monitor and App Insights](monitoring-logging/README.md)
 2. [Prometheus and Grafana](prometheus-grafana/README.md)
+3. Custom. Easy to bring your own monitoring/logging tool in this lab
+    * New Relic
+    * Influx DB
+    * Datadog
+    * fluentd
+    * Elastic Search
 
 ## Troubleshooting / Debugging
 
-* N/A
 
 ## Docs / References
 
-* N/A
+* Azure Monitor Overview. https://docs.microsoft.com/en-us/azure/azure-monitor/overview 
 
 #### Next Lab: [Service Mesh w/ Distributed Tracing](../servicemesh-tracing/README.md)

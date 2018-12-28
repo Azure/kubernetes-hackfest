@@ -1,4 +1,4 @@
-# Lab: Working with Azure Log Analytics
+# Lab: Azure Monitor and App Insights
 
 This section shows how to leverage Azure Monitor for Containers for gaining Monitoring and Logging insights into your AKS Cluster. If you recall from the AKS Cluster Creation section, the optional **monitoring** add-on was enabled which automatically integrated Azure Log Analytics with AKS. We will now explore what that add-on provides.
 
@@ -16,23 +16,24 @@ This section shows how to leverage Azure Monitor for Containers for gaining Moni
     * There is nothing more to do if the **monitoring** add-on was enabled at AKS Cluster creation time. Proceed to **Step 2**.
     * If the **monitoring** add-on was not enabled, no worries, it can be added after the fact via the enable-addons command. If you are not sure you can check via the following command to see if the Pods are running. No out put means **monitoring** add-on is not running.
 
-    ```bash
-    kubectl get ds omsagent --namespace=kube-system
-    ```
+        ```bash
+        kubectl get ds omsagent --namespace=kube-system
+        ```
     * To enable the add-on run the following command against your AKS Cluster.
 
-    ```bash
-    az aks enable-addons -a monitoring -g $RGNAME -n $CLUSTERNAME
-    ```
+        ```bash
+        az aks enable-addons -a monitoring -g $RGNAME -n $CLUSTERNAME
+        ```
 
-2. Enable Master Node Logs in AKS (Optional)
+2. Enable Master Node Logs in AKS
 
-    * One of the first things you are going to want to do is enable the Master Node Logs to help with troubleshooting Production running Applications. This will help gain additional insights into potential issues.
+    * One of the first things you are going to want to do is enable the Master Node Logs to help with troubleshooting production running Applications. This will help gain additional insights into potential issues.
         * Go to the Azure Portal and select your Resource Group.
         * Choose the **Diagnostic settings** Blade at the Resource Group level.
         * Select your AKS Cluster.
         * Click on **Turn on diagnostics** to collect logs.
         * Fill in a **Name**, click on the **Send to Log Analytics** checkbox, select your **Log Analytics Workspace**, and the Master Node logs you are interested in.
+        * Click "Save"
 
         ![Enable Master Node Logs](enable-masternode-logs.png "Enable Master Node Logs")
 
@@ -141,6 +142,25 @@ This section shows how to leverage Azure Monitor for Containers for gaining Moni
         | project log_s
         ```
 
+7. Application Insights
+
+    We enabled App Insights in our application in earlier labs. Application Insights is an extensible Application Performance Management (APM) service for web developers on multiple platforms.
+
+    * In the Azure Portal, click on "All services", then search for "Monitor"
+    * Click on "Monitor"
+    * Under Insights, select "Applications"
+    * Select the Application Insights instance we created earlier. It should be called "kubernetes-hackfest"
+
+    > Note: You may need to create traffic on your app by browsing the web site.
+
+    * Click on "Application Map
+    * Click on "Metrics"
+    * Click on "Performance"
+    * Click on "Application Dashboard" Browse the dashboard and the telemetry data. 
+
+        ![App Insights Dashboard](app-insights-dashboard.png "App Insights Dashboard")
+
+
 ## Troubleshooting / Debugging
 
 * [Troubleshoot Azure Monitor for Containers](https://docs.microsoft.com/en-us/azure/monitoring/monitoring-container-insights-troubleshoot)
@@ -150,5 +170,3 @@ This section shows how to leverage Azure Monitor for Containers for gaining Moni
 * [Azure Monitor for Containers](https://docs.microsoft.com/en-us/azure/monitoring/monitoring-container-insights-overview?toc=%2fazure%2fmonitoring%2ftoc.json)
 * [Understand AKS Cluster Performance](https://docs.microsoft.com/en-us/azure/monitoring/monitoring-container-insights-analyze?toc=%2fazure%2fmonitoring%2ftoc.json)
 * [View kubelet Logs](https://docs.microsoft.com/en-us/azure/aks/kubelet-logs)
-
-#### Next Lab: [Service Mesh w/ Distributed Tracing](../../servicemesh-tracing/README.md)
