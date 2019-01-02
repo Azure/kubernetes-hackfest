@@ -11,7 +11,7 @@ This section contains a number of labs related to Monitoring and Logging AKS Clu
 
 ## Options
 
-1. [Azure Monitor and App Insights](monitoring-logging/README.md)
+1. [Azure Monitor and App Insights](azure-monitor/README.md)
 2. [Prometheus and Grafana](prometheus-grafana/README.md)
 3. Custom. Easy to bring your own monitoring/logging tool in this lab
     * New Relic
