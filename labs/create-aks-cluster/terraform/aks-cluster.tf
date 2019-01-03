@@ -4,10 +4,10 @@ resource "azurerm_resource_group" "rg" {
 }
 
 resource "azurerm_kubernetes_cluster" "cluster" {
-  name                = "${TF_VAR_CLUSTERNAME}"
+  name                = "${var.CLUSTERNAME}"
   resource_group_name = "${var.RGNAME}"
   location            = "${var.location}"
-  dns_prefix          = "${TF_VAR_DNSNAME}"
+  dns_prefix          = "${var.DNSNAME}"
   kubernetes_version  = "${var.kubernetes_version}"
 
   agent_pool_profile {
@@ -19,13 +19,13 @@ resource "azurerm_kubernetes_cluster" "cluster" {
   }
 
   service_principal {
-    client_id     = "${TF_VAR_APPID}"
-    client_secret = "${TF_VAR_CLIENTSECRET}"
+    client_id     = "${var.APPID}"
+    client_secret = "${var.LIENTSECRET}"
   }
 }
 
 resource "azurerm_container_registry" "registry" {
-  name                = "${TF_VAR_ACRNAME}"
+  name                = "${var.ACRNAME}"
   resource_group_name = "${var.RGNAME}"
   location            = "${var.location}"
   admin_enabled       = true

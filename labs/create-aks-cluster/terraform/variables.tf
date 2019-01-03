@@ -1,9 +1,21 @@
-variable "APPID" {}
-variable "CLIENTSECRET" {}
-variable "UNIQUE_SUFFIX" {}
-variable "CLUSTERNAME" {}
-variable "DNSNAME" {}
-variable "ACRNAME" {}
+variable "APPID" {
+  type = "string" 
+}
+variable "CLIENTSECRET" {
+  type = "string"
+}
+variable "UNIQUE_SUFFIX" {
+  type = "string"
+}
+variable "CLUSTERNAME" {
+  type = "string"
+}
+variable "DNSNAME" {
+  type = "string"
+}
+variable "ACRNAME" {
+  type = "string"
+}
 
 
 variable "location" {
