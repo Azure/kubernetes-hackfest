@@ -14,15 +14,11 @@ In this lab you will setup pipelines for automating application creation and dep
     * [Build Application Components in Azure Container Registry](../build-application/README.md)
     * [Helm Setup and Deploy Application](../helm-setup-deploy/README.md)
 
-## Instructions
+## Options
 
-Click below to find the instructions for the CI/CD platform of your choice: 
-
-[Jenkins](jenkins/README.md)
-
-[Azure DevOps](azure-devops/README.md)
-
-[Brigade](brigade/README.md)
+1. [Jenkins](jenkins/README.md)
+2. [Azure DevOps](azure-devops/README.md)
+3. [Brigade](brigade/README.md)
 
 ## Troubleshooting / Debugging
 

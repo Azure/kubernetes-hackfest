@@ -1,6 +1,6 @@
-# Lab: Persistent Volume Claims
+# Lab: Best Practices for App Developers
 
-Coming soon.
+
 
 ## Prerequisites
 
@@ -11,12 +11,10 @@ Coming soon.
 
 ## Instructions
 
-1. ?
+
 
 ## Troubleshooting / Debugging
 
-* 
 
 ## Docs / References
 
-* 

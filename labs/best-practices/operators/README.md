@@ -1,6 +1,6 @@
-# Lab: Add ServiceMesh and Distributed Tracing to Application
+# Lab: Best Practices for Cluster Operators
 
-Coming soon.
+
 
 ## Prerequisites
 
@@ -11,14 +11,10 @@ Coming soon.
 
 ## Instructions
 
-1. ?
+
 
 ## Troubleshooting / Debugging
 
-* ?
 
 ## Docs / References
 
-* ?
-
-#### Next Lab: [Storage](../storage/README.md)

@@ -1,25 +1,24 @@
 # Labs: Security
 
-This section contains a number of labs related to Securing the AKS cluster. They are each self-contained labs meaning you do not have to do one before another.
+This section contains a number of labs related to securing the AKS cluster.
 
 ## Prerequisites
 
-* Complete previous labs:
+* These labs are each self-contained, meaning you do not have to do one before another. 
+
+* In theory, these are standalone but we recommend completing these labs prior to working on these.
     * [Azure Kubernetes Service](../create-aks-cluster/README.md)
     * [Build Application Components in Azure Container Registry](../build-application/README.md)
     * [Helm Setup and Deploy Application](../helm-setup-deploy/README.md)
 
 ## Options
 
-1. [Create RBAC w/Azure AD AKS Cluster](create-rbacwithazuread-cluster/README.md)
-2. [Securing Tiller](secure-tiller/README.md)
+1. [Azure AD Integration with AKS](create-rbacwithazuread-cluster/README.md)
+2. [Securing Helm/Tiller](secure-tiller/README.md)
 
 ## Troubleshooting / Debugging
 
-* N/A
 
 ## Docs / References
 
-* N/A
-
-#### Next Lab: [Service Broker](../service-broker/README.md)
+* [Docs: Integrate Azure Active Directory with Azure Kubernetes Service](https://docs.microsoft.com/en-us/azure/aks/aad-integration)
