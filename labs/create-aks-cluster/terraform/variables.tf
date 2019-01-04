@@ -16,6 +16,10 @@ variable "DNSNAME" {
 variable "ACRNAME" {
   type = "string"
 }
+<<<<<<< HEAD
+=======
+
+>>>>>>> b2854977e42902a5afc62cfcb253a9bae60de5de
 
 variable "location" {
   description = "location of cluster"

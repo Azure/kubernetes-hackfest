@@ -39,6 +39,7 @@ resource "azurerm_kubernetes_cluster" "cluster" {
 
   service_principal {
     client_id     = "${var.APPID}"
+<<<<<<< HEAD
     client_secret = "${var.CLIENTSECRET}"
   }
   addon_profile {
@@ -49,6 +50,9 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     http_application_routing {
       enabled                    = true
     }
+=======
+    client_secret = "${var.LIENTSECRET}"
+>>>>>>> b2854977e42902a5afc62cfcb253a9bae60de5de
   }
 }
 
