@@ -5,7 +5,6 @@ The following are the basic requirements to **start** the labs. Individual labs 
 
 * Azure Account [Azure Portal](https://portal.azure.com)
 * Git [Git SCM](https://git-scm.com/downloads)
-* Docker CE [Docker Store](https://store.docker.com/search?type=edition&offering=community)
 * Azure Cloud Shell [https://shell.azure.com](https://shell.azure.com)
 
 ## Application
@@ -27,13 +26,15 @@ The following are the basic requirements to **start** the labs. Individual labs 
 * [Monitoring and Logging](labs/monitoring-logging/README.md)
 * [Azure Container Instances and AKS Virtual Nodes](labs/aci/README.md)
 * [Azure Dev Spaces](labs/dev-spaces/README.md)
+* [Service Mesh](labs/servicemesh/README.md)
 
 #### Coming soon:
-* [Service Mesh](labs/servicemesh-tracing/README.md)
 * [Storage](labs/storage/README.md)
 * [Service Broker](labs/service-broker/README.md)
-
-
+* [Cluster Autoscaler and Horizontal Pod Autoscaler](labs/cluster-autoscaler/README.md)
+* [Using OpenFaaS on AKS](labs/open-faas/README.md)
+* [Best Practices for Cluster Operators](labs/best-practices/operators/README.md)
+* [Best Practices for App Developers](labs/best-practices/appdev/README.md)
 
 
 # Contributing

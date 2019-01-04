@@ -2,10 +2,6 @@
 
 This lab creates an AKS Cluster with Azure AD Integration for RBAC.
 
-## Prerequisites
-
-1. N/A
-
 ## Instructions
 
 1. Need Global Admin Permissions to an Existing Azure AD

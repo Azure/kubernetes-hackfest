@@ -32,10 +32,8 @@ Coming soon.
 
 ## Troubleshooting / Debugging
 
-* ?
+* 
 
 ## Docs / References
 
-* ?
-
-#### Next Lab: [Security](../../security/README.md)
+* 

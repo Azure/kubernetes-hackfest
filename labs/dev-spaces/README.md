@@ -4,10 +4,14 @@ This lab walks you through working with Azure Dev Spaces for that inner dev loop
 
 ## Prerequisites
 
-* Clone this repo in Azure Cloud Shell.
 * Complete previous labs:
-    * [Azure Kubernetes Service](../create-aks-cluster/README.md)
-    * [Build Application Components in Azure Container Registry](../build-application/README.md)
+    * [Azure Kubernetes Service](../../create-aks-cluster/README.md)
+    * [Build Application Components in Azure Container Registry](../../build-application/README.md)
+    * [Helm Setup and Deploy Application](../../helm-setup-deploy/README.md)
+
+* Visual Studio Code (NOT IN AZURE CLOUD SHELL). 
+
+    * This lab is not intended for Azure Cloud Shell. You may need to configure your local machine to match the cloud shell environment. 
 
 ## Instructions
 
@@ -15,21 +19,22 @@ This lab walks you through working with Azure Dev Spaces for that inner dev loop
 
     * Make sure that http_application_routing is setup in the AKS Cluster.
 
-    ```bash
-    # Add HTTP Application Routing add-on to AKS Cluster
-    az aks enable-addons -a http_application_routing -g ${RG} -n ${NAME}
-    ```
+        ```bash
+        # Add HTTP Application Routing add-on to AKS Cluster
+        az aks enable-addons -a http_application_routing -g $RGNAME -n $CLUSTERNAME
+        ```
 
     * Add DevSpaces to AKS Cluster
 
-    ```bash
-    # Add DevSpaces to Cluster
-    az aks use-dev-spaces -g ${RG} -n ${NAME}
-    # When prompted for a dev space, enter devspaces and hit Enter.
-    # When prompted for parent dev space, pick [0] <none>.
-    # This command can be used to check DevSpaces version
-    azds --version
-    ```
+        ```bash
+        # Add DevSpaces to Cluster
+        az aks use-dev-spaces -g $RGNAME -n $CLUSTERNAME
+
+        # When prompted for a dev space, enter devspaces and hit Enter.
+        # When prompted for parent dev space, pick [0] <none>.
+        # This command can be used to check DevSpaces version
+        azds --version
+        ```
 
     * Download the [Azure Dev Spaces extension](https://marketplace.visualstudio.com/items?itemName=azuredevspaces.azds) for VS Code. Click Install once on the extension's Marketplace page, and again in VS Code.
 
@@ -38,31 +43,36 @@ This lab walks you through working with Azure Dev Spaces for that inner dev loop
     * Clone the Azure DevSpaces Repo
     * Go to the NodeJS Web Front-end and Prep it for Public Exposure
 
-    ```bash
-    # Setup WebFront End for Debugging
-    git clone https://github.com/Azure/dev-spaces
-    cd dev-spaces
-    cd samples/nodejs/getting-started/webfrontend
-    # Before view of Directory
-    ls -al
-    # Prep this service for Public Exposure via Azure DevSpaces
-    azds prep --public
-    # After view of Directory & Files Added
-    ls -al
-    # Start the Service and Deploy to AKS via Azure DevSpaces
-    # Note: This will take a while the first time through.
-    azds up
-    # Test webapp via http app routing url outputted
-    # Press Ctrl+C to detach once testing is completed.
-    ```
+        ```bash
+        # Setup WebFront End for Debugging
+        git clone https://github.com/Azure/dev-spaces
+        cd dev-spaces
+        cd samples/nodejs/getting-started/webfrontend
+
+        # Before view of Directory
+        ls -al
+
+        # Prep this service for Public Exposure via Azure DevSpaces
+        azds prep --public
+
+        # After view of Directory & Files Added
+        ls -al
+
+        # Start the Service and Deploy to AKS via Azure DevSpaces
+        # Note: This will take a while the first time through.
+        azds up
+        
+        # Test webapp via http app routing url outputted
+        # Press Ctrl+C to detach once testing is completed.
+        ```
 
 3. Initialize Debug Assets with VS Code (Breakpoint Debugging)
 
     * Initialize debug assets with the VS Code extension.
 
-    ```bash
-    code dev-spaces/samples/nodejs/getting-started/webfrontend
-    ```
+        ```bash
+        code dev-spaces/samples/nodejs/getting-started/webfrontend
+        ```
 
     * Go to VS Code Command Palette
         * Run Azure Dev Spaces: Prepare configuration files for Azure Dev Spaces

@@ -21,5 +21,3 @@ This section contains a number of labs related to Storage decisions that are mad
 ## Docs / References
 
 * N/A
-
-#### Next Lab: [Security](../security/README.md)
