@@ -49,7 +49,6 @@ resource "azurerm_kubernetes_cluster" "cluster" {
     http_application_routing {
       enabled                    = true
     }
-    client_secret = "${var.LIENTSECRET}"
   }
 }
 
