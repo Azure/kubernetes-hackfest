@@ -1,10 +1,21 @@
-variable "APPID" {}
-variable "CLIENTSECRET" {}
-variable "UNIQUE_SUFFIX" {}
-variable "CLUSTERNAME" {}
-variable "DNSNAME" {}
-variable "ACRNAME" {}
-
+variable "APPID" {
+  type = "string" 
+}
+variable "CLIENTSECRET" {
+  type = "string"
+}
+variable "UNIQUE_SUFFIX" {
+  type = "string"
+}
+variable "CLUSTERNAME" {
+  type = "string"
+}
+variable "DNSNAME" {
+  type = "string"
+}
+variable "ACRNAME" {
+  type = "string"
+}
 
 variable "location" {
   description = "location of cluster"
@@ -17,7 +28,7 @@ variable "RGNAME" {
 }
 variable "kubernetes_version" {
   description = "Kubernetes Version"
-  default     = "1.11.3"
+  default     = "1.11.5"
 }
 
 variable "node_count" {
