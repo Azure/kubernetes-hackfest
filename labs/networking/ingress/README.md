@@ -13,8 +13,6 @@ An ingress controller is a piece of software that provides reverse proxy, config
 
 ## Instructions
 
-https://docs.microsoft.com/en-us/azure/aks/ingress-own-tls 
-
 1. Remove public IP addresses for services
 
     We do not need public IP's for the API's or the website.
@@ -123,5 +121,7 @@ https://docs.microsoft.com/en-us/azure/aks/ingress-own-tls
 
 ## Docs / References
 
+* [Create an ingress controller in Azure Kubernetes Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/ingress-basic)
 * [What is an Ingress Controller?](https://kubernetes.io/docs/concepts/services-networking/ingress/)
+* [Whitelisting egress traffic](https://docs.microsoft.com/en-us/azure/aks/egress)
 
