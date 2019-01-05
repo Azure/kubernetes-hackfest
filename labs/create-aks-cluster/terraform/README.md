@@ -1,69 +1,6 @@
-# Lab 1: Create AKS Cluster
+# Lab 1B: Create AKS Cluster
 
 In this lab we will create our Azure Kubernetes Services (AKS) distributed compute cluster with Terraform.
-
-## Prerequisites
-
-* Azure Account
-
-## Instructions
-
-1. Login to Azure Portal at http://portal.azure.com.
-2. Open the Azure Cloud Shell and choose Bash Shell (do not choose Powershell)
-
-    ![Azure Cloud Shell](img-cloud-shell.png "Azure Cloud Shell")
-
-3. The first time Cloud Shell is started will require you to create a storage account.
-
-4. Once your cloud shell is started, clone the workshop repo into the cloud shell environment
-    ```bash
-    git clone https://github.com/Azure/kubernetes-hackfest
-    ```
-
-    > Note: In the cloud shell, you are automatically logged into your Azure subscription.
-
-5. Ensure you are using the correct Azure subscription you want to deploy AKS to.
-    ```
-    # View subscriptions
-    az account list
-    ```
-    ```
-    # Verify selected subscription
-    az account show
-    ```
-
-    ```
-    # Set correct subscription (if needed)
-    az account set --subscription <subscription_id>
-
-    # Verify correct subscription is now set
-    az account show
-    ```
-
-6. Create Azure Service Prinicpal to use through the labs
-
-    ```bash
-    az ad sp create-for-rbac --skip-assignment
-    ```
-    This will return the following. !!!IMPORTANT!!! - Please copy this information down as you'll need it for labs going forward.
-
-    ```bash
-    "appId": "7248f250-0000-0000-0000-dbdeb8400d85",
-    "displayName": "azure-cli-2017-10-15-02-20-15",
-    "name": "http://azure-cli-2017-10-15-02-20-15",
-    "password": "77851d2c-0000-0000-0000-cb3ebc97975a",
-    "tenant": "72f988bf-0000-0000-0000-2d7cd011db47"
-    ```
-
-    Set the values from above as variables **(replace <appId> and <password> with your values)**.
-
-    DON'T MESS THIS STEP UP. REPLACE THE VALUES IN BRACKETS!!!
-
-    ```bash
-    # Persist for Later Sessions in Case of Timeout
-    # Lab 1: Create AKS Cluster
-
-In this lab we will create our Azure Kubernetes Services (AKS) distributed compute cluster.
 
 ## Prerequisites
 
@@ -145,22 +82,20 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
 
     *** Note this value as it will be used in the next couple labs. ***
 
-8. Create an Azure Resource Group in East US.
+8. Set variables for an Azure Resource Group in East US.
 
     ```bash
     # Set Resource Group Name
     RGNAME=kubernetes-hackfest
     # Persist for Later Sessions in Case of Timeout
-    echo export TF_VAR_RGNAME=kubernetes-hackfest >> ~/.bashrc
+    echo export RGNAME=kubernetes-hackfest >> ~/.bashrc
     # Set Region (Location)
     LOCATION=eastus
     # Persist for Later Sessions in Case of Timeout
-    echo export TF_VAR_LOCATION=eastus >> ~/.bashrc
-    # Create Resource Group
-    az group create -n $TF_VAR_RGNAME -l $TF_VAR_LOCATION
+    echo export LOCATION=eastus >> ~/.bashrc
     ```
 
-9. Create your AKS cluster in the resource group created above with 3 nodes, targeting Kubernetes version 1.10.3, with Container Insights, and HTTP Application Routing Enabled. You will use the Service Principal information from step 5.
+9. Create your AKS cluster with Terraform with 3 nodes, targeting Kubernetes version 1.11.5, with Container Insights, and HTTP Application Routing Enabled.
 
     Use Unique CLUSTERNAME
 
@@ -172,19 +107,21 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     # Persist for Later Sessions in Case of Timeout
     echo export TF_VAR_CLUSTERNAME=aks${UNIQUE_SUFFIX} >> ~/.bashrc
     ```  
-    > The below command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT and grab a coffee...
+    Run "terraform plan" to ensure the right resources are being created. Terraform plan allows you to evaluate the resources Terraform will create before actually deploying the resources
 
     ```bash
-    # Create AKS Cluster
-    az aks create -n $CLUSTERNAME -g $RGNAME -k 1.11.4 \
-    --service-principal $APPID \
-    --client-secret $CLIENTSECRET \
-    --generate-ssh-keys -l $LOCATION \
-    --node-count 3 \
-    --enable-addons http_application_routing,monitoring
+    terraform plan
+    ```
+    Now we will create the cluster with applying the terrraform configuration
+
+    ```bash
+    terraform apply
     ```
 
+> The deployment can take 8-10 minutes to run as it is creating the AKS cluster. Please be PATIENT and grab a coffee...
+
 10. Verify your cluster status. The `ProvisioningState` should be `Succeeded`
+
     ```bash
     az aks list -o table
     ```
@@ -194,7 +131,6 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     -------------------  ----------  --------------------  -------------------  -------------------  -------------------------------------------------------------------
     ODLaks-v2-gbb-16502  eastus   ODL_aks-v2-gbb-16502  1.11.4                Succeeded odlaks-v2--odlaks-v2-gbb-16-b23acc-17863579.hcp.centralus.azmk8s.io
     ```
-
 11. Get the Kubernetes config files for your new AKS cluster
 
     ```bash
@@ -210,7 +146,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
      ```
     ```bash
      NAME                       STATUS    ROLES     AGE       VERSION
-     aks-nodepool1-26522970-0   Ready     agent     33m       v1.11.3
+     aks-nodepool1-26522970-0   Ready     agent     33m       v1.11.5
      ```
  
      To see more details about your cluster:
