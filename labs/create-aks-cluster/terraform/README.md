@@ -134,15 +134,19 @@ Terraform
     ```bash
     # Persist for Later Sessions in Case of Timeout
     echo export TF_VAR_CLUSTERNAME=aks${UNIQUE_SUFFIX} >> ~/.bashrc
+    ```
+    Run "terraform init" to initialize the Terraform directory. This command performs several different initialization steps in order to prepare a working directory for use.
+    ```hcl
+    terraform init
     ```  
     Run "terraform plan" to ensure the right resources are being created. Terraform plan allows you to evaluate the resources Terraform will create before actually deploying the resources
 
-    ```bash
+    ```hcl
     terraform plan
     ```
     Now we will create the cluster with applying the terrraform configuration
 
-    ```bash
+    ```hcl
     terraform apply
     ```
 
