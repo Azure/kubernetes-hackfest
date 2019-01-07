@@ -3,7 +3,6 @@ kind: Deployment
 metadata:
   name: "{{.Values.deploy.name}}"
 spec:
-  replicas: {{ default 1 .Values.deploy.replicas }}
   selector:
     matchLabels:
       app: service-tracker-ui

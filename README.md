@@ -24,6 +24,7 @@ The following are the basic requirements to **start** the labs. Individual labs 
 * [Networking](labs/networking/README.md)
 * [Security](labs/security/README.md)
 * [Monitoring and Logging](labs/monitoring-logging/README.md)
+* [Scaling Cluster and Applications](labs/scaling/README.md)
 * [Azure Container Instances and AKS Virtual Nodes](labs/aci/README.md)
 * [Azure Dev Spaces](labs/dev-spaces/README.md)
 * [Service Mesh](labs/servicemesh/README.md)
@@ -31,7 +32,6 @@ The following are the basic requirements to **start** the labs. Individual labs 
 #### Coming soon:
 * [Storage](labs/storage/README.md)
 * [Service Broker](labs/service-broker/README.md)
-* [Cluster Autoscaler and Horizontal Pod Autoscaler](labs/cluster-autoscaler/README.md)
 * [Using OpenFaaS on AKS](labs/open-faas/README.md)
 * [Best Practices for Cluster Operators](labs/best-practices/operators/README.md)
 * [Best Practices for App Developers](labs/best-practices/appdev/README.md)
