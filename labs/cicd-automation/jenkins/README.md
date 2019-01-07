@@ -95,6 +95,8 @@ In order to trigger this pipeline you will need your own Github account and fork
 
    > Note: The Jenkins pod can take a couple minutes to start. Ensure it is `Running` prior to attempting to login.
 
+4. Update Jekins. There are pending updates that need to be applied for pipelines to work. Select `Manage Jenkins` and upgrade automatically. Jenkins must be re-started.
+
 #### Configure Azure Integration In Jenkins
 
 1. Browse to Jenkins Default Admin Screen
