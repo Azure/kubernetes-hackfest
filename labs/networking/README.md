@@ -9,7 +9,7 @@ This section contains a number of labs related to Networking decisions that are 
     * [Build Application Components in Azure Container Registry](../build-application/README.md)
     * [Helm Setup and Deploy Application](../helm-setup-deploy/README.md)
 
-## Options
+## Labs
 
 1. [Configure Ingress Controller](ingress/README.md)
 2. [Configure Network Policy](network-policy/README.md)
@@ -17,7 +17,5 @@ This section contains a number of labs related to Networking decisions that are 
 ## Troubleshooting / Debugging
 
 
-
 ## Docs / References
-
 

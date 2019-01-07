@@ -1,6 +1,8 @@
 # Lab: Configure Ingress Controller
 
-This lab is about setting up the Ingress Controller and configuring the different routes.
+In this lab, we will deploy a Kubernetes ingress controller and route traffic to our site.
+
+An ingress controller is a piece of software that provides reverse proxy, configurable traffic routing, and TLS termination for Kubernetes services. Kubernetes ingress resources are used to configure the ingress rules and routes for individual Kubernetes services. Using an ingress controller and ingress rules, a single IP address can be used to route traffic to multiple services in a Kubernetes cluster.
 
 ## Prerequisites
 
@@ -11,96 +13,115 @@ This lab is about setting up the Ingress Controller and configuring the differen
 
 ## Instructions
 
-Step 1 & 2 Only Needed if you did not complete Helm Setup In previous labs. Skip to step 3 if it was already completed.
+1. Remove public IP addresses for services
 
-1. Setup Service Account and Permissions in the Cluster for Tiller
-
-    ```bash
-    cd /kubernetes-hackfest/labs/networking/ingress
-    kubectl apply -f tiller-rbac-config.yaml
-    ```
-
-2. Re-Configure Tiller to use Service Account
+    We do not need public IP's for the API's or the website.
 
     ```bash
-    helm init --upgrade --service-account=tiller
+    # delete existing services
+    kubectl delete svc data-api -n hackfest
+    kubectl delete svc flights-api -n hackfest
+    kubectl delete svc quakes-api -n hackfest
+    kubectl delete svc weather-api -n hackfest
+    kubectl delete svc service-tracker-ui -n hackfest
     ```
 
-3. Install nginx Ingress Controller
+    > Note. It should not be necessary to delete these, but there is a bug with kubectl and how it handles services and NodePorts. 
+
+    ```bash
+    # update chart to install services again as ClusterIP
+    helm upgrade data-api ~/kubernetes-hackfest/charts/data-api --set service.type=ClusterIP
+    helm upgrade flights-api ~/kubernetes-hackfest/charts/flights-api --set service.type=ClusterIP
+    helm upgrade quakes-api ~/kubernetes-hackfest/charts/quakes-api --set service.type=ClusterIP
+    helm upgrade weather-api ~/kubernetes-hackfest/charts/weather-api --set service.type=ClusterIP
+    helm upgrade service-tracker-ui ~/kubernetes-hackfest/charts/service-tracker-ui --set service.type=ClusterIP
+    ```
+
+2. Create the NGINX ingress controller
 
     ```bash
     # Make sure Helm Repository is up to date
     helm repo update
-    # Install Helm Repo
-    helm install stable/nginx-ingress --namespace kube-system
-    # Validate nginx is Installed
+
+    # Install ingress controller via helm chart
+    helm install stable/nginx-ingress --namespace kube-system --set controller.replicaCount=2
+    
+    # Validate nginx is installed and running
     helm list
-    ```
-
-4. Get Public IP Address & Update [configure-publicip-dns.sh](./configure-publicip-dns.sh) file
-
-    ```bash
     kubectl get service -l app=nginx-ingress --namespace kube-system
     ```
 
-    * Replace IP with Public IP Address above in the configure-public-dns.sh file.
-    * Replace DNSNAME with DNS name to be used in the configure-public-dns-sh file.
+3. Setup DNS for ingress controller
+
+    * Get the public IP for the controller
+
+        ```bash
+        kubectl get service -l app=nginx-ingress --namespace kube-system
+        ```
+    
+    * Update [configure-publicip-dns.sh](./configure-publicip-dns.sh) file and replace the IP
+
+    * Note the DNSNAME in the script is set to the $UNIQUE_SUFFIX from earlier labs
+
+    * Set permissions on the script
+
+        ```bash
+        chmod +x ~/kubernetes-hackfest/labs/networking/ingress/configure-publicip-dns.sh
+        ```
+
+    * Execute the script
+        ```
+        ~/kubernetes-hackfest/labs/networking/ingress/configure-publicip-dns.sh
+        ```
+
+    * Note the new DNS name for your public IP. It should be something like `brian13270.eastus.cloudapp.azure.com`. You can look it up in the portal in the "MC" resource group for your cluster. 
+
+
+4. Generate TLS certificates
+
+    In your organization, you will already have a process for this. In our lab, we are going to use self-signed TLS certs.
+
+    Replace the url below with your domain created above. It is important that these hostnames match throughout the lab.
 
     ```bash
-    # Set DNSNAME to be used later
-    export DNSNAME=<REPLACE-WITH-USER-INITIALS>ingress
+    openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
+    -out ~/kubernetes-hackfest/labs/networking/ingress/aks-ingress-tls.crt \
+    -keyout ~/kubernetes-hackfest/labs/networking/ingress/aks-ingress-tls.key \
+    -subj "/CN=brian13270.eastus.cloudapp.azure.com/O=aks-ingress-tls"
     ```
 
-5. Execute Configure PublicIP DNS Script
+5. Create a secret to store TLS cert
+
+    We will use this later when creating ingress routes.
 
     ```bash
-    chmod +x configure-publicip-dns.sh
-    ./configure-publicip-dns.sh
+    kubectl create secret tls aks-ingress-tls \
+    --key ~/kubernetes-hackfest/labs/networking/ingress/aks-ingress-tls.key \
+    --cert ~/kubernetes-hackfest/labs/networking/ingress/aks-ingress-tls.crt -n hackfest
     ```
 
-6. Install Cert Mgr with RBAC
+6. Create an ingress route
 
-    ```bash
-    helm install stable/cert-manager --set ingressShim.defaultIssuerName=letsencrypt-prod --set IngressShim.defaultIssuerKind=ClusterIssuer
-    ```
+    * Update `service-tracker-ingress.yaml` with your unique hostname (lines 11 and 14)
 
-7. Create CA Cluster Issuer
+    * Apply
 
-    ```bash
-    kubectl apply -f cluster-issuer.yaml
-    ```
+        ```bash
+        kubectl apply -f ~/kubernetes-hackfest/labs/networking/ingress/service-tracker-ingress.yaml -n hackfest
+        ```
 
-8. Create Cluster Certificate
-    * Update DNS values in [certificate.yaml](./certificate.yaml)
-    * Apply Cluster Certificate
+7. Test configuration
 
-    ```bash
-    # Make sure DNSNAME Matches value used above
-    kubectl apply -f certificate.yaml
-    ```
+    Browse to your URL. Eg - http://brian13270.eastus.cloudapp.azure.com/ui 
 
-9. Apply Ingress Rules
-    * Update DNS values in [app-ingress.yaml](./app-ingress.yaml)
-
-    ```bash
-    # Apply Ingress Routes
-    kubectl apply -f app-ingress.yaml
-    # Check Ingress Route & Endpoints
-    kubectl get ingress
-    kubectl get endpoints
-    ```
-
-10. Check Ingress Route Works
-
-    * Open dnsname.eastus.cloudapp.azure.com
 
 ## Troubleshooting / Debugging
 
-* Check that the Service Names in the Ingress Rules match the Application Service Names.
-* Check that the DNS Name associated with the Public IP endpoint matches the one in the Certificate.
+* Check that the Service Names in the Ingress Rules match the Application Service Names
 
 ## Docs / References
 
+* [Create an ingress controller in Azure Kubernetes Service (AKS)](https://docs.microsoft.com/en-us/azure/aks/ingress-basic)
 * [What is an Ingress Controller?](https://kubernetes.io/docs/concepts/services-networking/ingress/)
+* [Whitelisting egress traffic](https://docs.microsoft.com/en-us/azure/aks/egress)
 
-#### Next Lab: [Network Policy](../network-policy/README.md)
