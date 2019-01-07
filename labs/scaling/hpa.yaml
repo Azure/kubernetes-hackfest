@@ -1,0 +1,12 @@
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: service-tracker-ui
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: service-tracker-ui
+  minReplicas: 5
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50
