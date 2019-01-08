@@ -28,13 +28,13 @@ The following are the basic requirements to **start** the labs. Individual labs 
 * [Azure Container Instances and AKS Virtual Nodes](labs/aci/README.md)
 * [Azure Dev Spaces](labs/dev-spaces/README.md)
 * [Service Mesh](labs/servicemesh/README.md)
+* [Best Practices for Cluster Operators](labs/best-practices/operators/README.md)
+* [Best Practices for App Developers](labs/best-practices/appdev/README.md)
 
 #### Coming soon:
 * [Storage](labs/storage/README.md)
 * [Service Broker](labs/service-broker/README.md)
 * [Using OpenFaaS on AKS](labs/open-faas/README.md)
-* [Best Practices for Cluster Operators](labs/best-practices/operators/README.md)
-* [Best Practices for App Developers](labs/best-practices/appdev/README.md)
 
 
 # Contributing
