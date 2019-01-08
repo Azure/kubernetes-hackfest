@@ -48,7 +48,7 @@ In this lab we will build Docker containers for each of the application componen
     az acr credential show -n ${ACRNAME}
 
     # Use the login and credential information from above
-    kubectl create secret docker-registry regcred \
+    kubectl create -n hackfest secret docker-registry regcred \
       --docker-server=<LOGIN SERVER GOES HERE> \
       --docker-username=<USERNAME GOES HERE> \
       --docker-password=<PASSWORD GOES HERE>
