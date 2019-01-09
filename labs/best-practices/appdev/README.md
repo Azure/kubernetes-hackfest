@@ -11,7 +11,7 @@ This lab walks through some basic best practices for developers using AKS. In ma
 
 ## Instructions
 
-### Base Container Images
+A. Base Container Images
 
 * It is important to select a proper base image for containers. Images should be lean to reduce size and eliminate tools that can lead to a larger attack surface. 
 
@@ -88,8 +88,10 @@ This lab walks through some basic best practices for developers using AKS. In ma
         ```bash
         az acr build -t hackfest/flights-api:multistage -r $ACRNAME --no-logs ~/kubernetes-hackfest/labs/best-practices/appdev/flights-api
         ```
+    
+    * Check out the image scanning lab in the [Best Practices for Cluster Operators](../operators/README.md) section.
 
-### Version Control and Image Tags
+B. Version Control and Image Tags
 
 * Never use `latest` for container image tags. Just don't do it. Trust me. Stop it. Now.
 * In our labs we tagged images with a version such as `hackfest/data-api:1.0`. This is a simple starting point, but in best practice the image tag should map to a commit ID in source control.
@@ -100,34 +102,133 @@ This lab walks through some basic best practices for developers using AKS. In ma
     def  imageTag = "${env.BRANCH_NAME}.${env.GIT_SHA}"
     ```
 
-### Handling Failures
+C. Handling Failures
 
 
 
-### Readiness and Liveness Probes
+D. Readiness and Liveness Probes
 
 
 
-### Define pod resource requests and limits
+E. Define pod resource requests and limits
 
+**Pod requests** define a set amount of CPU and memory that the pod needs. **Pod limits** are the maximum amount of CPU and memory that a pod can use.
 
+* Note that the pods deployed in our application have both of these set in the configuration.
 
-### Pod Security 
+    ```bash
+    kubectl describe pod quakes-api-6fbcf77dd5-zjdls -n hackfest
+    ```
 
+    In the results, you will see in the output: 
 
+    ```yaml
+    Limits:
+      cpu:     500m
+      memory:  128Mi
+    Requests:
+      cpu:     100m
+      memory:  64Mi
+    ```
 
-### Visual Studio Code extension for Kubernetes
+    > Note: You can read more about how these values are handled [here.](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/#meaning-of-cpu)
 
+* Deploy an updated `quakes-api` deployment with increased requests/limits.
 
+    * Update the `quakes-api.yaml` file on line 16 and set your ACR name as the prefix for the image.
+        Eg. - `- image: briaracr.azurecr.io/hackfest/quakes-api:1.0`
+    
+    * Delete the existing deploy
+        ```bash
+        kubectl delete deploy quakes-api -n hackfest
+        ```
+    
+    * Deploy the updated app
+        ```bash
+        kubectl apply -n hackfest -f ~/kubernetes-hackfest/labs/best-practices/appdev/quakes-api.yaml
+        ```
 
-### Develop and debug applications against an AKS cluster
+* Scale the deployment. You should see some pods go to `Pending` state.
+
+    ```bash
+    kubectl scale deploy quakes-api -n hackfest --replicas=5
+    ```
+
+F. Pod Security 
+
+In this lab, we will ensure our Pods cannot run as root and other important security settings. 
+
+* First, we will delete the existing `weather-api`. Update the `weather-api.yaml` file on line 16 and set your ACR name as the prefix for the image.
+        Eg. - `- image: briaracr.azurecr.io/hackfest/weather-api:1.0`
+    
+* Delete the existing deploy
+    ```bash
+    kubectl delete deploy weather-api -n hackfest
+    ```
+
+* Note the updated settings in the `weather-api.yaml` file starting at line 26
+    
+* Deploy the updated app
+    ```bash
+    kubectl apply -n hackfest -f ~/kubernetes-hackfest/labs/best-practices/appdev/weather-api.yaml
+    ```
+
+* Exec into pod and compare to one of the other API pods. Note that the weather pod is not running as root. 
+
+    ```bash
+    kubectl exec -it weather-api-59b64cd67b-6phkl -n hackfest /bin/sh
+
+    /usr/src/app $ ps aux
+
+    PID   USER     TIME  COMMAND
+    1     node     0:00  npm
+    16    node     0:00  node ./bin/www
+    33    node     0:00  /bin/sh
+    38    node     0:00  ps aux
+    ```
+
+* You can also view the status for process 1 to view the capabilities bitmap.
+
+    ```bash
+    cd /proc/1
+    cat status
+    ```
+
+    You will see something similar to the below. Compare the same result with one of the other API pods.
+    ```bash
+    ...
+    CapPrm:	0000000000000000
+    CapEff:	0000000000000000
+    ...
+    ```
+
+* Review the guidance for [Limiting credential exposure](https://docs.microsoft.com/en-us/azure/aks/developer-best-practices-pod-security#limit-credential-exposure) here.
+
+G. Use kube-advisor to check for issues
+
+https://github.com/Azure/kube-advisor 
+
+H. Visual Studio Code extension for Kubernetes
+
+Most of our labs have been completed using the Azure Cloud Shell. Developers will be more productive with a full IDE experience. In this lab, we will use Visual Studio Code. 
+
+* Install VS Code on your machine. [Installation here](https://code.visualstudio.com)
+* Add the Kubernetes extension for VS Code. [Here](https://github.com/Azure/vscode-kubernetes-tools)
+* Connect to your AKS cluster and experiment with the feature set
+
+I. Develop and debug applications against an AKS cluster
+
+> Note: These labs will require working from your local machine and NOT the Azure Cloud Shell.
 
 * Draft
+    * Draft makes it easier for developers to build applications that run on Kubernetes by doing two main things:
+        * The draft create command gives developers the artifacts they need to build and run their applications in Kubernetes
+        * The draft up command builds the container image for an application and deploys it to Kubernetes
+    * Draft targets the "inner loop" of a developer's workflow: as they hack on code, but before code is committed to version control
+    * Get started with Draft here. https://github.com/azure/draft 
 
-* Dev Spaces
-
-### Use kube-advisor to check for issues
-
+* Dev Spaces. 
+    * Try the lab here: [Azure Dev Spaces](../../dev-spaces/README.md)
 
 
 
