@@ -105,7 +105,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
         ...
 
         containers:
-          - image: "{{.Values.deploy.acrServer}}/hackfest/cache-api:{{.Values.deploy.imageTag}}"
+          - image: "{{.Values.deploy.acrServer}}/hackfest/weather-api:{{.Values.deploy.imageTag}}"
             imagePullPolicy: Always
 
         ...
@@ -118,7 +118,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
         imagePullSecrets:
         - name: regcred
         containers:
-          - image: "{{.Values.deploy.acrServer}}/hackfest/cache-api:{{.Values.deploy.imageTag}}"
+          - image: "{{.Values.deploy.acrServer}}/hackfest/weather-api:{{.Values.deploy.imageTag}}"
             imagePullPolicy: Always
 
         ...
