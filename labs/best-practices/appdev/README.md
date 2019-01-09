@@ -91,7 +91,14 @@ This lab walks through some basic best practices for developers using AKS. In ma
 
 ### Version Control and Image Tags
 
+* Never use `latest` for container image tags. Just don't do it. Trust me. Stop it. Now.
+* In our labs we tagged images with a version such as `hackfest/data-api:1.0`. This is a simple starting point, but in best practice the image tag should map to a commit ID in source control.
+* Review the approach in the [CI/CD labs](https://github.com/Azure/kubernetes-hackfest/blob/master/labs/cicd-automation/README.md) in this Hackfest. 
+* Ideally, the image could be tagged using details from the git commit. For example: 
 
+    ```
+    def  imageTag = "${env.BRANCH_NAME}.${env.GIT_SHA}"
+    ```
 
 ### Handling Failures
 
