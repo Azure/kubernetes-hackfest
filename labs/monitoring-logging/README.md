@@ -26,5 +26,3 @@ This section contains a number of labs related to Monitoring and Logging AKS Clu
 ## Docs / References
 
 * Azure Monitor Overview. https://docs.microsoft.com/en-us/azure/azure-monitor/overview 
-
-#### Next Lab: [Service Mesh w/ Distributed Tracing](../servicemesh-tracing/README.md)

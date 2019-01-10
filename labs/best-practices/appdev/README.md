@@ -15,11 +15,10 @@ This lab has a number of exercises in no particular order:
 
 - [Handling Base Container Images](#handling-base-container-images)
 - [Version Control and Image Tags](#version-control-and-image-tags)
-- [Handling Failures](#handling-failures)
 - [Readiness and Liveness Probes](#readiness-and-liveness-probes)
+- [Handling Failures](#handling-failures)
 - [Define pod resource requests and limits](#define-pod-resource-requests-and-limits)
 - [Pod Security](#pod-security)
-- [Use kube-advisor to check for issues](#use-kube-advisor-to-check-for-issues)
 - [Visual Studio Code Extension for Kubernetes](#visual-studio-code-extension-for-kubernetes)
 - [Develop and Debug Applications Against an AKS Cluster](#develop-and-debug-applications-against-an-AKS-cluster)
 
@@ -117,62 +116,6 @@ This lab has a number of exercises in no particular order:
     def  imageTag = "${env.BRANCH_NAME}.${env.GIT_SHA}"
     ```
 
-### Handling Failures
-- - -
-
-In this lab, we will update our application to handle failures gracefully and then create issues to test. For this lab, we will use the `data-api` service.
-
-* Review the code for our updated `data-api` in this folder. There are a few changes, but look closely at the code starting at line 58.
-
-    ```javascript
-    mongoose.connect(
-      cosmosConnectString,
-      {
-        user: user,
-        pass: password,
-        useNewUrlParser: true
-      }
-    )
-    .then (() => {
-      appInsights.defaultClient.trackEvent({ name: 'MongoConnSuccess' });
-      console.log('connection success with CosmosDB');
-    })
-    .catch ((err) => {
-      appInsights.defaultClient.trackException({exception: new Error(err)});
-      console.log('CosmosDB connection failed with error: ' + err);
-      appInsights.defaultClient.flush({callback: (responseFromAppInsights) => {
-        process.exit(-1);
-      }});
-    });
-    ```
-
-* If there is a failure connecting to CosmosDB, we want the pod to log an error with App Insights, log to standard out, and FAIL. This way the pod doesn't receive any traffic while not connected. Likely might include some retry logic here, but this is a good starting point. 
-
-* Using this source code, create a new container image
-
-    ```bash
-    az acr build -t hackfest/data-api:error-handling -r $ACRNAME --no-logs ~/kubernetes-hackfest/labs/best-practices/appdev/data-api
-    ```
-
-* Delete the existing `data-api` deploy
-
-    ```bash
-    kubectl delete deploy data-api -n hackfest
-    ```
-
-* Update the `data-api-error.yaml` file on line 16 and set your ACR name as the prefix for the image. 
-    * Note the new image tag, "error-handling" Eg. - `- image: briaracr.azurecr.io/hackfest/data-api:error-handling`
-
-* Prior to deploying, we will simulate a failure by changing the CosmosDB password in the Azure portal.
-
-    ![Cosmos Reset Password](cosmos-reset-password.png)
-
-* Deploy the updated `data-api`
-    ```bash
-    kubectl apply -n hackfest -f ~/kubernetes-hackfest/labs/best-practices/appdev/data-api-error.yaml
-    ```
-
-* The pod should fail to start. You should be able to find the exception logged in App Insights (it can take a few minutes)
 
 ### Readiness and Liveness Probes
 - - -
@@ -238,6 +181,64 @@ In this lab, we will add code to our `data-api` service to provide a health chec
     ```
 
     The kubelet will use these endpoints to determine readiness and liveness for each instance of the pod.
+
+
+### Handling Failures
+- - -
+
+In this lab, we will update our application to handle failures gracefully and then create issues to test. For this lab, we will use the `data-api` service.
+
+* Review the code for our updated `data-api` in this folder. There are a few changes, but look closely at the code starting at line 58.
+
+    ```javascript
+    mongoose.connect(
+      cosmosConnectString,
+      {
+        user: user,
+        pass: password,
+        useNewUrlParser: true
+      }
+    )
+    .then (() => {
+      appInsights.defaultClient.trackEvent({ name: 'MongoConnSuccess' });
+      console.log('connection success with CosmosDB');
+    })
+    .catch ((err) => {
+      appInsights.defaultClient.trackException({exception: new Error(err)});
+      console.log('CosmosDB connection failed with error: ' + err);
+      appInsights.defaultClient.flush({callback: (responseFromAppInsights) => {
+        process.exit(-1);
+      }});
+    });
+    ```
+
+* If there is a failure connecting to CosmosDB, we want the pod to log an error with App Insights, log to standard out, and FAIL. This way the pod doesn't receive any traffic while not connected. Likely might include some retry logic here, but this is a good starting point. 
+
+* Using this source code, create a new container image
+
+    ```bash
+    az acr build -t hackfest/data-api:error-handling -r $ACRNAME --no-logs ~/kubernetes-hackfest/labs/best-practices/appdev/data-api
+    ```
+
+* Delete the existing `data-api` deploy
+
+    ```bash
+    kubectl delete deploy data-api -n hackfest
+    ```
+
+* Update the `data-api-error.yaml` file on line 16 and set your ACR name as the prefix for the image. 
+    * Note the new image tag, "error-handling" Eg. - `- image: briaracr.azurecr.io/hackfest/data-api:error-handling`
+
+* Prior to deploying, we will simulate a failure by changing the CosmosDB password in the Azure portal.
+
+    ![Cosmos Reset Password](cosmos-reset-password.png)
+
+* Deploy the updated `data-api`
+    ```bash
+    kubectl apply -n hackfest -f ~/kubernetes-hackfest/labs/best-practices/appdev/data-api-error.yaml
+    ```
+
+* The pod should fail to start. You should be able to find the exception logged in App Insights (it can take a few minutes)
 
 
 ### Define pod resource requests and limits
@@ -343,22 +344,6 @@ In this lab, we will ensure our Pods cannot run as root and other important secu
 
 * Review the guidance for [Limiting credential exposure](https://docs.microsoft.com/en-us/azure/aks/developer-best-practices-pod-security#limit-credential-exposure) here.
 
-### Use kube-advisor to check for issues
-- - -
-
-* Create a service account and role binding
-
-    ```bash    
-    kubectl apply -f ~/kubernetes-hackfest/labs/best-practices/appdev/sa-kube-advisor.yaml
-    ```
-
-* Create the pod
-
-    ```bash
-    kubectl run --rm -i -t kube-advisor --image=mcr.microsoft.com/aks/kubeadvisor --restart=Never --overrides="{ \"apiVersion\": \"v1\", \"spec\": { \"serviceAccountName\": \"kube-advisor\" } }"
-    ```
-
-* Review results
 
 ### Visual Studio Code Extension for Kubernetes
 - - -
