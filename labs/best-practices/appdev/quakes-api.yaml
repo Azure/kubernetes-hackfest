@@ -13,7 +13,7 @@ spec:
         app: quakes-api
     spec:
       containers:
-        - image: briaracr.azurecr.io/hackfest/quakes-api:1.0
+        - image: replaceme-acr.azurecr.io/hackfest/quakes-api:1.0
           imagePullPolicy: Always
           name: quakes-api
           resources:

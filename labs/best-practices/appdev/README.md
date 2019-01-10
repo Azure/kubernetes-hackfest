@@ -128,9 +128,67 @@ In this lab, we will update our application to handle failures gracefully and th
 ### Readiness and Liveness Probes
 - - -
 
-In this lab, we will add code to our application to provide a health check route for kubernetes to determine if the pod is alive and ready. 
+In this lab, we will add code to our `data-api` service to provide a health check route for kubernetes to determine if the pod is alive and ready. 
 
-* Review the code 
+* Review the code at line 39. We have added an API route for `\healthz` that will validate the app is up and running.
+
+    ```javascript
+    router.get('/healthz', (req, res, next) => {
+        res.json({status: 'UP'});
+    });
+    ```
+
+* Using this source code, create a new container image
+
+    ```bash
+    az acr build -t hackfest/data-api:2.0 -r $ACRNAME --no-logs ~/kubernetes-hackfest/labs/best-practices/appdev/data-api
+    ```
+
+* Delete the existing `data-api` deploy
+
+    ```bash
+    kubectl delete deploy data-api -n hackfest
+    ```
+
+* Update the `data-api.yaml` file on line 16 and set your ACR name as the prefix for the image. Note the new image tag, "2.0"
+    Eg. - `- image: briaracr.azurecr.io/hackfest/data-api:2.0`
+
+* Review the configuration of the health probes in the `data-api.yaml` starting on line 26
+
+    ```yaml
+    readinessProbe:
+      httpGet:
+        port: 3009
+        path: /healthz
+    livenessProbe:
+      httpGet:
+        port: 3009
+        path: /healthz
+    ```
+
+* Deploy the updated `data-api`
+    ```bash
+    kubectl apply -n hackfest -f ~/kubernetes-hackfest/labs/best-practices/appdev/data-api.yaml
+    ```
+
+* Validate the health check endpoint is working
+
+    ```bash
+    kubectl get svc data-api -n hackfest
+
+    NAME       TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)          AGE
+    data-api   LoadBalancer   10.0.206.235   44.85.168.311   3009:31732/TCP   2d
+    ```
+
+    Browse to http://your-ip-address:3009/healthz to validate. You should see:
+
+    ```json
+    {
+        "status": "UP"
+    }
+    ```
+
+    The kubelet will use these endpoints to determine readiness and liveness for each instance of the pod.
 
 
 ### Define pod resource requests and limits
@@ -157,20 +215,19 @@ In this lab, we will add code to our application to provide a health check route
 
     > Note: You can read more about how these values are handled [here.](https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/#meaning-of-cpu)
 
-* Deploy an updated `quakes-api` deployment with increased requests/limits.
+* Delete the existing `quakes-api` deploy
 
-    * Update the `quakes-api.yaml` file on line 16 and set your ACR name as the prefix for the image.
-        Eg. - `- image: briaracr.azurecr.io/hackfest/quakes-api:1.0`
-    
-    * Delete the existing deploy
-        ```bash
-        kubectl delete deploy quakes-api -n hackfest
-        ```
-    
-    * Deploy the updated app
-        ```bash
-        kubectl apply -n hackfest -f ~/kubernetes-hackfest/labs/best-practices/appdev/quakes-api.yaml
-        ```
+    ```bash
+    kubectl delete deploy quakes-api -n hackfest
+    ```
+
+* Update the `quakes-api.yaml` file on line 16 and set your ACR name as the prefix for the image.
+    Eg. - `- image: briaracr.azurecr.io/hackfest/quakes-api:1.0`
+
+* Deploy the updated `quakes-api`
+    ```bash
+    kubectl apply -n hackfest -f ~/kubernetes-hackfest/labs/best-practices/appdev/quakes-api.yaml
+    ```
 
 * Scale the deployment. You should see some pods go to `Pending` state.
 
@@ -181,10 +238,10 @@ In this lab, we will add code to our application to provide a health check route
 ### Pod Security 
 - - -
 
-In this lab, we will ensure our Pods cannot run as root and other important security settings. 
+In this lab, we will ensure our Pods cannot run as root and other important security settings. We will use the `weather-api` app for this.
 
-* First, we will delete the existing `weather-api`. Update the `weather-api.yaml` file on line 16 and set your ACR name as the prefix for the image.
-        Eg. - `- image: briaracr.azurecr.io/hackfest/weather-api:1.0`
+* Update the `weather-api.yaml` file on line 16 and set your ACR name as the prefix for the image.
+    Eg. - `- image: briaracr.azurecr.io/hackfest/weather-api:1.0`
     
 * Delete the existing deploy
     ```bash
