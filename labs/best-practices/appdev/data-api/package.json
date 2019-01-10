@@ -8,7 +8,7 @@
     "container": "NODE_ENV=contaimer node ./bin/www"
   },
   "dependencies": {
-    "applicationinsights": "^1.0.3",
+    "applicationinsights": "^1.0.8",
     "async": "^2.6.1",
     "bluebird": "^3.5.2",
     "body-parser": "^1.18.3",

@@ -13,7 +13,7 @@ spec:
         app: data-api
     spec:
       containers:
-        - image: briaracr.azurecr.io/hackfest/data-api:2.0
+        - image: replaceme-acr.azurecr.io/hackfest/data-api:2.0
           imagePullPolicy: Always
           name: data-api
           resources:

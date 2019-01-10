@@ -38,6 +38,19 @@ This lab has a number of exercises in no particular order:
 
 * In our lab, we will use Anchore for some quick testing. https://anchore.com/opensource 
 
+    > Note: This lab will require working from your local machine and NOT the Azure Cloud Shell.
+
+    * Install anchore with helm
+
+        ```bash
+        helm install --name anchore-demo stable/anchore-engine
+        ```
+    
+    * 
+
+
+
+
 ### Upgrade Kubernetes Regularly
 - - -
 

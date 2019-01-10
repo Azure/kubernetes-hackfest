@@ -120,10 +120,59 @@ This lab has a number of exercises in no particular order:
 ### Handling Failures
 - - -
 
-In this lab, we will update our application to handle failures gracefully and then create issues to test.
+In this lab, we will update our application to handle failures gracefully and then create issues to test. For this lab, we will use the `data-api` service.
 
-* Review the code 
+* Review the code for our updated `data-api` in this folder. There are a few changes, but look closely at the code starting at line 58.
 
+    ```javascript
+    mongoose.connect(
+      cosmosConnectString,
+      {
+        user: user,
+        pass: password,
+        useNewUrlParser: true
+      }
+    )
+    .then (() => {
+      appInsights.defaultClient.trackEvent({ name: 'MongoConnSuccess' });
+      console.log('connection success with CosmosDB');
+    })
+    .catch ((err) => {
+      appInsights.defaultClient.trackException({exception: new Error(err)});
+      console.log('CosmosDB connection failed with error: ' + err);
+      appInsights.defaultClient.flush({callback: (responseFromAppInsights) => {
+        process.exit(-1);
+      }});
+    });
+    ```
+
+* If there is a failure connecting to CosmosDB, we want the pod to log an error with App Insights, log to standard out, and FAIL. This way the pod doesn't receive any traffic while not connected. Likely might include some retry logic here, but this is a good starting point. 
+
+* Using this source code, create a new container image
+
+    ```bash
+    az acr build -t hackfest/data-api:error-handling -r $ACRNAME --no-logs ~/kubernetes-hackfest/labs/best-practices/appdev/data-api
+    ```
+
+* Delete the existing `data-api` deploy
+
+    ```bash
+    kubectl delete deploy data-api -n hackfest
+    ```
+
+* Update the `data-api-error.yaml` file on line 16 and set your ACR name as the prefix for the image. 
+    * Note the new image tag, "error-handling" Eg. - `- image: briaracr.azurecr.io/hackfest/data-api:error-handling`
+
+* Prior to deploying, we will simulate a failure by changing the CosmosDB password in the Azure portal.
+
+    ![Cosmos Reset Password](cosmos-reset-password.png)
+
+* Deploy the updated `data-api`
+    ```bash
+    kubectl apply -n hackfest -f ~/kubernetes-hackfest/labs/best-practices/appdev/data-api-error.yaml
+    ```
+
+* The pod should fail to start. You should be able to find the exception logged in App Insights (it can take a few minutes)
 
 ### Readiness and Liveness Probes
 - - -
@@ -150,10 +199,10 @@ In this lab, we will add code to our `data-api` service to provide a health chec
     kubectl delete deploy data-api -n hackfest
     ```
 
-* Update the `data-api.yaml` file on line 16 and set your ACR name as the prefix for the image. Note the new image tag, "2.0"
-    Eg. - `- image: briaracr.azurecr.io/hackfest/data-api:2.0`
+* Update the `data-api-probes.yaml` file on line 16 and set your ACR name as the prefix for the image. 
+    * Note the new image tag, "2.0" Eg. - `- image: briaracr.azurecr.io/hackfest/data-api:2.0`
 
-* Review the configuration of the health probes in the `data-api.yaml` starting on line 26
+* Review the configuration of the health probes in the `data-api-probes.yaml` starting on line 26
 
     ```yaml
     readinessProbe:
@@ -168,7 +217,7 @@ In this lab, we will add code to our `data-api` service to provide a health chec
 
 * Deploy the updated `data-api`
     ```bash
-    kubectl apply -n hackfest -f ~/kubernetes-hackfest/labs/best-practices/appdev/data-api.yaml
+    kubectl apply -n hackfest -f ~/kubernetes-hackfest/labs/best-practices/appdev/data-api-probes.yaml
     ```
 
 * Validate the health check endpoint is working
@@ -222,7 +271,7 @@ In this lab, we will add code to our `data-api` service to provide a health chec
     ```
 
 * Update the `quakes-api.yaml` file on line 16 and set your ACR name as the prefix for the image.
-    Eg. - `- image: briaracr.azurecr.io/hackfest/quakes-api:1.0`
+    * Eg. - `- image: briaracr.azurecr.io/hackfest/quakes-api:1.0`
 
 * Deploy the updated `quakes-api`
     ```bash
