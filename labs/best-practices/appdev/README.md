@@ -11,7 +11,8 @@ This lab walks through some basic best practices for developers using AKS. In ma
 
 ## Instructions
 
-A. Base Container Images
+### Base Container Images
+- - -
 
 * It is important to select a proper base image for containers. Images should be lean to reduce size and eliminate tools that can lead to a larger attack surface. 
 
@@ -91,7 +92,8 @@ A. Base Container Images
     
     * Check out the image scanning lab in the [Best Practices for Cluster Operators](../operators/README.md) section.
 
-B. Version Control and Image Tags
+### Version Control and Image Tags
+- - -
 
 * Never use `latest` for container image tags. Just don't do it. Trust me. Stop it. Now.
 * In our labs we tagged images with a version such as `hackfest/data-api:1.0`. This is a simple starting point, but in best practice the image tag should map to a commit ID in source control.
@@ -102,15 +104,17 @@ B. Version Control and Image Tags
     def  imageTag = "${env.BRANCH_NAME}.${env.GIT_SHA}"
     ```
 
-C. Handling Failures
+### Handling Failures
+- - -
 
 
 
-D. Readiness and Liveness Probes
+### Readiness and Liveness Probes
+- - -
 
 
-
-E. Define pod resource requests and limits
+### Define pod resource requests and limits
+- - -
 
 **Pod requests** define a set amount of CPU and memory that the pod needs. **Pod limits** are the maximum amount of CPU and memory that a pod can use.
 
@@ -154,7 +158,8 @@ E. Define pod resource requests and limits
     kubectl scale deploy quakes-api -n hackfest --replicas=5
     ```
 
-F. Pod Security 
+### Pod Security 
+- - -
 
 In this lab, we will ensure our Pods cannot run as root and other important security settings. 
 
@@ -167,6 +172,14 @@ In this lab, we will ensure our Pods cannot run as root and other important secu
     ```
 
 * Note the updated settings in the `weather-api.yaml` file starting at line 26
+
+    ```yaml
+    securityContext:
+      runAsUser: 1000
+      allowPrivilegeEscalation: false
+      capabilities:
+        add: ["NET_ADMIN", "SYS_TIME"]
+    ```
     
 * Deploy the updated app
     ```bash
@@ -204,11 +217,13 @@ In this lab, we will ensure our Pods cannot run as root and other important secu
 
 * Review the guidance for [Limiting credential exposure](https://docs.microsoft.com/en-us/azure/aks/developer-best-practices-pod-security#limit-credential-exposure) here.
 
-G. Use kube-advisor to check for issues
+### Use kube-advisor to check for issues
+- - -
 
 https://github.com/Azure/kube-advisor 
 
-H. Visual Studio Code extension for Kubernetes
+### Visual Studio Code extension for Kubernetes
+- - -
 
 Most of our labs have been completed using the Azure Cloud Shell. Developers will be more productive with a full IDE experience. In this lab, we will use Visual Studio Code. 
 
@@ -216,7 +231,8 @@ Most of our labs have been completed using the Azure Cloud Shell. Developers wil
 * Add the Kubernetes extension for VS Code. [Here](https://github.com/Azure/vscode-kubernetes-tools)
 * Connect to your AKS cluster and experiment with the feature set
 
-I. Develop and debug applications against an AKS cluster
+### Develop and debug applications against an AKS cluster
+- - -
 
 > Note: These labs will require working from your local machine and NOT the Azure Cloud Shell.
 
