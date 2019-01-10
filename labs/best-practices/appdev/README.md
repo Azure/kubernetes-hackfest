@@ -11,7 +11,20 @@ This lab walks through some basic best practices for developers using AKS. In ma
 
 ## Instructions
 
-### Base Container Images
+This lab has a number of exercises in no particular order: 
+
+- [Handling Base Container Images](#handling-base-container-images)
+- [Version Control and Image Tags](#version-control-and-image-tags)
+- [Handling Failures](#handling-failures)
+- [Readiness and Liveness Probes](#readiness-and-liveness-probes)
+- [Define pod resource requests and limits](#define-pod-resource-requests-and-limits)
+- [Pod Security](#pod-security)
+- [Use kube-advisor to check for issues](#use-kube-advisor-to-check-for-issues)
+- [Visual Studio Code Extension for Kubernetes](#visual-studio-code-extension-for-kubernetes)
+- [Develop and Debug Applications Against an AKS Cluster](#develop-and-debug-applications-against-an-AKS-cluster)
+
+
+### Handling Base Container Images
 - - -
 
 * It is important to select a proper base image for containers. Images should be lean to reduce size and eliminate tools that can lead to a larger attack surface. 
@@ -107,10 +120,17 @@ This lab walks through some basic best practices for developers using AKS. In ma
 ### Handling Failures
 - - -
 
+In this lab, we will update our application to handle failures gracefully and then create issues to test.
+
+* Review the code 
 
 
 ### Readiness and Liveness Probes
 - - -
+
+In this lab, we will add code to our application to provide a health check route for kubernetes to determine if the pod is alive and ready. 
+
+* Review the code 
 
 
 ### Define pod resource requests and limits
@@ -220,21 +240,33 @@ In this lab, we will ensure our Pods cannot run as root and other important secu
 ### Use kube-advisor to check for issues
 - - -
 
-https://github.com/Azure/kube-advisor 
+* Create a service account and role binding
 
-### Visual Studio Code extension for Kubernetes
+    ```bash    
+    kubectl apply -f ~/kubernetes-hackfest/labs/best-practices/appdev/sa-kube-advisor.yaml
+    ```
+
+* Create the pod
+
+    ```bash
+    kubectl run --rm -i -t kube-advisor --image=mcr.microsoft.com/aks/kubeadvisor --restart=Never --overrides="{ \"apiVersion\": \"v1\", \"spec\": { \"serviceAccountName\": \"kube-advisor\" } }"
+    ```
+
+* Review results
+
+### Visual Studio Code Extension for Kubernetes
 - - -
 
-Most of our labs have been completed using the Azure Cloud Shell. Developers will be more productive with a full IDE experience. In this lab, we will use Visual Studio Code. 
+> Note: This lab will require working from your local machine and NOT the Azure Cloud Shell.
 
 * Install VS Code on your machine. [Installation here](https://code.visualstudio.com)
 * Add the Kubernetes extension for VS Code. [Here](https://github.com/Azure/vscode-kubernetes-tools)
 * Connect to your AKS cluster and experiment with the feature set
 
-### Develop and debug applications against an AKS cluster
+### Develop and Debug Applications Against an AKS Cluster
 - - -
 
-> Note: These labs will require working from your local machine and NOT the Azure Cloud Shell.
+> Note: This lab will require working from your local machine and NOT the Azure Cloud Shell.
 
 * Draft
     * Draft makes it easier for developers to build applications that run on Kubernetes by doing two main things:
@@ -255,5 +287,6 @@ Most of our labs have been completed using the Azure Cloud Shell. Developers wil
 
 * [Full AKS Best Practices Documentation](https://docs.microsoft.com/en-us/azure/aks/best-practices)
 * [5 reasons you should be doing container native development](https://cloudblogs.microsoft.com/opensource/2018/04/23/5-reasons-you-should-be-doing-container-native-development) 
+* [Kube Advisor](https://github.com/Azure/kube-advisor)
 * https://www.weave.works/blog/kubernetes-best-practices 
 * http://technosophos.com 

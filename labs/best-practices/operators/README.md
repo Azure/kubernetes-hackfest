@@ -11,7 +11,24 @@ This lab walks through some basic best practices for operators using AKS. In man
 
 ## Instructions
 
+This lab has a number of exercises in no particular order:
+
+- [Image Vulnerability Scanning](#image-vulnerability-scanning)
+- [Upgrade Kubernetes Regularly](#Upgrade-Kubernetes-Regularly)
+- [Process Node Updates and Reboots Using kured](#Process-Node-Updates-and-Reboots-Using-kured)
+- [Enforce Resource Quotas](#Enforce-Resource-Quotas)
+- [Pod Disruption Budgets](#Pod-Disruption-Budgets)
+- [Network Security](#Network-Security)
+- [Provide Dedicated Nodes using Taints and Tolerations](#Provide-Dedicated-Nodes-using-Taints-and-Tolerations)
+- [Using Role Based Access Control (RBAC)](#Using-Role-Based-Access-Control-(RBAC))
+- [Pod Identities](#Pod-Identities)
+- [Backup and Business Continuity](#Backup-and-Business-Continuity)
+- [App Armor and seccomp Filtering](#App-Armor-and-seccomp-Filtering)
+- [Use kube-advisor to check for issues](#Use-kube-advisor-to-check-for-issues)
+
+
 ### Image Vulnerability Scanning
+- - -
 
 * It is critical to scan images for vulnerabilities in your environment. We recommending using a Enterprise grade tool such as [Aqua Security](https://www.aquasec.com/products/aqua-container-security-platform) or [Twistlock](https://www.twistlock.com/why-twistlock)
 
@@ -21,7 +38,8 @@ This lab walks through some basic best practices for operators using AKS. In man
 
 * In our lab, we will use Anchore for some quick testing. https://anchore.com/opensource 
 
-### Upgrade Kubernetes regularly
+### Upgrade Kubernetes Regularly
+- - -
 
 * To stay current on new features and bug fixes, regularly upgrade to the Kubernetes version in your AKS cluster.
 
@@ -35,44 +53,44 @@ This lab walks through some basic best practices for operators using AKS. In man
     az aks upgrade --resource-group $RGNAME --name $CLUSTERNAME --kubernetes-version $KUBERNETES_VERSION
     ```
 
-### Process node updates and reboots using kured
+### Process Node Updates and Reboots Using kured
+- - -
 
 
+### Enforce Resource Quotas
+- - -
 
-### Enforce resource quotas
 
-
-
-### Pod disruption budgets
-
+### Pod Disruption Budgets
+- - -
 
 
 ### Network Security
+- - -
 
 
-
-### Provide dedicated nodes using taints and tolerations
-
+### Provide Dedicated Nodes using Taints and Tolerations
+- - -
 
 
 ### Using Role Based Access Control (RBAC)
-
+- - -
 
 
 ### Pod Identities
-
+- - -
 
 
 ### Backup and Business Continuity
+- - -
 
 
-
-### App Armor and seccomp filtering
-
+### App Armor and seccomp Filtering
+- - -
 
 
 ### Use kube-advisor to check for issues
-
+- - -
 
 
 
