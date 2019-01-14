@@ -137,17 +137,105 @@ This lab has a number of exercises in no particular order:
 ### Process Node Updates and Reboots Using kured
 - - -
 
+AKS automatically downloads and installs security fixes on each of the worker nodes, but does not automatically reboot if necessary.
+
+The open-source kured [(KUbernetes REboot Daemon)](https://github.com/weaveworks/kured) project by Weaveworks watches for pending node reboots. When a node applies updates that require a reboot, the node is safely cordoned and drained to move and schedule the pods on other nodes in the cluster. 
+
+* Deploy kured into the AKS cluster
+
+    ```bash
+    kubectl apply -f https://github.com/weaveworks/kured/releases/download/1.1.0/kured-1.1.0.yaml
+    ```
+
+* Check status. Since kured is installed with a DaemonSet, you will see one kured pod per node in your cluster.
+
+    ```bash
+    kubectl get pod -n kube-system -l name=kured
+
+    NAME          READY   STATUS    RESTARTS   AGE
+    kured-22s4v   1/1     Running   0          1m
+    kured-5hbqz   1/1     Running   0          1m
+    kured-ljsv4   1/1     Running   0          1m
+    kured-mnkcl   1/1     Running   0          1m
+    kured-wv9pp   1/1     Running   0          1m
+    ```
+
+* You're done. Re-boots will happen automatically if security updates are applied.
+    * You can force an re-boot as described [here.](https://docs.microsoft.com/en-us/azure/aks/node-updates-kured#update-cluster-nodes)
+
 
 ### Enforce Resource Quotas
 - - -
 
+In our first lab, we introduced resource quotas with namespaces. You can review those steps again [here.](../../create-aks-cluster/README.md)
 
 ### Pod Disruption Budgets
 - - -
 
+We can use "pod disruption budgets" to make sure a minimum number of pods are available. These pod disruption budgets can help ensure availability during voluntary updates to our deployments such as container image upgrades, etc.
 
-### Network Security
+* First, scale out a deployment to create more pods for the test
+
+    ```bash
+    kubectl scale deployment service-tracker-ui -n hackfest --replicas=4
+    ```
+
+* Create a pod disruption budget
+
+    Review the spec and then deploy:
+    ```yaml
+    apiVersion: policy/v1beta1
+    kind: PodDisruptionBudget
+    metadata:
+      name: service-tracker-pdb
+    spec:
+      minAvailable: 2
+     selector:
+       matchLabels:
+         app: service-tracker-ui
+    ```
+
+    ```bash
+    kubectl apply -f ~/kubernetes-hackfest/labs/best-practices/operators/pod-disruption-budget.yaml -n hackfest
+    ```
+
+* Create a new version of the service-tracker-ui
+
+    ```bash
+    az acr build -t hackfest/service-tracker-ui:newversion -r $ACRNAME --no-logs ~/kubernetes-hackfest/app/service-tracker-ui
+    ```
+
+* Watch the pods in the namespace
+
+    ```bash
+    watch kubectl get pod -n hackfest
+    ```
+
+* Perform the upgrade (you will need a new terminal/cloud shell session for this)
+
+    ```bash
+    kubectl set image deployment/service-tracker-ui service-tracker-ui=briaracr.azurecr.io/hackfest/service-tracker-ui:newversion -n hackfest
+    ```
+
+* Based on our PDB, you should see 2 pods running at all times while the pods are being updated to the new image
+
+
+### Use kube-advisor to check for issues
 - - -
+
+* Create a service account and role binding
+
+    ```bash    
+    kubectl apply -f ~/kubernetes-hackfest/labs/best-practices/operators/sa-kube-advisor.yaml
+    ```
+
+* Create the pod
+
+    ```bash
+    kubectl run --rm -i -t kube-advisor --image=mcr.microsoft.com/aks/kubeadvisor --restart=Never --overrides="{ \"apiVersion\": \"v1\", \"spec\": { \"serviceAccountName\": \"kube-advisor\" } }"
+    ```
+
+* Review results
 
 
 ### Provide Dedicated Nodes using Taints and Tolerations
@@ -168,25 +256,6 @@ This lab has a number of exercises in no particular order:
 
 ### App Armor and seccomp Filtering
 - - -
-
-
-### Use kube-advisor to check for issues
-- - -
-
-* Create a service account and role binding
-
-    ```bash    
-    kubectl apply -f ~/kubernetes-hackfest/labs/best-practices/operators/sa-kube-advisor.yaml
-    ```
-
-* Create the pod
-
-    ```bash
-    kubectl run --rm -i -t kube-advisor --image=mcr.microsoft.com/aks/kubeadvisor --restart=Never --overrides="{ \"apiVersion\": \"v1\", \"spec\": { \"serviceAccountName\": \"kube-advisor\" } }"
-    ```
-
-* Review results
-
 
 
 
