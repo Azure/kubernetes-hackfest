@@ -97,7 +97,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     az group create -n $RGNAME -l $LOCATION
     ```
 
-9. Create your AKS cluster in the resource group created above with 3 nodes, targeting Kubernetes version 1.10.3, with Container Insights, and HTTP Application Routing Enabled. You will use the Service Principal information from step 5.
+9. Create your AKS cluster in the resource group created above with 3 nodes, targeting Kubernetes version 1.11.4, with Container Insights, and HTTP Application Routing Enabled. You will use the Service Principal information from step 5.
 
     Use Unique CLUSTERNAME
 
