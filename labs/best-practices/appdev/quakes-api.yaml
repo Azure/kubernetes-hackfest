@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quakes-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: quakes-api
+  template:
+    metadata:
+      labels:
+        app: quakes-api
+    spec:
+      containers:
+        - image: replaceme-acr.azurecr.io/hackfest/quakes-api:1.0
+          imagePullPolicy: Always
+          name: quakes-api
+          resources:
+            requests:
+              memory: "1024Mi"
+              cpu: "1"
+            limits:
+              memory: "2048Mi"
+              cpu: "2"
+          env:
+            - name: APPINSIGHTS_INSTRUMENTATIONKEY
+              valueFrom:
+                secretKeyRef:
+                  name: cosmos-db-secret
+                  key: appinsights
+            - name: DATA_SERVICE_URI
+              value: http://data-api.hackfest.svc.cluster.local:3009/
+            - name: CACHE_SERVICE_URI
+              value: http://cache-api.hackfest.svc.cluster.local:3006/       
+          ports:
+          - containerPort: 3012
+            protocol: TCP
+      restartPolicy: Always

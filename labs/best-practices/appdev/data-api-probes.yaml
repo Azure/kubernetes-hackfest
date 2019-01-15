@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-api
+  template:
+    metadata:
+      labels:
+        app: data-api
+    spec:
+      containers:
+        - image: replaceme-acr.azurecr.io/hackfest/data-api:2.0
+          imagePullPolicy: Always
+          name: data-api
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "100m"
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          readinessProbe:
+            httpGet:
+              port: 3009
+              path: /healthz
+          livenessProbe:
+            httpGet:
+              port: 3009
+              path: /healthz
+          env:
+            - name: MONGODB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: cosmos-db-secret
+                  key: user
+            - name: MONGODB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: cosmos-db-secret
+                  key: pwd
+            - name: APPINSIGHTS_INSTRUMENTATIONKEY
+              valueFrom:
+                secretKeyRef:
+                  name: cosmos-db-secret
+                  key: appinsights                   
+          ports:
+          - containerPort: 3009
+            protocol: TCP
+      restartPolicy: Always
