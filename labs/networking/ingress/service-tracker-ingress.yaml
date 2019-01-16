@@ -14,7 +14,7 @@ spec:
   - host: brian13270.eastus.cloudapp.azure.com
     http:
       paths:
-      - path: /ui
+      - path: /
         backend:
           serviceName: service-tracker-ui
           servicePort: 8080
