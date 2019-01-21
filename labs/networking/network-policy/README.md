@@ -46,7 +46,7 @@ In this lab we will use Kube-Router for Network Policy Management. Kube-Router w
 
     ```bash
     # Log into the Pod
-    kubectl exec -it $(kubectl get pod -l "app=quakes-api" -o jsonpath='{.items[0].metadata.name}') -- /bin/sh
+    kubectl exec -it $(kubectl get pod -n hackfest -l "app=quakes-api" -o jsonpath='{.items[0].metadata.name}') -n hackfest -- /bin/sh
     # Once inside the Pod try to do a nslookup on the flights API
     nslookup flights-api
     ```
@@ -71,7 +71,7 @@ In this lab we will use Kube-Router for Network Policy Management. Kube-Router w
     kubectl apply -f ./labs/networking/network-policy/allow-default-namespace.yaml
     kubectl get networkpolicy
     # Let's Test the nslookup again
-    kubectl exec -it $(kubectl get pod -l "app=quakes-api" -o jsonpath='{.items[0].metadata.name}') -- /bin/sh
+    kubectl exec -it $(kubectl get pod -n hackfest -l "app=quakes-api" -o jsonpath='{.items[0].metadata.name}') -n hackfest -- /bin/sh
     # Once inside the Pod try to do a nslookup on the flights API
     nslookup flights-api
     ```
@@ -99,7 +99,7 @@ In this lab we will use Kube-Router for Network Policy Management. Kube-Router w
     kubectl apply -f ./labs/networking/network-policy/allow-default-namespace-with-egress.yaml
     kubectl get networkpolicy
     # Let's Test the nslookup again
-    kubectl exec -it $(kubectl get pod -l "app=quakes-api" -o jsonpath='{.items[0].metadata.name}') -- /bin/sh
+    kubectl exec -it $(kubectl get pod -n hackfest -l "app=quakes-api" -o jsonpath='{.items[0].metadata.name}') -n hackfest -- /bin/sh
     # Once inside the Pod try to do a nslookup on the flights API
     nslookup flights-api
     ```
