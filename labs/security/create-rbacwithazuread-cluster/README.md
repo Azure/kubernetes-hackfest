@@ -74,8 +74,8 @@ This lab creates an AKS Cluster with Azure AD Integration for RBAC.
 
 6. Create RBAC Binding to the two users created
 
-    * Update the user name in the [aksrback-clusteradmin.yaml](aksrback-clusteradmin.yaml) with the aksadmin user.
-    * Update the user name in the [aksrback-viewdefault.yaml](aksrback-viewdefault.yaml) with the aksuser user.
+    * Update the user name in the [aksrbac-clusteradmin.yaml](aksrbac-clusteradmin.yaml) with the aksadmin user.
+    * Update the user name in the [aksrbac-viewdefault.yaml](aksrbac-viewdefault.yaml) with the aksuser user.
     ```bash
     az aks get-credentials -g $RG -n $NAME --admin
     kubectl apply -f aksrbac-clusteradmin.yaml
