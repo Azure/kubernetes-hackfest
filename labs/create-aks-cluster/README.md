@@ -113,7 +113,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
 
     ```bash
     # Create AKS Cluster
-    az aks create -n $CLUSTERNAME -g $RGNAME -k 1.11.4 \
+    az aks create -n $CLUSTERNAME -g $RGNAME -k 1.11.6 \
     --service-principal $APPID \
     --client-secret $CLIENTSECRET \
     --generate-ssh-keys -l $LOCATION \
