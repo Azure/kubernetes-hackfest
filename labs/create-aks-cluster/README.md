@@ -85,10 +85,10 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
 8. Create an Azure Resource Group in East US.
 
     ```bash
-    # Set Resource Group Name
-    RGNAME=kubernetes-hackfest
+    # Set Resource Group Name using the unique suffix
+    RGNAME=aks-rg-$UNIQUE_SUFFIX
     # Persist for Later Sessions in Case of Timeout
-    echo export RGNAME=kubernetes-hackfest >> ~/.bashrc
+    echo export RGNAME=$RGNAME >> ~/.bashrc
     # Set Region (Location)
     LOCATION=eastus
     # Persist for Later Sessions in Case of Timeout
@@ -97,7 +97,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     az group create -n $RGNAME -l $LOCATION
     ```
 
-9. Create your AKS cluster in the resource group created above with 3 nodes, targeting Kubernetes version 1.11.4, with Container Insights, and HTTP Application Routing Enabled. You will use the Service Principal information from step 5.
+9. Create your AKS cluster in the resource group created above with 3 nodes. We will check for a recent version of kubnernetes before proceeding. We are also including the monitoring add-on for Azure Container Insights. You will use the Service Principal information from step 5.
 
     Use Unique CLUSTERNAME
 
@@ -109,16 +109,42 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     # Persist for Later Sessions in Case of Timeout
     echo export CLUSTERNAME=aks${UNIQUE_SUFFIX} >> ~/.bashrc
     ```  
+
+    Get available kubernetes versions for the region. You will likely see more recent versions in your lab.
+
+    ```bash
+    az aks get-versions -l $LOCATION
+
+    KubernetesVersion    Upgrades
+    -------------------  ----------------------
+    1.11.5               None available
+    1.11.4               1.11.5
+    1.10.9               1.11.4, 1.11.5
+    1.10.8               1.10.9, 1.11.4, 1.11.5
+    1.9.11               1.10.8, 1.10.9
+    1.9.10               1.9.11, 1.10.8, 1.10.9
+    1.8.15               1.9.10, 1.9.11
+    1.8.14               1.8.15, 1.9.10, 1.9.11
+    ```
+
+    Set the version to one with available upgrades (in this case v 1.11.4)
+
+    ```bash
+    K8SVERSION=1.11.4
+    ```
+
     > The below command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT and grab a coffee...
 
     ```bash
     # Create AKS Cluster
-    az aks create -n $CLUSTERNAME -g $RGNAME -k 1.11.6 \
+    az aks create -n $CLUSTERNAME -g $RGNAME \
+    --kubernetes-version $K8SVERSION \
     --service-principal $APPID \
     --client-secret $CLIENTSECRET \
     --generate-ssh-keys -l $LOCATION \
     --node-count 3 \
-    --enable-addons http_application_routing,monitoring
+    --enable-addons monitoring \
+    --no-wait
     ```
 
 10. Verify your cluster status. The `ProvisioningState` should be `Succeeded`
@@ -145,9 +171,12 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
      ```bash
      kubectl get nodes
      ```
-    ```bash
+     
+     ```bash
      NAME                       STATUS    ROLES     AGE       VERSION
-     aks-nodepool1-26522970-0   Ready     agent     33m       v1.11.3
+     aks-nodepool1-16622101-0   Ready     agent     24m       v1.11.4
+     aks-nodepool1-16622101-1   Ready     agent     24m       v1.11.4
+     aks-nodepool1-16622101-2   Ready     agent     24m       v1.11.4
      ```
  
      To see more details about your cluster:
@@ -155,18 +184,13 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
      ```bash
      kubectl cluster-info
      ```
+
      ```bash
-     Kubernetes master is running at https://cluster-dw-kubernetes-hackf-80066e-a44f3eb0.hcp.eastus.azmk8s.io:443
-
-     addon-http-application-routing-default-http-backend is running at https://cluster-dw-kubernetes-hackf-80066e-a44f3eb0.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/addon-http-application-routing-default-http-backend/proxy
-
-     addon-http-application-routing-nginx-ingress is running at http://168.62.191.18:80 http://168.62.191.18:443
-
-     Heapster is running at https://cluster-dw-kubernetes-hackf-80066e-a44f3eb0.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/heapster/proxy
-
-     KubeDNS is running at https://cluster-dw-kubernetes-hackf-80066e-a44f3eb0.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-
-     kubernetes-dashboard is running at https://cluster-dw-kubernetes-hackf-80066e-a44f3eb0.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kubernetes-dashboard/proxy 
+     Kubernetes master is running at https://aksbrian13-aks-rg-brian1327-471d33-09e2e91f.hcp.eastus.azmk8s.io:443
+     Heapster is running at https://aksbrian13-aks-rg-brian1327-471d33-09e2e91f.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/heapster/proxy
+     KubeDNS is running at https://aksbrian13-aks-rg-brian1327-471d33-09e2e91f.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+     kubernetes-dashboard is running at https://aksbrian13-aks-rg-brian1327-471d33-09e2e91f.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kubernetes-dashboard/proxy
+     Metrics-server is running at https://aksbrian13-aks-rg-brian1327-471d33-09e2e91f.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
      ```
 
      You should now have a Kubernetes cluster running with 3 nodes. You do not see the master servers for the cluster because these are managed by Microsoft. The Control Plane services which manage the Kubernetes cluster such as scheduling, API access, configuration data store and object controllers are all provided as services to the nodes.
@@ -252,7 +276,6 @@ This lab creates namespaces that reflect a representative example of an organiza
 
 ## Troubleshooting / Debugging
 
-* To further debug and diagnose cluster problems, use `kubectl cluster-info dump` command.
 * The limits and quotas of a namespace can be found via the **kubectl describe ns <...>** command. You will also be able to see current allocations.
 * If pods are not deploying then check to make sure that CPU, Memory and Storage amounts are within the limits and do not exceed the overall quota of the namespace.
 

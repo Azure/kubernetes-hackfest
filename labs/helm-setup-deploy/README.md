@@ -27,8 +27,8 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
         ```
 
         ```bash
-        Client: &version.Version{SemVer:"v2.11.0", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}
-        Server: &version.Version{SemVer:"v2.11.0", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}
+        Client: &version.Version{SemVer:"v2.12.1", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}
+        Server: &version.Version{SemVer:"v2.12.2", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}
         ```
 
         > Note: It can take a minute or so for Tiller to start
@@ -73,7 +73,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
         # Default values for chart
 
         service:
-        type: LoadBalancer
+        type: ClusterIP
         port: 3009
 
         deploy:
@@ -161,12 +161,12 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     pod/weather-api-7448ff75b7-7bptj          1/1       Running   0          1m
 
     NAME                         TYPE           CLUSTER-IP     EXTERNAL-IP    PORT(S)          AGE
-    service/data-api             LoadBalancer   10.0.89.66     23.96.11.105   3009:31779/TCP   9m
-    service/flights-api          LoadBalancer   10.0.210.195   23.96.11.180   3003:30862/TCP   8m
+    service/data-api             LoadBalancer   10.0.89.66     <none>         3009:31779/TCP   9m
+    service/flights-api          LoadBalancer   10.0.210.195   <none>         3003:30862/TCP   8m
     service/kubernetes           ClusterIP      10.0.0.1       <none>         443/TCP          20h
-    service/quakes-api           LoadBalancer   10.0.134.0     23.96.11.127   3003:31950/TCP   8m
+    service/quakes-api           LoadBalancer   10.0.134.0     <none>         3003:31950/TCP   8m
     service/service-tracker-ui   LoadBalancer   10.0.90.157    23.96.11.115   8080:32324/TCP   8m
-    service/weather-api          LoadBalancer   10.0.179.66    23.96.11.49    3003:31951/TCP   8m
+    service/weather-api          LoadBalancer   10.0.179.66    <none>         3003:31951/TCP   8m
     ```
 
     * Browse to the web UI
@@ -175,10 +175,10 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     kubectl get service service-tracker-ui -n hackfest
 
     NAME                TYPE           CLUSTER-IP   EXTERNAL-IP     PORT(S)          AGE
-    service-tracker-ui  LoadBalancer   10.0.82.74   40.16.218.139   8080:31346/TCP   8m
+    service-tracker-ui  LoadBalancer   10.0.82.74   23.96.11.115    8080:31346/TCP   8m
     ```
 
-    Open the browser to http://40.76.218.139:8080 (your IP will be different #obvious)
+    Open the browser to http://23.96.11.115:8080 (your IP will be different #obvious)
 
     * You will need to click "REFRESH DATA" for each service to load the data sets.
 

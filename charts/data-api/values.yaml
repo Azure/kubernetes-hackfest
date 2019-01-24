@@ -1,7 +1,7 @@
 # Default values for chart
 
 service:
-  type: LoadBalancer
+  type: ClusterIP
   port: 3009
 
 deploy:
