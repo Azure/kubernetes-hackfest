@@ -15,25 +15,17 @@ An ingress controller is a piece of software that provides reverse proxy, config
 
 1. Remove public IP addresses for services
 
-    We do not need public IP's for the API's or the website.
+    We do not need a public IP for the website when using an Ingress route.
 
     ```bash
-    # delete existing services
-    kubectl delete svc data-api -n hackfest
-    kubectl delete svc flights-api -n hackfest
-    kubectl delete svc quakes-api -n hackfest
-    kubectl delete svc weather-api -n hackfest
+    # delete existing service
     kubectl delete svc service-tracker-ui -n hackfest
     ```
 
-    > Note. It should not be necessary to delete these, but there is a bug with kubectl and how it handles services and NodePorts. 
+    > Note. It should not be necessary to delete this, but there is a bug with kubectl and how it handles services and NodePorts. 
 
     ```bash
-    # update chart to install services again as ClusterIP
-    helm upgrade data-api ~/kubernetes-hackfest/charts/data-api --set service.type=ClusterIP
-    helm upgrade flights-api ~/kubernetes-hackfest/charts/flights-api --set service.type=ClusterIP
-    helm upgrade quakes-api ~/kubernetes-hackfest/charts/quakes-api --set service.type=ClusterIP
-    helm upgrade weather-api ~/kubernetes-hackfest/charts/weather-api --set service.type=ClusterIP
+    # update chart to install service again as ClusterIP
     helm upgrade service-tracker-ui ~/kubernetes-hackfest/charts/service-tracker-ui --set service.type=ClusterIP
     ```
 
