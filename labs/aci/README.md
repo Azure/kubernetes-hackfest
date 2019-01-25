@@ -282,6 +282,15 @@ For this lab, we are creating a new AKS cluster. Depending on your quota, you ma
     ```bash
     kubectl delete deploy service-tracker-ui -n hackfest
     ```
+    
+10. Clean-up 
+
+> IMPORTANT. In order to remove the VNET we used above, you must follow the steps below. #doit 
+
+When deleting the virtual node and ACI, there are some lingering resources in the VNET that need to be cleaned up. This issue will likely be corrected. Details here. https://docs.microsoft.com/en-us/azure/container-instances/container-instances-vnet#clean-up-resources 
+
+In order to delete the SAL, you may need to use this link as well. https://docs.microsoft.com/en-us/rest/api/container-instances/serviceassociationlink/delete 
+
 
 ## Troubleshooting / Debugging
 
