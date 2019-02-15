@@ -18,7 +18,7 @@
     "express": "~4.16.0",
     "hbs": "~4.0.1",
     "http-errors": "~1.6.2",
-    "morgan": "~1.9.0",
+    "morgan": "^1.9.1",
     "path": "^0.12.7",
     "request": "^2.88.0",
     "request-promise": "^4.2.2"
