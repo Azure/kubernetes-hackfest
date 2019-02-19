@@ -40,7 +40,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     az account show
     ```
 
-6. Create Azure Service Prinicpal to use through the labs
+6. Create Azure Service Principal to use through the labs
 
     ```bash
     az ad sp create-for-rbac --skip-assignment
