@@ -113,7 +113,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     Get available kubernetes versions for the region. You will likely see more recent versions in your lab.
 
     ```bash
-    az aks get-versions -l $LOCATION
+    az aks get-versions -l $LOCATION -o table
 
     KubernetesVersion    Upgrades
     -------------------  -----------------------
