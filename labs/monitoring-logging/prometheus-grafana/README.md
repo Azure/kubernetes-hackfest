@@ -59,9 +59,15 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
 
     ```bash
     # Edit kubelet to be http instead of https (Fixes Prometheus kubelet API Metrics)
+    kubectl edit servicemonitors kube-prometheus-exporter-kubelets -n monitoring
+    
+    # !!!!!!!!!!
+    # Only perform the next edit if kube-dns is deployed in your cluster.
+    # Check using "kubectl get deploy -n kube-system". (As of K8s v1.12.4, AKS switched to coredns).
+    # !!!!!!!!!!
+
     # Edit kube-dns to update Prometheus ENV (Fixes DNS API Metrics)
     # https://github.com/coreos/prometheus-operator/issues/1522
-    kubectl edit servicemonitors kube-prometheus-exporter-kubelets -n monitoring
     kubectl patch deployment kube-dns-v20 -n kube-system --patch "$(cat prom-graf-kube-dns-metrics-patch.yaml)"
     ```
 
