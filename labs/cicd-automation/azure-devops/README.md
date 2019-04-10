@@ -155,7 +155,7 @@ In the deployment pipeline, we will create a Helm task to update our application
 
     ![Azure DevOps Release](azure-do-release.png)
 
-4. Validate that your newly built image was deployed in your AKS cluster. Eg - `kubectl describe pod...`
+4. Validate that your newly built image was deployed in your AKS cluster. Eg - `kubectl describe pod service-tracker-ui-<pod id> -n hackfest`
 
 5. Now kick-off the full CI/CD pipeline by making an edit to the service-tracker-ui frontend code in the Azure DevOps code repo.
 
