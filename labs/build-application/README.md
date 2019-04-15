@@ -44,6 +44,8 @@ In this lab we will build Docker containers for each of the application componen
     # Extract Container Registry details needed for Login
     # Login Server
     az acr show -n ${ACRNAME} --query "{acrLoginServer:loginServer}" -o table
+    # Enable ACR admin 
+    az acr update -n ${ACRNAME} --admin-enabled true
     # Registry Username and Password
     az acr credential show -n ${ACRNAME}
 
