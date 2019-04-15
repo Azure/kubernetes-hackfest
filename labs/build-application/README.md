@@ -44,6 +44,8 @@ In this lab we will build Docker containers for each of the application componen
     # Extract Container Registry details needed for Login
     # Login Server
     az acr show -n ${ACRNAME} --query "{acrLoginServer:loginServer}" -o table
+    # Enable ACR admin 
+    az acr update -n ${ACRNAME} --admin-enabled true
     # Registry Username and Password
     az acr credential show -n ${ACRNAME}
 
@@ -59,6 +61,17 @@ In this lab we will build Docker containers for each of the application componen
     ```
 
 3. Create Application Insights Instance
+
+    Continue using the same resource group that was created previously
+    
+    ```bash
+    # Create a unique application insights name
+    APPINSIGHTSNAME=appInsightshackfest$UNIQUE_SUFFIX
+    # Deploy the appinsights ARM template   
+    az group deployment create --resource-group $RGNAME --template-file ~/kubernetes-hackfest/labs/build-application/app-Insights.json --parameters type=Node.js name=$APPINSIGHTSNAME regionId=eastus
+    ```
+
+    Alternatively :    
 
     * In your Azure portal, click "Create a resource", select "Developer tools", and choose "Application Insights"
     * Pick a unique name (you can use the unique identifier created in the 1st lab)

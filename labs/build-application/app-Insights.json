@@ -1,0 +1,27 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2014-04-01-preview/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "name": {
+            "type": "string"
+        },
+        "type": {
+            "type": "string"
+        },
+        "regionId": {
+            "type": "string"
+        }
+    },
+    "resources": [
+        {
+            "name": "[parameters('name')]",
+            "type": "microsoft.insights/components",
+            "location": "[parameters('regionId')]",
+            "apiVersion": "2014-08-01",
+            "properties": {
+                "ApplicationId": "[parameters('name')]",
+                "Application_Type": "[parameters('type')]"
+            }
+        }
+    ]
+}
