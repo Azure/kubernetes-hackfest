@@ -116,21 +116,23 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     az aks get-versions -l $LOCATION --output table
 
     KubernetesVersion    Upgrades
-    -------------------  -----------------------
-    1.12.5               None available
-    1.12.4               1.12.5
-    1.11.7               1.12.4, 1.12.5
-    1.11.6               1.11.7, 1.12.4, 1.12.5
-    1.10.12              1.11.6, 1.11.7
-    1.10.9               1.10.12, 1.11.6, 1.11.7
-    1.9.11               1.10.9, 1.10.12
-    1.9.10               1.9.11, 1.10.9, 1.10.12
+    -------------------  ------------------------
+    1.14.0(preview)      None available
+    1.13.5               1.14.0(preview)
+    1.12.8               1.13.5
+    1.12.7               1.12.8, 1.13.5
+    1.11.9               1.12.7, 1.12.8
+    1.11.8               1.11.9, 1.12.7, 1.12.8
+    1.10.13              1.11.8, 1.11.9
+    1.10.12              1.10.13, 1.11.8, 1.11.9
+    1.9.11               1.10.12, 1.10.13
+    1.9.10               1.9.11, 1.10.12, 1.10.13
     ```
 
-    Set the version to one with available upgrades (in this case v 1.12.4)
+    Set the version to one with available upgrades (in this case v 1.12.8)
 
     ```bash
-    K8SVERSION=1.12.4
+    K8SVERSION=1.12.8
     ```
 
     > The below command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT and grab a coffee...
