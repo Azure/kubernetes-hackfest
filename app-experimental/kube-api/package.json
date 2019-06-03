@@ -7,13 +7,13 @@
     "dev": "node ./bin/www"
   },
   "dependencies": {
-    "@kubernetes/client-node": "^0.4.0",
+    "@kubernetes/client-node": "^0.9.1",
     "async": "^2.6.1",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "express": "~4.16.0",
-    "hbs": "~4.0.1",
+    "hbs": "^4.0.4",
     "http-errors": "~1.6.2",
-    "morgan": "~1.9.0"
+    "morgan": "^1.9.1"
   }
 }

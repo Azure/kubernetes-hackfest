@@ -6,6 +6,6 @@
     "refresh": "artillery run data-api-load.yaml"
   },
   "dependencies": {
-    "artillery": "^1.6.0-23"
+    "artillery": "^1.6.0-28"
   }
 }
