@@ -108,11 +108,11 @@ Linkerd is a Cloud Native Computing Foundation (CNCF) project.
 8. Re-deploy application using `linkerd inject`
 
     ```bash
-    linkerd inject data-api.yaml | kubectl apply -n hackfest -f -
-    linkerd inject flights-api.yaml | kubectl apply -n hackfest -f -
-    linkerd inject quakes-api.yaml | kubectl apply -n hackfest -f -
-    linkerd inject weather-api.yaml | kubectl apply -n hackfest -f -
-    linkerd inject service-tracker-ui.yaml | kubectl apply -n hackfest -f -
+    linkerd inject ./kubernetes-hackfest/data-api.yaml | kubectl apply -n hackfest -f -
+    linkerd inject ./kubernetes-hackfest/flights-api.yaml | kubectl apply -n hackfest -f -
+    linkerd inject ./kubernetes-hackfest/quakes-api.yaml | kubectl apply -n hackfest -f -
+    linkerd inject ./kubernetes-hackfest/weather-api.yaml | kubectl apply -n hackfest -f -
+    linkerd inject ./kubernetes-hackfest/service-tracker-ui.yaml | kubectl apply -n hackfest -f -
     ```
 
 9. Load test and review traffic in Dashboard
