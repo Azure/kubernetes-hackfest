@@ -98,11 +98,11 @@ Linkerd is a Cloud Native Computing Foundation (CNCF) project.
 7. Use `helm template` to create manifest for injection
 
     ```bash
-    helm template ~/kubernetes-hackfest/charts/data-api > ~/kubernetes-hackfest/data-api.yaml
-    helm template ~/kubernetes-hackfest/charts/flights-api > ~/kubernetes-hackfest/flights-api.yaml
-    helm template ~/kubernetes-hackfest/charts/quakes-api > ~/kubernetes-hackfest/quakes-api.yaml
-    helm template ~/kubernetes-hackfest/charts/weather-api > ~/kubernetes-hackfest/weather-api.yaml
-    helm template ~/kubernetes-hackfest/charts/service-tracker-ui > ~/kubernetes-hackfest/service-tracker-ui.yaml
+    helm template ./kubernetes-hackfest/charts/data-api > ./kubernetes-hackfest/data-api.yaml
+    helm template ./kubernetes-hackfest/charts/flights-api > ./kubernetes-hackfest/flights-api.yaml
+    helm template ./kubernetes-hackfest/charts/quakes-api > ./kubernetes-hackfest/quakes-api.yaml
+    helm template ./kubernetes-hackfest/charts/weather-api > ./kubernetes-hackfest/weather-api.yaml
+    helm template ./kubernetes-hackfest/charts/service-tracker-ui > ./kubernetes-hackfest/service-tracker-ui.yaml
     ```
 
 8. Re-deploy application using `linkerd inject`
@@ -115,12 +115,37 @@ Linkerd is a Cloud Native Computing Foundation (CNCF) project.
     linkerd inject service-tracker-ui.yaml | kubectl apply -n hackfest -f -
     ```
 
-9. Load Test and review traffic in Dashboard
+9. Load test and review traffic in Dashboard
 
-    ```bash
-    export APP_URL=http://168.62.169.76:3003/status
-    while true; do curl -o /dev/null -s -w "%{http_code}\n" $APP_URL; sleep 1; done
-    ```
+    > Note: There are a few ways we could create traffic on the API layer. You could create a load test pod in the cluster that hits the API's on internal IP addresses. Below is a simple setup just for lab purposes.
+
+    * Expose one of the API's as a public IP
+
+        ```bash
+        kubectl edit svc flights-api -n hackfest
+        ```
+
+    * Get the IP address of one of your API's
+
+        ```bash
+        kubectl get svc flights-api -n hackfest
+        
+        NAME          TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)    AGE
+        flights-api   ClusterIP   10.0.75.165   13.10.293.100 3003/TCP   100s
+        ```
+
+    * Create a variable with the URL
+
+        ```bash
+        export APP_URL=http://<your_ip_address>:3003/status
+        while true; do curl -o /dev/null -s -w "%{http_code}\n" $APP_URL; sleep 1; done
+        ```
+
+10. Try some other Linkerd features
+
+    * Automating injection. https://linkerd.io/2/tasks/automating-injection 
+    * Setup mTLS encryption. https://linkerd.io/2/features/automatic-mtls 
+    * Routing and Service Profiles. https://linkerd.io/2/features/service-profiles 
 
 
 ## Troubleshooting / Debugging
