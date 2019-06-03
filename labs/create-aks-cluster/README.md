@@ -116,21 +116,23 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     az aks get-versions -l $LOCATION --output table
 
     KubernetesVersion    Upgrades
-    -------------------  -----------------------
-    1.12.5               None available
-    1.12.4               1.12.5
-    1.11.7               1.12.4, 1.12.5
-    1.11.6               1.11.7, 1.12.4, 1.12.5
-    1.10.12              1.11.6, 1.11.7
-    1.10.9               1.10.12, 1.11.6, 1.11.7
-    1.9.11               1.10.9, 1.10.12
-    1.9.10               1.9.11, 1.10.9, 1.10.12
+    -------------------  ------------------------
+    1.14.0(preview)      None available
+    1.13.5               1.14.0(preview)
+    1.12.8               1.13.5
+    1.12.7               1.12.8, 1.13.5
+    1.11.9               1.12.7, 1.12.8
+    1.11.8               1.11.9, 1.12.7, 1.12.8
+    1.10.13              1.11.8, 1.11.9
+    1.10.12              1.10.13, 1.11.8, 1.11.9
+    1.9.11               1.10.12, 1.10.13
+    1.9.10               1.9.11, 1.10.12, 1.10.13
     ```
 
-    Set the version to one with available upgrades (in this case v 1.12.4)
+    Set the version to one with available upgrades (in this case v 1.12.8)
 
     ```bash
-    K8SVERSION=1.12.4
+    K8SVERSION=1.12.8
     ```
 
     > The below command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT and grab a coffee...
@@ -153,9 +155,9 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     ```
 
     ```bash
-    Name                 Location    ResourceGroup         KubernetesVersion    ProvisioningState    Fqdn
-    -------------------  ----------  --------------------  -------------------  -------------------  -------------------------------------------------------------------
-    ODLaks-v2-gbb-16502  eastus   ODL_aks-v2-gbb-16502  1.11.4                Succeeded odlaks-v2--odlaks-v2-gbb-16-b23acc-17863579.hcp.centralus.azmk8s.io
+    Name             Location    ResourceGroup            KubernetesVersion    ProvisioningState    Fqdn
+    ---------------  ----------  -----------------------  -------------------  -------------------  ----------------------------------------------------------------
+    aksstephen14260  eastus      aks-rg-stephen14260      1.12.8               Succeeded            aksstephen-aks-rg-stephen14-62afe9-9aa48ae4.hcp.eastus.azmk8s.io
     ```
 
 11. Get the Kubernetes config files for your new AKS cluster
@@ -173,10 +175,10 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
      ```
      
      ```bash
-     NAME                       STATUS    ROLES     AGE       VERSION
-     aks-nodepool1-16622101-0   Ready     agent     24m       v1.11.4
-     aks-nodepool1-16622101-1   Ready     agent     24m       v1.11.4
-     aks-nodepool1-16622101-2   Ready     agent     24m       v1.11.4
+     NAME                       STATUS   ROLES   AGE     VERSION
+     aks-nodepool1-14089323-0   Ready    agent   113s    v1.12.8
+     aks-nodepool1-14089323-1   Ready    agent   2m59s   v1.12.8
+     aks-nodepool1-14089323-2   Ready    agent   2m1s    v1.12.8     
      ```
  
      To see more details about your cluster:
@@ -186,11 +188,11 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
      ```
 
      ```bash
-     Kubernetes master is running at https://aksbrian13-aks-rg-brian1327-471d33-09e2e91f.hcp.eastus.azmk8s.io:443
-     Heapster is running at https://aksbrian13-aks-rg-brian1327-471d33-09e2e91f.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/heapster/proxy
-     KubeDNS is running at https://aksbrian13-aks-rg-brian1327-471d33-09e2e91f.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-     kubernetes-dashboard is running at https://aksbrian13-aks-rg-brian1327-471d33-09e2e91f.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kubernetes-dashboard/proxy
-     Metrics-server is running at https://aksbrian13-aks-rg-brian1327-471d33-09e2e91f.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
+    Kubernetes master is running at https://aksstephen-aks-rg-stephen14-62afe9-9aa48ae4.hcp.eastus.azmk8s.io:443
+    Heapster is running at https://aksstephen-aks-rg-stephen14-62afe9-9aa48ae4.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/heapster/proxy
+    CoreDNS is running at https://aksstephen-aks-rg-stephen14-62afe9-9aa48ae4.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+    kubernetes-dashboard is running at https://aksstephen-aks-rg-stephen14-62afe9-9aa48ae4.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kubernetes-dashboard/proxy
+    Metrics-server is running at https://aksstephen-aks-rg-stephen14-62afe9-9aa48ae4.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
      ```
 
      You should now have a Kubernetes cluster running with 3 nodes. You do not see the master servers for the cluster because these are managed by Microsoft. The Control Plane services which manage the Kubernetes cluster such as scheduling, API access, configuration data store and object controllers are all provided as services to the nodes.
