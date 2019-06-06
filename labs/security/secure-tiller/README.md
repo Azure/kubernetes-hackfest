@@ -7,6 +7,9 @@ This lab walks through how to secure tiller in a single namespace to restrict ac
 1. Create Helm/Tiller for **dev** Namespace
 
     ```bash
+    # Move to the lab directory
+    cd ~/kubernetes-hackfest/labs/security/secure-tiller/
+
     # Create kubeconfig file for tiller Service Account (Useful for DevOps)
     chmod a+x tiller-namespace-setup.sh
     ./tiller-namespace-setup.sh tiller dev
