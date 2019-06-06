@@ -59,7 +59,7 @@ This lab creates an AKS Cluster with Azure AD Integration for RBAC.
     PATH_TO_SSH_PUBLICKEY="~/.ssh/id_rsa.pub"
     # Create AKS with RBAC Cluster
     az aks create -g $RG -n $NAME --enable-rbac \
-        -k 1.10.3 --node-count 1 --ssh-key-value $PATH_TO_SSH_PUBLICKEY \
+        -k 1.12.8 --node-count 1 --ssh-key-value $PATH_TO_SSH_PUBLICKEY \
         --aad-server-app-id $SERVER_APP_ID \
         --aad-server-app-secret $SERVER_APP_SECRET \
         --aad-client-app-id $CLIENT_APP_ID \
