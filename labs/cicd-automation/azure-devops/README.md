@@ -125,6 +125,8 @@ In the deployment pipeline, we will create a Helm task to update our application
 
 13. Search for "helm" and add the task called "Helm Tool Installer" as first task. Click Add
 
+    > Change the version for the helm install to `2.14.0`
+
 14. Next, Search for "helm" and add the task called "Package and deploy Helm charts". Click Add
 
 15. Click on the task (named "helm ls") to configure all of the settings for the release
