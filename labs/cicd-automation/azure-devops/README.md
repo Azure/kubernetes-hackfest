@@ -42,28 +42,33 @@ The general workflow/result will be as follows:
 
 #### Create Build Pipeline
 
+
 1. In Azure DevOps, click on "Pipelines" on the left menu and then click "Builds"
 
 2. Click the "New pipeline" button
 
-3. In "Select a source," use `Azure Repos Git` and ensure it is pointing to your newly built repo (this is the default)
+3. Azure DevOps pipelines now defaults to the yaml based editing experience. The following steps assume classic mode, so you should select 'Use the classic editor' as shown below.
+
+    ![Switch to Classic Mode](azure-do-use-classic.png)
+
+4. In "Select a source," use `Azure Repos Git` and ensure it is pointing to your newly built repo (this is the default)
     > Note that we are using the master branch here. Normally we would use other branches and PR's. For simplicity, we are using master just for this lab.
 
-4. Select to "start with an Empty job"
+5. Select to "start with an Empty job"
 
-5. Leave the name as "kubernetes-hackfest-CI"
+6. Leave the name as "kubernetes-hackfest-CI"
 
-6. Change the Agent pool to use the "Hosted Ubuntu 1604"
+7. Change the Agent pool to use the "Hosted Ubuntu 1604"
 
-7. Click the plus sign by "Agent job 1" to add a task
+8. Click the plus sign by "Agent job 1" to add a task
 
-8. Search tasks for "Azure" and add the Azure CLI task
+9. Search tasks for "Azure" and add the Azure CLI task
 
     ![Azure DevOps Azure CLI](azure-do-azurecli.png)
 
-9. Click on the Azure CLI task and choose your Azure subscription and `Authorize`
+10. Click on the Azure CLI task and choose your Azure subscription and `Authorize`
 
-10. For "Script Location" choose "Inline script" and enter the following (be sure to replace the ACR name with yours). 
+11. For "Script Location" choose "Inline script" and enter the following (be sure to replace the ACR name with yours). 
 
     > Note: We are creating a dynamic image tag using our build ID from Azure DevOps.
 
@@ -81,15 +86,15 @@ The general workflow/result will be as follows:
 
     ![Azure DevOps CLI](azure-do-cli.png)
 
-11. Add another task to "Agent job 1" and search for "Publish Build Artifacts". Use "charts" for the artifact name and browse to the charts folder for the "Path to publish"
+12. Add another task to "Agent job 1" and search for "Publish Build Artifacts". Use "charts" for the artifact name and browse to the charts folder for the "Path to publish"
 
     ![Azure DevOps Artifact](azure-do-artifact.png)
 
-12. Test this by clicking "Save & queue" and providing a comment
+13. Test this by clicking "Save & queue" and providing a comment
 
-13. Click on "Builds" to check result. It can take a bit of time for all of the steps to complete. 
+14. Click on "Builds" to check result. It can take a bit of time for all of the steps to complete. 
 
-14. Enable Continuous integration for the build definition. Edit the build definition and you will find this setting under "Triggers"
+15. Enable Continuous integration for the build definition. Edit the build definition and you will find this setting under "Triggers"
 
 #### Create Deployment Pipeline
 
