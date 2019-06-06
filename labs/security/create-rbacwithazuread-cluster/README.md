@@ -29,28 +29,28 @@ This lab creates an AKS Cluster with Azure AD Integration for RBAC.
     * [Create Server Application](https://docs.microsoft.com/en-us/azure/aks/aad-integration#create-server-application)
     ```bash
     # Set Azure AD Server Application ID and Secret
-    SERVER-APP-ID=""
-    SERVER-APP-SECRET=""
+    SERVER_APP_ID=""
+    SERVER_APP_SECRET=""
     ```
     * [Create Client Application](https://docs.microsoft.com/en-us/azure/aks/aad-integration#create-client-application)
     ```bash
     # Set Azure AD Client Application ID
-    CLIENT-APP-ID=""
-    AZUREAD-TENANT-ID=""
+    CLIENT_APP_ID=""
+    AZUREAD_TENANT_ID=""
     ```
     * Get Azure AD Tenant ID (tenantId)
 
     ```bash
     az account list
     # Set Azure AD Tenant ID
-    AZUREAD-TENANT-ID=""
+    AZUREAD_TENANT_ID=""
     ```
 
 4. Create AKS Cluster with Azure AD RBAC
 
     ```bash
     # Create Resource Group
-    USERINITIALS="<REPLACE-WITH-USER-INITIALS>"
+    USERINITIALS="<REPLACE-WITH-USER-INITIALS-LOWERCASE>"
     RG="${USERINITIALS}aksrbac-rg"
     LOC="eastus"
     NAME="${USERINITIALS}aksrbac"
@@ -59,11 +59,11 @@ This lab creates an AKS Cluster with Azure AD Integration for RBAC.
     PATH_TO_SSH_PUBLICKEY="~/.ssh/id_rsa.pub"
     # Create AKS with RBAC Cluster
     az aks create -g $RG -n $NAME --enable-rbac \
-        -k 1.10.3 --node-count 1 --ssh-key-value $PATH_TO_SSH_PUBLICKEY \
-        --aad-server-app-id $SERVER-APP-ID \
-        --aad-server-app-secret $SERVER-APP-SECRET \
-        --aad-client-app-id $CLIENT-APP-ID \
-        --aad-tenant-id $AZUREAD-TENANT-ID --no-wait
+        -k 1.12.8 --node-count 1 --ssh-key-value $PATH_TO_SSH_PUBLICKEY \
+        --aad-server-app-id $SERVER_APP_ID \
+        --aad-server-app-secret $SERVER_APP_SECRET \
+        --aad-client-app-id $CLIENT_APP_ID \
+        --aad-tenant-id $AZUREAD_TENANT_ID --no-wait
     ```
 
 5. Create Two User Accounts in Azure AD
