@@ -27,6 +27,8 @@ In this lab we will use Kube-Router for Network Policy Management. Kube-Router w
 
    ```bash
    cd ~/kubernetes-hackfest
+
+   kubectl apply -f ./labs/networking/network-policy/kube-router-rbac.yaml
    kubectl apply -f ./labs/networking/network-policy/kube-router.yaml
    kubectl get daemonset -n kube-system -l k8s-app=kube-router
    ```
