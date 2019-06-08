@@ -161,22 +161,135 @@ When you run modern, microservices-based applications in Kubernetes, you often w
 
         wget -qO- http://data-api.hackfest:3009/status
 
-        # this will fail to return a result
+        # no results...
         ```
         
         Exit the pod:
         ```bash
         exit
         ```
-    
-    * Delete this policy
 
-        ```bash
-        kubectl delete networkpolicy -n hackfest data-api-policy
+        > Notice that if you browse the service-tracker-ui web page, the app no longer works. The api's can no longer access the data-api, so the app is now broken. We should probably fix this. 
+    
+4. Allow inbound traffic based on pod label
+
+    * Update the policy to allow flights-api to access
+
+        ```yaml
+        kind: NetworkPolicy
+        apiVersion: networking.k8s.io/v1
+        metadata:
+        name: data-api-policy
+        namespace: hackfest
+        spec:
+        podSelector:
+            matchLabels:
+            app: data-api
+        ingress:
+        - from:
+            - namespaceSelector: {}
+            podSelector:
+                matchLabels:
+                app: flights-api
         ```
 
-4. Allow inbound traffic based on a pod label
+        Apply the policy
 
+        ```bash
+        kubectl apply -f ./labs/networking/network-policy/fix-access-data-api.yaml
+        ```
+
+    * Test access from flights-api
+
+        ```bash
+        # lookup your pod name as it will be different
+        kubectl exec -it flights-api-9f9bb5b86-4x7z8 -n hackfest sh
+
+        wget -qO- http://data-api.hackfest:3009/status
+
+        "message":"api default endpoint for data api","payload":{"uptime":"4 hours"}}
+        ```
+
+        Exit the pod:
+        ```bash
+        exit
+        ```
+
+    * Test access from weather-api (this should fail)
+
+        ```bash
+        # lookup your pod name as it will be different
+        kubectl exec -it data-api-69dbc755f7-lr6hn -n hackfest sh
+
+        wget -qO- http://data-api.hackfest:3009/status
+
+        # no results...
+        ```
+
+        Exit the pod:
+        ```bash
+        exit
+        ```
+
+5. Allow inbound traffic based on namespace
+
+    * Create and label the production namespace
+
+        ```bash
+        kubectl create namespace production
+        kubectl label namespace/production purpose=production
+        ```
+
+    * Update the policy to allow the `hackfest` namespace
+
+        ```yaml
+        kind: NetworkPolicy
+        apiVersion: networking.k8s.io/v1
+        metadata:
+          name: data-api-policy
+          namespace: hackfest
+        spec:
+          podSelector:
+            matchLabels:
+              app: data-api
+        ingress:
+          - from:
+            - namespaceSelector:
+                matchLabels:
+                  purpose: production
+            - podSelector:
+                matchLabels:
+                  app: flights-api
+            - podSelector:
+                matchLabels:
+                  app: weather-api
+            - podSelector:
+                matchLabels:
+                  app: quakes-api
+        ```
+
+        Apply the policy
+
+        ```bash
+        kubectl apply -f ./labs/networking/network-policy/fix-access-namespace.yaml
+        ```
+
+    * Validate that all pods and the web page are working properly
+
+    * Validate the a pod in the specifed namespace can also access the pod
+
+        ```bash
+        kubectl run --rm -it --image=alpine network-policy --namespace production --generator=run-pod/v1
+
+        wget -qO- http://data-api.hackfest:3009/status
+
+        {"message":"api default endpoint for data api","payload":{"uptime":"5 hours"}}
+        ```
+
+        Exit the pod:
+        ```bash
+        exit
+        ```        
 
 ## Troubleshooting / Debugging
 
