@@ -40,18 +40,11 @@ When you run modern, microservices-based applications in Kubernetes, you often w
         VNET_ID=$(az network vnet show --resource-group $RGNAME --name myVnet --query id -o tsv)
         echo $VNET_ID
         ```
-
+        
     * Assign the service principal Contributor permissions to the virtual network resource
 
         ```bash
         az role assignment create --assignee $APPID --scope $VNET_ID --role Contributor
-        ```
-
-    * Get the virtual network subnet resource ID
-
-        ```bash
-        SUBNET_ID=$(az network vnet subnet show --resource-group $RGNAME --vnet-name myVnet --name myAKSSubnet --query id -o tsv)
-        echo $SUBNET_ID
         ```
 
     * Create AKS Cluster

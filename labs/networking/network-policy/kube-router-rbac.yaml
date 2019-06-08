@@ -13,6 +13,6 @@ roleRef:
   kind: ClusterRole
   name: cluster-admin
 subjects:
-  - kind: ServiceAccount
+  - kind: User
     name: nodeclient
     namespace: kube-system
