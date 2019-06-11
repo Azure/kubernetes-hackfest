@@ -153,20 +153,19 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     ```bash
     kubectl get pod,svc -n hackfest
 
-    NAME                                      READY     STATUS    RESTARTS   AGE
-    pod/data-api-555688c8d-xb76d              1/1       Running   0          1m
-    pod/flights-api-69b9d9dfc-8b9z8           1/1       Running   0          1m
-    pod/quakes-api-7d95bccfc8-5x9hw           1/1       Running   0          1m
-    pod/service-tracker-ui-7db967b8c9-p27s5   1/1       Running   0          54s
-    pod/weather-api-7448ff75b7-7bptj          1/1       Running   0          1m
+    NAME                                     READY   STATUS    RESTARTS   AGE
+    pod/data-api-5bdc5c94b4-8xfq2            1/1     Running   3          5d3h
+    pod/flights-api-77f77464df-n7jb4         1/1     Running   4          5d15h
+    pod/quakes-api-7c8b96b594-vm5qd          1/1     Running   4          5d15h
+    pod/service-tracker-ui-c4476d778-hpn5q   1/1     Running   3          5d6h
+    pod/weather-api-56d6c57b89-cds8v         1/1     Running   4          5d15h
 
-    NAME                         TYPE           CLUSTER-IP     EXTERNAL-IP    PORT(S)          AGE
-    service/data-api             LoadBalancer   10.0.89.66     <none>         3009:31779/TCP   9m
-    service/flights-api          LoadBalancer   10.0.210.195   <none>         3003:30862/TCP   8m
-    service/kubernetes           ClusterIP      10.0.0.1       <none>         443/TCP          20h
-    service/quakes-api           LoadBalancer   10.0.134.0     <none>         3003:31950/TCP   8m
-    service/service-tracker-ui   LoadBalancer   10.0.90.157    23.96.11.115   8080:32324/TCP   8m
-    service/weather-api          LoadBalancer   10.0.179.66    <none>         3003:31951/TCP   8m
+    NAME                         TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
+    service/data-api             ClusterIP      10.0.179.206   <none>        3009/TCP         7d4h
+    service/flights-api          ClusterIP      10.0.255.59    <none>        3003/TCP         7d4h
+    service/quakes-api           ClusterIP      10.0.122.46    <none>        3012/TCP         7d4h
+    service/service-tracker-ui   LoadBalancer   10.0.24.184    40.71.20.1    8080:30757/TCP   5d6h
+    service/weather-api          ClusterIP      10.0.124.80    <none>        3015/TCP         7d4h
     ```
 
     * Browse to the web UI
@@ -174,11 +173,11 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
     ```bash
     kubectl get service service-tracker-ui -n hackfest
 
-    NAME                TYPE           CLUSTER-IP   EXTERNAL-IP     PORT(S)          AGE
-    service-tracker-ui  LoadBalancer   10.0.82.74   23.96.11.115    8080:31346/TCP   8m
+    NAME                 TYPE           CLUSTER-IP    EXTERNAL-IP   PORT(S)          AGE
+    service-tracker-ui   LoadBalancer   10.0.24.184   40.71.20.1    8080:30757/TCP   5d6h
     ```
 
-    Open the browser to http://23.96.11.115:8080 (your IP will be different #obvious)
+    Open the browser to http://40.71.20.1:8080 (your IP will be different #obvious)
 
     * You will need to click "REFRESH DATA" for each service to load the data sets.
 
