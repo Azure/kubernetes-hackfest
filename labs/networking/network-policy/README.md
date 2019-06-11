@@ -1,145 +1,292 @@
-# Lab: Configure Network Policy
+# Lab: AKS Network Policies
 
-In this lab we will setup Kube-Router and Network Policies to enforce communication between services via Policy.
+When you run modern, microservices-based applications in Kubernetes, you often want to control which components can communicate with each other. The principle of least privilege should be applied to how traffic can flow between pods in an Azure Kubernetes Service (AKS) cluster. Let's say you likely want to block traffic directly to back-end applications. The Network Policy feature in Kubernetes lets you define rules for ingress and egress traffic between pods in a cluster.
 
-## Prerequisites
+## Prerequisites 
 
 * Complete previous labs:
     * [Azure Kubernetes Service](../../create-aks-cluster/README.md)
     * [Build Application Components in Azure Container Registry](../../build-application/README.md)
     * [Helm Setup and Deploy Application](../../helm-setup-deploy/README.md)
-
-## Kubernetes and Kube-Router Overview
-
-Kubernetes networking has following security model:
-
-* Every Pod can talk to every other Pod by default so a Pod can receive traffic from any one
-* Default allow behaviour can be changed to default deny on per namespace basis. When a namespace is configured with isolation tye of DefaultDeny no traffic is allowed to the pods in that namespace
-* When a namespace is configured with DefaultDeny isolation type, network policies can be configured in the namespace to whitelist the traffic to the pods in that namespace
-
-Kubernetes network policies are application centric compared to infrastructure/network centric standard firewalls. There are no explicit CIDR or IP used for matching source or destination IP’s. Network policies build up on labels and selectors which are key concepts of Kubernetes that are used to organize (for e.g all DB tier pods of app) and select subsets of objects.
-
-In this lab we will use Kube-Router for Network Policy Management. Kube-Router will use ipsets with iptables to ensure your firewall rules have as little performance impact on your cluster as possible.
+    * Azure CLI version 2.0.61 or later (Cloud Shell should provide the latest)
 
 ## Instructions
 
-1. Run the following commands to deploy kube-router and verify it is running on your cluster.
+1. Create a new AKS cluster with advanced networking
 
-   ```bash
-   cd ~/kubernetes-hackfest
+    Our AKS cluster in lab 1 uses basic networking and this lab requires AKS advanced networking. Follow these steps to create a new cluster:
 
-   kubectl apply -f ./labs/networking/network-policy/kube-router-rbac.yaml
-   kubectl apply -f ./labs/networking/network-policy/kube-router.yaml
-   kubectl get daemonset -n kube-system -l k8s-app=kube-router
-   ```
+    * Create a virtual network and subnet
 
-2. Take a look at the [deny-all file](deny-all.yaml) for an example of a Kubernetes Network Policy. In this case this is a blanket policy across all Namespaces and Pods to deny traffic. Apply the deny-all.yaml file which will break the applicaton as no communication between Pods will be allowed.
+        ```bash
+        az network vnet create \
+            --resource-group $RGNAME \
+            --name myVnet \
+            --address-prefixes 10.0.0.0/8 \
+            --subnet-name myAKSSubnet \
+            --subnet-prefix 10.240.0.0/16
+        ```
+    
+    * Validate service principle values in profile
 
-    ```bash
-    kubectl apply -f ./labs/networking/network-policy/deny-all.yaml
-    kubectl get networkpolicy -n hackfest
-    ```
+        ```bash
+        echo $APPID
+        echo $CLIENTSECRET
+        ```
 
-3. Test out the Application by going to the Dashboard and clicking on the Refresh Data button for one of the APIs. You should see that the Refresh is taking an extra long time and eventually comes back with an error. This is becuase you have denied all Ingress to Pods, which means all traffic into the Cluster.
+    * Get the virtual network resource ID
+        
+        ```bash
+        VNET_ID=$(az network vnet show --resource-group $RGNAME --name myVnet --query id -o tsv)
+        echo $VNET_ID
+        ```
+        
+    * Assign the service principal Contributor permissions to the virtual network resource
 
-    ![Example Error Message](img-refresh-error.png "Error from Data Refresh")
+        ```bash
+        az role assignment create --assignee $APPID --scope $VNET_ID --role Contributor
+        ```
 
-4. Test out connectivity between Pods by interacting with a Pod using kubectl exec. Let's log into the Quakes API pod and try to access somethign outside of the Pod.
+    * Create AKS Cluster
 
-    ```bash
-    # Log into the Pod
-    kubectl exec -it $(kubectl get pod -n hackfest -l "app=quakes-api" -o jsonpath='{.items[0].metadata.name}') -n hackfest -- /bin/sh
-    # Once inside the Pod try to do a nslookup on the flights API
-    nslookup flights-api
-    ```
+        > Note: Note the `--network-policy` parameter
 
-    **Sample Output:**
-    ```bash
-    /usr/src/app # nslookup flights-api
-    nslookup: can't resolve '(null)': Name does not resolve
+        ```bash
+        CLUSTERNAME=aks-np-${UNIQUE_SUFFIX}
 
-    nslookup: can't resolve 'flights-api': Try again
-    ```
+        az aks create \
+            --resource-group $RGNAME \
+            --name $CLUSTERNAME \
+            --node-count 3 \
+            --generate-ssh-keys \
+            --network-plugin azure \
+            --service-cidr 10.0.0.0/16 \
+            --dns-service-ip 10.0.0.10 \
+            --docker-bridge-address 172.17.0.1/16 \
+            --vnet-subnet-id $SUBNET_ID \
+            --service-principal $APPID \
+            --client-secret $CLIENTSECRET \
+            --network-policy azure
+        ```
 
-    ```bash
-    # Now exit out of the Pod
-    exit
-    ```
+    * Get credentials
 
-5. As we can see from above all ingress and egress traffic from Pods has been blocked. Let's enable traffic between Pods in the **default** Namespace. First, take a look at the [allow default namespace file](allow-default-namespace.yaml) and notice the Ingress (from: synatx) and Egress (to: syntax) are allowed in the **default** namespace.
+        ```bash
+        az aks get-credentials --resource-group $RGNAME --name $CLUSTERNAME
+        ```
 
-    ```bash
-    # Apply the Allow Network Policy
-    kubectl apply -f ./labs/networking/network-policy/allow-default-namespace.yaml
-    kubectl get networkpolicy -n hackfest
-    # Let's Test the nslookup again
-    kubectl exec -it $(kubectl get pod -n hackfest -l "app=quakes-api" -o jsonpath='{.items[0].metadata.name}') -n hackfest -- /bin/sh
-    # Once inside the Pod try to do a nslookup on the flights API
-    nslookup flights-api
-    ```
+2. Deploy our application
 
-    **Sample Output:**
-    ```bash
-    /usr/src/app # nslookup flights-api
-    nslookup: can't resolve '(null)': Name does not resolve
+    * Create namespace
 
-    nslookup: can't resolve 'flights-api': Try again
-    ```
+        ```bash
+        kubectl create ns hackfest
+        ```
 
-    ```bash
-    # Now exit out of the Pod
-    exit
-    ```
+    * Create secret to allow pods to access Cosmos from this new cluster
 
-6. So what gives as it is still not working. In order for nslookup to work it requires to be able to talk to the kube-dns server. Let's delete the Network Policy and try one that allows egress.
+        ```bash
+        export MONGODB_USER=$(az cosmosdb show --name $COSMOSNAME --resource-group $RGNAME --query "name" -o tsv)
+        ```
 
-    ```bash
-    # Delete Previous Network Allow Policy
-    kubectl delete -f ./labs/networking/network-policy/allow-default-namespace.yaml
-    kubectl get networkpolicy -n hackfest
-    # Apply the Allow Network Policy
-    kubectl apply -f ./labs/networking/network-policy/allow-default-namespace-with-egress.yaml
-    kubectl get networkpolicy -n hackfest
-    # Let's Test the nslookup again
-    kubectl exec -it $(kubectl get pod -n hackfest -l "app=quakes-api" -o jsonpath='{.items[0].metadata.name}') -n hackfest -- /bin/sh
-    # Once inside the Pod try to do a nslookup on the flights API
-    nslookup flights-api
-    ```
+        ```bash
+        export MONGODB_PASSWORD=$(az cosmosdb list-keys --name $COSMOSNAME --resource-group $RGNAME --query "primaryMasterKey" -o tsv)
+        ```
 
-    **Sample Output:**
-    ```bash
-    /usr/src/app # nslookup flights-api
-    nslookup: can't resolve '(null)': Name does not resolve
+        Use Instrumentation Key from step 3 above.
+        ```bash
+        export APPINSIGHTS_INSTRUMENTATIONKEY='replace-me'
+        ```
 
-    Name:      flights-api
-    Address 1: 10.0.230.91 flights-api.default.svc.cluster.local
-    ```
+        ```bash
+        kubectl create secret generic cosmos-db-secret --from-literal=user=$MONGODB_USER --from-literal=pwd=$MONGODB_PASSWORD --from-literal=appinsights=$APPINSIGHTS_INSTRUMENTATIONKEY -n hackfest
+        ```
+    
+    * Follow the steps from the earlier lab 3 [Helm Setup and Deploy Application](../../helm-setup-deploy/README.md)
 
-    ```bash
-    # Now exit out of the Pod
-    exit
-    ```
+        > Note: the helm charts from lab 3 earlier should already be updated and should work fine without edit
 
-7. All right we now have connectivity between the Pods and it can interact with kube-dns to resolve Service Endpoints. Great, but my UI is still not responding, what do I do? We leave this last exercise up to you to figure out.
+    * Test and ensure app works correctly (Browse the UI and update data)
 
-    * **Hint:** Create a Network Policy that allows the proper Ingress traffic to only the UI Pods (think PodSelectors and labels).
+3. Deny all inbound traffic to a pod (data-api)
 
-8. Cleanup all the Network Policies so if you do other labs they will not interfere.
+    * Quickly test access to one of our api's from a pod
 
-    ```bash
-    # Cleanup Network Policies
-    kubectl delete networkpolicy --all -n hackfest
-    kubectl get networkpolicy -n hackfest
-    ```
+        ```bash
+        kubectl run --rm -it --image=alpine network-policy --namespace hackfest --generator=run-pod/v1
+
+        wget -qO- http://data-api.hackfest:3009/status
+
+        # should see a result such as:
+        {"message":"api default endpoint for data api","payload":{"uptime":"3 hours"}}
+        ```
+
+        Exit the pod:
+        ```bash
+        exit
+        ```
+    
+    * Create the deny policy
+
+        Review the file `block-access-to-data-api.yaml`
+
+        ```yaml
+        kind: NetworkPolicy
+        apiVersion: networking.k8s.io/v1
+        metadata:
+        name: data-api-policy
+        namespace: hackfest
+        spec:
+        podSelector:
+            matchLabels:
+            app: data-api
+        ingress: []
+        ```
+
+        ```bash
+        kubectl apply -f ./labs/networking/network-policy/block-access-to-data-api.yaml
+        ```
+
+    * Retry accessing the pod
+
+        ```bash
+        kubectl run --rm -it --image=alpine network-policy --namespace hackfest --generator=run-pod/v1
+
+        wget -qO- http://data-api.hackfest:3009/status
+
+        # no results...
+        ```
+        
+        Exit the pod:
+        ```bash
+        exit
+        ```
+
+        > Notice that if you browse the service-tracker-ui web page, the app no longer works. The api's can no longer access the data-api, so the app is now broken. We should probably fix this. 
+    
+4. Allow inbound traffic based on pod label
+
+    * Update the policy to allow flights-api to access
+
+        ```yaml
+        kind: NetworkPolicy
+        apiVersion: networking.k8s.io/v1
+        metadata:
+        name: data-api-policy
+        namespace: hackfest
+        spec:
+        podSelector:
+            matchLabels:
+            app: data-api
+        ingress:
+        - from:
+            - namespaceSelector: {}
+            podSelector:
+                matchLabels:
+                app: flights-api
+        ```
+
+        Apply the policy
+
+        ```bash
+        kubectl apply -f ./labs/networking/network-policy/fix-access-data-api.yaml
+        ```
+
+    * Test access from flights-api
+
+        ```bash
+        # lookup your pod name as it will be different
+        kubectl exec -it flights-api-9f9bb5b86-4x7z8 -n hackfest sh
+
+        wget -qO- http://data-api.hackfest:3009/status
+
+        "message":"api default endpoint for data api","payload":{"uptime":"4 hours"}}
+        ```
+
+        Exit the pod:
+        ```bash
+        exit
+        ```
+
+    * Test access from weather-api (this should fail)
+
+        ```bash
+        # lookup your pod name as it will be different
+        kubectl exec -it data-api-69dbc755f7-lr6hn -n hackfest sh
+
+        wget -qO- http://data-api.hackfest:3009/status
+
+        # no results...
+        ```
+
+        Exit the pod:
+        ```bash
+        exit
+        ```
+
+5. Allow inbound traffic based on namespace
+
+    * Create and label the production namespace
+
+        ```bash
+        kubectl create namespace production
+        kubectl label namespace/production purpose=production
+        ```
+
+    * Update the policy to allow the `hackfest` namespace
+
+        ```yaml
+        kind: NetworkPolicy
+        apiVersion: networking.k8s.io/v1
+        metadata:
+          name: data-api-policy
+          namespace: hackfest
+        spec:
+          podSelector:
+            matchLabels:
+              app: data-api
+        ingress:
+          - from:
+            - namespaceSelector:
+                matchLabels:
+                  purpose: production
+            - podSelector:
+                matchLabels:
+                  app: flights-api
+            - podSelector:
+                matchLabels:
+                  app: weather-api
+            - podSelector:
+                matchLabels:
+                  app: quakes-api
+        ```
+
+        Apply the policy
+
+        ```bash
+        kubectl apply -f ./labs/networking/network-policy/fix-access-namespace.yaml
+        ```
+
+    * Validate that all pods and the web page are working properly
+
+    * Validate the a pod in the specifed namespace can also access the pod
+
+        ```bash
+        kubectl run --rm -it --image=alpine network-policy --namespace production --generator=run-pod/v1
+
+        wget -qO- http://data-api.hackfest:3009/status
+
+        {"message":"api default endpoint for data api","payload":{"uptime":"5 hours"}}
+        ```
+
+        Exit the pod:
+        ```bash
+        exit
+        ```        
 
 ## Troubleshooting / Debugging
 
-* Check to make sure that the namespace that is in the yaml files is the same namespace that the Microservices are deployed to.
-
 ## Docs / References
 
-* [Kubernetes Network Policy](https://kubernetes.io/docs/concepts/services-networking/network-policies/)
-* [Kube-Router Docs](https://www.kube-router.io/)
-* [Kube-Router Repo](https://github.com/cloudnativelabs/kube-router)
-
-#### Next Lab: [Monitoring and Logging](../../monitoring-logging/README.md)
+* [AKS Network Policy Docs](https://docs.microsoft.com/en-us/azure/aks/use-network-policies)
+* [Kubernetes Network Policy](https://kubernetes.io/docs/concepts/services-networking/network-policies)

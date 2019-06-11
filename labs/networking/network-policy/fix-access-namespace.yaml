@@ -1,0 +1,23 @@
+kind: NetworkPolicy
+apiVersion: networking.k8s.io/v1
+metadata:
+  name: data-api-policy
+  namespace: hackfest
+spec:
+  podSelector:
+    matchLabels:
+      app: data-api
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          purpose: production
+    - podSelector:
+        matchLabels:
+          app: flights-api
+    - podSelector:
+        matchLabels:
+          app: weather-api
+    - podSelector:
+        matchLabels:
+          app: quakes-api
