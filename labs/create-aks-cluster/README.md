@@ -132,7 +132,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     Set the version to one with available upgrades (in this case v 1.12.8)
 
     ```bash
-    K8SVERSION=1.12.8
+    K8SVERSION=1.13.5
     ```
 
     > The below command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT and grab a coffee...
