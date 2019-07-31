@@ -34,11 +34,16 @@ When you run modern, microservices-based applications in Kubernetes, you often w
         echo $CLIENTSECRET
         ```
 
-    * Get the virtual network resource ID
+    * Get the virtual network resource and subnet ID's
         
         ```bash
         VNET_ID=$(az network vnet show --resource-group $RGNAME --name myVnet --query id -o tsv)
         echo $VNET_ID
+         ```
+         
+        ```bash
+        SUBNET_ID=$(az network vnet subnet list --resource-group $RGNAME --vnet-name myVnet --query [].id --output tsv)
+        echo $SUBNET_ID
         ```
         
     * Assign the service principal Contributor permissions to the virtual network resource
@@ -93,7 +98,8 @@ When you run modern, microservices-based applications in Kubernetes, you often w
         export MONGODB_PASSWORD=$(az cosmosdb list-keys --name $COSMOSNAME --resource-group $RGNAME --query "primaryMasterKey" -o tsv)
         ```
 
-        Use Instrumentation Key from step 3 above.
+        Use Instrumentation Key from lab 2 [Build Application Components and Prerequisites](../../build-application/README.md)
+        
         ```bash
         export APPINSIGHTS_INSTRUMENTATIONKEY='replace-me'
         ```
