@@ -73,7 +73,8 @@ router.get('/status', (req, res, next) => {
             dayjs(Math.floor(process.uptime()) * 1000 + global.start),
             true
           ),
-          latest: dayjs(Number(r)).format('MM/DD/YYYY h:mm A')
+          //latest: dayjs(Number(r)).format('MM/DD/YYYY hh:mm A')
+          latest: dayjs(Number(r))
         });
       }
     }

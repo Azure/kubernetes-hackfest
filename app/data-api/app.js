@@ -19,7 +19,7 @@ const appInsights = require('applicationinsights');
 
 appInsights
   .setup()
-  .setAutoDependencyCorrelation(true)
+  .setAutoDependencyCorrelation(false)
   .setAutoCollectRequests(true)
   .setAutoCollectPerformance(true)
   .setAutoCollectExceptions(true)
@@ -27,6 +27,13 @@ appInsights
   .setAutoCollectConsole(true)
   .setUseDiskRetryCaching(true)
   .start();
+
+appInsights.defaultClient.commonProperties = {
+    EnvName: `container`,
+    EnvType: process.env.NODE_ENV
+};
+
+appInsights.defaultClient.config.maxBatchSize = 1;
 
 mongoose.set('useCreateIndex', true);
 mongoose.set('useFindAndModify', false);
@@ -48,35 +55,27 @@ var password = process.env.MONGODB_PASSWORD
 
 var cosmosConnectString = mongoPrefix.concat(user,`:`,password,`@`,user,`.documents.azure.com:10255/hackfest?ssl=true`)
 
-if (process.env.NODE_ENV != 'local') {
-  mongoose.connect(
-    cosmosConnectString,
-    {
-      user: user,
-      pass: password,
-      useNewUrlParser: true
-    }
-  );
-} else {
-  mongoose.connect(
-    'mongodb://localhost/demo:27017',
-    { useNewUrlParser: true }
-  );
-}
+mongoose.connect(
+  cosmosConnectString,
+  {
+    user: user,
+    pass: password,
+    useNewUrlParser: true
+  }
+)
+.then (() => {
+  appInsights.defaultClient.trackEvent({ name: 'MongoConnSuccess' });
+  console.log('connection success with CosmosDB');
+})
+.catch ((err) => {
+  appInsights.defaultClient.trackException({exception: new Error(err)});
+  console.log('CosmosDB connection failed with error: ' + err);
+  appInsights.defaultClient.flush({callback: (responseFromAppInsights) => {
+    process.exit(-1);
+  }});
+});
 
 const apiRouter = require('./routes/api');
-
-var db = mongoose.connection;
-
-db.on('error', err => {
-  appInsights.defaultClient.trackEvent({ name: 'MongoConnError' });
-  console.log(err);
-});
-
-db.once('open', () => {
-  appInsights.defaultClient.trackEvent({ name: 'MongoConnSuccess' });
-  console.log('connection success with Mongo');
-});
 
 app.set('etag', 'strong');
 app.use(logger('dev'));

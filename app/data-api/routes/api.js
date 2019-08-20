@@ -36,6 +36,10 @@ router.get('/', (req, res, next) => {
   jsonResponse.json(res, routename, st.OK.code, {});
 });
 
+router.get('/healthz', (req, res, next) => {
+  res.json({status: 'UP'});
+});
+
 router.get('/status', (req, res, next) => {
   jsonResponse.json(res, routename, st.OK.code, {
     uptime: dayjs(global.start).from(

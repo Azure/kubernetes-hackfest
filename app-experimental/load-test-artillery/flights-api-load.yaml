@@ -10,11 +10,6 @@ config:
 scenarios:
   - flow:
     - get:
-        url: "/get/latest/flights"
-        capture:
-          json: "$.payload[0].Timestamp"
-          as: "fstamp"
-    - get:
-        url: "/get/flights/{{ fstamp }}"
+        url: "/latest"
 
 
