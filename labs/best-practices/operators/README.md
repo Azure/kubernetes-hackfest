@@ -196,13 +196,13 @@ We can use "pod disruption budgets" to make sure a minimum number of pods are av
     ```
 
     ```bash
-    kubectl apply -f ~/kubernetes-hackfest/labs/best-practices/operators/pod-disruption-budget.yaml -n hackfest
+    kubectl apply -f labs/best-practices/operators/pod-disruption-budget.yaml -n hackfest
     ```
 
 * Create a new version of the service-tracker-ui
 
     ```bash
-    az acr build -t hackfest/service-tracker-ui:newversion -r $ACRNAME --no-logs ~/kubernetes-hackfest/app/service-tracker-ui
+    az acr build -t hackfest/service-tracker-ui:newversion -r $ACRNAME --no-logs app/service-tracker-ui
     ```
 
 * Watch the pods in the namespace
@@ -226,7 +226,7 @@ We can use "pod disruption budgets" to make sure a minimum number of pods are av
 * Create a service account and role binding
 
     ```bash    
-    kubectl apply -f ~/kubernetes-hackfest/labs/best-practices/operators/sa-kube-advisor.yaml
+    kubectl apply -f labs/best-practices/operators/sa-kube-advisor.yaml
     ```
 
 * Create the pod

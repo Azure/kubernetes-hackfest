@@ -99,7 +99,7 @@ This lab has a number of exercises in no particular order:
     * Build the new image and try it out
 
         ```bash
-        az acr build -t hackfest/flights-api:multistage -r $ACRNAME --no-logs ~/kubernetes-hackfest/labs/best-practices/appdev/flights-api
+        az acr build -t hackfest/flights-api:multistage -r $ACRNAME --no-logs labs/best-practices/appdev/flights-api
         ```
     
     * Check out the image scanning lab in the [Best Practices for Cluster Operators](../operators/README.md) section.
@@ -133,7 +133,7 @@ In this lab, we will add code to our `data-api` service to provide a health chec
 * Using this source code, create a new container image
 
     ```bash
-    az acr build -t hackfest/data-api:2.0 -r $ACRNAME --no-logs ~/kubernetes-hackfest/labs/best-practices/appdev/data-api
+    az acr build -t hackfest/data-api:2.0 -r $ACRNAME --no-logs labs/best-practices/appdev/data-api
     ```
 
 * Delete the existing `data-api` deploy
@@ -160,7 +160,7 @@ In this lab, we will add code to our `data-api` service to provide a health chec
 
 * Deploy the updated `data-api`
     ```bash
-    kubectl apply -n hackfest -f ~/kubernetes-hackfest/labs/best-practices/appdev/data-api-probes.yaml
+    kubectl apply -n hackfest -f labs/best-practices/appdev/data-api-probes.yaml
     ```
 
 * Validate the health check endpoint is working
@@ -217,7 +217,7 @@ In this lab, we will update our application to handle failures gracefully and th
 * Using this source code, create a new container image
 
     ```bash
-    az acr build -t hackfest/data-api:error-handling -r $ACRNAME --no-logs ~/kubernetes-hackfest/labs/best-practices/appdev/data-api
+    az acr build -t hackfest/data-api:error-handling -r $ACRNAME --no-logs labs/best-practices/appdev/data-api
     ```
 
 * Delete the existing `data-api` deploy
@@ -235,7 +235,7 @@ In this lab, we will update our application to handle failures gracefully and th
 
 * Deploy the updated `data-api`
     ```bash
-    kubectl apply -n hackfest -f ~/kubernetes-hackfest/labs/best-practices/appdev/data-api-error.yaml
+    kubectl apply -n hackfest -f labs/best-practices/appdev/data-api-error.yaml
     ```
 
 * The pod should fail to start. You should be able to find the exception logged in App Insights (it can take a few minutes)
@@ -276,7 +276,7 @@ In this lab, we will update our application to handle failures gracefully and th
 
 * Deploy the updated `quakes-api`
     ```bash
-    kubectl apply -n hackfest -f ~/kubernetes-hackfest/labs/best-practices/appdev/quakes-api.yaml
+    kubectl apply -n hackfest -f labs/best-practices/appdev/quakes-api.yaml
     ```
 
 * Scale the deployment. You should see some pods go to `Pending` state.
@@ -310,7 +310,7 @@ In this lab, we will ensure our Pods cannot run as root and other important secu
     
 * Deploy the updated app
     ```bash
-    kubectl apply -n hackfest -f ~/kubernetes-hackfest/labs/best-practices/appdev/weather-api.yaml
+    kubectl apply -n hackfest -f labs/best-practices/appdev/weather-api.yaml
     ```
 
 * Exec into pod and compare to one of the other API pods. Note that the weather pod is not running as root. 

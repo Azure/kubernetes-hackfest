@@ -17,7 +17,7 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
 
     ```bash
     # Switch to the lab directory in Azure Cloud Shell
-    cd ~/kubernetes-hackfest/labs/monitoring-logging/prometheus-grafana
+    cd labs/monitoring-logging/prometheus-grafana
     ```
 
     ```bash

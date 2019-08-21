@@ -201,39 +201,46 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
 
 This lab creates namespaces that reflect a representative example of an organization's environments. In this case dev, uat and prod. We will also apply the appopriate permissions, limits and resource quotas to each of the namespaces.
 
-1. Create three namespaces
+1. Navigate to the directory of the cloned repository
+
+   ```bash
+   cd kubernetes-hackfest
+   ```
+
+
+2. Create three namespaces
 
     ```bash
     # Create namespaces
-    kubectl apply -f ~/kubernetes-hackfest/labs/create-aks-cluster/create-namespaces.yaml
+    kubectl apply -f labs/create-aks-cluster/create-namespaces.yaml
 
     # Look at namespaces
     kubectl get ns
     ```
 
-2. Assign CPU, memory and storage limits to namespaces
+3. Assign CPU, memory and storage limits to namespaces
 
     ```bash
     # Create namespace limits
-    kubectl apply -f ~/kubernetes-hackfest/labs/create-aks-cluster/namespace-limitranges.yaml
+    kubectl apply -f labs/create-aks-cluster/namespace-limitranges.yaml
 
     # Get list of namespaces and drill into one
     kubectl get ns
-    kubectl describe ns uat
+    kubectl describe 
     ```
 
-3. Assign CPU, Memory and Storage Quotas to Namespaces
+4. Assign CPU, Memory and Storage Quotas to Namespaces
 
     ```bash
     # Create namespace quotas
-    kubectl apply -f ~/kubernetes-hackfest/labs/create-aks-cluster/namespace-quotas.yaml
+    kubectl apply -f labs/create-aks-cluster/namespace-quotas.yaml
 
     # Get list of namespaces and drill into one
     kubectl get ns
     kubectl describe ns dev
     ```
 
-4. Test out Limits and Quotas in **dev** Namespace
+5. Test out Limits and Quotas in **dev** Namespace
 
     ```bash
     # Test Limits - Forbidden due to assignment of CPU too low
@@ -253,15 +260,15 @@ This lab creates namespaces that reflect a representative example of an organiza
     kubectl run nginx-quotatest --image=nginx --restart=Never --replicas=1 --port=80 --requests='cpu=500m,memory=512Mi' -n dev
     
     # Check running pod and dev Namespace Allocations
-    kubectl get po -n dev
-    kubectl describe ns dev
+    kubectl get po -n 
+    kubectl describe n
     ```
 
-5. Clean up limits, quotas, pods
+6. Clean up limits, quotas, pods
 
     ```bash
-    kubectl delete -f ~/kubernetes-hackfest/labs/create-aks-cluster/namespace-limitranges.yaml
-    kubectl delete -f ~/kubernetes-hackfest/labs/create-aks-cluster/namespace-quotas.yaml
+    kubectl delete -f labs/create-aks-cluster/namespace-limitranges.yaml
+    kubectl delete -f labs/create-aks-cluster/namespace-quotas.yaml
     kubectl delete po nginx-limittest nginx-quotatest -n dev
 
     kubectl describe ns dev
@@ -269,7 +276,7 @@ This lab creates namespaces that reflect a representative example of an organiza
     kubectl describe ns prod
     ```
 
-6. Create namespace for our application. This will be used in subsequent labs.
+7. Create namespace for our application. This will be used in subsequent labs.
 
     ```bash
     kubectl create ns hackfest

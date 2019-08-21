@@ -16,7 +16,7 @@ This lab has 2 components. First we will use Azure Container Instances to deploy
 1. Create container image for batch processing
 
     ```bash
-    az acr build -t hackfest/data-updater:1.0 -r $ACRNAME --no-logs ~/kubernetes-hackfest/app/data-updater
+    az acr build -t hackfest/data-updater:1.0 -r $ACRNAME --no-logs app/data-updater
     ```
 
 2. Configure ACR credentials to be stored in Azure Key Vault
@@ -236,11 +236,11 @@ For this lab, we are creating a new AKS cluster. Depending on your quota, you ma
     c. Install each chart as below:
 
     ```bash
-    helm upgrade --install data-api ~/kubernetes-hackfest/charts/data-api --namespace hackfest
-    helm upgrade --install quakes-api ~/kubernetes-hackfest/charts/quakes-api --namespace hackfest
-    helm upgrade --install weather-api ~/kubernetes-hackfest/charts/weather-api --namespace hackfest
-    helm upgrade --install flights-api ~/kubernetes-hackfest/charts/flights-api --namespace hackfest
-    helm upgrade --install service-tracker-ui ~/kubernetes-hackfest/charts/service-tracker-ui --namespace hackfest
+    helm upgrade --install data-api charts/data-api --namespace hackfest
+    helm upgrade --install quakes-api charts/quakes-api --namespace hackfest
+    helm upgrade --install weather-api charts/weather-api --namespace hackfest
+    helm upgrade --install flights-api charts/flights-api --namespace hackfest
+    helm upgrade --install service-tracker-ui charts/service-tracker-ui --namespace hackfest
     ```
 
     d. Validate that the service-tracker-ui is up and running. Eg - browse to http://your-public-ip:8080 
@@ -257,7 +257,7 @@ For this lab, we are creating a new AKS cluster. Depending on your quota, you ma
 
     Create the new deployment
     ```bash
-    kubectl apply -f ~/kubernetes-hackfest/labs/aci/service-tracker-ui.yaml -n hackfest
+    kubectl apply -f labs/aci/service-tracker-ui.yaml -n hackfest
     ```
 
     Validate that the pod is running on the virtual node and verify that you have an ACI in the Azure portal

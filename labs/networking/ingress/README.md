@@ -26,7 +26,7 @@ An ingress controller is a piece of software that provides reverse proxy, config
 
     ```bash
     # update chart to install service again as ClusterIP
-    helm upgrade service-tracker-ui ~/kubernetes-hackfest/charts/service-tracker-ui --set service.type=ClusterIP
+    helm upgrade service-tracker-ui charts/service-tracker-ui --set service.type=ClusterIP
     ```
 
 2. Create the NGINX ingress controller
@@ -58,12 +58,12 @@ An ingress controller is a piece of software that provides reverse proxy, config
     * Set permissions on the script
 
         ```bash
-        chmod +x ~/kubernetes-hackfest/labs/networking/ingress/configure-publicip-dns.sh
+        chmod +x labs/networking/ingress/configure-publicip-dns.sh
         ```
 
     * Execute the script
         ```
-        ~/kubernetes-hackfest/labs/networking/ingress/configure-publicip-dns.sh
+        labs/networking/ingress/configure-publicip-dns.sh
         ```
 
     * Note the new DNS name for your public IP. It should be something like `brian13270.eastus.cloudapp.azure.com`. You can look it up in the portal in the "MC" resource group for your cluster. 
@@ -77,8 +77,8 @@ An ingress controller is a piece of software that provides reverse proxy, config
 
     ```bash
     openssl req -x509 -nodes -days 365 -newkey rsa:2048 \
-    -out ~/kubernetes-hackfest/labs/networking/ingress/aks-ingress-tls.crt \
-    -keyout ~/kubernetes-hackfest/labs/networking/ingress/aks-ingress-tls.key \
+    -out labs/networking/ingress/aks-ingress-tls.crt \
+    -keyout labs/networking/ingress/aks-ingress-tls.key \
     -subj "/CN=brian13270.eastus.cloudapp.azure.com/O=aks-ingress-tls"
     ```
 
@@ -88,8 +88,8 @@ An ingress controller is a piece of software that provides reverse proxy, config
 
     ```bash
     kubectl create secret tls aks-ingress-tls \
-    --key ~/kubernetes-hackfest/labs/networking/ingress/aks-ingress-tls.key \
-    --cert ~/kubernetes-hackfest/labs/networking/ingress/aks-ingress-tls.crt -n hackfest
+    --key labs/networking/ingress/aks-ingress-tls.key \
+    --cert labs/networking/ingress/aks-ingress-tls.crt -n hackfest
     ```
 
 6. Create an ingress route
@@ -99,7 +99,7 @@ An ingress controller is a piece of software that provides reverse proxy, config
     * Apply
 
         ```bash
-        kubectl apply -f ~/kubernetes-hackfest/labs/networking/ingress/service-tracker-ingress.yaml -n hackfest
+        kubectl apply -f labs/networking/ingress/service-tracker-ingress.yaml -n hackfest
         ```
 
 7. Test configuration
