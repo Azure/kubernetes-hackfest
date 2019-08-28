@@ -38,10 +38,10 @@ This lab is about setting up the Ingress Controller and configuring the differen
 
     ```bash
     # first, set permissions on script
-    chmod +x ~/kubernetes-hackfest/labs/networking/ingress/configure-publicip-dns.sh
+    chmod +x labs/networking/ingress/configure-publicip-dns.sh
 
     # do it
-    ~/kubernetes-hackfest/labs/networking/ingress/configure-publicip-dns.sh
+    labs/networking/ingress/configure-publicip-dns.sh
     ```
 
 4. Install Cert Mgr with RBAC
@@ -53,7 +53,7 @@ This lab is about setting up the Ingress Controller and configuring the differen
 5. Create CA Cluster Issuer
 
     ```bash
-    kubectl apply -f ~/kubernetes-hackfest/labs/networking/ingress/cluster-issuer.yaml
+    kubectl apply -f labs/networking/ingress/cluster-issuer.yaml
     ```
 
 6. Create Cluster Certificate
@@ -64,7 +64,7 @@ This lab is about setting up the Ingress Controller and configuring the differen
 
     ```bash
     # Make sure DNSNAME Matches value used above
-    kubectl apply -f ~/kubernetes-hackfest/labs/networking/ingress/certificate.yaml
+    kubectl apply -f labs/networking/ingress/certificate.yaml
     ```
 
 7. Apply Ingress Rules
@@ -72,7 +72,7 @@ This lab is about setting up the Ingress Controller and configuring the differen
 
     ```bash
     # Apply Ingress Routes
-    kubectl apply -f ~/kubernetes-hackfest/labs/networking/ingress/app-ingress.yaml
+    kubectl apply -f labs/networking/ingress/app-ingress.yaml
 
     # Check Ingress Route & Endpoints
     kubectl get ingress
