@@ -75,3 +75,8 @@ typings/
 # Certificates and Keys
 labs/security/secure-tiller/*.pem
 labs/security/secure-tiller/*.srl
+
+# Temporary & Swap Files
+*~
+*.swp
+*.swo
