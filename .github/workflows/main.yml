@@ -4,21 +4,26 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+    - env:
+        ACR_NAME: briaracr
+        AKS_CLUSTER_NAME: briar-kubecon-01
+        AKS_RG: aks
+    
     # github Checkout
     - uses: actions/checkout@master
 
-    # azure login
+    # login to azure and build container image
     - uses: azure/login@v1
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
-    - run: az acr list
+    - run: az acr build -t hackfest/flights-api:${{ github.sha }} -r $ACR_NAME --no-logs app/flights-api
         
     # set AKS context (https://github.com/Azure/aks-set-context)
     - uses: azure/aks-set-context@v1
       with:
         creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
-        resource-group: 'aks'
-        cluster-name: 'briar-kubecon-01'
+        resource-group: $AKS_RG
+        cluster-name: $AKS_CLUSTER_NAME
       id: login
     
     # install kubernetes CLI
