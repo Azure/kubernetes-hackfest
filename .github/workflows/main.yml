@@ -34,3 +34,15 @@ jobs:
     
     # trigger canary deploy with Flagger
     - run: kubectl -n hackfest set image deployment/flights-api flights-api=$ACR_NAME.azurecr.io/hackfest/flights-api:${{ github.sha }}
+ 
+    # slack notify that pipeline completed
+    - uses: rtCamp/action-slack-notify@master
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_CHANNEL: kubecon2019
+        SLACK_USERNAME: Github Actions
+        SLACK_ICON: https://github.com/quintessence/slack-icons/blob/master/images/octocat-spock-slack-icon.png
+        SLACK_TITLE: flights-api CI/CD workflow
+        SLACK_MESSAGE: 'container image created and deployed as canary to AKS'
+
+      
