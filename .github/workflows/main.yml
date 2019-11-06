@@ -1,0 +1,26 @@
+name: Container CI/CD
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@master
+#    - name: Build the Docker image
+#      run: docker build . --file Dockerfile --tag chzbrgr71/podinfo:${{ github.sha }}
+#    - name: Login to Docker Hub
+#      run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+#    - name: Push the Docker image
+#      run: docker push chzbrgr71/podinfo:${{ github.sha }}
+    - uses: azure/aks-set-context@v1
+      with:
+        creds: '${{ secrets.AZURE_CREDENTIALS }}' # Azure credentials
+        resource-group: 'briar-kubecon-01'
+        cluster-name: 'briar-kubecon-01'
+      id: login
+    - uses: azure/setup-kubectl@v1
+      with:
+        version: 'latest'
+      id: install
+    - run: kubectl get node
+
+# https://github.com/Azure/aks-set-context 
