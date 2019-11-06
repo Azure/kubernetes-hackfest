@@ -24,11 +24,6 @@ jobs:
     # github Checkout
     - uses: actions/checkout@master
 
-    # ESLint code check (https://github.com/marketplace/actions/run-eslint)
-    - uses: "stefanoeb/eslint-action@master"
-      with:
-       args: "app/flights-api/app.js"
-
     # login to azure and build container image
     - uses: azure/login@v1
       with:
