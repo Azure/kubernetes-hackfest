@@ -12,15 +12,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    # slack notify: started
-    - uses: rtCamp/action-slack-notify@master
+    - uses: Ilshidur/action-slack@master
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_CHANNEL: kubecon2019
         SLACK_USERNAME: Github Actions
-        SLACK_ICON: https://github.com/quintessence/slack-icons/blob/master/images/octocat-spock-slack-icon.png
-        SLACK_TITLE: flights-api CI/CD workflow
-        SLACK_MESSAGE: 'workflow started'
+      with:
+        args: 'flights-api CI/CD workflow started'
 
     # github Checkout
     - uses: actions/checkout@master
@@ -66,6 +64,6 @@ jobs:
         SLACK_USERNAME: Github Actions
         SLACK_ICON: https://github.com/quintessence/slack-icons/blob/master/images/octocat-spock-slack-icon.png
         SLACK_TITLE: flights-api CI/CD workflow
-        SLACK_MESSAGE: 'container image created and deployed as canary to AKS: ${{ env.ACR_NAME }}.azurecr.io/hackfest/flights-api:${{ github.sha }}'
+        SLACK_MESSAGE: 'new version deployed as canary to AKS: ${{ env.ACR_NAME }}.azurecr.io/hackfest/flights-api:${{ github.sha }}'
 
       
