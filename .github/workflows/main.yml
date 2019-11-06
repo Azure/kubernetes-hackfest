@@ -4,11 +4,19 @@ jobs:
   build:
     env:
       ACR_NAME: briaracr
-      AKS_CLUSTER_NAME: briar-kubecon-01
-      AKS_RG: aks
     runs-on: ubuntu-latest
     steps:
-    
+
+    # slack notify: started
+    - uses: rtCamp/action-slack-notify@master
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_CHANNEL: kubecon2019
+        SLACK_USERNAME: Github Actions
+        SLACK_ICON: https://github.com/quintessence/slack-icons/blob/master/images/octocat-spock-slack-icon.png
+        SLACK_TITLE: flights-api CI/CD workflow
+        SLACK_MESSAGE: 'workflow started'
+
     # github Checkout
     - uses: actions/checkout@master
 
@@ -17,7 +25,25 @@ jobs:
       with:
         creds: ${{ secrets.AZURE_CREDENTIALS }}
     - run: az acr build -t hackfest/flights-api:${{ github.sha }} -r $ACR_NAME --no-logs app/flights-api
-        
+
+    # slack notify: ACR image built and stored in Azure
+    - uses: rtCamp/action-slack-notify@master
+      env:
+        SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+        SLACK_CHANNEL: kubecon2019
+        SLACK_USERNAME: Github Actions
+        SLACK_ICON: https://github.com/quintessence/slack-icons/blob/master/images/octocat-spock-slack-icon.png
+        SLACK_TITLE: flights-api CI/CD workflow
+        SLACK_MESSAGE: 'Container image created in ACR: ${{ env.ACR_NAME }}.azurecr.io/hackfest/flights-api:${{ github.sha }}'
+
+  deploy:
+    env:
+      ACR_NAME: briaracr
+      AKS_CLUSTER_NAME: briar-kubecon-01
+      AKS_RG: aks
+    runs-on: ubuntu-latest
+    steps:
+      
     # set AKS context (https://github.com/Azure/aks-set-context)
     - uses: azure/aks-set-context@v1
       with:
@@ -35,7 +61,7 @@ jobs:
     # trigger canary deploy with Flagger
     - run: kubectl -n hackfest set image deployment/flights-api flights-api=$ACR_NAME.azurecr.io/hackfest/flights-api:${{ github.sha }}
  
-    # slack notify that pipeline completed
+    # slack notify: pipeline completed
     - uses: rtCamp/action-slack-notify@master
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
@@ -43,6 +69,6 @@ jobs:
         SLACK_USERNAME: Github Actions
         SLACK_ICON: https://github.com/quintessence/slack-icons/blob/master/images/octocat-spock-slack-icon.png
         SLACK_TITLE: flights-api CI/CD workflow
-        SLACK_MESSAGE: 'container image created and deployed as canary to AKS'
+        SLACK_MESSAGE: 'container image created and deployed as canary to AKS: ${{ env.ACR_NAME }}.azurecr.io/hackfest/flights-api:${{ github.sha }}'
 
       
