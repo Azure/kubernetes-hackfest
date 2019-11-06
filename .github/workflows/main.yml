@@ -24,11 +24,10 @@ jobs:
     # github Checkout
     - uses: actions/checkout@master
 
-    # sonar cloud scan
-    - uses: sonarsource/sonarcloud-github-action@master
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+    # ESLint code check (https://github.com/marketplace/actions/run-eslint)
+    - uses: "stefanoeb/eslint-action@master"
+      with:
+       args: "app/flights-api/app.js"
 
     # login to azure and build container image
     - uses: azure/login@v1
