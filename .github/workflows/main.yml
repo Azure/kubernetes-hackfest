@@ -1,9 +1,14 @@
 name: Container CI/CD
-on: [push]
+on:
+  push:
+    branches:
+      - master    
 jobs:
-  build:
+  build-deploy:
     env:
       ACR_NAME: briaracr
+      AKS_CLUSTER_NAME: briar-kubecon-01
+      AKS_RG: aks
     runs-on: ubuntu-latest
     steps:
 
@@ -35,14 +40,6 @@ jobs:
         SLACK_ICON: https://github.com/quintessence/slack-icons/blob/master/images/octocat-spock-slack-icon.png
         SLACK_TITLE: flights-api CI/CD workflow
         SLACK_MESSAGE: 'Container image created in ACR: ${{ env.ACR_NAME }}.azurecr.io/hackfest/flights-api:${{ github.sha }}'
-
-  deploy:
-    env:
-      ACR_NAME: briaracr
-      AKS_CLUSTER_NAME: briar-kubecon-01
-      AKS_RG: aks
-    runs-on: ubuntu-latest
-    steps:
       
     # set AKS context (https://github.com/Azure/aks-set-context)
     - uses: azure/aks-set-context@v1
