@@ -2,12 +2,12 @@ name: Container CI/CD
 on: [push]
 jobs:
   build:
+    env:
+      ACR_NAME: briaracr
+      AKS_CLUSTER_NAME: briar-kubecon-01
+      AKS_RG: aks
     runs-on: ubuntu-latest
     steps:
-    - env:
-        ACR_NAME: briaracr
-        AKS_CLUSTER_NAME: briar-kubecon-01
-        AKS_RG: aks
     
     # github Checkout
     - uses: actions/checkout@master
