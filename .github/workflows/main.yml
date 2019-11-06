@@ -32,5 +32,5 @@ jobs:
         version: 'latest'
       id: install
     
-    # run kubernetes commands
-    - run: kubectl get node 
+    # trigger canary deploy with Flagger
+    - run: kubectl -n hackfest set image deployment/flights-api flights-api=$ACR_NAME.azurecr.io/hackfest/flights-api:${{ github.sha }}
