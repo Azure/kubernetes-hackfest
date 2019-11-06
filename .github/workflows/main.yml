@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
+    # slack notify: start (https://github.com/marketplace/actions/github-action-for-slack)
     - uses: Ilshidur/action-slack@master
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
@@ -30,14 +31,13 @@ jobs:
     - run: az acr build -t hackfest/flights-api:${{ github.sha }} -r $ACR_NAME --no-logs app/flights-api
 
     # slack notify: ACR image built and stored in Azure
-    - uses: rtCamp/action-slack-notify@master
+    - uses: Ilshidur/action-slack@master
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_CHANNEL: kubecon2019
         SLACK_USERNAME: Github Actions
-        SLACK_ICON: https://github.com/quintessence/slack-icons/blob/master/images/octocat-spock-slack-icon.png
-        SLACK_TITLE: flights-api CI/CD workflow
-        SLACK_MESSAGE: 'Container image created in ACR: ${{ env.ACR_NAME }}.azurecr.io/hackfest/flights-api:${{ github.sha }}'
+      with:
+        args: 'container image created in ACR: ${{ env.ACR_NAME }}.azurecr.io/hackfest/flights-api:${{ github.sha }}'
       
     # set AKS context (https://github.com/Azure/aks-set-context)
     - uses: azure/aks-set-context@v1
@@ -57,13 +57,12 @@ jobs:
     - run: kubectl -n hackfest set image deployment/flights-api flights-api=$ACR_NAME.azurecr.io/hackfest/flights-api:${{ github.sha }}
  
     # slack notify: pipeline completed
-    - uses: rtCamp/action-slack-notify@master
+    - uses: Ilshidur/action-slack@master
       env:
         SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
         SLACK_CHANNEL: kubecon2019
         SLACK_USERNAME: Github Actions
-        SLACK_ICON: https://github.com/quintessence/slack-icons/blob/master/images/octocat-spock-slack-icon.png
-        SLACK_TITLE: flights-api CI/CD workflow
-        SLACK_MESSAGE: 'new version deployed as canary to AKS: ${{ env.ACR_NAME }}.azurecr.io/hackfest/flights-api:${{ github.sha }}'
+      with:
+        args: 'new version deployed as canary to AKS: ${{ env.ACR_NAME }}.azurecr.io/hackfest/flights-api:${{ github.sha }}'
 
       
