@@ -47,7 +47,7 @@ In order to trigger this pipeline you will need your own Github account and fork
 1. Update helm repo
 
     ```bash
-    helm repo add brigade https://azure.github.io/brigade
+    helm repo add brigade https://brigadecore.github.io/charts
     ```
 
 2. Install brigade chart into it's own namespace
