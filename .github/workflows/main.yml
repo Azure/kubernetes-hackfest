@@ -3,8 +3,6 @@ on:
   push:
     branches:
       - master
-    paths:
-    - '!.github/workflows/**'
 jobs:
   build-deploy:
     env:
