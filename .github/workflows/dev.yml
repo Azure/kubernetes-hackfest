@@ -1,8 +1,6 @@
 name: Container Security Scan
 on:
-  push:
-    branches:
-      - dev    
+  pull_request:
 jobs:
   build:
     runs-on: ubuntu-latest
