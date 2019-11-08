@@ -2,7 +2,9 @@ name: Container CI/CD
 on:
   push:
     branches:
-      - master    
+      - master
+    paths:
+    - '!.github/workflows/**'
 jobs:
   build-deploy:
     env:
