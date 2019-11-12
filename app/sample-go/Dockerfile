@@ -1,5 +1,5 @@
 # build stage
-FROM golang:1.10.1 AS build-env
+FROM golang:1.13.1 AS build-env
 WORKDIR /go/src/app
 ADD . .
 RUN go get -d -v
