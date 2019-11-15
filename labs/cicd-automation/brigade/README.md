@@ -47,7 +47,7 @@ In order to trigger this pipeline you will need your own Github account and fork
 1. Update helm repo
 
     ```bash
-    helm repo add brigade https://azure.github.io/brigade
+    helm repo add brigade https://brigadecore.github.io/charts
     ```
 
 2. Install brigade chart into it's own namespace
@@ -116,7 +116,7 @@ Brigade uses projects to define the configuration for pipelines. Brigade Project
         * Be sure to copy the access token value and add it to your project YAML file.
 
     * Gather your ACR info from the Azure portal. Edit the ```brig-proj-hackfest.yaml``` for these values
-        * acrServer (something like )
+        * acrServer (something like myacr.azurecr.io)
         * acrName (something like myacr)
 
     * Create an Azure service principal with rights to your ACR Resource Group. 
