@@ -113,7 +113,7 @@ In this lab we will build Docker containers for each of the application componen
     ```
 
     ```bash
-    export MONGODB_PASSWORD=$(az cosmosdb list-keys --name $COSMOSNAME --resource-group $RGNAME --query "primaryMasterKey" -o tsv)
+    export MONGODB_PASSWORD=$(az cosmosdb keys list --name $COSMOSNAME --resource-group $RGNAME --query "primaryMasterKey" -o tsv)
     ```
 
     Use Instrumentation Key from step 3 above.
