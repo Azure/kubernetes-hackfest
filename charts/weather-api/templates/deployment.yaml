@@ -12,6 +12,8 @@ spec:
       labels:
         app: weather-api
     spec:
+      imagePullSecrets:
+        - name: regcred
       containers:
         - image: "{{.Values.deploy.acrServer}}/hackfest/weather-api:{{.Values.deploy.imageTag}}"
           imagePullPolicy: Always

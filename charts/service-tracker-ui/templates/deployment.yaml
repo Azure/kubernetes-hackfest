@@ -11,6 +11,8 @@ spec:
       labels:
         app: service-tracker-ui
     spec:
+      imagePullSecrets:
+        - name: regcred
       containers:
         - image: "{{.Values.deploy.acrServer}}/hackfest/service-tracker-ui:{{.Values.deploy.imageTag}}"
           imagePullPolicy: Always

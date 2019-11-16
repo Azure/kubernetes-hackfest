@@ -12,6 +12,8 @@ spec:
       labels:
         app: data-api
     spec:
+      imagePullSecrets:
+        - name: regcred
       containers:
         - image: "{{.Values.deploy.acrServer}}/hackfest/data-api:{{.Values.deploy.imageTag}}"
           imagePullPolicy: Always

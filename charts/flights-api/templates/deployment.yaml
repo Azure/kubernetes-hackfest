@@ -12,6 +12,8 @@ spec:
       labels:
         app: flights-api
     spec:
+      imagePullSecrets:
+        - name: regcred
       containers:
         - image: "{{.Values.deploy.acrServer}}/hackfest/flights-api:{{.Values.deploy.imageTag}}"
           imagePullPolicy: Always

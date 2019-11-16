@@ -12,6 +12,8 @@ spec:
       labels:
         app: quakes-api
     spec:
+      imagePullSecrets:
+        - name: regcred
       containers:
         - image: "{{.Values.deploy.acrServer}}/hackfest/quakes-api:{{.Values.deploy.imageTag}}"
           imagePullPolicy: Always
