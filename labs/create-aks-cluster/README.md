@@ -152,7 +152,23 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
    --enable-addons monitoring \
    --no-wait
    ```
-
+   ## or with scale sets.
+   ```bash
+   # Create AKS Cluster
+   az aks create -n $CLUSTERNAME -g $RGNAME \
+   --kubernetes-version $K8SVERSION \
+   --service-principal $APPID \
+   --client-secret $CLIENTSECRET \
+   --generate-ssh-keys -l $LOCATION \
+   --node-count 1 \
+   --vm-set-type VirtualMachineScaleSets \
+   --load-balancer-sku standard \
+   --enable-cluster-autoscaler \
+   --min-count 1 \
+   --max-count 3 \
+   --enable-addons monitoring \
+   --no-wait
+   ```
 10. Verify your cluster status. The `ProvisioningState` should be `Succeeded`
 
     ```bash
