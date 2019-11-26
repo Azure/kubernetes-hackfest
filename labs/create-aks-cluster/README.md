@@ -61,15 +61,17 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
 
    Set the values from above as variables **(replace <appId> and <password> with your values)**.
 
-   DON'T MESS THIS STEP UP. REPLACE THE VALUES IN BRACKETS!!!
+    >**Warning:** Several of the following steps have you echo values to your .bashrc file. This is done so that you can get those values back if your session reconnects. You will want to remember to clean these up at the end of the training, in particular if you're running on your own, or your company's, subscription.
 
-   ```bash
-   # Persist for Later Sessions in Case of Timeout
-   APPID=<appId>
-   echo export APPID=$APPID >> ~/.bashrc
-   CLIENTSECRET=<password>
-   echo export CLIENTSECRET=$CLIENTSECRET >> ~/.bashrc
-   ```
+    DON'T MESS THIS STEP UP. REPLACE THE VALUES IN BRACKETS!!!
+
+    ```bash
+    # Persist for Later Sessions in Case of Timeout
+    APPID=<appId>
+    echo export APPID=$APPID >> ~/.bashrc
+    CLIENTSECRET=<password>
+    echo export CLIENTSECRET=$CLIENTSECRET >> ~/.bashrc
+    ```
 
 7. Create a unique identifier suffix for resources to be created in this lab.
 
