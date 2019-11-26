@@ -11,7 +11,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
 ## Instructions
 
->Note: Step 1 'Initialize Helm' below is only required if you're using a Helm version below version Helm 3. The Azure Cloud Shell now defaults to Helm 3. As of Helm 3 the 'Tiller' pod is not longer required, so the RBAC setup that follows is no longer needed. Run the following to confirm:
+>Note: Step 1 'Initialize Helm' below is only required if you're using a Helm version below version Helm 3. The Azure Cloud Shell now defaults to Helm 3. As of Helm 3 the 'Tiller' pod is no longer required, so the RBAC setup that follows is no longer needed. Run the following to confirm:
 ```bash
 helm version
 ```
