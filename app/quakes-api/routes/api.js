@@ -2,8 +2,6 @@ const applicationInsights = require('applicationinsights');
 const async = require('async');
 const cacheServiceUri = process.env.CACHE_SERVICE_URI;
 const dataServiceUri = process.env.DATA_SERVICE_URI;
-const kubePodName = process.env.KUBE_POD_NAME;
-const imageTag = '1.1.5'
 const dayjs = require('dayjs');
 const express = require('express');
 const jsonResponse = require('../models/express/jsonResponse');
@@ -22,7 +20,8 @@ const site = require('../models/util/site');
 var telemetry = applicationInsights.defaultClient;
 
 const routename = path
-  .basename('quakes-api version ' + imageTag + ' (' + kubePodName + ')');
+  .basename(__filename)
+  .replace('.js', ' default endpoint for ' + site.name);
 
 /**
  *

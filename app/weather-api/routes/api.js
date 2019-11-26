@@ -23,11 +23,7 @@ var applicationInsights = require('applicationinsights'),
  **/
 var telemetry = applicationInsights.defaultClient
 
-const kubePodName = process.env.KUBE_POD_NAME;
-const imageTag = '1.1.5'
-
-const routename = path
-  .basename('weather-api version ' + imageTag + ' (' + kubePodName + ')');
+const routename = path.basename(__filename).replace('.js', ' default endpoint for ' + site.name)
 
 const weatherIconBaseUrl = 'https://developer.accuweather.com/sites/default/files/'
 
