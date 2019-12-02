@@ -11,6 +11,11 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
 ## Instructions
 
+>Note: Step 1 'Initialize Helm' below is only required if you're using a Helm version below version 3. The Azure Cloud Shell now defaults to Helm 3. As of Helm 3 the 'Tiller' pod is no longer required, so the RBAC setup that follows is no longer needed. Run the following to confirm:
+```bash
+helm version
+```
+
 1. Initialize Helm
 
     Helm helps you manage Kubernetes applications — Helm Charts helps you define, install, and upgrade even the most complex Kubernetes application. Helm has a CLI component and a server side component called Tiller. 
