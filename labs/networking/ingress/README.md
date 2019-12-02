@@ -11,6 +11,8 @@ An ingress controller is a piece of software that provides reverse proxy, config
     * [Build Application Components in Azure Container Registry](../../build-application/README.md)
     * [Helm Setup and Deploy Application](../../helm-setup-deploy/README.md)
 
+>**Note:** Modern browsers (ex. Chrome) have started restricting navigation to untrusted sites by default. The following lab creates a self signed cert which will be considered untrested by these browsers. To test navigation to the site at the end of the lab you may need to use Safari or Internet Explorer. 
+
 ## Instructions
 
 1. Remove public IP addresses for services
