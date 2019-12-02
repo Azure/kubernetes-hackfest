@@ -61,17 +61,15 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
 
    Set the values from above as variables **(replace <appId> and <password> with your values)**.
 
-    >**Warning:** Several of the following steps have you echo values to your .bashrc file. This is done so that you can get those values back if your session reconnects. You will want to remember to clean these up at the end of the training, in particular if you're running on your own, or your company's, subscription.
+   DON'T MESS THIS STEP UP. REPLACE THE VALUES IN BRACKETS!!!
 
-    DON'T MESS THIS STEP UP. REPLACE THE VALUES IN BRACKETS!!!
-
-    ```bash
-    # Persist for Later Sessions in Case of Timeout
-    APPID=<appId>
-    echo export APPID=$APPID >> ~/.bashrc
-    CLIENTSECRET=<password>
-    echo export CLIENTSECRET=$CLIENTSECRET >> ~/.bashrc
-    ```
+   ```bash
+   # Persist for Later Sessions in Case of Timeout
+   APPID=<appId>
+   echo export APPID=$APPID >> ~/.bashrc
+   CLIENTSECRET=<password>
+   echo export CLIENTSECRET=$CLIENTSECRET >> ~/.bashrc
+   ```
 
 7. Create a unique identifier suffix for resources to be created in this lab.
 
@@ -121,26 +119,24 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
    ```bash
    az aks get-versions -l $LOCATION --output table
 
-    KubernetesVersion    Upgrades
-    -------------------  ----------------------------------------
-    1.15.5(preview)      None available
-    1.15.4(preview)      1.15.5(preview)
-    1.14.8               1.15.4(preview), 1.15.5(preview)
-    1.14.7               1.14.8, 1.15.4(preview), 1.15.5(preview)
-    1.13.12              1.14.7, 1.14.8
-    1.13.11              1.13.12, 1.14.7, 1.14.8
-    1.12.8               1.13.11, 1.13.12
-    1.12.7               1.12.8, 1.13.11, 1.13.12
-    1.11.10              1.12.7, 1.12.8
-    1.11.9               1.11.10, 1.12.7, 1.12.8
-    1.10.13              1.11.9, 1.11.10
-    1.10.12              1.10.13, 1.11.9, 1.11.10
+   KubernetesVersion    Upgrades
+   -------------------  ------------------------
+   1.14.0(preview)      None available
+   1.13.5               1.14.0(preview)
+   1.12.8               1.13.5
+   1.12.7               1.12.8, 1.13.5
+   1.11.9               1.12.7, 1.12.8
+   1.11.8               1.11.9, 1.12.7, 1.12.8
+   1.10.13              1.11.8, 1.11.9
+   1.10.12              1.10.13, 1.11.8, 1.11.9
+   1.9.11               1.10.12, 1.10.13
+   1.9.10               1.9.11, 1.10.12, 1.10.13
    ```
 
-   Set the version to one with available upgrades (in this case v 1.13.12)
+   Set the version to one with available upgrades (in this case v 1.12.8)
 
    ```bash
-   K8SVERSION=1.13.12
+   K8SVERSION=1.13.5
    ```
 
    > The below command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT and grab a coffee...
@@ -166,7 +162,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     ```bash
     Name             Location    ResourceGroup            KubernetesVersion    ProvisioningState    Fqdn
     ---------------  ----------  -----------------------  -------------------  -------------------  ----------------------------------------------------------------
-    aksstephen14260  eastus      aks-rg-stephen14260      1.13.12              Succeeded            aksstephen-aks-rg-stephen14-62afe9-9aa48ae4.hcp.eastus.azmk8s.io
+    aksstephen14260  eastus      aks-rg-stephen14260      1.12.8               Succeeded            aksstephen-aks-rg-stephen14-62afe9-9aa48ae4.hcp.eastus.azmk8s.io
     ```
 
 11. Get the Kubernetes config files for your new AKS cluster
@@ -185,9 +181,9 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
 
     ```bash
     NAME                       STATUS   ROLES   AGE     VERSION
-    aks-nodepool1-14089323-0   Ready    agent   113s    v1.13.12
-    aks-nodepool1-14089323-1   Ready    agent   2m59s   v1.13.12
-    aks-nodepool1-14089323-2   Ready    agent   2m1s    v1.13.12
+    aks-nodepool1-14089323-0   Ready    agent   113s    v1.12.8
+    aks-nodepool1-14089323-1   Ready    agent   2m59s   v1.12.8
+    aks-nodepool1-14089323-2   Ready    agent   2m1s    v1.12.8
     ```
 
     To see more details about your cluster:
@@ -234,7 +230,7 @@ This lab creates namespaces that reflect a representative example of an organiza
 
    # Get list of namespaces and drill into one
    kubectl get ns
-   kubectl describe ns <ns-name>
+   kubectl describe
    ```
 
 4. Assign CPU, Memory and Storage Quotas to Namespaces
@@ -268,8 +264,8 @@ This lab creates namespaces that reflect a representative example of an organiza
    kubectl run nginx-quotatest --image=nginx --restart=Never --replicas=1 --port=80 --requests='cpu=500m,memory=512Mi' -n dev
 
    # Check running pod and dev Namespace Allocations
-   kubectl get po -n dev
-   kubectl describe ns dev
+   kubectl get po -n
+   kubectl describe n
    ```
 
 6. Clean up limits, quotas, pods
