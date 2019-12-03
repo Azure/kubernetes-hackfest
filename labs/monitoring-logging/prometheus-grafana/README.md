@@ -13,6 +13,8 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
 
 ## Instructions
 
+>**Note:** If you're using Helm 3 then you can skip step 1 below, as Tiller is not used and no Tiller RBAC will be needed.
+
 1. Configure and Setup Helm to Deploy Prometheus Operator
 
     ```bash
