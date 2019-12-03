@@ -99,8 +99,8 @@ This section shows how to leverage Azure Monitor for Containers for gaining Moni
         * Kubernetes Events
 
         ```text
-        KubeEvents_CL
-        | where not(isempty(Namespace_s))
+        KubeEvents
+        | where not(isempty(Namespace))
         | sort by TimeGenerated desc
         | render table
         ```
