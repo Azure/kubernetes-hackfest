@@ -4,6 +4,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
 ## Prerequisites
 
+* Helm Version 3+
 * Clone this repo in Azure Cloud Shell.
 * Complete previous labs:
     * [Azure Kubernetes Service](../create-aks-cluster/README.md)
@@ -11,34 +12,15 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 
 ## Instructions
 
->Note: Step 1 'Initialize Helm' below is only required if you're using a Helm version below version 3. The Azure Cloud Shell now defaults to Helm 3. As of Helm 3 the 'Tiller' pod is no longer required, so the RBAC setup that follows is no longer needed. Run the following to confirm:
+>Note: The following lab assumes Helm version 3. Run the following to confirm your Helm version:
 ```bash
 helm version
+
+# Example Output:
+version.BuildInfo{Version:"v3.0.0", GitCommit:"e29ce2a54e96cd02ccfce88bee4f58bb6e2a28b6", GitTreeState:"clean", GoVersion:"go1.13.4"}
 ```
 
-1. Initialize Helm
-
-    Helm helps you manage Kubernetes applications — Helm Charts helps you define, install, and upgrade even the most complex Kubernetes application. Helm has a CLI component and a server side component called Tiller. 
-    * Initialize Helm and Tiller:
-
-        ```bash
-        kubectl apply -f labs/helm-setup-deploy/rbac-config.yaml
-        helm init --service-account tiller --upgrade
-        ```
-
-    * Validate the install (the Helm version may be newer in your lab):
-        ```bash
-        helm version
-        ```
-
-        ```bash
-        Client: &version.Version{SemVer:"v2.12.1", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}
-        Server: &version.Version{SemVer:"v2.12.2", GitCommit:"20adb27c7c5868466912eebdf6664e7390ebe710", GitTreeState:"clean"}
-        ```
-
-        > Note: It can take a minute or so for Tiller to start
-
-2. Review the Helm Chart components
+1. Review the Helm Chart components
 
     In this repo, there is a folder for `charts` with a sub-folder for each specific app chart. In our case each application has its own chart. 
 
@@ -46,7 +28,7 @@ helm version
 
     The `templates` folder holds the yaml files for the specific kubernetes resources for our application. Here you will see how Helm inserts the parameters into resources with this bracketed notation: eg -  `{{.Values.deploy.image}}`
 
-3. Customize Chart Parameters
+1. Customize Chart Parameters
 
     In each chart we will need to update the values file with our specific Azure Container Registry. 
 
@@ -129,7 +111,7 @@ helm version
         ...
         ```
 
-4. Deploy Charts
+1. Deploy Charts
 
     Ensure namespace was created earlier:
     ```bash
@@ -151,7 +133,7 @@ helm version
     helm upgrade --install service-tracker-ui charts/service-tracker-ui --namespace hackfest
     ```
 
-5. Initialize application
+1. Initialize application
 
     * First check to see if pods and services are working correctly
 
