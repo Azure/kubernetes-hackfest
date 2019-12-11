@@ -142,13 +142,13 @@ In order to trigger this pipeline you will need your own Github account and fork
 
 1. Enter "aks-hackfest" for Item Name
 
-1. Select `Multibrach Pipeline`
+1. Select `Multibrach Pipeline` and then click Ok
 
 1. Under Branch Sources `Click Add` -> `Single repository & branch`
 
-   ![Jenkins Branch Resource](./img/branch-resource.png)
+1. Name the repo and branch 'Master' and then in 'Replository URL' enter `your forked git repo`
 
-1. In 'Replository URL' enter `your forked git repo`
+   ![Jenkins Branch Resource](./img/branch-resource.png)
 
 1. Leave the 'Branch Specifier' as '*/master'
 
