@@ -27,14 +27,14 @@ The general workflow/result will be as follows:
 
 1. Create a Azure DevOps organization/account. Follow the steps here: https://docs.microsoft.com/en-us/azure/devops/user-guide/sign-up-invite-teammates?view=vsts
 
-2. Create New Project in Azure DevOps
+1. Create New Project in Azure DevOps
 
     * Name your project "kubernetes-hackfest" and give it a description.
     * Leave the Version control as Git
 
     ![Azure DevOps New Project](azure-do-new-project.png)
 
-3. On the next screen, click "Repos" and then "import a repository"
+1. On the next screen, click "Repos" and then "import a repository"
 
     Enter `https://github.com/Azure/kubernetes-hackfest` for the Clone URL and click "Import"
     
@@ -45,30 +45,30 @@ The general workflow/result will be as follows:
 
 1. In Azure DevOps, click on "Pipelines" on the left menu and then click "Builds"
 
-2. Click the "New pipeline" button
+1. Click the "New pipeline" button
 
-3. Azure DevOps pipelines now defaults to the yaml based editing experience. The following steps assume classic mode, so you should select 'Use the classic editor' as shown below.
+1. Azure DevOps pipelines now defaults to the yaml based editing experience. The following steps assume classic mode, so you should select 'Use the classic editor' as shown below.
 
     ![Switch to Classic Mode](azure-do-use-classic.png)
 
-4. In "Select a source," use `Azure Repos Git` and ensure it is pointing to your newly built repo (this is the default)
+1. In "Select a source," use `Azure Repos Git` and ensure it is pointing to your newly built repo (this is the default)
     > Note that we are using the master branch here. Normally we would use other branches and PR's. For simplicity, we are using master just for this lab.
 
-5. Select to "start with an Empty job"
+1. Select to "start with an Empty job"
 
-6. Leave the name as "kubernetes-hackfest-CI"
+1. Leave the name as "kubernetes-hackfest-CI"
 
-7. Change the Agent pool to use the "Hosted Ubuntu 1804"
+1. Make sure the Agent pool is set to 'Azure Pipelines' and the Agent Specification is set to use the 'ubuntu-1804'
 
-8. Click the plus sign by "Agent job 1" to add a task
+1. Click the plus sign by "Agent job 1" to add a task
 
-9. Search tasks for "Azure" and add the Azure CLI task
+1. Search tasks for "Azure" and add the Azure CLI task
 
     ![Azure DevOps Azure CLI](azure-do-azurecli.png)
 
-10. Click on the Azure CLI task and choose your Azure subscription and `Authorize`
+1. Click on the Azure CLI task and choose your Azure subscription and `Authorize`
 
-11. For "Script Location" choose "Inline script" and enter the following (be sure to replace the ACR name with yours). 
+1. For "Script Location" choose "Inline script" and enter the following (be sure to replace the ACR name with yours). 
 
     > Note: We are creating a dynamic image tag using our build ID from Azure DevOps.
 
@@ -86,15 +86,19 @@ The general workflow/result will be as follows:
 
     ![Azure DevOps CLI](azure-do-cli.png)
 
-12. Add another task to "Agent job 1" and search for "Copy files". Use "charts" for the artifact name and browse to the charts folder for the "Path to publish"
+1. Add another task to "Agent job 1" and search for "Copy files". Use "charts" for the artifact name and browse to the charts folder for the "Path to publish". Under 'Target Folder' enter $(System.DefaultWorkingDirectory).
 
     ![Azure DevOps Artifact](azure-do-artifact.png)
 
-13. Test this by clicking "Save & queue" and providing a comment
+1. Add a final task to "Agent job 1" and search for "Publish Build Artifacts". You can leave the default settings for this task.
 
-14. Click on "Builds" to check result. It can take a bit of time for all of the steps to complete. 
+    ![Azure DevOps Artifact](azure-do-publish.png)
 
-15. Enable Continuous integration for the build definition. Edit the build definition and you will find this setting under "Triggers"
+1. Test this by clicking "Save & queue" and providing a comment
+
+1. Click on "Builds" to check result. It can take a bit of time for all of the steps to complete. 
+
+1. Enable Continuous integration for the build definition. Edit the build definition and you will find this setting under "Triggers"
 
 #### Create Deployment Pipeline
 
@@ -104,37 +108,37 @@ In the deployment pipeline, we will create a Helm task to update our application
 
 1. In Azure DevOps, click on "Pipelines" on the left menu and then click "Releases"
 
-2. Click the "New pipeline" button
+1. Click the "New pipeline" button
 
-3. Select to "start with an Empty job"
+1. Select to "start with an Empty job"
 
-4. Name the pipeline "AKS Helm Deploy" (it will default to "New release pipeline")
+1. Name the pipeline "AKS Helm Deploy" (it will default to "New release pipeline")
 
-5. Click on "+ Add" next to Artifacts
+1. Click on "+ Add" next to Artifacts
 
-6. In "Source (build pipeline)", select the build we created earlier (should be named "kubernetes-hackfest-CI")
+1. In "Source (build pipeline)", select the build we created earlier (should be named "kubernetes-hackfest-CI")
 
     ![Azure DevOps Release Artifact](azure-do-release-artifact.png)
 
-7. Click on the lightning bolt next to the Artifact we just created and enable "Continuous deployment trigger"
+1. Click on the lightning bolt next to the Artifact we just created and enable "Continuous deployment trigger"
 
-8. Click on "Stage 1" in the Stages box.
+1. Click on "Stage 1" in the Stages box.
 
-9. Name the stage "dev"
+1. Name the stage "dev"
 
-10. Click on "1 job, 0 task" to view stage tasks
+1. Click on "1 job, 0 task" to view stage tasks
 
-11. Click on "Agent job" and change the Agent pool to "Hosted Ubuntu 1804" in the drop down
+1. Click on "Agent job" and change the Agent pool to "Azure Pipelines" and the Agent Specification to "ubuntu-1804" in the drop down
 
-12. On the Agent job, click the "+" to add a Task
+1. On the Agent job, click the "+" to add a Task
 
-13. Search for "helm" and add the task called "Helm Tool Installer" as first task. Click Add
+1. Search for "helm" and add the task called "Helm Tool Installer" as first task. Click Add
 
     > Change the version for the helm install to `3.0.1`
 
-14. Next, Search for "helm" and add the task called "Package and deploy Helm charts". Click Add
+1. Next, Search for "helm" and add the task called "Package and deploy Helm charts". Click Add
 
-15. Click on the task (named "helm ls") to configure all of the settings for the release
+1. Click on the task (named "helm ls") to configure all of the settings for the release
     
     * Select your Azure subscription in the dropdown and click "Authorize"
     * Select the Resource Group and AKS Cluster
@@ -154,17 +158,17 @@ In the deployment pipeline, we will create a Helm task to update our application
 
 1. In Azure DevOps, click on Builds and click the "Queue" button
 
-2. Monitor the builds and wait for the build to complete
+1. Monitor the builds and wait for the build to complete
 
     ![Azure DevOps Build](azure-do-build.png)
 
-3. The release will automatically start when the build is complete (be patient, this can take some time). Review the results as it is complete. 
+1. The release will automatically start when the build is complete (be patient, this can take some time). Review the results as it is complete. 
 
     ![Azure DevOps Release](azure-do-release.png)
 
-4. Validate that your newly built image was deployed in your AKS cluster. Eg - `kubectl describe pod service-tracker-ui-<pod id> -n hackfest`
+1. Validate that your newly built image was deployed in your AKS cluster. Eg - `kubectl describe pod service-tracker-ui-<pod id> -n hackfest`
 
-5. Now kick-off the full CI/CD pipeline by making an edit to the service-tracker-ui frontend code in the Azure DevOps code repo.
+1. Now kick-off the full CI/CD pipeline by making an edit to the service-tracker-ui frontend code in the Azure DevOps code repo.
 
 ## Troubleshooting / Debugging
 
