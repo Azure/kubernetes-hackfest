@@ -134,7 +134,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     1.13.11              1.13.12, 1.14.7, 1.14.8
    ```
 
-   Set the version to one with available upgrades (in this case v 1.13.12)
+   Set the version to one with available upgrades (in this case v 1.15.7)
 
    ```bash
    K8SVERSION=1.15.7
