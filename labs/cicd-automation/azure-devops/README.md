@@ -58,7 +58,7 @@ The general workflow/result will be as follows:
 
 6. Leave the name as "kubernetes-hackfest-CI"
 
-7. Change the Agent pool to use the "Hosted Ubuntu 1604"
+7. Change the Agent pool to use the "Hosted Ubuntu 1804"
 
 8. Click the plus sign by "Agent job 1" to add a task
 
@@ -86,7 +86,7 @@ The general workflow/result will be as follows:
 
     ![Azure DevOps CLI](azure-do-cli.png)
 
-12. Add another task to "Agent job 1" and search for "Publish Build Artifacts". Use "charts" for the artifact name and browse to the charts folder for the "Path to publish"
+12. Add another task to "Agent job 1" and search for "Copy files". Use "charts" for the artifact name and browse to the charts folder for the "Path to publish"
 
     ![Azure DevOps Artifact](azure-do-artifact.png)
 
@@ -124,13 +124,13 @@ In the deployment pipeline, we will create a Helm task to update our application
 
 10. Click on "1 job, 0 task" to view stage tasks
 
-11. Click on "Agent job" and change the Agent pool to "Hosted Ubuntu 1604" in the drop down
+11. Click on "Agent job" and change the Agent pool to "Hosted Ubuntu 1804" in the drop down
 
 12. On the Agent job, click the "+" to add a Task
 
 13. Search for "helm" and add the task called "Helm Tool Installer" as first task. Click Add
 
-    > Change the version for the helm install to `2.14.0`
+    > Change the version for the helm install to `3.0.1`
 
 14. Next, Search for "helm" and add the task called "Package and deploy Helm charts". Click Add
 
