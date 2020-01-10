@@ -263,8 +263,11 @@ To save time, we will only deploy the web-ui application in this lab.
 
 #### Add Kashti Web Dashboard (Optional)
 
-* [Add these steps](https://github.com/Azure/kashti)
+The Kashti Web Dashboard was deployed as part of the Brigade Helm chart. By default the dashboard service is set as ClsuterIP. You can edit the service and change the type to LoadBalancer to view the dashboard.
 
+```bash
+kubectl edit svc brigade-kashti -n brigade
+```
 ## Troubleshooting / Debugging
 
 * N/A
