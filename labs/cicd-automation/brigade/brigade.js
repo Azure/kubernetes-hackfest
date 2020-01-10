@@ -30,9 +30,9 @@ events.on("push", (brigadeEvent, project) => {
     // setup brigade job for helm deployment
     var helm = new Job("job-runner-helm")
     helm.storage.enabled = false
-    helm.image = "chzbrgr71/k8s-helm:v2.9.1"
+    helm.image = "lachlanevenson/k8s-helm:v3.0.2"
     helm.tasks = [
-        `helm upgrade --install web-ui ./src/charts/service-tracker-ui --namespace hackfest --set deploy.imageTag=${imageTag}`
+        `helm upgrade --install service-tracker-ui ./src/charts/service-tracker-ui --namespace hackfest --set deploy.imageTag=${imageTag}`
     ]
 
     // create a brigade group and run
