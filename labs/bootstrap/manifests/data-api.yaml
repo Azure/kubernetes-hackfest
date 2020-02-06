@@ -1,0 +1,55 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: data-api
+  namespace: hackfest
+  labels:
+    name: data-api
+spec:
+  type: ClusterIP
+  ports:
+  - name: http
+    port: 3009
+    targetPort: 3009
+  selector:
+    app: data-api
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-api
+  namespace: hackfest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-api
+  template:
+    metadata:
+      labels:
+        app: data-api
+    spec:
+      containers:
+        - image: msftgbb/data-api:latest
+          imagePullPolicy: Always
+          name: data-api
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "1024Mi"
+              cpu: "1000m"
+          env:
+            - name: MONGODB_USER
+              value: "dbuser"
+            - name: MONGODB_PASSWORD
+              value: "dbpassword"
+            - name: MONGODB_IP
+              value: "mongodb.hackfest.svc.cluster.local"
+            - name: MONGODB_PORT
+              value: "27017"
+          ports:
+          - containerPort: 3009
+            protocol: TCP
+      restartPolicy: Always
