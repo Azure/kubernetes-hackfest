@@ -28,11 +28,11 @@ In order to trigger this pipeline you will need your own Github account and fork
 
     ![Brigade GitHub Fork](github-fork.png)
 
-2. Grab your clone URL from Github which will look something like: `https://github.com/thedude-lebowski/kubernetes-hackfest.git`
+1. Grab your clone URL from Github which will look something like: `https://github.com/thedude-lebowski/kubernetes-hackfest.git`
 
     ![Brigade GitHub Clone](github-clone.png)
 
-3. Clone your repo in Azure Cloud Shell.
+1. Clone your repo in Azure Cloud Shell.
 
     > Note: If you have cloned the repo in earlier labs, the directory name will conflict. You can either delete the old one or just rename it before this step. 
 
@@ -49,24 +49,30 @@ In order to trigger this pipeline you will need your own Github account and fork
     ```bash
     helm repo add brigade https://brigadecore.github.io/charts
     ```
+1. Apply the cluster role binding for the brigade-worker service account
+    ```bash
+    kubectl apply -f labs/cicd-automation/brigade/brigade-rbac.yaml
+    ```
 
-2. Install brigade chart into it's own namespace
+1. Install brigade chart into it's own namespace
 
     ```bash
     kubectl create ns brigade
 
-    helm install -n brigade brigade/brigade --namespace brigade
+    helm install brigade brigade/brigade --namespace brigade --set brigade-github-app.enabled=true --set brigade-github-app.service.type=LoadBalancer
 
     kubectl get pod,svc -n brigade
 
-    NAME                                             READY     STATUS    RESTARTS   AGE
-    pod/brigade-brigade-api-789bf79dbd-t2p8g         1/1       Running   0          25s
-    pod/brigade-brigade-ctrl-5d85d9f5bc-9zd26        1/1       Running   0          25s
-    pod/brigade-brigade-github-gw-65f45c69c7-kbvhg   1/1       Running   0          25s
+    NAME                                              READY   STATUS    RESTARTS   AGE
+    pod/brigade-brigade-api-77d8c6cd59-grlcw          0/1     Running   0          8s
+    pod/brigade-brigade-ctrl-5885799bcd-zmxjx         1/1     Running   0          8s
+    pod/brigade-brigade-github-app-597b756478-dkx84   1/1     Running   0          8s
+    pod/brigade-kashti-7d46999bb9-zgf7t               1/1     Running   0          8s
 
-    NAME                                TYPE           CLUSTER-IP     EXTERNAL-IP   PORT(S)          AGE
-    service/brigade-brigade-api         ClusterIP      10.0.140.170   <none>        7745/TCP         25s
-    service/brigade-brigade-github-gw   LoadBalancer   10.0.44.207    <pending>     7744:30858/TCP   25s
+    NAME                                 TYPE           CLUSTER-IP    EXTERNAL-IP   PORT(S)        AGE
+    service/brigade-brigade-api          ClusterIP      10.0.85.60    <none>        7745/TCP       8s
+    service/brigade-brigade-github-app   LoadBalancer   10.0.189.63   <pending>     80:31744/TCP   8s
+    service/brigade-kashti               ClusterIP      10.0.52.160   <none>        80/TCP         8s
     ```
 
 #### Setup Brigade Project
@@ -157,12 +163,12 @@ Brigade uses projects to define the configuration for pipelines. Brigade Project
             tenant: 99f999bf-99f1-41af-99ab-2d7cd011ab12
         ```
 
-2. Create your brigade project
+1. Create your brigade project
 
     ```bash
     # from the directory where your file from step #1 was created
 
-    helm install --name brig-proj-hackfest brigade/brigade-project -f brig-proj-hackfest.yaml --namespace brigade
+    helm install brig-proj-hackfest brigade/brigade-project -f brig-proj-hackfest.yaml --namespace brigade
     ```
 
     > Note: There is a ```brig``` CLI client that allows you to view your brigade projects. More details here: <https://github.com/Azure/brigade/tree/master/brig>
@@ -173,13 +179,13 @@ To save time, we will only deploy the web-ui application in this lab.
 
 1. In the Azure cloud shell, ```cd ~/kubernetes-hackfest``` and create a file called ```brigade.js```
 
-2. Edit `brigade.js` in cloud shell
+1. Edit `brigade.js` in cloud shell
 
-3. Paste the contents from the sample [brigade.js](./brigade.js) file in this file
+1. Paste the contents from the sample [brigade.js](./brigade.js) file in this file
 
-4. Review the pipeline steps in the javascript
+1. Review the pipeline steps in the javascript
 
-5. Commit the new file to your Github repository
+1. Commit the new file to your Github repository
 
     ```bash
     git add .
@@ -195,43 +201,43 @@ To save time, we will only deploy the web-ui application in this lab.
 1. Get a URL for your Brigade Gateway
 
     ```bash
-    kubectl get service brigade-brigade-github-gw -n brigade
+    kubectl get service brigade-brigade-github-app -n brigade
 
     NAME                 TYPE           CLUSTER-IP    EXTERNAL-IP     PORT(S)          AGE
     brigade-brigade-gw   LoadBalancer   10.0.45.233   13.67.129.228   7744:30176/TCP   4h
 
     # use these commands to create the full URL
 
-    export GH_WEBHOOK=http://$(kubectl get svc brigade-brigade-github-gw -n brigade -o jsonpath='{.status.loadBalancer.ingress[0].ip}'):7744/events/github
+    export GH_WEBHOOK=http://$(kubectl get svc brigade-brigade-github-app -n brigade -o jsonpath='{.status.loadBalancer.ingress[0].ip}')/events/github
 
     echo $GH_WEBHOOK
     ```
 
-    The webhook URL should look something like: http://13.67.129.228:7744/events/github You will use this in the next step.
+    The webhook URL should look something like: http://13.67.129.228/events/github You will use this in the next step.
 
-2. In your forked Github repo, click on Settings
+1. In your forked Github repo, click on Settings
 
-3. Click Webhooks
+1. Click Webhooks
 
-4. Click `Add webhook`
+1. Click `Add webhook`
 
-5. Set the `Payload URL` to the URL created in step 1
+1. Set the `Payload URL` to the URL created in step 1
 
-6. Set the `Content type` to `application/json`
+1. Set the `Content type` to `application/json`
 
-7. Set the `Secret` to the value from your `brig-proj-hackfest.yaml` called "sharedSecret"
+1. Set the `Secret` to the value from your `brig-proj-hackfest.yaml` called "sharedSecret"
 
-8. Set the `Which events...` to `Let me select individual events` and check `Push` and `Pull request`
+1. Set the `Which events...` to `Let me select individual events` and check `Push` and `Pull request`
 
     ![Brigade GitHub Webhook](github-webhook.png)
 
-9. Click the `Add webhook` button
+1. Click the `Add webhook` button
 
 #### Test the CI/CD Pipeline
 
 1. Make a code change in the web-ui application source code.
 
-2. Push the update to Github and validate the build in brigade.
+1. Push the update to Github and validate the build in brigade.
 
     ```bash
     kubectl get pod -n brigade
@@ -248,16 +254,20 @@ To save time, we will only deploy the web-ui application in this lab.
     job-runner-helm-01cjzdn7d650jff10a04292pjs          0/1       Completed   0          25s
 
     kubectl logs job-runner-helm-01cjzdn7d650jff10a04292pjs -n brigade
+    # Note: On the above command you can add the -f flag to 'follow' the output (i.e. to keep watching it as it rolls)
     ```
 
-3. Check the `web-ui` application pods and ensure they were updated with the new imageTag created in the build.
+1. Check the `service-tracker-ui` application pods and ensure they were updated with the new imageTag created in the build.
 
-4. If it worked, celebrate and go get a beer.
+1. If it worked, celebrate and go get a beer.
 
 #### Add Kashti Web Dashboard (Optional)
 
-* [Add these steps](https://github.com/Azure/kashti)
+The Kashti Web Dashboard was deployed as part of the Brigade Helm chart. By default the dashboard service is set as ClsuterIP. You can edit the service and change the type to LoadBalancer to view the dashboard.
 
+```bash
+kubectl edit svc brigade-kashti -n brigade
+```
 ## Troubleshooting / Debugging
 
 * N/A

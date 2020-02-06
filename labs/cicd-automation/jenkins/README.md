@@ -32,7 +32,7 @@ In order to trigger this pipeline you will need your own Github account and fork
 
     ![Jenkins GitHub Fork](./img/github-fork.png)
 
-2. Modify the Jenkinsfile pipeline Within Github Fork (Needs to be done from Github)
+1. Modify the Jenkinsfile pipeline Within Github Fork (Needs to be done from Github)
 
     The pipeline file references your Azure Container Registry in a variable. Edit the `labs/cicd-automation/jenkins/Jenkinsfile` file and modify line 4 of the code: 
 
@@ -40,19 +40,20 @@ In order to trigger this pipeline you will need your own Github account and fork
     def ACRNAME = 'youracrname'
     ```
 
-3.  Your newly forked repo will have the default ACR URL hardcoded in the Helm chart for the service-tracker-ui app (which was manually updated locally in step 4 of the 'Lab: Helm Setup and Deploy Application' lab). This needs to be updated on line 10 of ./charts/service-tracker-ui/values.yaml in your fork of the repo.
+    ![Jenkins Modify ACR](./img/modify_acr.png)
+
+1.  Your newly forked repo will have the default ACR URL hardcoded in the Helm chart for the service-tracker-ui app (which was manually updated locally in step 4 of the 'Lab: Helm Setup and Deploy Application' lab). This needs to be updated on line 10 of ./charts/service-tracker-ui/values.yaml in your fork of the repo.
 
     ```bash
     acrServer: "<update this with your acr name>.azurecr.io"
     ```
 
-    ![Jenkins Modify ACR](./img/modify_acr.png)
 
-4. Grab your clone URL from Github which will look something like: `https://github.com/thedude-lebowski/kubernetes-hackfest.git`
+1. Grab your clone URL from Github which will look something like: `https://github.com/thedude-lebowski/kubernetes-hackfest.git`
 
     ![Jenkins GitHub Clone](./img/github-clone.png)
 
-5. Clone your repo in Azure Cloud Shell.
+1. Clone your repo in Azure Cloud Shell.
 
     > Note: If you have cloned the repo in earlier labs, the directory name will conflict. You can either delete the old one or just rename it before this step.
 
@@ -69,19 +70,21 @@ In order to trigger this pipeline you will need your own Github account and fork
     ```bash
     helm version
 
-    Client: &version.Version{SemVer:"v2.12.0", GitCommit:"2e55dbe1fdb5fdb96b75ff144a339489417b146b", GitTreeState:"clean"}
-    Server: &version.Version{SemVer:"v2.12.0", GitCommit:"d325d2a9c179b33af1a024cdb5a4472b6288016a", GitTreeState:"clean"}
+    version.BuildInfo{Version:"v3.0.0", GitCommit:"e29ce2a54e96cd02ccfce88bee4f58bb6e2a28b6", GitTreeState:"clean", GoVersion:"go1.13.4"}
     ```
-
-2. Install Jenkins Using Helm
+1. Apply the jenkins Cluster Role Binding manifest
+    ```bash
+    kubectl apply -f jenkins-rbac.yaml
+    ```
+1. Install Jenkins Using Helm
 
    ```bash
-   helm install stable/jenkins --name jenkins -f values.yaml
+   helm install jenkins stable/jenkins -f values.yaml
    ```
 
    This will take a couple of minutes to fully deploy
 
-3. Get credentials and IP to Login To Jenkins
+1. Get credentials and IP to Login To Jenkins
 
    ```bash
    printf $(kubectl get secret --namespace default jenkins -o jsonpath="{.data.jenkins-admin-password}" | base64 --decode);echo
@@ -93,21 +96,21 @@ In order to trigger this pipeline you will need your own Github account and fork
 
    Login with the password from previous step and the username: admin
 
-   > Note: The Jenkins pod can take a couple minutes to start. Ensure it is `Running` prior to attempting to login.
+   > Note: The Jenkins pod can take a couple minutes to start. Ensure it is `Running` prior to attempting to login. You can run the following to watch the pod creation: **watch kubectl get pods**
 
-4. Update Jekins. There are pending updates that need to be applied for pipelines to work. Select `Manage Jenkins` and upgrade automatically. Jenkins must be re-started.
+1. Update Jekins. There may be pending updates that need to be applied for pipelines to work. Select `Manage Jenkins`. See if any updates are pending, and apply accordingly. This will likely require Jenkins to reboot. There should be a checkbox asking to authorize reboot.
 
 #### Configure Azure Integration In Jenkins
 
 1. Browse to Jenkins Default Admin Screen
 
-2. Click on `Credentials`
+1. Click on `Credentials`
 
-3. Select `System` under Credentials
+1. Select `System` under Credentials
 
-4. On the right side click the `Global Credentials` drop down and select `Add Credentials`
+1. On the right side click the `Global Credentials` drop down and select `Add Credentials`
 
-5. Enter the following: *Example Below*
+1. Enter the following: *Example Below*
     * Kind = Azure Service Principal
     * Scope = Global
     * Subscription ID = use Subscription ID from cluster creation
@@ -118,50 +121,52 @@ In order to trigger this pipeline you will need your own Github account and fork
     * Id = azurecli
     * Description = Azure CLI Credentials
 
-6. Click `Verify Service Principal`
+1. Click `Verify Service Principal`
 
-7. Click `Save`
+1. Click `Save`
 
    ![Jenkins Azure Credentials](./img/az-creds.png)
 
-#### Edit Jenkinsfile Variable
+#### Verify Updated ACRNAME in Jenkinsfile
 
-1. Edit Jenkinsfile  with the following command `code Jenkinsfile`
+1. Within Azure Cloud Shell edit Jenkinsfile  with the following command `code Jenkinsfile`
 
-2. Replace the following variable with the Azure Container Registry created previously
+1. If not updated, replace the following variable with the Azure Container Registry created previously
    * def  ACRNAME = '<container_registry_name>'
 
 #### Create Jenkins Multibranch Pipeline
 
 1. Open Jenkins Main Admin Interface
 
-2. Click `New Item`
+1. Click `New Item`
 
-3. Enter "aks-hackfest" for Item Name
+1. Enter "aks-hackfest" for Item Name
 
-4. Select `Multibrach Pipeline`
+1. Select `Multibrach Pipeline` and then click Ok
 
-5. Under Branch Sources `Click Add` -> `Git`
+1. Under Branch Sources `Click Add` -> `Single repository & branch`
+
+1. Name the repo and branch 'Master' and then in 'Replository URL' enter `your forked git repo`
 
    ![Jenkins Branch Resource](./img/branch-resource.png)
 
-6. In Project Replository enter `your forked git repo`
+1. Leave the 'Branch Specifier' as '*/master'
 
-7. In Build Configuration -> Script Path -> use the following path 
+1. In Build Configuration -> Script Path -> use the following path 
 
    `labs/cicd-automation/jenkins/Jenkinsfile`
 
    ![Jenkins Branch Config](./img/branch-config.png)
 
-8. Scroll to bottom of page and click `Save`
+1. Scroll to bottom of page and click `Save`
 
 #### Run Jenkins Multibranch Deployment
 
 1. Go back to Jenkins main page
 
-2. Select the newly created pipeline
+1. Select the newly created pipeline
 
-3. Select `Scan Multibranch Pipeline Now`
+1. Select `Scan Multibranch Pipeline Now`
 
 This will scan your git repo and run the Jenkinsfile build steps. It will clone the repository, build the docker image, and then deploy the app to your AKS Cluster.
 
@@ -171,15 +176,15 @@ This will scan your git repo and run the Jenkinsfile build steps. It will clone 
 
    ![Jenkins Master](./img/jenkins-master.png)
 
-2. Select `build #1` under Build History
+1. Select `build #1` under Build History
 
    ![Jenkins Build History](./img/build-history.png)
 
-3. Select `Console Output`
+1. Select `Console Output`
 
    ![Jenkins Console Log](./img/console-log.png)
 
-4. Check streaming console output for any errors
+1. Check streaming console output for any errors
 
 #### Verify Deployed Application
 
@@ -189,13 +194,13 @@ This will scan your git repo and run the Jenkinsfile build steps. It will clone 
    kubectl get pods -n hackfest
    ```
 
-2. Get service IP of deployed app
+1. Get service IP of deployed app
 
    ```bash
    kubectl get service/service-tracker-ui -n hackfest
    ```
 
-3. Open browser and test application `EXTERNAL-IP:8080`
+1. Open browser and test application `EXTERNAL-IP:8080`
 
 ## Troubleshooting / Debugging
 
