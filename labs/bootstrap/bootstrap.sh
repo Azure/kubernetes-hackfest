@@ -160,7 +160,7 @@ function deployapp () {
     sleep 10
 
     echo "Application deployment complete!!!"
-    echo Hit the site at http://$(k get svc service-tracker-ui -n hackfest -o=jsonpath='{.status.loadBalancer.ingress[0].ip}'):8080 
+    echo Hit the site at http://$(kubectl get svc service-tracker-ui -n hackfest -o=jsonpath='{.status.loadBalancer.ingress[0].ip}'):8080 
 }
 
 ##If Create Cluster step flag set, execute create cluster
