@@ -1,6 +1,8 @@
 # Bootstrap the Lab 
 
-This script will allow you to jump ahead on labs 1, 2 and 3 if needed. 
+This script will allow you to jump ahead on labs 1, 2 and 3 if needed.
+
+This setup will use an in-cluster MongoDB rather than Cosmos, and as such the data-api deployment will use an aligned manifest rather than trying to reuse the Helm charts. Service Tracker UI, Weather API, Flights API and Quakes API will all reuse the Helm charts used by the standard lab flow.
 
 ```bash
 # Make sure the script is executable
