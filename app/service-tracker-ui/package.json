@@ -37,7 +37,7 @@
   "description": "Web UI Service Status Dashboard",
   "author": "Joey Schluchter <jschluchter@gmail.com>",
   "engines": {
-    "node": ">= 8.1.4",
+    "node": ">= 10.19.0",
     "npm": ">= 5.0.0"
   },
   "browserslist": [
