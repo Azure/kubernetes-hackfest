@@ -18,7 +18,7 @@ GEM
       bson (>= 4.3.0, < 5.0.0)
     multi_json (1.13.1)
     mustermann (1.0.2)
-    rack (2.0.6)
+    rack (2.0.8)
     rack-protection (2.0.3)
       rack
     sinatra (2.0.3)
