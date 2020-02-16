@@ -71,7 +71,7 @@ version.BuildInfo{Version:"v3.0.0", GitCommit:"e29ce2a54e96cd02ccfce88bee4f58bb6
         containerPort: 3009
         ```
 
-    * Valdiate that the `imageTag` parameter matches the tag you created in Azure Container Registry in the previous lab.
+    * Validate that the `imageTag` parameter matches the tag you created in Azure Container Registry in the previous lab.
 
     * Add `imagePullSecret` to each deployment.yaml file for each microservice
 
