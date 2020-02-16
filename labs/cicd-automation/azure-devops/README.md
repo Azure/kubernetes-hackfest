@@ -177,6 +177,6 @@ In the deployment pipeline, we will create a Helm task to update our application
 
 ## Docs / References
 
-* Blog post by Jessica Dean. http://jessicadeen.com/tech/microsoft/how-to-deploy-to-kubernetes-using-helm-and-vsts 
+* Blog post by Jessica Dean. https://jessicadeen.com/how-to-deploy-to-kubernetes-using-helm-and-vsts 
 
 #### Next Lab: [Networking](../../networking/README.md)
