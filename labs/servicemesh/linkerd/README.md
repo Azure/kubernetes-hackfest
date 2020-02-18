@@ -20,11 +20,11 @@ Linkerd is a Cloud Native Computing Foundation (CNCF) project.
 1. Remove the application pods/services from the cluster. We will re-deploy with linkerd.
 
     ```bash
-    helm uninstall service-tracker-ui
-    helm uninstall weather-api
-    helm uninstall quakes-api
-    helm uninstall flights-api
-    helm uninstall data-api
+    helm uninstall service-tracker-ui -n hackfest
+    helm uninstall weather-api -n hackfest
+    helm uninstall quakes-api -n hackfest
+    helm uninstall flights-api -n hackfest
+    helm uninstall data-api -n hackfest
     ```
 
 2. Install linkerd CLI on your machine
