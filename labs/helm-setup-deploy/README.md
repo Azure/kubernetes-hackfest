@@ -178,6 +178,7 @@ version.BuildInfo{Version:"v3.0.0", GitCommit:"e29ce2a54e96cd02ccfce88bee4f58bb6
 
 ## Docs / References
 
+* [Debugging Pods](https://kubernetes.io/docs/tasks/debug-application-cluster/debug-application/#debugging-pods)
 * [Helm](http://helm.sh)
 
 #### Next Lab: [CI/CD Automation](../cicd-automation/README.md)
