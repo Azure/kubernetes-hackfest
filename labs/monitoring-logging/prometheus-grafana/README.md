@@ -13,42 +13,23 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
 
 ## Instructions
 
->**Note:** If you're using Helm 3 then you can skip step 1 below, as Tiller is not used and no Tiller RBAC will be needed.
-
-1. Configure and Setup Helm to Deploy Prometheus Operator
-
-    ```bash
-    # Switch to the lab directory in Azure Cloud Shell
-    cd labs/monitoring-logging/prometheus-grafana
-    ```
-
-    ```bash
-    # Create Tiller Service Account and Apply ClusterRoleBinding
-    kubectl apply -f prom-rbactillerconfig.yaml
-
-    # Helm was installed previously. Check to make sure it is Running
-    helm version
-    ```
-
-    > Note: If helm is not installed, run: ```helm init --service-account=tiller```
-
-2. Deploy Prometheus Operator
+1. Deploy Prometheus Operator
 
     ``` bash
-    # Add the Core OS Helm Reop in case it is not already installed
-    helm repo add coreos https://s3-eu-west-1.amazonaws.com/coreos-charts/stable/
     # Create a new Monitoring Namespace to deploy Prometheus Operator too
     kubectl create namespace monitoring
+    
+    # Add the stable repo for Helm 3
+    helm repo add stable https://kubernetes-charts.storage.googleapis.com
+    helm repo update
+    
     # Install Prometheus Operator
-    # NOTE: The output of this command will say failed because there is a job (pod)
-    # running and it takes a while to complete. It is ok, proceed to next step.
-    helm install coreos/prometheus-operator --version 0.0.27 --name prometheus-operator --namespace monitoring
+    helm install prometheus-operator stable/prometheus-operator --namespace monitoring
     kubectl -n monitoring get all -l "release=prometheus-operator"
-    # Install Prometheus Configuration and Setup for Kubernetes
-    helm install coreos/kube-prometheus --version 0.0.95 --name kube-prometheus --namespace monitoring
-    kubectl -n monitoring get all -l "release=kube-prometheus"
+    
     # Check to see that all the Pods are running
     kubectl get pods -n monitoring
+    
     # Other Useful Prometheus Operator Resources to Peruse
     kubectl get prometheus -n monitoring
     kubectl get prometheusrules -n monitoring
@@ -57,7 +38,7 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
     kubectl get secrets -n monitoring
     ```
 
-3. Expose Services to Public IP's
+2. Expose Services to Public IP's
 
     ```bash
     # use your VI skills to change the below snippet. It should be "LoadBalancer" and not "ClusterIP"
@@ -92,7 +73,7 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
 
     > Note: These settings should not generally be used in production. The endpoints should be secured behind an Ingress. This just aides the lab experience. 
 
-4. Interact with Prometheus (Prometheus and Alert Manager Dashboards)
+3. Interact with Prometheus (Prometheus and Alert Manager Dashboards)
 
     ```bash
     # Get your public IP address for the Prometheus dashboard (if <pending>, you must wait...)
@@ -116,7 +97,7 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
 
         ![Defaul Alert Manager UI](img-alertmanager-ui.png)
 
-5. Interact with Grafana Dashboard
+4. Interact with Grafana Dashboard
 
     ```bash
     # Get your public IP address for Grafana (if <pending>, you must wait...)
@@ -129,7 +110,7 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
 
         ![Grafana Snapshot](img-grafana-dashboard.png)
 
-6. Deploy Sample App with Integrated and Custom Prometheus Metrics
+5. Deploy Sample App with Integrated and Custom Prometheus Metrics
 
     * Create Namespace for Sample GO App
 
@@ -151,7 +132,7 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
         ```
     * If there is interest in how Prometheus Metrics and Custom Metrics can be added to an existing application take a look at the [GO Code](../../../app/sample-go/app.go).
 
-7. Check Metrics and Alerts are Working for Sample GO App
+6. Check Metrics and Alerts are Working for Sample GO App
 
     * Using the technique above, port-forward to the Prometheus Dashboard.
     * Check custom metric `requests_counter_total` in the deployed sample GO App:
@@ -162,7 +143,7 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
 
         ![Prometheus Alerts](img-prometheus-alerts.png)
 
-8. Fix Replica Count Custom Alert
+7. Fix Replica Count Custom Alert
 
     * Scale the Deployment to 3 replicas to stop the Alert from FIRING.
 
@@ -196,7 +177,7 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
 
 ## Docs / References
 
-* [Core OS Prometheus Operator](https://github.com/coreos/prometheus-operator/blob/v0.17.0/Documentation/user-guides/getting-started.md)
+* [Prometheus Operator](https://github.com/helm/charts/blob/master/stable/prometheus-operator/README.md)
 * [Crash Course to Monitoring K8s](https://www.sumologic.com/blog/cloud/how-to-monitor-kubernetes/)
 * [Prometheus Operator Alerting](https://github.com/coreos/prometheus-operator/blob/v0.17.0/Documentation/user-guides/alerting.md)
 
