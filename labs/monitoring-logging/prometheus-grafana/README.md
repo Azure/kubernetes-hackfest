@@ -35,8 +35,6 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
 2. Deploy Prometheus Operator
 
     ``` bash
-    # Add the Core OS Helm Reop in case it is not already installed
-    helm repo add coreos https://s3-eu-west-1.amazonaws.com/coreos-charts/stable/
     # Create a new Monitoring Namespace to deploy Prometheus Operator too
     kubectl create namespace monitoring
     # Install Prometheus Operator
