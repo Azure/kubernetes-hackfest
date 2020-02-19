@@ -79,7 +79,7 @@ This lab has a number of exercises in no particular order:
 
         ```Dockerfile
         # build stage (use full node image to provide tooling needed for CI)
-        FROM node:10.9.0 as build-stage
+        FROM node:12.16.0 as build-stage
 
         WORKDIR /usr/src/app
         COPY package*.json ./
@@ -87,7 +87,7 @@ This lab has a number of exercises in no particular order:
         COPY . /usr/src/app/
 
         # final stage (using slim)
-        FROM node:10.9.0-slim
+        FROM node:12.16.0-slim
         WORKDIR /app
         COPY --from=build-stage /usr/src/app/ /app/
         ENV NODE_ENV "development"
