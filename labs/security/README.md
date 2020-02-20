@@ -13,8 +13,7 @@ This section contains a number of labs related to securing the AKS cluster.
 
 ## Options
 
-1. [Azure AD Integration with AKS](create-rbacwithazuread-cluster/README.md)
-2. [Securing Helm/Tiller](secure-tiller/README.md)
+* [Azure AD Integration with AKS](create-rbacwithazuread-cluster/README.md)
 
 ## Troubleshooting / Debugging
 
