@@ -68,7 +68,7 @@ In this lab we will build Docker containers for each of the application componen
     # Create a unique application insights name
     APPINSIGHTSNAME=appInsightshackfest$UNIQUE_SUFFIX
     # Deploy the appinsights ARM template   
-    az group deployment create --resource-group $RGNAME --template-file labs/build-application/app-Insights.json --parameters type=Node.js name=$APPINSIGHTSNAME regionId=eastus
+    az group deployment create --resource-group $RGNAME --template-file labs/build-application/app-Insights.json --parameters type=Node.js name=$APPINSIGHTSNAME regionId=eastus --no-wait
     ```
 
     Alternatively :    
@@ -95,7 +95,7 @@ In this lab we will build Docker containers for each of the application componen
     # Persist for Later Sessions in Case of Timeout
     echo export COSMOSNAME=cosmos$UNIQUE_SUFFIX >> ~/.bashrc
     # Create Cosmos DB
-    az cosmosdb create --name $COSMOSNAME --resource-group $RGNAME --kind MongoDB
+    az cosmosdb create --name $COSMOSNAME --resource-group $RGNAME --kind MongoDB --no-wait
     ```
 
     You can validate your Cosmos instance in the portal. The credentials and connect string will be used in the next lab.
