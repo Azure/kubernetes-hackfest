@@ -41,7 +41,7 @@ This lab has a number of exercises in no particular order:
     * Install anchore with helm
 
         ```bash
-        helm install --name anchore-demo stable/anchore-engine
+        helm install anchore-demo stable/anchore-engine
         ```
         > Note: It may take a few minutes for all of the pods to start and for the CVE data to be loaded into the database. 
 
