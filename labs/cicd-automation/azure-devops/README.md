@@ -173,7 +173,7 @@ In the deployment pipeline, we will create a Helm task to update our application
 ## Troubleshooting / Debugging
 
 * We've seen issues where people forgot to use the hackfest namespace in Kubernetes. 
-* Ensure that are using the "Hosted Ubuntu 1604" image in Azure DevOps. 
+* Ensure that are using the "ubuntu-18.04" image in Azure DevOps. 
 
 ## Docs / References
 
