@@ -86,7 +86,7 @@ The general workflow/result will be as follows:
 
     ![Azure DevOps CLI](azure-do-cli.png)
 
-1. Add another task to "Agent job 1" and search for "Copy files". Use "charts" for the artifact name and browse to the charts folder for the "Path to publish". Under 'Target Folder' enter $(System.DefaultWorkingDirectory).
+1. Add another task to "Agent job 1" and search for "Copy files". Use "charts" for the artifact name and browse to the charts folder for the "Path to publish". Under 'Target Folder' enter `$(Build.ArtifactStagingDirectory)`.
 
     ![Azure DevOps Artifact](azure-do-artifact.png)
 
@@ -134,7 +134,7 @@ In the deployment pipeline, we will create a Helm task to update our application
 
 1. Search for "helm" and add the task called "Helm Tool Installer" as first task. Click Add
 
-    > Change the version for the helm install to `3.0.1`
+    > Change the version for the helm install to `3.1.1`
 
 1. Next, Search for "helm" and add the task called "Package and deploy Helm charts". Click Add
 
@@ -145,7 +145,7 @@ In the deployment pipeline, we will create a Helm task to update our application
     * For Namespace, enter "hackfest"
     * For the Command select "upgrade"
     * For Chart type select "File Path"
-    * For Chart path, click the "..." button and browse to the "service-trakcer-ui" chart in the charts directory
+    * For Chart path, click the "..." button and browse to the "service-tracker-ui" chart in the charts directory
     * For the Release Name, enter `service-tracker-ui`
     * For Set Values you will need to fix the ACR server to match your ACR server name and the imageTag needs to be set.
         Eg - `deploy.acrServer=acrhackfestbrian13932.azurecr.io,deploy.imageTag=azuredevops-$(Build.BuildId)`
@@ -156,7 +156,7 @@ In the deployment pipeline, we will create a Helm task to update our application
 
 #### Run a test build
 
-1. In Azure DevOps, click on Builds and click the "Queue" button
+1. In Azure DevOps, click on Pipelines, and select "Run Pipeline" from the menu of the kubernetes-hackfest-CI build pipeline
 
 1. Monitor the builds and wait for the build to complete
 
@@ -173,7 +173,7 @@ In the deployment pipeline, we will create a Helm task to update our application
 ## Troubleshooting / Debugging
 
 * We've seen issues where people forgot to use the hackfest namespace in Kubernetes. 
-* Ensure that are using the "Hosted Ubuntu 1604" image in Azure DevOps. 
+* Ensure that are using the "ubuntu-18.04" image in Azure DevOps. 
 
 ## Docs / References
 
