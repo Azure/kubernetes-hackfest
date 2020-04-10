@@ -124,6 +124,9 @@ version.BuildInfo{Version:"v3.0.0", GitCommit:"e29ce2a54e96cd02ccfce88bee4f58bb6
     Install each chart as below:
 
     ```bash
+    # Install Mongo
+    kubectl apply -f charts/mongodb.yaml
+    
     # Application charts
 
     helm upgrade --install data-api charts/data-api --namespace hackfest

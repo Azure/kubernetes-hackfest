@@ -13,32 +13,25 @@ spec:
         app: data-api
     spec:
       containers:
-        - image: "{{.Values.deploy.acrServer}}/hackfest/data-api:{{.Values.deploy.imageTag}}"
+        - image: msftgbb/data-api:latest
           imagePullPolicy: Always
           name: data-api
           resources:
             requests:
-              memory: "512Mi"
-              cpu: "500m"
+              memory: "128Mi"
+              cpu: "100m"
             limits:
               memory: "1024Mi"
               cpu: "1000m"
           env:
             - name: MONGODB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: cosmos-db-secret
-                  key: user
+              value: "dbuser"
             - name: MONGODB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: cosmos-db-secret
-                  key: pwd
-            - name: APPINSIGHTS_INSTRUMENTATIONKEY
-              valueFrom:
-                secretKeyRef:
-                  name: cosmos-db-secret
-                  key: appinsights                   
+              value: "dbpassword"
+            - name: MONGODB_IP
+              value: "mongodb.hackfest.svc.cluster.local"
+            - name: MONGODB_PORT
+              value: "27017"                
           ports:
           - containerPort: {{.Values.deploy.containerPort}}
             protocol: TCP
