@@ -35,7 +35,7 @@ version.BuildInfo{Version:"v3.0.0", GitCommit:"e29ce2a54e96cd02ccfce88bee4f58bb6
     * Get the value of your ACR Login Server:
 
         ```bash
-        az acr list -o table --query "[].loginServer"
+        az acr list -g $RGNAME -o table --query "[].loginServer"
 
         Result
         -------------------

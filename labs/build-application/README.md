@@ -69,6 +69,10 @@ In this lab we will build Docker containers for each of the application componen
     APPINSIGHTSNAME=appInsightshackfest$UNIQUE_SUFFIX
     # Deploy the appinsights ARM template   
     az deployment group create --resource-group $RGNAME --template-file labs/build-application/app-Insights.json --parameters type=Node.js name=$APPINSIGHTSNAME regionId=eastus --no-wait
+        
+    # Get App Insights instrumentation key for 
+    az extension add -n application-insights
+    APPINSIGHTS_INSTRUMENTATIONKEY=$(az monitor app-insights component show --app $APPINSIGHTSNAME -g $RGNAME --query instrumentationKey -o tsv)
     ```
 
     Alternatively :    
@@ -83,7 +87,14 @@ In this lab we will build Docker containers for each of the application componen
     * On the Overview Page take note of the Instrumentation Key 
 
         ![App Insights](app-insights.png "App Insights")
-
+    * Use Instrumentation Key from above step.
+    ```bash
+    export APPINSIGHTS_INSTRUMENTATIONKEY='replace-me'
+            
+    # Persist for Later Sessions in Case of Timeout
+    echo export APPINSIGHTSNAME=$APPINSIGHTSNAME >> ~/.bashrc
+    echo export APPINSIGHTS_INSTRUMENTATIONKEY=$APPINSIGHTS_INSTRUMENTATIONKEY >> ~/.bashrc
+    ```
 4. Deploy Cosmos DB
 
     In this step, create a Cosmos DB account for the Mongo api. Again, we will create a random, unique name.
@@ -114,11 +125,6 @@ In this lab we will build Docker containers for each of the application componen
 
     ```bash
     export MONGODB_PASSWORD=$(az cosmosdb keys list --name $COSMOSNAME --resource-group $RGNAME --query "primaryMasterKey" -o tsv)
-    ```
-
-    Use Instrumentation Key from step 3 above.
-    ```bash
-    export APPINSIGHTS_INSTRUMENTATIONKEY='replace-me'
     ```
 
     ```bash
