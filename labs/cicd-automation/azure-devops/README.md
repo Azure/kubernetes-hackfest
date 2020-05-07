@@ -86,13 +86,9 @@ The general workflow/result will be as follows:
 
     ![Azure DevOps CLI](azure-do-cli.png)
 
-1. Add another task to "Agent job 1" and search for "Copy files". Use "charts" for the artifact name and browse to the charts folder for the "Path to publish". Under 'Target Folder' enter `$(Build.ArtifactStagingDirectory)`.
+1. Add a final task to "Agent job 1" and search for "Publish Pipeline Artifact". Use "charts" for the "Artifact name" and browse to the charts folder for the "File or directory path".
 
-    ![Azure DevOps Artifact](azure-do-artifact.png)
-
-1. Add a final task to "Agent job 1" and search for "Publish Build Artifacts". You can leave the default settings for this task.
-
-    ![Azure DevOps Artifact](azure-do-publish.png)
+    ![Azure DevOps Artifact](azure-do-pipeline-artifact.png)
 
 1. Test this by clicking "Save & queue" and providing a comment
 
