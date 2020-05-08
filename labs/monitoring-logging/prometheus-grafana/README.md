@@ -41,9 +41,9 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
 2. Expose Services to Public IP's
 
     ```bash
-    # use your VI skills to change the below snippet. It should be "LoadBalancer" and not "ClusterIP"
+    # use your VI skills to change the below snippet. The type should be "LoadBalancer" and not "ClusterIP"
 
-    kubectl edit service kube-prometheus -n monitoring
+    kubectl edit service prometheus-operator-prometheus -n monitoring
     ```
 
     ```yaml
@@ -63,12 +63,12 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
 
     ```bash
     # repeat for Alert Manager
-    kubectl edit service kube-prometheus-alertmanager -n monitoring
+    kubectl edit service prometheus-operator-alertmanager -n monitoring
     ```
 
     ```bash
     # repeat for Grafana
-    kubectl edit service kube-prometheus-grafana -n monitoring
+    kubectl edit service prometheus-operator-grafana -n monitoring
     ```
 
     > Note: These settings should not generally be used in production. The endpoints should be secured behind an Ingress. This just aides the lab experience. 
@@ -77,7 +77,7 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
 
     ```bash
     # Get your public IP address for the Prometheus dashboard (if <pending>, you must wait...)
-    kubectl get service kube-prometheus -n monitoring
+    kubectl get service prometheus-operator-prometheus -n monitoring
     ```
 
     Open up a brower to http://<your-public-ip>:9090 and you will see the Prometheus dashboard
@@ -88,7 +88,7 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
 
     ```bash
     # Get your public IP address for the Prometheus Alert Manager (if <pending>, you must wait...)
-    kubectl get service kube-prometheus-alertmanager -n monitoring
+    kubectl get service prometheus-operator-alertmanager -n monitoring
     ```
 
     Open up a brower to http://<your-public-ip>:9093 and you will see the Prometheus dashboard
@@ -101,10 +101,10 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
 
     ```bash
     # Get your public IP address for Grafana (if <pending>, you must wait...)
-    kubectl get service kube-prometheus-grafana -n monitoring
+    kubectl get service prometheus-operator-grafana -n monitoring
     ```
 
-    Open up a brower to http://<your-public-ip>:80 and you will see the Prometheus dashboard
+    Open up a brower to http://<your-public-ip>:80 and you will need to log in to see the Prometheus dashboard. Username: admin Password: prom-operator
 
     * Screenshot of Kubernetes Capacity Planning Dashboard
 
