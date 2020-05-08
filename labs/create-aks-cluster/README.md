@@ -150,7 +150,6 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
    --client-secret $CLIENTSECRET \
    --generate-ssh-keys -l $LOCATION \
    --node-count 3 \
-   --enable-addons monitoring \
    --no-wait
    ```
 
