@@ -68,7 +68,7 @@ In this lab we will build Docker containers for each of the application componen
     # Create a unique application insights name
     APPINSIGHTSNAME=appInsightshackfest$UNIQUE_SUFFIX
     # Deploy the appinsights ARM template   
-    az deployment group create --resource-group $RGNAME --template-file labs/build-application/app-Insights.json --parameters type=Node.js name=$APPINSIGHTSNAME regionId=eastus --no-wait
+    az group deployment create --resource-group $RGNAME --template-file labs/build-application/app-Insights.json --parameters type=Node.js name=$APPINSIGHTSNAME regionId=eastus --no-wait
     ```
 
     Alternatively :    
