@@ -134,6 +134,18 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
         ```
     * If there is interest in how Prometheus Metrics and Custom Metrics can be added to an existing application take a look at the [GO Code](../../../app/sample-go/app.go).
 
+    * Get the IP address of the sample and send some requests to it to get some metrics loaded.
+
+        ```bash
+        kubectl get svc -n sample-app
+
+        # Either pop out to a browser or curl http://<ExternalIP>:8080
+        curl -H 'Cache-Control: no-cache' <ExternalIP>:8080
+
+        # To view the metrics endpoint
+        curl <ExternalIP>:8080/metrics
+        ```
+
 1. Check Metrics and Alerts are Working for Sample GO App
 
     * Using the technique above, port-forward to the Prometheus Dashboard.

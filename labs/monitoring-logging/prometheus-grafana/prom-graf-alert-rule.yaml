@@ -4,10 +4,10 @@ metadata:
   labels:
     app: prometheus-operator
     release: prometheus-operator
-  name: sample-go-app-rules
+  name: example-sample-go-app-rules
 spec:
   groups:
-  - name: ./samplegoapp.rules
+  - name: ./examplesamplegoapp.rules
     rules:
     - alert: ExampleSampleGoAppDeploymentLowReplicaCount
       annotations:
