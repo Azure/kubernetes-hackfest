@@ -4,7 +4,7 @@
       <nav>
         <ul>
           <li>
-            <router-link :to="{path:'/admin'}">Back to Dashboard</router-link>
+            <router-link :to="{path:'/'}">Back to Dashboard</router-link>
           </li>
         </ul>
       </nav>
