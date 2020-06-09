@@ -16,6 +16,9 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
 1. Deploy Prometheus Operator
 
     ``` bash
+    # Go to the prometheus lab directory
+    cd ~/kubernetes-hackfest/labs/monitoring-logging/prometheus-grafana
+    
     # Create a new Monitoring Namespace to deploy Prometheus Operator too
     kubectl create namespace monitoring
     
@@ -24,7 +27,7 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
     helm repo update
     
     # Install Prometheus Operator
-    helm install prometheus-operator stable/prometheus-operator --namespace monitoring
+    helm install prometheus-operator stable/prometheus-operator -f values.yaml --namespace monitoring
     kubectl -n monitoring get all -l "release=prometheus-operator"
     
     # Check to see that all the Pods are running
