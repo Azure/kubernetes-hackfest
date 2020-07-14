@@ -28,7 +28,7 @@ An ingress controller is a piece of software that provides reverse proxy, config
 
     ```bash
     # update chart to install service again as ClusterIP
-    helm upgrade service-tracker-ui charts/service-tracker-ui --set service.type=ClusterIP
+    helm upgrade service-tracker-ui charts/service-tracker-ui --set service.type=ClusterIP -n hackfest
     ```
 
 2. Create the NGINX ingress controller
