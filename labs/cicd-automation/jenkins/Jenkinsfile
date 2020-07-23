@@ -2,7 +2,7 @@ def  appName = 'service-tracker-ui'
 def  feSvcName = "${appName}"
 def  ACRPATH = 'hackfest'
 def  ACRNAME = 'tugboatlabs'
-def  ACRURL = 'azurecr.io'
+def  ACRURL = 'acrhackfestshagul14568.azurecr.io'
 def  imageTag = "master.${env.BUILD_NUMBER}"
 
 pipeline {
