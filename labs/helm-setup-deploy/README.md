@@ -121,7 +121,7 @@ version.BuildInfo{Version:"v3.0.0", GitCommit:"e29ce2a54e96cd02ccfce88bee4f58bb6
     hackfest   Active    4m
     ```
 
-    Install each chart as below:
+    Install each chart as below (note: the following commands expect your working directory to be /kubernetes-hackfest you may need to return to this if you have changed workind directory in previous steps):
 
     ```bash
     # Application charts
