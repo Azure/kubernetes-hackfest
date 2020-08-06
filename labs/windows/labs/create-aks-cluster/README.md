@@ -133,7 +133,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     ```bash
     Name             Location    ResourceGroup            KubernetesVersion    ProvisioningState    Fqdn
     ---------------  ----------  -----------------------  -------------------  -------------------  ----------------------------------------------------------------
-    aksstephen14260  eastus      aks-rg-stephen14260      1.15.7             Succeeded            aksstephen-aks-rg-stephen14-62afe9-9aa48ae4.hcp.eastus.azmk8s.io
+    aksstephen14260  eastus      aks-rg-stephen14260      1.17.7             Succeeded            aksstephen-aks-rg-stephen14-62afe9-9aa48ae4.hcp.eastus.azmk8s.io
     ```
 
 1. Add your Windows node pool
