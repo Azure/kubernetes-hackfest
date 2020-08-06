@@ -11,7 +11,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
 1. Login to Azure Portal at http://portal.azure.com.
 1. Open the Azure Cloud Shell and choose Bash Shell (do not choose Powershell)
 
-   ![Azure Cloud Shell](img-cloud-shell.png "Azure Cloud Shell")
+   ![Azure Cloud Shell](../../assets/img/img-cloud-shell.png "Azure Cloud Shell")
 
 1. The first time Cloud Shell is started will require you to create a storage account.
 
