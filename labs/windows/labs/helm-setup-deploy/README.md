@@ -45,7 +45,7 @@ version.BuildInfo{Version:"v3.3.0-rc.1", GitCommit:"5c2dfaad847df2ac8f289d278186
 
     * Replace the `acrServer` value below with the Login server from previous step. In the Azure Cloud Shell, select the file editor '{}'.  Navigate to the yaml files below.  To save changes, select the elipticals on the right hand side and select Save. You will make this change in the chart below:
     
-        [charts/service-tracker-ui/values.yaml](chart/values.yaml)
+        [chart/values.yaml](chart/values.yaml)
 
         Example:
         ```yaml
