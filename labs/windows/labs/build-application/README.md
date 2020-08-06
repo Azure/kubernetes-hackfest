@@ -23,17 +23,24 @@ In this lab we will build Docker containers for each of the application componen
     # Persist for Later Sessions in Case of Timeout
     echo export ACRNAME=acrhackfest$UNIQUE_SUFFIX >> ~/.bashrc
     # Create Azure Container Registry
-    az acr create --resource-group $RGNAME --name $ACRNAME --sku Basic
+    az acr create --resource-group $RGNAME --name $ACRNAME --sku Basic --admin-enabled
     ```
 
-1. Run bash script to authenticate with Azure Container Registry from AKS
+1. Create a registry credential to be used by the cluster to access your ACR
 
-    Running this script will grant the Managed Identity created at cluster creation time access to ACR.
-
-    **NOTE: If the below role assignment fails due to permissions, we will do it the hard way and create an Image Pull Secret.**
+    **NOTE: We're using admin credentials for this lab. In real world scenarios you may choose to use a service principal and disable admin credentials on the ACR.**
 
     ```bash
-    sh labs/build-application/reg-acr.sh $RGNAME $CLUSTERNAME $ACRNAME
+    # Get the Admin user name
+    ACRUSERNAME=$(az acr credential show -g $RGNAME -n $ACRNAME -o tsv --query username)
+
+    # Get the password
+    ACRPASSWD=$(az acr credential show -g $RGNAME -n $ACRNAME -o tsv --query passwords[0].value)
+
+    kubectl create -n hackfest secret docker-registry regcred \
+    --docker-server=$ACRUSERNAME.azurecr.io \
+    --docker-username=$ACRUSERNAME \
+    --docker-password=$ACRPASSWD
     ```
 
 1. Deploy Azure SQL DB
@@ -68,7 +75,12 @@ In this lab we will build Docker containers for each of the application componen
     * Set the Azure SQL DB user and password
 
     ```bash
-    kubectl create secret generic sql-db-secret --from-literal=user=sqladmin --from-literal=pwd=$SQLSERVERPASSWD -n jabbr
+    # Get the SQL Server FQDN
+    SQLFQDN=$(az sql server show -g $RGNAME -n $SQLSERVERNAME -o tsv --query fullyQualifiedDomainName)
+
+    CONNSTR="Server=tcp:$SQLFQDN,1433;Initial Catalog=jabbr;Persist Security Info=False;User ID=sqladmin;Password=$SQLSERVERPASSWD;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+
+    kubectl create secret generic sql-db-conn-secret --from-literal="connstr=$CONNSTR" -n jabbr
     ```
 
 6. Create Docker containers in ACR

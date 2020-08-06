@@ -1,0 +1,7 @@
+name: jabbr
+home: https://github.com/swgriffith/JabbR
+version: 1.0
+description: Jabbr Chat Client
+maintainers: 
+  - name: stevegriffith
+    email: steve.griffith@microsoft.com

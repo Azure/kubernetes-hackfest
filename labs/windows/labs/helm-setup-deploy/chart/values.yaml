@@ -1,0 +1,13 @@
+# Default values for chart
+
+service:
+  type: LoadBalancer
+  port: 80
+
+deploy:
+  name: jabbr
+  acr: acrServer.azurecr.io
+  imageTag: "1.0"
+  containerPort: 80
+
+  

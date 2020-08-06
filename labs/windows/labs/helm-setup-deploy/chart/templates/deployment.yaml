@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{.Values.deploy.name}}"
+spec:
+  selector:
+    matchLabels:
+      app: jabbr
+  template:
+    metadata:
+      labels:
+        app: jabbr
+    spec:
+      imagePullSecrets:
+      - name: regcred
+      containers:
+        - image: "{{.Values.deploy.acr}}/jabbr:{{.Values.deploy.imageTag}}"
+          imagePullPolicy: Always
+          name: jabbr
+          resources:
+          env:
+            - name: CONNSTR_Jabbr
+              valueFrom:
+                secretKeyRef:
+                  name: sql-db-conn-secret
+                  key: connstr
+          ports:
+          - containerPort: {{.Values.deploy.containerPort}}
+            protocol: TCP
+      nodeSelector:
+        "beta.kubernetes.io/os": windows            
+      restartPolicy: Always        
