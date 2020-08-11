@@ -29,6 +29,23 @@ version.BuildInfo{Version:"v3.3.0-rc.1", GitCommit:"5c2dfaad847df2ac8f289d278186
     --docker-password=$ACRPASSWD
     ```
 
+1. Create Kubernetes secrets for access to the Jabbr database in your Azure SQL DB
+
+    You will use a secret to hold the credentials for our backend database. In the next lab, you will use this secret as a part of your deployment manifests.
+
+    Once the secret is created, these envvars are no longer needed.
+
+    * Set the Azure SQL DB user and password
+
+    ```bash
+    # Get the SQL Server FQDN
+    SQLFQDN=$(az sql server show -g $RGNAME -n $SQLSERVERNAME -o tsv --query fullyQualifiedDomainName)
+
+    CONNSTR="Server=tcp:$SQLFQDN,1433;Initial Catalog=jabbr;Persist Security Info=False;User ID=sqladmin;Password=$SQLSERVERPASSWD;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+
+    kubectl create secret generic sql-db-conn-secret --from-literal="connstr=$CONNSTR" -n jabbr
+    ```
+
 1. Review the Helm Chart components
 
     In the folder for this lab there's a folder called `chart` with a sub-folder for the Kubernetes manifests to be deployed.

@@ -127,26 +127,9 @@ In this lab we will build Docker containers for each of the application componen
     az sql server firewall-rule create --resource-group $RGNAME --server $SQLSERVERNAME -n AllowYourIp --start-ip-address 0.0.0.0 --end-ip-address 0.0.0.0
     ```
 
-    You can validate your Azure SQL DB instance in the portal. The credentials and connect string will be used in the next lab.
+    You can validate your Azure SQL DB instance in the portal.
 
-1. Create Kubernetes secrets for access to the Jabbr database in your Azure SQL DB
-
-    You will use a secret to hold the credentials for our backend database. In the next lab, you will use this secret as a part of your deployment manifests.
-
-    Once the secret is created, these envvars are no longer needed.
-
-    * Set the Azure SQL DB user and password
-
-    ```bash
-    # Get the SQL Server FQDN
-    SQLFQDN=$(az sql server show -g $RGNAME -n $SQLSERVERNAME -o tsv --query fullyQualifiedDomainName)
-
-    CONNSTR="Server=tcp:$SQLFQDN,1433;Initial Catalog=jabbr;Persist Security Info=False;User ID=sqladmin;Password=$SQLSERVERPASSWD;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
-
-    kubectl create secret generic sql-db-conn-secret --from-literal="connstr=$CONNSTR" -n jabbr
-    ```
-
-6. Create Docker containers in ACR
+1. Create Docker containers in ACR
 
     In this step we will create a Docker container image for each of our microservices. We will use ACR Builder functionality to build and store these images in the cloud.
 
