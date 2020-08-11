@@ -81,18 +81,18 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     --os-type Windows \
     --name npwin \
     --kubernetes-version $K8SVERSION \
-    --node-count 1 
+    --node-count 1 \
+    --no-wait
     ```
+    **NOTE: The above will take a few minutes. While that completes you can continue through the rest of this lab. You can verify when your node is ready by running 'kubectl get nodes' and look for a node named 'aksnpwin000000'.
 
-11. Get the Kubernetes config files for your new AKS cluster
+1. Get the Kubernetes config files for your new AKS cluster
 
     ```bash
     az aks get-credentials -n $CLUSTERNAME -g $RGNAME
     ```
 
-12. Verify you have API access to your new AKS cluster
-
-    > Note: It can take 5 minutes for your nodes to appear and be in READY state. You can run `watch kubectl get nodes` to monitor status.
+1. Verify you have API access to your new AKS cluster
 
     ```bash
     kubectl get nodes
