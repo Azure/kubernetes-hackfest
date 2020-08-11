@@ -8,72 +8,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
 
 ## Instructions
 
-1. Login to Azure Portal at http://portal.azure.com.
-1. Open the Azure Cloud Shell and choose Bash Shell (do not choose Powershell)
-
-   ![Azure Cloud Shell](../../assets/img/img-cloud-shell.png "Azure Cloud Shell")
-
-1. The first time Cloud Shell is started will require you to create a storage account.
-
-1. Once your cloud shell is started, clone the workshop repo into the cloud shell environment
-
-   ```bash
-   git clone https://github.com/Azure/kubernetes-hackfest
-   ```
-
-   > Note: In the cloud shell, you are automatically logged into your Azure subscription.
-
-1. Ensure you are using the correct Azure subscription you want to deploy AKS to.
-
-   ```
-   # View subscriptions
-   az account list
-   ```
-
-   ```
-   # Verify selected subscription
-   az account show
-   ```
-
-   ```
-   # Set correct subscription (if needed)
-   az account set --subscription <subscription_id>
-
-   # Verify correct subscription is now set
-   az account show
-   ```
-
-1. Create a unique identifier suffix for resources to be created in this lab.
-
-   ```bash
-   UNIQUE_SUFFIX=$USER$RANDOM
-   # Remove Underscores and Dashes (Not Allowed in AKS and ACR Names)
-   UNIQUE_SUFFIX="${UNIQUE_SUFFIX//_}"
-   UNIQUE_SUFFIX="${UNIQUE_SUFFIX//-}"
-   # Check Unique Suffix Value (Should be No Underscores or Dashes)
-   echo $UNIQUE_SUFFIX
-   # Persist for Later Sessions in Case of Timeout
-   echo export UNIQUE_SUFFIX=$UNIQUE_SUFFIX >> ~/.bashrc
-   ```
-
-   **_ Note this value as it will be used in the next couple labs. _**
-
-1. Create an Azure Resource Group in East US.
-
-   ```bash
-   # Set Resource Group Name using the unique suffix
-   RGNAME=aks-rg-$UNIQUE_SUFFIX
-   # Persist for Later Sessions in Case of Timeout
-   echo export RGNAME=$RGNAME >> ~/.bashrc
-   # Set Region (Location)
-   LOCATION=eastus
-   # Persist for Later Sessions in Case of Timeout
-   echo export LOCATION=eastus >> ~/.bashrc
-   # Create Resource Group
-   az group create -n $RGNAME -l $LOCATION
-   ```
-
-1. Create your AKS cluster in the resource group created above with 3 nodes. We will check for a recent version of kubnernetes before proceeding. We are also including the monitoring add-on for Azure Container Insights. You will use the Service Principal information from step 5.
+1. Create your AKS cluster in the resource group created in the previous lab with 3 nodes. We will check for a recent version of kubnernetes before proceeding. We are also including the monitoring add-on for Azure Container Insights. You will use the Service Principal information from step 5.
 
    Use Unique CLUSTERNAME
 

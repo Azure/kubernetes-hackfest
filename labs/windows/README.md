@@ -13,9 +13,9 @@ The following are the basic requirements to **start** the labs. Individual labs 
 ## Labs
 
 #### Start with:
+1. [Build Application Components and Prerequisites](labs/build-application/README.md)
 1. [Create AKS Cluster](labs/create-aks-cluster/README.md)
-2. [Build Application Components and Prerequisites](labs/build-application/README.md)
-3. [Helm Setup and Deploy Application](labs/helm-setup-deploy/README.md)
+1. [Helm Setup and Deploy Application](labs/helm-setup-deploy/README.md)
 
 #### Additional exercises (in no order):
 * TBD
