@@ -103,7 +103,7 @@ In this lab we will build Docker containers for each of the application componen
     # Get the password
     export ACRPASSWD=$(az acr credential show -g $RGNAME -n $ACRNAME -o tsv --query passwords[0].value)
     # Persist for Later Sessions in Case of Timeout
-    echo export ACRPASSWD=$ACRPASSWD >> ~/.bashrc
+    echo export ACRPASSWD="$ACRPASSWD" >> ~/.bashrc
     ```
 
 1. Deploy Azure SQL DB
