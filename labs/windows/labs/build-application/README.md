@@ -75,7 +75,7 @@ In this lab we will build Docker containers for each of the application componen
    ```
 
 1. Create Azure Container Registry (ACR)
-    * Use the same resource group that was created for AKS (in lab 1)
+    * Use the same resource group that was created above
     * In this step, you will need a unique name for your ACR instance. Use the following step to create the ACR name and then deploy.
 
     ```bash
@@ -97,15 +97,13 @@ In this lab we will build Docker containers for each of the application componen
 
     ```bash
     # Get the Admin user name
-    ACRUSERNAME=$(az acr credential show -g $RGNAME -n $ACRNAME -o tsv --query username)
-
+    export ACRUSERNAME=$(az acr credential show -g $RGNAME -n $ACRNAME -o tsv --query username)
+    # Persist for Later Sessions in Case of Timeout
+    echo export ACRUSERNAME=$ACRUSERNAME
     # Get the password
-    ACRPASSWD=$(az acr credential show -g $RGNAME -n $ACRNAME -o tsv --query passwords[0].value)
-
-    kubectl create -n hackfest secret docker-registry regcred \
-    --docker-server=$ACRUSERNAME.azurecr.io \
-    --docker-username=$ACRUSERNAME \
-    --docker-password=$ACRPASSWD
+    export ACRPASSWD=$(az acr credential show -g $RGNAME -n $ACRNAME -o tsv --query passwords[0].value)
+    # Persist for Later Sessions in Case of Timeout
+    echo export ACRPASSWD=$ACRPASSWD
     ```
 
 1. Deploy Azure SQL DB

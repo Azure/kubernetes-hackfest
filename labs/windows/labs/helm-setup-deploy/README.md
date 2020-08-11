@@ -20,11 +20,20 @@ helm version
 version.BuildInfo{Version:"v3.3.0-rc.1", GitCommit:"5c2dfaad847df2ac8f289d278186d048f446c70c", GitTreeState:"dirty", GoVersion:"go1.14.4"}
 ```
 
+1. Create a registry credential secret in your Kubernetes cluster to be used by AKS when pulling your image:
+
+    ```bash
+    kubectl create -n hackfest secret docker-registry regcred \
+    --docker-server=$ACRUSERNAME.azurecr.io \
+    --docker-username=$ACRUSERNAME \
+    --docker-password=$ACRPASSWD
+    ```
+
 1. Review the Helm Chart components
 
     In the folder for this lab there's a folder called `chart` with a sub-folder for the Kubernetes manifests to be deployed.
 
-    The `values.yaml` file has the parameters that allow you to customize release. This file has the defaults, but they can be overridden on the command line. 
+    The `values.yaml` file has the parameters that allow you to customize release. This file has the defaults, but they can be overridden on the command line.
 
     The `templates` folder holds the yaml files for the specific kubernetes resources for our application. Here you will see how Helm inserts the parameters into resources with this bracketed notation: eg -  `{{.Values.deploy.image}}`
 
