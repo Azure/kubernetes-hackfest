@@ -147,6 +147,8 @@ In this lab we will build Docker containers for each of the application componen
 
     Browse to your ACR instance in the Azure portal and validate that the images are in "Repositories."
 
+**NOTE: The above build will take up to 25 minutes, so while that completes you can move on to the next lab and create your AKS cluster.
+
 ## Troubleshooting / Debugging
 
 * Make sure all of you ACR Task commands are pointing to the correct Azure Container Registry. You can check repositories by navigating to your ACR in the Azure Portal UI.
