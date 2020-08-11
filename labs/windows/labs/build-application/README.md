@@ -4,8 +4,7 @@ In this lab we will build Docker containers for each of the application componen
 
 ## Prerequisites
 
-* Complete previous labs:
-    * [Azure Kubernetes Service](../create-aks-cluster/README.md)
+- Azure Account
 
 ## Instructions
 
@@ -135,7 +134,7 @@ In this lab we will build Docker containers for each of the application componen
 
     ```bash
     git clone https://github.com/swgriffith/JabbR
-    az acr build -t jabbr:1.0 -r $ACRNAME --no-logs -o json JabbR --platform Windows
+    az acr build -t jabbr:1.0 -r $ACRNAME --no-logs -o json JabbR --platform Windows --verbose
     ```
 
     You can see the status of the builds by running the command below.
@@ -156,4 +155,4 @@ In this lab we will build Docker containers for each of the application componen
 
 * Azure Container Registry Docs. https://docs.microsoft.com/en-us/azure/container-registry 
 
-#### Next Lab: [Helm Setup and Deploy Application](../helm-setup-deploy/README.md)
+#### Next Lab: [Create AKS Cluster](../create-aks-cluster/README.md)

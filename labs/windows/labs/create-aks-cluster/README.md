@@ -1,10 +1,11 @@
-# Lab 1: Create AKS Cluster
+# Lab: Create AKS Cluster
 
 In this lab we will create our Azure Kubernetes Services (AKS) distributed compute cluster with a Windows nodepool attached.
 
 ## Prerequisites
 
-- Azure Account
+* Complete previous labs:
+    * [Build Application](../build-application/README.md)
 
 ## Instructions
 
@@ -218,4 +219,4 @@ This lab creates namespaces that reflect a representative example of an organiza
 - [Use Ansible to deploy AKS](https://docs.microsoft.com/en-us/azure/ansible/ansible-create-configure-aks?toc=%2Fen-us%2Fazure%2Faks%2FTOC.json&bc=%2Fen-us%2Fazure%2Fbread%2Ftoc.json)
 - [Use Terraform to deploy AKS](https://docs.microsoft.com/en-us/azure/terraform/terraform-create-k8s-cluster-with-tf-and-aks?toc=%2Fen-us%2Fazure%2Faks%2FTOC.json&bc=%2Fen-us%2Fazure%2Fbread%2Ftoc.json)
 
-#### Next Lab: [Build Application Components and Prerequisites](../build-application/README.md)
+#### Next Lab: [Helm Deploy Application](../helm-setup-deploy/README.md)

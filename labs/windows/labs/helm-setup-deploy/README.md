@@ -7,8 +7,8 @@ In this lab we will use helm to deploy our Jabbr application.
 * Helm Version 3+
 * Clone this repo in Azure Cloud Shell.
 * Complete previous labs:
-    * [Azure Kubernetes Service](../create-aks-cluster/README.md)
     * [Build Application Components in Azure Container Registry](../build-application/README.md)
+    * [Create AKS Cluster](../create-aks-cluster/README.md)
 
 ## Instructions
 
