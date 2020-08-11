@@ -23,7 +23,7 @@ version.BuildInfo{Version:"v3.3.0-rc.1", GitCommit:"5c2dfaad847df2ac8f289d278186
 1. Create a registry credential secret in your Kubernetes cluster to be used by AKS when pulling your image:
 
     ```bash
-    kubectl create -n hackfest secret docker-registry regcred \
+    kubectl create -n jabbr secret docker-registry regcred \
     --docker-server=$ACRUSERNAME.azurecr.io \
     --docker-username=$ACRUSERNAME \
     --docker-password=$ACRPASSWD
