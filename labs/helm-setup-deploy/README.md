@@ -47,9 +47,9 @@ version.BuildInfo{Version:"v3.0.0", GitCommit:"e29ce2a54e96cd02ccfce88bee4f58bb6
     
         Replace all `acrServer` values:
         ```bash
-        export ARCSERVER=$(az acr list -o table --query "[].loginServer" --output json | jq -r '.[]')
-        echo "export ARCSERVER=$ARCSERVER" >> ~/.bashrc
-        find charts -name values.yaml -exec sed -i 's/youracr.azurecr.io/'${ARCSERVER}'/g' {} \;
+        export ACRSERVER=$(az acr list -o table --query "[].loginServer" --output json | jq -r '.[]')
+        echo "export ACRSERVER=$ACRSERVER" >> ~/.bashrc
+        find charts -name values.yaml -exec sed -i 's/youracr.azurecr.io/'${ACRSERVER}'/g' {} \;
 
         ```
 
