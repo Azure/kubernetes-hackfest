@@ -116,7 +116,7 @@ In this lab we will build Docker containers for each of the application componen
     # Persist for Later Sessions in Case of Timeout
     echo export SQLSERVERNAME=sql$UNIQUE_SUFFIX >> ~/.bashrc
 
-    export SQLSERVERPASSWD=@sqlpw$UNIQUE_SUFFIX
+    export SQLSERVERPASSWD=$UNIQUE_SUFFIX-passwd
     echo export SQLSERVERPASSWD=@sql1$UNIQUE_SUFFIX >> ~/.bashrc
     # Create SQL Server
     az sql server create --name $SQLSERVERNAME --resource-group $RGNAME --admin-user sqladmin --admin-password $SQLSERVERPASSWD
