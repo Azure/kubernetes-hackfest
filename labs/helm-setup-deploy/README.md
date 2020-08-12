@@ -45,6 +45,14 @@ version.BuildInfo{Version:"v3.0.0", GitCommit:"e29ce2a54e96cd02ccfce88bee4f58bb6
 
     * Replace the `acrServer` value below with the Login server from previous step. In the Azure Cloud Shell, select the file editor '{}'.  Navigate to the yaml files below.  To save changes, select the elipticals on the right hand side and select Save. You will make this change in all of the charts below:
     
+        Replace all `acrServer` values:
+        ```bash
+        export ACRSERVER=$(az acr list -o table --query "[].loginServer" --output json | jq -r '.[]')
+        echo "export ACRSERVER=$ACRSERVER" >> ~/.bashrc
+        find charts -name values.yaml -exec sed -i 's/youracr.azurecr.io/'${ACRSERVER}'/g' {} \;
+
+        ```
+
         [charts/service-tracker-ui/values.yaml](../../charts/service-tracker-ui/values.yaml)
 
         [charts/weather-api/values.yaml](../../charts/weather-api/values.yaml)
