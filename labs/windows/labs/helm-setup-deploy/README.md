@@ -48,6 +48,11 @@ version.BuildInfo{Version:"v3.3.0-rc.1", GitCommit:"5c2dfaad847df2ac8f289d278186
 
 1. Review the Helm Chart components
 
+    ```bash
+    # Go to the Jabbr Application Directory
+    cd ~/JabbR
+    ```
+
     In the folder for this lab there's a folder called `chart` with a sub-folder for the Kubernetes manifests to be deployed.
 
     The `values.yaml` file has the parameters that allow you to customize release. This file has the defaults, but they can be overridden on the command line.
