@@ -142,7 +142,7 @@ This lab creates namespaces that reflect a representative example of an organiza
    kubectl get ns
    ```
 
-3. Assign CPU, memory and storage limits to namespaces
+3. Assign CPU, memory and storage limits to namespaces. You should take a minute to explore each of the files below. In particular pay attention to the resources section. Also note that since we're in a hybrid Linux/Windows cluster we will need to use a 'NodeSelector' to make sure we're deploying Linux containers to Linux nodes.
 
    ```bash
    # Create namespace limits
@@ -168,20 +168,20 @@ This lab creates namespaces that reflect a representative example of an organiza
 
    ```bash
    # Test Limits - Forbidden due to assignment of CPU too low
-   kubectl run nginx-limittest --image=nginx --restart=Never --replicas=1 --port=80 --requests='cpu=100m,memory=256Mi' -n dev
+   kubectl apply -f labs/create-aks-cluster/cpu-to-low.yaml
 
    # Test Limits - Pass due to automatic assignment within limits via defaults
-   kubectl run nginx-limittest --image=nginx --restart=Never --replicas=1 --port=80 -n dev
+   kubectl apply -f labs/create-aks-cluster/cpu-auto-assign.yaml
 
    # Check running pod and dev Namespace Allocations
    kubectl get po -n dev
    kubectl describe ns dev
 
    # Test Quotas - Forbidden due to memory quota exceeded
-   kubectl run nginx-quotatest --image=nginx --restart=Never --replicas=1 --port=80 --requests='cpu=500m,memory=1Gi' -n dev
+   kkubectl apply -f labs/create-aks-cluster/memory-exceeded.yaml
 
    # Test Quotas - Pass due to memory within quota
-   kubectl run nginx-quotatest --image=nginx --restart=Never --replicas=1 --port=80 --requests='cpu=500m,memory=512Mi' -n dev
+   kubectl apply -f labs/create-aks-cluster/memory-within-quota.yaml
 
    # Check running pod and dev Namespace Allocations
    kubectl get po -n dev
