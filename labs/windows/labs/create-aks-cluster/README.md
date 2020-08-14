@@ -9,7 +9,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
 
 ## Instructions
 
-1. Create your AKS cluster in the resource group created in the previous lab with 3 nodes. We will check for a recent version of kubnernetes before proceeding. We are also including the monitoring add-on for Azure Container Insights. You will use the Service Principal information from step 5.
+1. Create your AKS cluster in the resource group created in the previous lab with 2 nodepools, one for Windows and one for Linux that will run the Kubernetes components. We will check for a recent version of kubnernetes before proceeding. 
 
    Use Unique CLUSTERNAME
 
@@ -28,19 +28,21 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
    az aks get-versions -l $LOCATION --output table
 
    KubernetesVersion    Upgrades
-   -------------------  --------------------------------
-   1.18.4(preview)      None available
-   1.18.2(preview)      1.18.4(preview)
-   1.17.7               1.18.2(preview), 1.18.4(preview)
-   1.16.10              1.17.7
-   1.15.12              1.16.10
-   1.15.11              1.15.12, 1.16.10
+   -------------------  ----------------------------------------
+   1.18.6(preview)      None available
+   1.18.4(preview)      1.18.6(preview)
+   1.17.9               1.18.4(preview), 1.18.6(preview)
+   1.17.7               1.17.9, 1.18.4(preview), 1.18.6(preview)
+   1.16.13              1.17.7, 1.17.9
+   1.16.10              1.16.13, 1.17.7, 1.17.9
+   1.15.12              1.16.10, 1.16.13
+   1.15.11              1.15.12, 1.16.10, 1.16.13
    ```
 
-   For this lab we'll use 1.17.7.
+   For this lab we'll use 1.17.9
 
    ```bash
-   K8SVERSION=1.17.7
+   K8SVERSION=1.17.9
    ```
 
    > The below command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT and grab a coffee...

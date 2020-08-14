@@ -1,6 +1,6 @@
 # Lab: Build Application Components and Prerequisites
 
-In this lab we will build Docker containers for each of the application components and setup the back-end database.
+In this lab we will build Docker containers for the JabbR ASP.Net application and deploy the Azure SQL DB backend that will support it.
 
 ## Prerequisites
 
@@ -20,7 +20,6 @@ In this lab we will build Docker containers for each of the application componen
    ```bash
    git clone https://github.com/Azure/kubernetes-hackfest
    ```
-
    > Note: In the cloud shell, you are automatically logged into your Azure subscription.
 
 1. Ensure you are using the correct Azure subscription you want to deploy to.
@@ -56,7 +55,7 @@ In this lab we will build Docker containers for each of the application componen
    echo export UNIQUE_SUFFIX=$UNIQUE_SUFFIX >> ~/.bashrc
    ```
 
-   **_ Note this value as it will be used in the next couple labs. _**
+   **Note this value as it will be used in the next couple labs.**
 
 1. Create an Azure Resource Group in East US.
 
