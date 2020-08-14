@@ -168,20 +168,20 @@ This lab creates namespaces that reflect a representative example of an organiza
 
    ```bash
    # Test Limits - Forbidden due to assignment of CPU too low
-   kubectl apply -f labs/create-aks-cluster/cpu-to-low.yaml
+   kubectl apply -f labs/create-aks-cluster/cpu-to-low.yaml -n dev
 
    # Test Limits - Pass due to automatic assignment within limits via defaults
-   kubectl apply -f labs/create-aks-cluster/cpu-auto-assign.yaml
+   kubectl apply -f labs/create-aks-cluster/cpu-auto-assign.yaml -n dev
 
    # Check running pod and dev Namespace Allocations
    kubectl get po -n dev
    kubectl describe ns dev
 
    # Test Quotas - Forbidden due to memory quota exceeded
-   kkubectl apply -f labs/create-aks-cluster/memory-exceeded.yaml
+   kkubectl apply -f labs/create-aks-cluster/memory-exceeded.yaml -n dev
 
    # Test Quotas - Pass due to memory within quota
-   kubectl apply -f labs/create-aks-cluster/memory-within-quota.yaml
+   kubectl apply -f labs/create-aks-cluster/memory-within-quota.yaml -n dev
 
    # Check running pod and dev Namespace Allocations
    kubectl get po -n dev
