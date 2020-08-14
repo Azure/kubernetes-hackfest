@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  labels:
+    run: nginx-limittest
+  name: nginx-limittest
+spec:
+  nodeSelector:
+    kubernetes.io/os: linux
+  containers:
+  - image: nginx
+    name: nginx-limittest
+    ports:
+    - containerPort: 80
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+  dnsPolicy: ClusterFirst
+  restartPolicy: Never
