@@ -178,7 +178,7 @@ This lab creates namespaces that reflect a representative example of an organiza
    kubectl describe ns dev
 
    # Test Quotas - Forbidden due to memory quota exceeded
-   kkubectl apply -f labs/create-aks-cluster/memory-exceeded.yaml -n dev
+   kubectl apply -f labs/create-aks-cluster/memory-exceeded.yaml -n dev
 
    # Test Quotas - Pass due to memory within quota
    kubectl apply -f labs/create-aks-cluster/memory-within-quota.yaml -n dev
