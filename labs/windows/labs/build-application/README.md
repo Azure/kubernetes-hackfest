@@ -18,7 +18,7 @@ In this lab we will build Docker containers for the JabbR ASP.Net application an
 1. Once your cloud shell is started, clone the workshop repo into the cloud shell environment
 
    ```bash
-   git clone https://github.com/Azure/kubernetes-hackfest
+   git clone https://github.com/Azure/kubernetes-hackfest.git -b windows-lab
    ```
    > Note: In the cloud shell, you are automatically logged into your Azure subscription.
 
