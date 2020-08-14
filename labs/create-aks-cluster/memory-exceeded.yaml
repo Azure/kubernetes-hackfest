@@ -2,8 +2,8 @@ apiVersion: v1
 kind: Pod
 metadata:
   labels:
-    run: nginx-limittest
-  name: nginx-limittest
+    run: nginx-quotatest
+  name: nginx-quotatest
 spec:
   nodeSelector:
     kubernetes.io/os: linux
