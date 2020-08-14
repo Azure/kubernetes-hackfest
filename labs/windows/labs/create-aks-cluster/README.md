@@ -195,6 +195,9 @@ This lab creates namespaces that reflect a representative example of an organiza
    kubectl delete -f labs/create-aks-cluster/namespace-quotas.yaml
    kubectl delete po nginx-limittest nginx-quotatest -n dev
 
+   kubectl delete -f labs/create-aks-cluster/cpu-auto-assign.yaml -n dev
+   kubectl delete -f labs/create-aks-cluster/memory-within-quota.yaml -n dev
+
    kubectl describe ns dev
    kubectl describe ns uat
    kubectl describe ns prod
