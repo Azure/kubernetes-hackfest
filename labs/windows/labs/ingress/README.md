@@ -200,6 +200,8 @@ An ingress controller is a piece of software that provides reverse proxy, config
     ```bash
     52.186.38.32 jabbr jabbr2
     ```
+
+1. In another incognito window or tab browse to the new instance at http://jabbr2
 ## Troubleshooting / Debugging
 
 * Check that the Service Names in the Ingress Rules match the Application Service Names
