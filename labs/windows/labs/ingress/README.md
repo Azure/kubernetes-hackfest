@@ -7,9 +7,9 @@ An ingress controller is a piece of software that provides reverse proxy, config
 ## Prerequisites
 
 * Complete previous labs:
-    * [Azure Kubernetes Service](../../create-aks-cluster/README.md)
-    * [Build Application Components in Azure Container Registry](../../build-application/README.md)
-    * [Helm Setup and Deploy Application](../../helm-setup-deploy/README.md)
+    * [Azure Kubernetes Service](../create-aks-cluster/README.md)
+    * [Build Application Components in Azure Container Registry](../build-application/README.md)
+    * [Helm Setup and Deploy Application](../helm-setup-deploy/README.md)
 
 ## Instructions
 
