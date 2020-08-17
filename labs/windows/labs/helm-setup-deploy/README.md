@@ -148,3 +148,4 @@ version.BuildInfo{Version:"v3.3.0-rc.1", GitCommit:"5c2dfaad847df2ac8f289d278186
 
 * [Helm](http://helm.sh)
 
+#### Next Lab: [Ingress Control](../ingress/README.md)

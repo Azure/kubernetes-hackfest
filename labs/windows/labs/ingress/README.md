@@ -212,4 +212,3 @@ An ingress controller is a piece of software that provides reverse proxy, config
 * [What is an Ingress Controller?](https://kubernetes.io/docs/concepts/services-networking/ingress/)
 * [Whitelisting egress traffic](https://docs.microsoft.com/en-us/azure/aks/egress)
 
-#### Next Lab: [Ingress Control](../ingress/README.md)
