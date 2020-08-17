@@ -48,7 +48,7 @@ An ingress controller is a piece of software that provides reverse proxy, config
     --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux
     
     # Validate nginx is installed and running
-    helm list
+    helm ls --all-namespaces
     kubectl get service -l app=nginx-ingress --namespace jabbr
     ```
 
