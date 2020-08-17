@@ -1,0 +1,18 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: jabbr-ingress
+  namespace: jabbr
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+spec:
+  rules:
+  - host: jabbr
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: jabbr
+          servicePort: 80
+

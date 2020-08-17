@@ -131,6 +131,8 @@ In this lab we will build Docker containers for the JabbR ASP.Net application an
 
     In this step we will create a Docker container image for each of our microservices. We will use ACR Builder functionality to build and store these images in the cloud.
 
+    >**NOTE:** The directory name 'JabbR' referenced below is case sensitive, so make sure you clone with the proper case before trying to run ACR build.
+
     ```bash
     git clone https://github.com/swgriffith/JabbR
     az acr build -t jabbr:1.0 -r $ACRNAME --no-logs -o json JabbR --platform Windows --verbose
