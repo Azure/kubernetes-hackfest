@@ -1,0 +1,17 @@
+  # Forcing Kubelet metrics scraping on http
+  kubelet:
+    enabled: true
+    serviceMonitor:
+      https: false
+  # Disabling scraping of Master Nodes Components
+  kubeControllerManager:
+    enabled: false
+  kubeScheduler:
+    enabled: false
+  kubeEtcd:
+    enabled: false
+  kubeProxy:
+    enabled: false
+  grafana:
+    plugins:
+    - grafana-piechart-panel

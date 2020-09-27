@@ -1,0 +1,19 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    app: prometheus-operator
+    release: prometheus-operator
+  name: example-sample-go-app-rules
+spec:
+  groups:
+  - name: ./examplesamplegoapp.rules
+    rules:
+    - alert: ExampleSampleGoAppDeploymentLowReplicaCount
+      annotations:
+        summary: "App Not Fully Functional"
+        message: "The Sample GO App is running with less than 3 replicas."
+      expr: kube_deployment_status_replicas{deployment="sample-go",namespace="sample-app"} < 3
+      for: 30s
+      labels:
+        severity: critical

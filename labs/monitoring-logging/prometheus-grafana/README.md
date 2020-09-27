@@ -16,6 +16,9 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
 1. Deploy Prometheus Operator
 
     ``` bash
+    # Go to the prometheus lab directory
+    cd ~/kubernetes-hackfest/labs/monitoring-logging/prometheus-grafana
+    
     # Create a new Monitoring Namespace to deploy Prometheus Operator too
     kubectl create namespace monitoring
     
@@ -24,7 +27,7 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
     helm repo update
     
     # Install Prometheus Operator
-    helm install prometheus-operator stable/prometheus-operator --namespace monitoring
+    helm install prometheus-operator stable/prometheus-operator -f values.yaml --namespace monitoring
     kubectl -n monitoring get all -l "release=prometheus-operator"
     
     # Check to see that all the Pods are running
@@ -38,12 +41,14 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
     kubectl get secrets -n monitoring
     ```
 
-2. Expose Services to Public IP's
+>**Note:** The following explains how to expose Prometheus, Alert Manager and Grafana dashboards via a public IP. This is only for lab purposes, and would not be recommended for production. A more secure alternative would be to use a Kubernetes [port-forward](https://kubernetes.io/docs/tasks/access-application-cluster/port-forward-access-application-cluster/). (Ex. kubectl port-forward services/prometheus-operator-prometheus -n monitoring 9090:9090)
+
+1. Expose Services to Public IP's
 
     ```bash
-    # use your VI skills to change the below snippet. It should be "LoadBalancer" and not "ClusterIP"
+    # use your VI skills to change the below snippet. The type should be "LoadBalancer" and not "ClusterIP"
 
-    kubectl edit service kube-prometheus -n monitoring
+    kubectl edit service prometheus-operator-prometheus -n monitoring
     ```
 
     ```yaml
@@ -63,21 +68,21 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
 
     ```bash
     # repeat for Alert Manager
-    kubectl edit service kube-prometheus-alertmanager -n monitoring
+    kubectl edit service prometheus-operator-alertmanager -n monitoring
     ```
 
     ```bash
     # repeat for Grafana
-    kubectl edit service kube-prometheus-grafana -n monitoring
+    kubectl edit service prometheus-operator-grafana -n monitoring
     ```
 
     > Note: These settings should not generally be used in production. The endpoints should be secured behind an Ingress. This just aides the lab experience. 
 
-3. Interact with Prometheus (Prometheus and Alert Manager Dashboards)
+1. Interact with Prometheus (Prometheus and Alert Manager Dashboards)
 
     ```bash
     # Get your public IP address for the Prometheus dashboard (if <pending>, you must wait...)
-    kubectl get service kube-prometheus -n monitoring
+    kubectl get service prometheus-operator-prometheus -n monitoring
     ```
 
     Open up a brower to http://<your-public-ip>:9090 and you will see the Prometheus dashboard
@@ -88,7 +93,7 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
 
     ```bash
     # Get your public IP address for the Prometheus Alert Manager (if <pending>, you must wait...)
-    kubectl get service kube-prometheus-alertmanager -n monitoring
+    kubectl get service prometheus-operator-alertmanager -n monitoring
     ```
 
     Open up a brower to http://<your-public-ip>:9093 and you will see the Prometheus dashboard
@@ -97,20 +102,20 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
 
         ![Defaul Alert Manager UI](img-alertmanager-ui.png)
 
-4. Interact with Grafana Dashboard
+1. Interact with Grafana Dashboard
 
     ```bash
     # Get your public IP address for Grafana (if <pending>, you must wait...)
-    kubectl get service kube-prometheus-grafana -n monitoring
+    kubectl get service prometheus-operator-grafana -n monitoring
     ```
 
-    Open up a brower to http://<your-public-ip>:80 and you will see the Prometheus dashboard
+    Open up a brower to http://<your-public-ip>:80 and you will need to log in to see the Prometheus dashboard. Username: admin Password: prom-operator
 
     * Screenshot of Kubernetes Capacity Planning Dashboard
 
         ![Grafana Snapshot](img-grafana-dashboard.png)
 
-5. Deploy Sample App with Integrated and Custom Prometheus Metrics
+1. Deploy Sample App with Integrated and Custom Prometheus Metrics
 
     * Create Namespace for Sample GO App
 
@@ -128,11 +133,23 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
         # Deploy the ServiceMonitor to Monitor the Sample GO App
         kubectl apply -f prom-graf-servicemonitor.yaml -n monitoring
         # Deploy the ConfigMap to Raise Alerts for the Sample GO App
-        kubectl apply -f prom-graf-configmap.yaml -n monitoring
+        kubectl apply -f prom-graf-alert-rule.yaml -n monitoring
         ```
     * If there is interest in how Prometheus Metrics and Custom Metrics can be added to an existing application take a look at the [GO Code](../../../app/sample-go/app.go).
 
-6. Check Metrics and Alerts are Working for Sample GO App
+    * Get the IP address of the sample and send some requests to it to get some metrics loaded.
+
+        ```bash
+        kubectl get svc -n sample-app
+
+        # Either pop out to a browser or curl http://<ExternalIP>:8080
+        curl -H 'Cache-Control: no-cache' <ExternalIP>:8080
+
+        # To view the metrics endpoint
+        curl <ExternalIP>:8080/metrics
+        ```
+
+1. Check Metrics and Alerts are Working for Sample GO App
 
     * Using the technique above, port-forward to the Prometheus Dashboard.
     * Check custom metric `requests_counter_total` in the deployed sample GO App:
@@ -143,7 +160,7 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
 
         ![Prometheus Alerts](img-prometheus-alerts.png)
 
-7. Fix Replica Count Custom Alert
+1. Fix Replica Count Custom Alert
 
     * Scale the Deployment to 3 replicas to stop the Alert from FIRING.
 
@@ -155,25 +172,6 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
 
         ![Prometheus Alerts](img-prometheus-alerts-resolved.png)
 
-## Troubleshooting / Debugging
-
-* Checking Default Prometheus Configuration
-
-    ```bash
-    kubectl get secret prometheus-kube-prometheus -n monitoring -o json | jq -r '.data["prometheus.yaml"]' | base64 --decode
-    ```
-
-* Checking Default Prometheus Alert Manager Configuration
-
-    ```bash
-    kubectl get secret alertmanager-kube-prometheus -n monitoring -o json | jq -r '.data["alertmanager.yaml"]' | base64 --decode
-    ```
-
-* Checking Custom Deployed ServiceMonitor (Sample GO App) Configuration
-
-    ```bash
-    kubectl get secret prometheus-kube-prometheus -n monitoring -o json | jq -r '.data["prometheus.yaml"]' | base64 --decode | grep "sample-go"
-    ```
 
 ## Docs / References
 

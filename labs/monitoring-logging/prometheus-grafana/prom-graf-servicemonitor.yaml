@@ -5,7 +5,7 @@ metadata:
   namespace: monitoring
   labels:
     app: sample-go
-    prometheus: kube-prometheus
+    release: prometheus-operator
 spec:
   selector:
     matchLabels:
