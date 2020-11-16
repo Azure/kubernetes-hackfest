@@ -28,7 +28,7 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
     helm repo update
     
     # Install Prometheus Operator
-    helm install prometheus-operator stable/prometheus-operator -f values.yaml --namespace monitoring
+    helm install prometheus-operator prometheus-community/kube-prometheus-stack -f values.yaml --namespace monitoring
     kubectl -n monitoring get all -l "release=prometheus-operator"
     
     # Check to see that all the Pods are running
