@@ -39,7 +39,7 @@ Linkerd is a Cloud Native Computing Foundation (CNCF) project.
     # verify CLI (ignore that the server version is unavailable)
     linkerd version
     
-    Client version: stable-2.1.0
+    Client version: stable-2.8.1
     Server version: unavailable
     ```
 
