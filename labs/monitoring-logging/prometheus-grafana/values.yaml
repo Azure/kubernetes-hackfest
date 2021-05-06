@@ -15,3 +15,6 @@
   grafana:
     plugins:
     - grafana-piechart-panel
+  prometheusOperator:
+    admissionWebhooks:
+      enabled: false

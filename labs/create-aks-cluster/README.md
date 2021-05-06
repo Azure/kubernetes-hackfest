@@ -122,21 +122,21 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
    az aks get-versions -l $LOCATION --output table
 
    KubernetesVersion    Upgrades
-   -------------------  ----------------------------------------
-   1.18.6(preview)      None available
-   1.18.4(preview)      1.18.6(preview)
-   1.17.9               1.18.4(preview), 1.18.6(preview)
-   1.17.7               1.17.9, 1.18.4(preview), 1.18.6(preview)
-   1.16.13              1.17.7, 1.17.9
-   1.16.10              1.16.13, 1.17.7, 1.17.9
-   1.15.12              1.16.10, 1.16.13
-   1.15.11              1.15.12, 1.16.10, 1.16.13
+   -------------------  -----------------------------------------
+   1.19.3(preview)      None available
+   1.19.0(preview)      1.19.3(preview)
+   1.18.10              1.19.0(preview), 1.19.3(preview)
+   1.18.8               1.18.10, 1.19.0(preview), 1.19.3(preview)
+   1.17.13              1.18.8, 1.18.10
+   1.17.11              1.17.13, 1.18.8, 1.18.10
+   1.16.15              1.17.11, 1.17.13
+   1.16.13              1.16.15, 1.17.11, 1.17.13
    ```
 
-   For this lab we'll use 1.17.9
+   For this lab we'll use 1.18.10
 
    ```bash
-   K8SVERSION=1.15.11
+   K8SVERSION=1.18.10
    ```
 
    > The below command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT and grab a coffee...
@@ -161,7 +161,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     ```bash
     Name             Location    ResourceGroup            KubernetesVersion    ProvisioningState    Fqdn
     ---------------  ----------  -----------------------  -------------------  -------------------  ----------------------------------------------------------------
-    aksstephen14260  eastus      aks-rg-stephen14260      1.15.7             Succeeded            aksstephen-aks-rg-stephen14-62afe9-9aa48ae4.hcp.eastus.azmk8s.io
+    aksstephen14260  eastus      aks-rg-stephen14260      1.18.10              Succeeded            aksstephen-aks-rg-stephen14-62afe9-9aa48ae4.hcp.eastus.azmk8s.io
     ```
 
 11. Get the Kubernetes config files for your new AKS cluster
@@ -180,9 +180,9 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
 
     ```bash
     NAME                                STATUS   ROLES   AGE    VERSION
-    aks-nodepool1-33525724-vmss000000   Ready    agent   177m   v1.15.7
-    aks-nodepool1-33525724-vmss000001   Ready    agent   177m   v1.15.7
-    aks-nodepool1-33525724-vmss000002   Ready    agent   177m   v1.15.7
+    aks-nodepool1-33525724-vmss000000   Ready    agent   177m   v1.18.10
+    aks-nodepool1-33525724-vmss000001   Ready    agent   177m   v1.18.10
+    aks-nodepool1-33525724-vmss000002   Ready    agent   177m   v1.18.10
     ```
 
     To see more details about your cluster:

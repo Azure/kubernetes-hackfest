@@ -17,7 +17,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 helm version
 
 # Example Output:
-version.BuildInfo{Version:"v3.0.0", GitCommit:"e29ce2a54e96cd02ccfce88bee4f58bb6e2a28b6", GitTreeState:"clean", GoVersion:"go1.13.4"}
+version.BuildInfo{Version:"v3.3.0-rc.1", GitCommit:"5c2dfaad847df2ac8f289d278186d048f446c70c", GitTreeState:"dirty", GoVersion:"go1.14.4"}
 ```
 
 1. Review the Helm Chart components
@@ -35,7 +35,7 @@ version.BuildInfo{Version:"v3.0.0", GitCommit:"e29ce2a54e96cd02ccfce88bee4f58bb6
     * Get the value of your ACR Login Server:
 
         ```bash
-        az acr list -o table --query "[].loginServer"
+        az acr list -o table --query "[].loginServer" -g $RGNAME
 
         Result
         -------------------
@@ -47,7 +47,7 @@ version.BuildInfo{Version:"v3.0.0", GitCommit:"e29ce2a54e96cd02ccfce88bee4f58bb6
     
         Replace all `acrServer` values:
         ```bash
-        export ACRSERVER=$(az acr list -o table --query "[].loginServer" --output json | jq -r '.[]')
+        export ACRSERVER=$(az acr list -g $RGNAME -o table --query "[].loginServer" --output json | jq -r '.[]')
         echo "export ACRSERVER=$ACRSERVER" >> ~/.bashrc
         find charts -name values.yaml -exec sed -i 's/youracr.azurecr.io/'${ACRSERVER}'/g' {} \;
 

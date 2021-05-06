@@ -23,11 +23,12 @@ This lab will walkthrough using the Core OS Prometheus Operator to add Monitorin
     kubectl create namespace monitoring
     
     # Add the stable repo for Helm 3
-    helm repo add stable https://kubernetes-charts.storage.googleapis.com
+    helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+    helm repo add stable https://charts.helm.sh/stable
     helm repo update
     
     # Install Prometheus Operator
-    helm install prometheus-operator stable/prometheus-operator -f values.yaml --namespace monitoring
+    helm install prometheus-operator prometheus-community/kube-prometheus-stack -f values.yaml --namespace monitoring
     kubectl -n monitoring get all -l "release=prometheus-operator"
     
     # Check to see that all the Pods are running
