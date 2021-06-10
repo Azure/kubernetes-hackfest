@@ -9,7 +9,7 @@
   "author": "Ray Kao",
   "license": "ISC",
   "dependencies": {
-    "node-fetch": "^2.1.2",
+    "node-fetch": "^2.6.1",
     "restify": "^7.2.1"
   }
 }
