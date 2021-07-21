@@ -17,7 +17,7 @@ In this lab we will setup Helm in our AKS cluster and deploy our application wit
 helm version
 
 # Example Output:
-version.BuildInfo{Version:"v3.3.0-rc.1", GitCommit:"5c2dfaad847df2ac8f289d278186d048f446c70c", GitTreeState:"dirty", GoVersion:"go1.14.4"}
+version.BuildInfo{Version:"v3.5.4", GitCommit:"1b5edb69df3d3a08df77c9902dc17af864ff05d1", GitTreeState:"dirty", GoVersion:"go1.16.3"}
 ```
 
 1. Review the Helm Chart components

@@ -122,21 +122,20 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
    az aks get-versions -l $LOCATION --output table
 
    KubernetesVersion    Upgrades
-   -------------------  -----------------------------------------
-   1.19.3(preview)      None available
-   1.19.0(preview)      1.19.3(preview)
-   1.18.10              1.19.0(preview), 1.19.3(preview)
-   1.18.8               1.18.10, 1.19.0(preview), 1.19.3(preview)
-   1.17.13              1.18.8, 1.18.10
-   1.17.11              1.17.13, 1.18.8, 1.18.10
-   1.16.15              1.17.11, 1.17.13
-   1.16.13              1.16.15, 1.17.11, 1.17.13
+   -------------------  ------------------------
+   1.21.1(preview)      None available
+   1.20.7               1.21.1(preview)
+   1.20.5               1.20.7, 1.21.1(preview)
+   1.19.11              1.20.5, 1.20.7
+   1.19.9               1.19.11, 1.20.5, 1.20.7
+   1.18.19              1.19.9, 1.19.11
+   1.18.17              1.18.19, 1.19.9, 1.19.11
    ```
 
    For this lab we'll use 1.18.10
 
    ```bash
-   K8SVERSION=1.18.10
+   K8SVERSION=1.20.7
    ```
 
    > The below command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT and grab a coffee...
@@ -247,20 +246,20 @@ This lab creates namespaces that reflect a representative example of an organiza
 
    ```bash
    # Test Limits - Forbidden due to assignment of CPU too low
-   kubectl run nginx-limittest --image=nginx --restart=Never --replicas=1 --port=80 --requests='cpu=100m,memory=256Mi' -n dev
+   kubectl run nginx-limittest --image=nginx --restart=Never --port=80 --requests='cpu=100m,memory=256Mi' -n dev
 
    # Test Limits - Pass due to automatic assignment within limits via defaults
-   kubectl run nginx-limittest --image=nginx --restart=Never --replicas=1 --port=80 -n dev
+   kubectl run nginx-limittest --image=nginx --restart=Never --port=80 -n dev
 
    # Check running pod and dev Namespace Allocations
    kubectl get po -n dev
    kubectl describe ns dev
 
    # Test Quotas - Forbidden due to memory quota exceeded
-   kubectl run nginx-quotatest --image=nginx --restart=Never --replicas=1 --port=80 --requests='cpu=500m,memory=1Gi' -n dev
+   kubectl run nginx-quotatest --image=nginx --restart=Never --port=80 --requests='cpu=500m,memory=1Gi' -n dev
 
    # Test Quotas - Pass due to memory within quota
-   kubectl run nginx-quotatest --image=nginx --restart=Never --replicas=1 --port=80 --requests='cpu=500m,memory=512Mi' -n dev
+   kubectl run nginx-quotatest --image=nginx --restart=Never --port=80 --requests='cpu=500m,memory=512Mi' -n dev
 
    # Check running pod and dev Namespace Allocations
    kubectl get po -n dev
