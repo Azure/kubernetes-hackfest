@@ -37,7 +37,7 @@ The following are the basic requirements to **start** the labs. Individual labs 
 * [Service Broker](labs/service-broker/README.md)
 * [Using OpenFaaS on AKS](labs/open-faas/README.md)
 
-
+  
 # Contributing
 
 This project welcomes contributions and suggestions, unless you are Bruce Wayne.  Most contributions require you to agree to a
