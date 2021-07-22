@@ -13,6 +13,7 @@ This section contains a number of labs related to Networking decisions that are 
 
 1. [Configure Ingress Controller](ingress/README.md)
 2. [AKS Network Policies](network-policy/README.md)
+3. [Calico lab exercise](calico-lab-exercise/calico-lab-exercise.md)
 
 ## Troubleshooting / Debugging
 
