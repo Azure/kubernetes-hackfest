@@ -1,0 +1,22 @@
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: security.kubelet-access
+spec:
+  tier: security
+  order: 120
+  selector: has(eks.amazonaws.com/nodegroup)
+  ingress:
+  # This rule allows all traffic to localhost.
+  - action: Allow
+    destination:
+      nets:
+      - 127.0.0.1/32
+  # This rule allows the access the kubelet API.
+  - action: Allow
+    protocol: TCP
+    destination:
+      ports:
+      - '10250'
+  types:
+    - Ingress

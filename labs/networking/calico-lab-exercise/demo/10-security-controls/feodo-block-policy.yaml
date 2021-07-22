@@ -1,0 +1,16 @@
+---
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: security.block-feodo
+spec:
+  tier: security
+  order: 210
+  selector: all()
+  types:
+  - Egress
+  egress:
+  - action: Deny
+    destination:
+      selector: threatfeed == 'feodo'
+  - action: Pass

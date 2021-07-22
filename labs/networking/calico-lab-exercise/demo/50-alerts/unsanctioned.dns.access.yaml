@@ -1,0 +1,35 @@
+---
+apiVersion: projectcalico.org/v3
+kind: GlobalAlertTemplate
+metadata:
+  name: dns.unsanctioned.access
+spec:
+  description: "Pod attempted to access restricted.com domain"
+  summary: "[dns] pod ${client_namespace}/${client_name_aggr} attempted to access '${qname}'"
+  severity: 100
+  dataSet: dns
+  period: 5m
+  lookback: 5m
+  query: '(qname = "www.restricted.com" OR qname = "restricted.com")'
+  aggregateBy: [client_namespace, client_name_aggr, qname]
+  metric: count
+  condition: gt
+  threshold: 0
+
+---
+apiVersion: projectcalico.org/v3
+kind: GlobalAlert
+metadata:
+  name: dns.unsanctioned.access
+spec:
+  description: "Pod attempted to access google.com domain"
+  summary: "[dns] pod ${client_namespace}/${client_name_aggr} attempted to access '${qname}'"
+  severity: 100
+  dataSet: dns
+  period: 1m
+  lookback: 1m
+  query: '(qname = "www.google.com" OR qname = "google.com")'
+  aggregateBy: [client_namespace, client_name_aggr, qname]
+  metric: count
+  condition: gt
+  threshold: 0

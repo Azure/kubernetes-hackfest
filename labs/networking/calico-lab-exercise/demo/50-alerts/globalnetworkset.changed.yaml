@@ -1,0 +1,37 @@
+---
+apiVersion: projectcalico.org/v3
+kind: GlobalAlertTemplate
+metadata:
+  name: policy.globalnetworkset
+spec:
+  description: "Alerts on any changes to global network sets"
+  summary: "[audit] [privileged access] change detected for ${objectRef.resource} ${objectRef.name}"
+  severity: 100
+  period: 5m
+  lookback: 5m
+  dataSet: audit
+  # alert is triggered if CRUD operation executed against any globalnetworkset
+  query: (verb=create OR verb=update OR verb=delete OR verb=patch) AND "objectRef.resource"=globalnetworksets
+  aggregateBy: [objectRef.resource, objectRef.name]
+  metric: count
+  condition: gt
+  threshold: 0
+
+---
+apiVersion: projectcalico.org/v3
+kind: GlobalAlert
+metadata:
+  name: policy.globalnetworkset
+spec:
+  description: "Alerts on any changes to global network sets"
+  summary: "[audit] [privileged access] change detected for ${objectRef.resource} ${objectRef.name}"
+  severity: 100
+  period: 1m
+  lookback: 1m
+  dataSet: audit
+  # alert is triggered if CRUD operation executed against any globalnetworkset
+  query: (verb=create OR verb=update OR verb=delete OR verb=patch) AND "objectRef.resource"=globalnetworksets
+  aggregateBy: [objectRef.resource, objectRef.name]
+  metric: count
+  condition: gt
+  threshold: 0

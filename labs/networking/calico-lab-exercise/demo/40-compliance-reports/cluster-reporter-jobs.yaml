@@ -1,0 +1,446 @@
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: run-cluster-reporter-network-access
+  namespace: tigera-compliance
+  labels:
+    k8s-app: compliance-reporter
+spec:
+  backoffLimit: 6
+  completions: 1
+  parallelism: 1
+  template:
+    metadata:
+      name: run-cluster-reporter-network-access
+      namespace: tigera-compliance
+      labels:
+        k8s-app: compliance-reporter
+        reporter-type: manual
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      restartPolicy: OnFailure
+      serviceAccount: tigera-compliance-reporter
+      serviceAccountName: tigera-compliance-reporter
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+      imagePullSecrets:
+        - name: tigera-pull-secret
+      containers:
+      - name: reporter
+        # Modify this image name, if you have re-tagged the image and are using a local
+        # docker image repository.
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        image: quay.io/tigera/compliance-reporter:<CALICO_VERSION>
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        env:
+          # Modify this value with name of an existing globalreport resource.
+          # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        - name: TIGERA_COMPLIANCE_REPORT_NAME
+          value: <NETWORK_ACCESS_REPORT_NAME>
+          # Modify these values with the start and end time frame that should be reported on.
+          # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # - name: TIGERA_COMPLIANCE_REPORT_START_TIME
+        #   value: <report start time in UTC RFC3339 format, e.g.  2019-03-23T14:20:00Z>
+        # - name: TIGERA_COMPLIANCE_REPORT_END_TIME
+        #   value: <report start time in UTC RFC3339 format, e.g. 2019-03-23T15:10:00Z>
+        - name: TIGERA_COMPLIANCE_REPORT_START_TIME
+          value: "<REPORT_START_TIME_UTC>"
+        - name: TIGERA_COMPLIANCE_REPORT_END_TIME
+          value: "<REPORT_END_TIME_UTC>"
+          # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # By default reports get generated 30 min after the end of report time.
+        # Modify this variable to change the default delay.
+        - name: TIGERA_COMPLIANCE_JOB_START_DELAY
+          value: "0m"
+          # value: "5m"
+        - name: LOG_LEVEL
+          value: "warning"
+        - name: ELASTIC_INDEX_SUFFIX
+          value: cluster
+        - name: ELASTIC_SCHEME
+          value: https
+        - name: ELASTIC_HOST
+          value: tigera-secure-es-http.tigera-elasticsearch.svc
+        - name: ELASTIC_PORT
+          value: "9200"
+        - name: ELASTIC_USER
+          valueFrom:
+            secretKeyRef:
+              name: tigera-ee-compliance-reporter-elasticsearch-access
+              key: username
+              optional: true
+        - name: ELASTIC_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: tigera-ee-compliance-reporter-elasticsearch-access
+              key: password
+              optional: true
+        - name: ELASTIC_SSL_VERIFY
+          value: "true"
+        - name: ELASTIC_CA
+          value: /etc/ssl/elastic/ca.pem
+        volumeMounts:
+        - mountPath: /var/log/calico
+          name: var-log-calico
+        - name: elastic-ca-cert-volume
+          mountPath: /etc/ssl/elastic/
+        - name: tigera-compliance-reporter-token
+          mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        livenessProbe:
+          httpGet:
+            path: /liveness
+            port: 9099
+            host: localhost
+      volumes:
+      - name: var-log-calico 
+        hostPath:
+          path: /var/log/calico
+          type: DirectoryOrCreate
+      - name: elastic-ca-cert-volume
+        secret:
+          optional: true
+          items:
+          - key: tls.crt
+            path: ca.pem
+          secretName: tigera-secure-es-http-certs-public
+      - name: tigera-compliance-reporter-token
+        secret:
+          defaultMode: 420
+          secretName: <COMPLIANCE_REPORTER_TOKEN>
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: run-cluster-reporter-inventory
+  namespace: tigera-compliance
+  labels:
+    k8s-app: compliance-reporter
+spec:
+  backoffLimit: 6
+  completions: 1
+  parallelism: 1
+  template:
+    metadata:
+      name: run-cluster-reporter-inventory
+      namespace: tigera-compliance
+      labels:
+        k8s-app: compliance-reporter
+        reporter-type: manual
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      restartPolicy: OnFailure
+      serviceAccount: tigera-compliance-reporter
+      serviceAccountName: tigera-compliance-reporter
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+      imagePullSecrets:
+        - name: tigera-pull-secret
+      containers:
+      - name: reporter
+        # Modify this image name, if you have re-tagged the image and are using a local
+        # docker image repository.
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        image: quay.io/tigera/compliance-reporter:<CALICO_VERSION>
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        env:
+          # Modify this value with name of an existing globalreport resource.
+          # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        - name: TIGERA_COMPLIANCE_REPORT_NAME
+          value: <INVENTORY_REPORT_NAME>
+          # Modify these values with the start and end time frame that should be reported on.
+          # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # - name: TIGERA_COMPLIANCE_REPORT_START_TIME
+        #   value: <report start time in UTC RFC3339 format, e.g.  2019-03-23T14:20:00Z>
+        # - name: TIGERA_COMPLIANCE_REPORT_END_TIME
+        #   value: <report start time in UTC RFC3339 format, e.g. 2019-03-23T15:10:00Z>
+        - name: TIGERA_COMPLIANCE_REPORT_START_TIME
+          value: "<REPORT_START_TIME_UTC>"
+        - name: TIGERA_COMPLIANCE_REPORT_END_TIME
+          value: "<REPORT_END_TIME_UTC>"
+          # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        # By default reports get generated 30 min after the end of report time.
+        # Modify this variable to change the default delay.
+        - name: TIGERA_COMPLIANCE_JOB_START_DELAY
+          value: "0m"
+          # value: "5m"
+        - name: LOG_LEVEL
+          value: "warning"
+        - name: ELASTIC_INDEX_SUFFIX
+          value: cluster
+        - name: ELASTIC_SCHEME
+          value: https
+        - name: ELASTIC_HOST
+          value: tigera-secure-es-http.tigera-elasticsearch.svc
+        - name: ELASTIC_PORT
+          value: "9200"
+        - name: ELASTIC_USER
+          valueFrom:
+            secretKeyRef:
+              name: tigera-ee-compliance-reporter-elasticsearch-access
+              key: username
+              optional: true
+        - name: ELASTIC_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: tigera-ee-compliance-reporter-elasticsearch-access
+              key: password
+              optional: true
+        - name: ELASTIC_SSL_VERIFY
+          value: "true"
+        - name: ELASTIC_CA
+          value: /etc/ssl/elastic/ca.pem
+        volumeMounts:
+        - mountPath: /var/log/calico
+          name: var-log-calico
+        - name: elastic-ca-cert-volume
+          mountPath: /etc/ssl/elastic/
+        - name: tigera-compliance-reporter-token
+          mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        livenessProbe:
+          httpGet:
+            path: /liveness
+            port: 9099
+            host: localhost
+      volumes:
+      - name: var-log-calico 
+        hostPath:
+          path: /var/log/calico
+          type: DirectoryOrCreate
+      - name: elastic-ca-cert-volume
+        secret:
+          optional: true
+          items:
+          - key: tls.crt
+            path: ca.pem
+          secretName: tigera-secure-es-http-certs-public
+      - name: tigera-compliance-reporter-token
+        secret:
+          defaultMode: 420
+          secretName: <COMPLIANCE_REPORTER_TOKEN>
+
+---
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: run-cluster-reporter-cis
+  namespace: tigera-compliance
+  labels:
+    k8s-app: compliance-reporter
+spec:
+  backoffLimit: 6
+  completions: 1
+  parallelism: 1
+  template:
+    metadata:
+      name: run-cluster-reporter-cis
+      namespace: tigera-compliance
+      labels:
+        k8s-app: compliance-reporter
+        reporter-type: manual
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      restartPolicy: OnFailure
+      serviceAccount: tigera-compliance-reporter
+      serviceAccountName: tigera-compliance-reporter
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+      imagePullSecrets:
+        - name: tigera-pull-secret
+      containers:
+      - name: reporter
+        # Modify this image name, if you have re-tagged the image and are using a local
+        # docker image repository.
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        image: quay.io/tigera/compliance-reporter:<CALICO_VERSION>
+        # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        env:
+          # Modify this value with name of an existing globalreport resource.
+          # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        - name: TIGERA_COMPLIANCE_REPORT_NAME
+          value: <CIS_REPORT_NAME>
+          # Modify these values with the start and end time frame that should be reported on.
+          # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          #- name: TIGERA_COMPLIANCE_REPORT_START_TIME
+          #  value: <report start time in UTC RFC3339 format, e.g.  2019-03-23T14:20:00Z>
+          #- name: TIGERA_COMPLIANCE_REPORT_END_TIME
+          #  value: <report start time in UTC RFC3339 format, e.g. 2019-03-23T15:10:00Z>
+          # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+        - name: LOG_LEVEL
+          value: "warning"
+        - name: ELASTIC_INDEX_SUFFIX
+          value: cluster
+        - name: ELASTIC_SCHEME
+          value: https
+        - name: ELASTIC_HOST
+          value: tigera-secure-es-http.tigera-elasticsearch.svc
+        - name: ELASTIC_PORT
+          value: "9200"
+        - name: ELASTIC_USER
+          valueFrom:
+            secretKeyRef:
+              name: tigera-ee-compliance-reporter-elasticsearch-access
+              key: username
+              optional: true
+        - name: ELASTIC_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: tigera-ee-compliance-reporter-elasticsearch-access
+              key: password
+              optional: true
+        - name: ELASTIC_SSL_VERIFY
+          value: "true"
+        - name: ELASTIC_CA
+          value: /etc/ssl/elastic/ca.pem
+        volumeMounts:
+        - mountPath: /var/log/calico
+          name: var-log-calico
+        - name: elastic-ca-cert-volume
+          mountPath: /etc/ssl/elastic/
+        - name: tigera-compliance-reporter-token
+          mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        livenessProbe:
+          httpGet:
+            path: /liveness
+            port: 9099
+            host: localhost
+      volumes:
+      - name: var-log-calico 
+        hostPath:
+          path: /var/log/calico
+          type: DirectoryOrCreate
+      - name: elastic-ca-cert-volume
+        secret:
+          optional: true
+          items:
+          - key: tls.crt
+            path: ca.pem
+          secretName: tigera-secure-es-http-certs-public
+      - name: tigera-compliance-reporter-token
+        secret:
+          defaultMode: 420
+          secretName: <COMPLIANCE_REPORTER_TOKEN>
+
+####################################################################
+# uncomment reporter definition below if you configured CloudWatch connection for Calico LogCollector
+# see: https://docs.tigera.io/compliance/compliance-reports/compliance-managed-cloud#enable-audit-logs-in-eks
+####################################################################
+# ---
+# apiVersion: batch/v1
+# kind: Job
+# metadata:
+#   name: run-cluster-reporter-policy-audit
+#   namespace: tigera-compliance
+#   labels:
+#     k8s-app: compliance-reporter
+# spec:
+#   backoffLimit: 6
+#   completions: 1
+#   parallelism: 1
+#   template:
+#     metadata:
+#       name: run-cluster-reporter-policy-audit
+#       namespace: tigera-compliance
+#       labels:
+#         k8s-app: compliance-reporter
+#         reporter-type: manual
+#     spec:
+#       nodeSelector:
+#         kubernetes.io/os: linux
+#       restartPolicy: OnFailure
+#       serviceAccount: tigera-compliance-reporter
+#       serviceAccountName: tigera-compliance-reporter
+#       tolerations:
+#         - key: node-role.kubernetes.io/master
+#           effect: NoSchedule
+#       imagePullSecrets:
+#         - name: tigera-pull-secret
+#       containers:
+#       - name: reporter
+#         # Modify this image name, if you have re-tagged the image and are using a local
+#         # docker image repository.
+#         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#         image: quay.io/tigera/compliance-reporter:<CALICO_VERSION>
+#         # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#         env:
+#           # Modify this value with name of an existing globalreport resource.
+#           # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#         - name: TIGERA_COMPLIANCE_REPORT_NAME
+#           value: <POLICY_AUDIT_REPORT_NAME>
+#           # Modify these values with the start and end time frame that should be reported on.
+#           # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#         # - name: TIGERA_COMPLIANCE_REPORT_START_TIME
+#         #   value: <report start time in UTC RFC3339 format, e.g.  2019-03-23T14:20:00Z>
+#         # - name: TIGERA_COMPLIANCE_REPORT_END_TIME
+#         #   value: <report start time in UTC RFC3339 format, e.g. 2019-03-23T15:10:00Z>
+#         - name: TIGERA_COMPLIANCE_REPORT_START_TIME
+#           value: "<REPORT_START_TIME_UTC>"
+#         - name: TIGERA_COMPLIANCE_REPORT_END_TIME
+#           value: "<REPORT_END_TIME_UTC>"
+#           # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#         # By default reports get generated 30 min after the end of report time.
+#         # Modify this variable to change the default delay.
+#         - name: TIGERA_COMPLIANCE_JOB_START_DELAY
+#           value: "0m"
+#           # value: "5m"
+#         - name: LOG_LEVEL
+#           value: "warning"
+#         - name: ELASTIC_INDEX_SUFFIX
+#           value: cluster
+#         - name: ELASTIC_SCHEME
+#           value: https
+#         - name: ELASTIC_HOST
+#           value: tigera-secure-es-http.tigera-elasticsearch.svc
+#         - name: ELASTIC_PORT
+#           value: "9200"
+#         - name: ELASTIC_USER
+#           valueFrom:
+#             secretKeyRef:
+#               name: tigera-ee-compliance-reporter-elasticsearch-access
+#               key: username
+#               optional: true
+#         - name: ELASTIC_PASSWORD
+#           valueFrom:
+#             secretKeyRef:
+#               name: tigera-ee-compliance-reporter-elasticsearch-access
+#               key: password
+#               optional: true
+#         - name: ELASTIC_SSL_VERIFY
+#           value: "true"
+#         - name: ELASTIC_CA
+#           value: /etc/ssl/elastic/ca.pem
+#         volumeMounts:
+#         - mountPath: /var/log/calico
+#           name: var-log-calico
+#         - name: elastic-ca-cert-volume
+#           mountPath: /etc/ssl/elastic/
+#         - name: tigera-compliance-reporter-token
+#           mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+#         livenessProbe:
+#           httpGet:
+#             path: /liveness
+#             port: 9099
+#             host: localhost
+#       volumes:
+#       - name: var-log-calico 
+#         hostPath:
+#           path: /var/log/calico
+#           type: DirectoryOrCreate
+#       - name: elastic-ca-cert-volume
+#         secret:
+#           optional: true
+#           items:
+#           - key: tls.crt
+#             path: ca.pem
+#           secretName: tigera-secure-es-http-certs-public
+#       - name: tigera-compliance-reporter-token
+#         secret:
+#           defaultMode: 420
+#           secretName: <COMPLIANCE_REPORTER_TOKEN>

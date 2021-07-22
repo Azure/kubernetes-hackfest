@@ -1,0 +1,37 @@
+---
+apiVersion: projectcalico.org/v3
+kind: GlobalAlertTemplate
+metadata:
+  name: network.lateral.access
+spec:
+  description: "Alerts when pods with a specific label (security=strict) accessed by other workloads from other namespaces"
+  summary: "[flows] [lateral movement] ${source_namespace}/${source_name_aggr} has accessed ${dest_namespace}/${dest_name_aggr} with label security=strict"
+  severity: 100
+  period: 5m
+  lookback: 5m
+  dataSet: flows
+  query: '"dest_labels.labels"="security=strict" AND "dest_namespace"="secured_pod_namespace" AND "source_namespace"!="secured_pod_namespace" AND proto=tcp AND (("action"="allow" AND ("reporter"="dst" OR "reporter"="src")) OR ("action"="deny" AND "reporter"="src"))'
+  aggregateBy: [source_namespace, source_name_aggr, dest_namespace, dest_name_aggr]
+  field: num_flows
+  metric: sum
+  condition: gt
+  threshold: 0
+
+---
+apiVersion: projectcalico.org/v3
+kind: GlobalAlert
+metadata:
+  name: network.lateral.access
+spec:
+  description: "Alerts when pods with a specific label (security=strict) accessed by other workloads from other namespaces"
+  summary: "[flows] [lateral movement] ${source_namespace}/${source_name_aggr} has accessed ${dest_namespace}/${dest_name_aggr} with label security=strict"
+  severity: 100
+  period: 1m
+  lookback: 1m
+  dataSet: flows
+  query: '("dest_labels.labels"="security=strict" AND "dest_namespace"="dev") AND "source_namespace"!="dev" AND "proto"="tcp" AND (("action"="allow" AND ("reporter"="dst" OR "reporter"="src")) OR ("action"="deny" AND "reporter"="src"))'
+  aggregateBy: [source_namespace, source_name_aggr, dest_namespace, dest_name_aggr]
+  field: num_flows
+  metric: sum
+  condition: gt
+  threshold: 0

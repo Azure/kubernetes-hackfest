@@ -1,0 +1,23 @@
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: security.ssh-access
+spec:
+  tier: security
+  order: 110
+  selector: has(eks.amazonaws.com/nodegroup)
+  # Allow all traffic to localhost.
+  ingress:
+  - action: Allow
+    destination:
+      nets:
+      - 127.0.0.1/32
+  # Allow only SSH port access.
+  - action: Allow
+    protocol: TCP
+    source:
+      nets:
+      - ${CLOUD9_IP}
+    destination:
+      ports:
+      - "22"

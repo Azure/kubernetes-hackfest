@@ -1,0 +1,11 @@
+apiVersion: projectcalico.org/v3
+kind: GlobalThreatFeed
+metadata:
+  name: feodo-tracker
+spec:
+  pull:
+    http:
+      url: https://feodotracker.abuse.ch/downloads/ipblocklist.txt
+  globalNetworkSet:
+    labels:
+      threatfeed: feodo
