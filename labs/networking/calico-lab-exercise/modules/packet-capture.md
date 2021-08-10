@@ -1,10 +1,25 @@
-# Module 8: Packet Capture
+# Module 7: Packet Capture
 
 **Goal:** Configure packet capture for specific pods and review captured payload.
 
 ## Steps
 
-1. Configure packet capture.
+1. Confirm `calicoctl` binary is installed. Follow instructions in [Module 0 Step 7](./creating-aks-cluster.md) if installation is required
+
+    The easiest way to retrieve captured `*.pcap` files is to use [calicoctl](https://docs.tigera.io/maintenance/clis/calicoctl/) CLI.
+
+    ```bash
+    # confirm calicoctl is executable
+    calicoctl version
+    ```
+    
+    ```bash
+    # confirm calicoctl is executable from CloudShell
+    ./calicoctl version
+    ```
+
+
+2. Configure packet capture.
 
     Navigate to `demo/80-packet-capture` and review YAML manifests that represent packet capture definition. Each packet capture is configured by deploying a `PacketCapture` resource that targets endpoints using `selector` and `labels`.
 
@@ -16,17 +31,6 @@
 
     >Once the `PacketCapture` resource is deployed, Calico starts capturing packets for all endpoints configured in the `selector` field.
 
-2. Install `calicoctl` CLI
-
-    The easiest way to retrieve captured `*.pcap` files is to use [calicoctl](https://docs.tigera.io/maintenance/clis/calicoctl/) CLI.
-
-    ```bash
-    # download and configure calicoctl
-    curl -o calicoctl -O -L https://docs.tigera.io/download/binaries/v3.7.0/calicoctl
-    chmod +x calicoctl
-    sudo mv calicoctl /usr/local/bin/
-    calicoctl version
-    ```
 
 3. Fetch and review captured payload.
 
@@ -50,3 +54,5 @@
     ```bash
     kubectl delete -f demo/80-packet-capture/packet-capture.yaml
     ```
+
+[Next -> Module 8](../modules/anomaly-detection.md)

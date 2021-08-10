@@ -48,7 +48,7 @@
 
     # test egress access to api.twilio.com
     kubectl -n dev exec -t centos -- sh -c 'curl -m3 -skI https://api.twilio.com 2>/dev/null | grep -i http'
-    # test egress access to www.google.com
+    # test egress access to www.bing.com
     kubectl -n dev exec -t centos -- sh -c 'curl -m3 -skI https://www.bing.com 2>/dev/null | grep -i http'
     ```
 
@@ -63,7 +63,15 @@
     kubectl apply -f demo/20-egress-access-controls/dns-policy.netset.yaml
     ```
 
-    >the update version of `allow-twilio-access` policy is using [destination: type == "external-apis"] instead of [source: app == 'centos'], which will simplify your DNS egress management.
+    >the update version of `allow-twilio-access` policy is using [destination: type == "external-apis"] instead of [source: app == 'centos'], which will simplify your DNS egress management. Now we re-test access to twilio and bing to demonstrate policy using Network Sets is enforcing as expected:
+    
+    ```bash
+    # test egress access to api.twilio.com
+    kubectl -n dev exec -t centos -- sh -c 'curl -m3 -skI https://api.twilio.com 2>/dev/null | grep -i http'
+    # test egress access to www.bing.com
+    kubectl -n dev exec -t centos -- sh -c 'curl -m3 -skI https://www.bing.com 2>/dev/null | grep -i http'
+    ```
+    As access to twilio is permitted and access to bing is denied we are able to whitelist domains as described next
 
     c. As a bonus example, you can modify the `external-apis` network set in calico cloud management UI to include `*.azure.com` domain name or `*.microsoft.com`which would allow access to azure/microsoft subdomains. 
     

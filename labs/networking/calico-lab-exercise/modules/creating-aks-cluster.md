@@ -111,6 +111,8 @@ echo export CLIENTSECRET=$CLIENTSECRET >> ~/.bashrc
     
     ```bash
     az aks get-versions -l $LOCATION --output table
+    ```
+    ```
     KubernetesVersion    Upgrades
     -------------------  ------------------------
     1.21.1(preview)      None available
@@ -168,7 +170,8 @@ echo export CLIENTSECRET=$CLIENTSECRET >> ~/.bashrc
     
 	```bash
 	kubectl get nodes
-
+	```
+	```
 	NAME                                STATUS   ROLES   AGE    VERSION
 	aks-nodepool1-29374799-vmss000000   Ready    agent   118s   v1.20.7
 	aks-nodepool1-29374799-vmss000001   Ready    agent   2m3s   v1.20.7
@@ -179,7 +182,58 @@ echo export CLIENTSECRET=$CLIENTSECRET >> ~/.bashrc
 	```bash
 	kubectl cluster-info
 	```
-<br>
+	
+7.  Install `calicoctl` CLI for use in later labs
+
+    The easiest way to retrieve captured `*.pcap` files is to use [calicoctl](https://docs.tigera.io/maintenance/clis/calicoctl/) CLI. The following binary installations are available:
+
+    a) CloudShell
+    ```bash    
+    # download and configure calicoctl
+    curl -o calicoctl -O -L https://docs.tigera.io/download/binaries/v3.8.1/calicoctl
+    chmod +x calicoctl
+    
+    # verify calicoctl is running 
+    ./calicoctl version
+    ```
+
+    
+    b) Linux
+
+    >Tip: Consider navigating to a location that’s in your PATH. For example, /usr/local/bin/
+    ```bash    
+    # download and configure calicoctl
+    curl -o calicoctl -O -L https://docs.tigera.io/download/binaries/v3.8.1/calicoctl
+    chmod +x calicoctl
+    
+    # verify calicoctl is running 
+    calicoctl version
+    ```
+    c) MacOS
+    
+
+    >Tip: Consider navigating to a location that’s in your PATH. For example, /usr/local/bin/
+    ```bash    
+    # download and configure calicoctl
+    curl -o calicoctl -O -L  https://docs.tigera.io/download/binaries/v3.8.1/calicoctl-darwin-amd64
+    chmod +x calicoctl
+    
+    # verify calicoctl is running 
+    calicoctl version
+    ```
+    Note: If you are faced with `cannot be opened because the developer cannot be verified` error when using `calicoctl` for the first time. go to `Applicaitons` \> `System Prefences` \> `Security & Privacy` in the `General` tab at the bottom of the window click `Allow anyway`.  
+Note: If the location of calicoctl is not already in your PATH, move the file to one that is or add its location to your PATH. This will allow you to invoke it without having to prepend its location.
+
+    c) Windows - using powershell command to download the calicoctl binary  
+    >Tip: Consider runing powershell as administraor and navigating to a location that’s in your PATH. For example, C:\Windows.
+    
+    ```pwsh
+    Invoke-WebRequest -Uri "https://docs.tigera.io/download/binaries/v3.8.1/calicoctl-windows-amd64.exe" -OutFile "calicocttl.exe"
+    ```
+    
+   
+
+
 
 --- 
 ## Next steps

@@ -1,0 +1,142 @@
+---
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: allow-tigera.allow-anomaly-detection
+  namespace: tigera-intrusion-detection
+spec:
+  tier: allow-tigera
+  order: 1
+  selector: app == 'anomaly-detection'
+  types:
+  - Ingress
+  - Egress
+  egress:
+  - action: Allow
+    protocol: TCP
+    destination:
+      namespaceSelector: projectcalico.org/name == 'tigera-guardian'
+      selector: k8s-app == 'tigera-guardian'
+      ports:
+      - 8080
+  - action: Allow
+    protocol: UDP
+    destination:
+      namespaceSelector: projectcalico.org/name == 'kube-system'
+      selector: k8s-app == 'kube-dns'
+      ports:
+      - 53
+  - action: Allow
+    protocol: UDP
+    destination:
+      namespaceSelector: projectcalico.org/name == "openshift-dns"
+      selector: dns.operator.openshift.io/daemonset-dns == "default"
+      ports: [5353]
+---
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: allow-tigera.elasticsearch-access-anomaly-detection
+  namespace: tigera-guardian
+spec:
+  tier: allow-tigera
+  order: 1
+  selector: k8s-app == 'tigera-guardian'
+  types:
+  - Ingress
+  ingress:
+  - action: Allow
+    destination:
+      ports:
+      - 8080
+    protocol: TCP
+    source:
+      namespaceSelector: projectcalico.org/name == 'tigera-intrusion-detection'
+      selector:  app == 'anomaly-detection'
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ad-jobs-deployment
+  namespace: tigera-intrusion-detection
+  labels:
+    app: anomaly-detection
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: anomaly-detection
+  template:
+    metadata:
+      labels:
+        app: anomaly-detection
+    spec:
+      imagePullSecrets:
+      - name: tigera-pull-secret
+      containers:
+      - name: ad-jobs
+        image: quay.io/tigera/anomaly_detection_jobs:v3.7.0
+        resources:
+          requests:
+            memory: 1G
+        securityContext:
+          privileged: true
+          allowPrivilegeEscalation: true
+        env:
+          - name: CLUSTER_NAME
+            value: "$CALICOCLUSTERNAME"
+          - name: ELASTIC_PORT
+            value: "9200"
+          - name: ES_CA_CERT
+            value: /certs/es-ca.pem
+          - name: ELASTIC_USER
+            valueFrom:
+              secretKeyRef:
+                key: username
+                name: tigera-ee-ad-job-elasticsearch-access
+          - name: ELASTIC_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: password
+                name: tigera-ee-ad-job-elasticsearch-access
+          - name: AD_max_docs
+            value: "100000"
+          - name: AD_train_interval_minutes
+            value: "20"
+          - name: AD_search_interval_minutes
+            value: "5"
+          - name: AD_DnsLatency_IsolationForest_score_threshold
+            value: "-0.886"
+          - name: AD_ProcessRestarts_threshold
+            value: "5"
+          - name: AD_port_scan_threshold
+            value: "200"
+          - name: AD_ip_sweep_threshold
+            value: "32"
+          - name: AD_BytesInModel_min_size_for_train
+            value: "1000"
+          - name: AD_SeasonalAD_c
+            value: "500"
+          - name: AD_BytesOutModel_min_size_for_train
+            value: "1000"
+          - name: AD_debug
+            value: "True"
+        volumeMounts:
+          - name: host-volume
+            mountPath: /home/idsuser/anomaly_detection_jobs/models
+          - name: es-certs
+            mountPath: /certs/es-ca.pem
+            subPath: es-ca.pem
+        command: ["python3"]
+        args: ["main.py"]
+      volumes:
+        - name: es-certs
+          secret:
+            defaultMode: 420
+            items:
+              - key: tls.crt
+                path: es-ca.pem
+            secretName: tigera-secure-es-http-certs-public
+        - name: host-volume
+          hostPath:
+            path: /var/log/calico
