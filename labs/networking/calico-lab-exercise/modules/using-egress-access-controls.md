@@ -22,13 +22,15 @@
     kubectl -n dev exec -t centos -- sh -c 'curl -m3 -sI http://www.bing.com 2>/dev/null | grep -i http'
     ```
     The access should be denied as the policies configured in previous module do not allow it.
+     ![default-centos-to-frontend](../img/default-centos-to-frontend.png)
 
-2. Implement egress policy to allow egress access from a workload in one namespace, e.g. `dev/centos`, to a service in another namespace, e.g. `default/frontend`. After the deployment, you can view the policy details under `platform` tier in `Policies Board`
+
+2. Implement egress policy to allow egress access from a workload in one namespace, e.g. `dev/centos`, to a service in another namespace, e.g. `default/frontend`. A
 
     a. Deploy egress policy.
 
     ```bash
-    kubectl apply -f demo/20-egress-access-controls/centos-to-frontend.yaml
+    kubectl apply -f demo/20-egress-access-controls/default-centos-to-frontend.yaml
     ```
 
     b. Test connectivity between `dev/centos` pod and `default/frontend` service.
@@ -38,6 +40,8 @@
     ```
 
     The access should be allowed once the egress policy is in place.
+
+
 
 3. Implement DNS policy to allow the external endpoint access from a specific workload, e.g. `dev/centos`.
 
