@@ -11,6 +11,8 @@
     ```
 
 2. Deploy demo applications.
+    This is app we will use for next modules.
+      ![demo-diagram](../img/demo-diagram.png)
 
     ```bash
     # deploy dev app stack
