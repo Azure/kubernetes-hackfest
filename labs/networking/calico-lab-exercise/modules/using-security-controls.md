@@ -1,6 +1,7 @@
 # Module 3: Using security controls with global network policies
 
 **Goal:** Leverage global network policies to segment connections within the AKS cluster.
+
 **Docs:** https://docs.projectcalico.org/archive/v3.20/reference/resources/globalnetworkpolicy
 
 ## Steps
