@@ -64,6 +64,10 @@
 
 3. Test connectivity with policieis in place.
 
+    This is the connection after we have network policy in place.
+      ![global-default-deny](../img/global-default-deny.png)
+
+
     a. The only connections between the components within each namespaces should be allowed as configured by the policies.
 
     ```bash

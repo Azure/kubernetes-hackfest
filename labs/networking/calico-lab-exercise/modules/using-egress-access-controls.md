@@ -1,6 +1,7 @@
 # Module 4: Using egress access controls with global networkset 
 
 **Goal:** Configure egress access for specific workloads.
+
 **Docs:** https://docs.projectcalico.org/archive/v3.20/reference/resources/globalnetworkset
 
 ## Steps
