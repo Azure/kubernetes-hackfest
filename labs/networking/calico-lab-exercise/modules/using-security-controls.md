@@ -1,6 +1,7 @@
-# Module 3: Using security controls
+# Module 3: Using security controls with global network policies
 
-**Goal:** Leverage global network policies to segment connections within the AKS cluster and prevent known bad actors from accessing the workloads.
+**Goal:** Leverage global network policies to segment connections within the AKS cluster.
+**Docs:** https://docs.projectcalico.org/archive/v3.20/reference/resources/globalnetworkpolicy
 
 ## Steps
 
@@ -92,27 +93,6 @@
     kubectl exec -it $(kubectl get po -l app=loadgenerator -ojsonpath='{.items[0].metadata.name}') -- sh -c 'curl -m3 -sI www.bing.com 2>/dev/null | grep -i http'
     ```
 
-5. Protect workloads from known bad actors.
 
-    Calico offers `GlobalThreatfeed` resource to prevent known bad actors from accessing Kubernetes pods. We will configure a `Network Set` resource to reference an external threatfeed which will dynamically update the IP addresses or FQDNs/domains. Then we configure a network policy to deny traffic to these blacklisted destinations.
-    
-
-    ```bash
-    # deploy feodo tracker threatfeed
-    kubectl apply -f demo/10-security-controls/feodotracker.threatfeed.yaml
-    # deploy network policy that uses the threadfeed
-    kubectl apply -f demo/10-security-controls/feodo-block-policy.yaml
-    ```
-    <br>
-    
-    You should be able to view the `threatfeed.feodo-tracker` details in `Network Sets` view and the `block-feodo`policy in `Policies Board` view in your calicocloud manager UI.
-    
-    ![network-set-grid](../img/network-set-grid.png)
-    
-    ```bash
-    # try to ping any of the IPs in from the feodo tracker list, and the packet will be deny.
-    IP=$(kubectl get globalnetworkset threatfeed.feodo-tracker -ojson | jq '.spec.nets[0]' | sed -e 's/^"//' -e 's/"$//' -e 's/\/32//')
-    kubectl -n dev exec -t centos -- sh -c "ping -c1 $IP"
-    ```
     
 [Next -> Module 4](../modules/using-egress-access-controls.md)

@@ -1,6 +1,7 @@
-# Module 4: Using egress access controls
+# Module 4: Using egress access controls with global networkset 
 
 **Goal:** Configure egress access for specific workloads.
+**Docs:** https://docs.projectcalico.org/archive/v3.20/reference/resources/globalnetworkset
 
 ## Steps
 
@@ -19,7 +20,6 @@
     # test connectivity from dev namespace to the Internet
     kubectl -n dev exec -t centos -- sh -c 'curl -m3 -sI http://www.bing.com 2>/dev/null | grep -i http'
     ```
-
     The access should be denied as the policies configured in previous module do not allow it.
 
 2. Implement egress policy to allow egress access from a workload in one namespace, e.g. `dev/centos`, to a service in another namespace, e.g. `default/frontend`. After the deployment, you can view the policy details under `platform` tier in `Policies Board`
