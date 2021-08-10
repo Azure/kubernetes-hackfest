@@ -1,6 +1,6 @@
 # Module 3: Using security controls
 
-**Goal:** Leverage network policies to segment connections within the AKS cluster and prevent known bad actors from accessing the workloads.
+**Goal:** Leverage global network policies to segment connections within the AKS cluster and prevent known bad actors from accessing the workloads.
 
 ## Steps
 
@@ -40,32 +40,9 @@
 
     All of these tests should succeed if there are no policies in place to govern the traffic for `dev` and `default` namespaces.
 
-2. Apply staged `default-deny` policy.
 
-    >Staged `default-deny` policy is a good way of catching any traffic that is not explicitly allowed by a policy without explicitly blocking it.
 
-    ```bash
-    kubectl apply -f demo/10-security-controls/staged.default-deny.yaml
-    ```
-
-    Review the network policy created by clicking `Policies` on the left menu. A staged default deny policy has been created in the `default` tier. You can view or edit the policy by clicking the view or edit icons.
-    
-    <img src="../img/staged-default-deny.png" alt="staged-default-deny.png" width="100%"/>
-
-    You can view the potential affect of the staged `default-deny` policy if you navigate to the `Dashboard` view in your Calico Cloud Manager UI and look at the `Packets by Policy` histogram.
-    
-    <img src="../img/dashboard-default-deny.png" alt="dashboard-default-deny.png" width="100%"/>
-
-    To view more traffic in the `Packets by Policy` histogram we can generate traffic from the `centos` pod to the `frontend` service.
-
-    ```bash
-    # make a request across namespaces and view Packets by Policy histogram
-    for i in {1..10}; do kubectl -n dev exec -t centos -- sh -c 'curl -m3 -sI http://frontend.default 2>/dev/null | grep -i http'; sleep 2; done
-    ```
-
-    >The staged policy does not affect the traffic directly but allows you to view the policy impact if it were to be enforced.
-
-3. Apply network policies to control East-West traffic.
+2. Apply network policies to control East-West traffic.
 
     ```bash
     # deploy dev policies
@@ -75,17 +52,15 @@
     kubectl apply -f demo/boutiqueshop/policies.yaml
     ```
     
-    Now as we have proper policies in place, we can enforce `default-deny` policy moving closer to zero-trust security approach. You can either enforced the already deployed staged `default-deny` policy using the `Policies Board` view in your calicocloud Manager UI, or you can apply an enforcing `default-deny` policy manifest.
+    Now as we have proper policies in place, we can deploy `default-deny` as global network policy moving closer to zero-trust security approach. 
 
     ```bash
     # apply enforcing default-deny policy manifest
     kubectl apply -f demo/10-security-controls/default-deny.yaml
     ```
-    If the above yaml definition is deployed the policy `Staged default-deny` can be deleted through the Web UI. Within the policy board click the edit icon from the `Staged default deny` policy in the `default` tier. Then click `Delete`
     
-    <img src="../img/edit-policy.png" alt="edit-policy" width="100%"/>
 
-4. Test connectivity with policieis in place.
+3. Test connectivity with policieis in place.
 
     a. The only connections between the components within each namespaces should be allowed as configured by the policies.
 

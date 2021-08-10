@@ -59,4 +59,14 @@
     kubectl exec -it $(kubectl get po -l app=loadgenerator -ojsonpath='{.items[0].metadata.name}') -- sh -c 'apt install curl -y'
     ```
 
+4. Deploy basic DNS policy as global allow.
+
+    In order to explicitly allow workloads to connect to the Kubernetes DNS component, we are going to implement a policy that controls such traffic.
+
+    ```bash
+    kubectl apply -f demo/10-security-controls/default-allow-kube-dns.yaml
+    ```
+
+
+       
 [Next -> Module 3](../modules/using-security-controls.md)

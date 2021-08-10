@@ -2,10 +2,9 @@
 apiVersion: projectcalico.org/v3
 kind: NetworkPolicy
 metadata:
-  name: default.adservice
+  name: adservice
   namespace: default
 spec:
-  tier: default
   order: 100
   selector: app == "adservice"
   ingress:
@@ -31,10 +30,9 @@ spec:
 apiVersion: projectcalico.org/v3
 kind: NetworkPolicy
 metadata:
-  name: default.cartservice
+  name: cartservice
   namespace: default
 spec:
-  tier: default
   order: 110
   selector: app == "cartservice"
   ingress:
@@ -74,10 +72,9 @@ spec:
 apiVersion: projectcalico.org/v3
 kind: NetworkPolicy
 metadata:
-  name: default.checkoutservice
+  name: checkoutservice
   namespace: default
 spec:
-  tier: default
   order: 120
   selector: app == "checkoutservice"
   ingress:
@@ -145,10 +142,9 @@ spec:
 apiVersion: projectcalico.org/v3
 kind: NetworkPolicy
 metadata:
-  name: default.currencyservice
+  name: currencyservice
   namespace: default
 spec:
-  tier: default
   order: 130
   selector: app == "currencyservice"
   ingress:
@@ -173,10 +169,9 @@ spec:
 apiVersion: projectcalico.org/v3
 kind: NetworkPolicy
 metadata:
-  name: default.emailservice
+  name: emailservice
   namespace: default
 spec:
-  tier: default
   order: 140
   selector: app == "emailservice"
   ingress:
@@ -194,10 +189,9 @@ spec:
 apiVersion: projectcalico.org/v3
 kind: NetworkPolicy
 metadata:
-  name: default.frontend
+  name: frontend
   namespace: default
 spec:
-  tier: default
   order: 150
   selector: app == "frontend"
   ingress:
@@ -291,10 +285,9 @@ spec:
 apiVersion: projectcalico.org/v3
 kind: NetworkPolicy
 metadata:
-  name: default.loadgenerator
+  name: loadgenerator
   namespace: default
 spec:
-  tier: default
   order: 160
   selector: app == "loadgenerator"
   egress:
@@ -319,10 +312,9 @@ spec:
 apiVersion: projectcalico.org/v3
 kind: NetworkPolicy
 metadata:
-  name: default.paymentservice
+  name: paymentservice
   namespace: default
 spec:
-  tier: default
   order: 170
   selector: app == "paymentservice"
   ingress:
@@ -340,10 +332,9 @@ spec:
 apiVersion: projectcalico.org/v3
 kind: NetworkPolicy
 metadata:
-  name: default.productcatalogservice
+  name: productcatalogservice
   namespace: default
 spec:
-  tier: default
   order: 180
   selector: app == "productcatalogservice"
   ingress:
@@ -392,10 +383,9 @@ spec:
 apiVersion: projectcalico.org/v3
 kind: NetworkPolicy
 metadata:
-  name: default.recommendationservice
+  name: recommendationservice
   namespace: default
 spec:
-  tier: default
   order: 190
   selector: app == "recommendationservice"
   ingress:
@@ -428,10 +418,9 @@ spec:
 apiVersion: projectcalico.org/v3
 kind: NetworkPolicy
 metadata:
-  name: default.redis-cart
+  name: redis-cart
   namespace: default
 spec:
-  tier: default
   order: 200
   selector: app == "redis-cart"
   ingress:
@@ -449,10 +438,9 @@ spec:
 apiVersion: projectcalico.org/v3
 kind: NetworkPolicy
 metadata:
-  name: default.shippingservice
+  name: shippingservice
   namespace: default
 spec:
-  tier: default
   order: 210
   selector: app == "shippingservice"
   ingress:
