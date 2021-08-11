@@ -10,7 +10,7 @@ spec:
   endpoints:
     namespaces:
       names: ["default"]
-  schedule: '*/10 * * * *'
+  schedule: '*/15 * * * *'
 
 ---
 apiVersion: projectcalico.org/v3
@@ -24,4 +24,4 @@ spec:
   endpoints:
     namespaces:
       names: ["default"]
-  schedule: '*/10 * * * *'
+  schedule: '*/15 * * * *'

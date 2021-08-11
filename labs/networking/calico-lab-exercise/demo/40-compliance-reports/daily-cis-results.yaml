@@ -6,9 +6,9 @@ metadata:
     deployment: production
 spec:
   reportType: cis-benchmark
-  schedule: '*/10 * * * *'
+  schedule: '*/15 * * * *'
 ##  schedule: '0 0 * * *'
-##This is not daily report but every 10 mins for demo purpose
+##This is not daily report but every 15 mins for demo purpose
   cis:
     highThreshold: 100
     medThreshold: 50
