@@ -63,9 +63,9 @@
     # test egress access to www.bing.com
     kubectl -n dev exec -t centos -- sh -c 'curl -m3 -skI https://www.bing.com 2>/dev/null | grep -i http'
     ```
-    As access to azure is permitted and access to bing is denied we are able to whitelist domains as described next
+    As access to `*.azure.com` is permitted and access to `*.bing.com` is denied we are able to whitelist domains as described next
 
-     ![default-centos-to-frontend](../img/default-centos-to-frontend.png)
+     ![dns-policy](../img/dns-policy.png)
 
 
 [Next -> Module 5](../modules/using-observability-tools.md)
