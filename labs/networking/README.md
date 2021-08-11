@@ -16,7 +16,7 @@ This section contains a number of labs related to Networking decisions that are 
 3. [Calico lab exercise](calico-lab-exercise/README.md)
 
 ## Troubleshooting / Debugging
-
+ 
 
 ## Docs / References
 
