@@ -66,7 +66,22 @@
     ```bash
     kubectl apply -f demo/10-security-controls/default-allow-kube-dns.yaml
     ```
+5. Deploy compliance reports.
 
+    >The reports will be needed for one of a later lab.
+
+    ```bash
+    kubectl apply -f demo/40-compliance-reports
+    ```
+6. Deploy global alerts.
+
+    >The alerts will be explored in a later lab. Ignore any warning messages - these do not affect the deployment of resources.
+
+    ```bash
+    kubectl apply -f demo/50-alerts/globalnetworkset.changed.yaml
+    kubectl apply -f demo/50-alerts/unsanctioned.dns.access.yaml
+    kubectl apply -f demo/50-alerts/unsanctioned.lateral.access.yaml
+    ```
 
        
 [Next -> Module 3](../modules/using-security-controls.md)

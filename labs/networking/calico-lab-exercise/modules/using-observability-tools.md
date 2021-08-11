@@ -6,8 +6,6 @@
 
 >If you are interested in enabling collection of application layer metrics for your workloads, refer to [Configure L7 logs](https://docs.tigera.io/visibility/elastic/l7/configure) documentation to enable application layer metrics collection.
 
-
-
 1. Dashboard
 
     The `Dashboard` view in the Calicocloud Manager UI presents high level overview of what's going on in your cluster. The view shows the following information:
@@ -25,11 +23,58 @@
 
     The `Policies Board` shows all policies deployed in the cluster and organized into `policy tiers`. You can control what a user can see and do by configuring Kubernetes RBAC roles which determine what the user can see in this view. You can also use controls to hide away tiers you're not interested in at any given time.
 
+
+    a. Deploy policy tiers.
+
+    We are going to deploy some policies into policy tier to take advantage of hierarcical policy management.
+
+    ```bash
+    kubectl apply -f demo/tiers/tiers.yaml
+    
+    ```
+    This will add tiers `security` and `platform` to the aks cluster. 
+
+
+    b. Move the kube-dns policy to platform tier.
+
+    ```bash
+    kubectl apply -f demo/10-security-controls/allow-kube-dns.yaml
+
+    kubectl delete -f demo/10-security-controls/default-allow-kube-dns.yaml
+    ```
+
+    This will add `allow-kube-dns` policy to your `platform` tier and remove `allow-kube-dns` policy in your `default` tier. 
+
+
+    c. Move the centos-to-frontend policy to platform tier as well.
+
+    ```bash
+    kubectl apply -f demo/20-egress-access-controls/centos-to-frontend.yaml
+
+    kubectl delete -f demo/20-egress-access-controls/default-centos-to-frontend.yaml
+    ```
+
+    This will add `centos-to-frontend` policy to your `platform` tier and remove `centos-to-frontend` policy in your `default` tier. 
+
+
+    d. Move the `allow-azure-access`  policy to security tier.
+
+    ```bash
+    kubectl apply -f demo/20-egress-access-controls/security.dns-policy.netset.yaml
+
+    kubectl delete -f demo/20-egress-access-controls/dns-policy.netset.yaml
+    ```
+
+    This will add `allow-azure-access` policy to your `security` tier and remove `allow-azure-access` policy in your `default` tier. 
+
+
+
     ![policies board](../img/policies-board.png)
 
     By leveraging stats controls you can toggle additional metrics to be listed for each shown policy.
 
-    ![policies board stats](../img/policies-board-stats.png)
+    ![policies board stats](../img/policies-board-stats.png) 
+
 
 3. Audit timeline
 
@@ -43,7 +88,30 @@
 
     ![endpoints view](../img/endpoints-view.png)
 
-5. Service Graph
+5. Network Sets 
+
+    Calico offers `GlobalThreatfeed` resource to prevent known bad actors from accessing Kubernetes pods. We will configure a `Network Set` resource to reference an external threatfeed which will dynamically update the IP addresses or FQDNs/domains. Then we configure a network policy to deny traffic to these blacklisted destinations.
+    
+
+    ```bash
+    # deploy feodo tracker threatfeed
+    kubectl apply -f demo/10-security-controls/feodotracker.threatfeed.yaml
+    # deploy network policy that uses the threadfeed
+    kubectl apply -f demo/10-security-controls/feodo-block-policy.yaml
+    ```
+    <br>
+    
+    You should be able to view the `threatfeed.feodo-tracker` details in `Network Sets` view and the `block-feodo`policy in `Policies Board` view in your calicocloud manager UI.
+    
+    ![network-set-grid](../img/network-set-grid.png)
+    
+    ```bash
+    # try to ping any of the IPs in from the feodo tracker list, and the packet will be deny.
+    IP=$(kubectl get globalnetworkset threatfeed.feodo-tracker -ojson | jq '.spec.nets[0]' | sed -e 's/^"//' -e 's/"$//' -e 's/\/32//')
+    kubectl -n dev exec -t centos -- sh -c "ping -c1 $IP"
+    ```
+
+6. Service Graph
 
     The dynamic `Service Graph` presents network flows from service level perspective. Top level view shows how traffic flows between namespaces as well as external and internal endpoints.
 
@@ -54,15 +122,13 @@
     - If you expand a namespace by double-clicking on it, you will get the view of all components of the namespace.
 
 
-
-
-6. Flow Visualizations
+7. Flow Visualizations
 
     The `Flow Visualizations` view shows all point-to-point flows in the cluster. It allows you to see the cluster traffic from the network point of view.
 
     ![flow viz view](../img/flow-viz.png)
 
-7. Kibana dashboards
+8. Kibana dashboards
 
     The `Kibana` components comes with Calico cloud offerings and provides you access to raw flow, audit, and dns logs, as well as ability to visualize the collected data in various dashboards.
 
