@@ -30,7 +30,7 @@ The following are the basic requirements to **start** the labs. Individual labs 
 * [Service Mesh](labs/servicemesh/README.md)
 * [Best Practices for Cluster Operators](labs/best-practices/operators/README.md)
 * [Best Practices for App Developers](labs/best-practices/appdev/README.md)
-* [Calico lab exercise](labs/networking/calico-lab-exercise/calico-lab-exercise.md)
+* [Calico lab exercise](labs/networking/calico-lab-exercise/README.md)
 
 #### Coming soon:
 * [Storage](labs/storage/README.md)
