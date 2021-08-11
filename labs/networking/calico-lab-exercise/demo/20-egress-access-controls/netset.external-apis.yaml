@@ -6,4 +6,4 @@ metadata:
     type: external-apis
 spec:
   allowedEgressDomains:
-  - '*.twilio.com'
+  - '*.azure.com'
