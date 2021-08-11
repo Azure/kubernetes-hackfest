@@ -66,8 +66,8 @@
     ```
 
     This will add `allow-azure-access` policy to your `security` tier. 
-
-
+    
+    ![create dns policy](../img/create-dns-policy.png)
 
     ![policies board](../img/policies-board.png)
 
@@ -123,7 +123,7 @@
     ```
     As access to `*.azure.com` is permitted and access to `*.bing.com` is denied we are able to whitelist domains as described next, you can also try to add `*.bing.com` in `external-apis` and test the connectivity again.
 
-
+    ![dns network set](../img/dns-network-set.png)
 
 6. Service Graph
 

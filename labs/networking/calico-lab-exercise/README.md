@@ -47,7 +47,7 @@ In this workshop we are going to focus on these main use cases (with links to Ca
 - [Module 2: Configuring demo applications](modules/configuring-demo-apps.md)
 - [Module 3: Calico OSS-Using global network policies for security controls](modules/using-security-controls.md)
 - [Module 4: Calico OSS-Using global network sets for egress access controls](modules/using-egress-access-controls.md)
-- [Module 5: Using observability tools with Calico UI](modules/using-observability-tools.md)
+- [Module 5: Using Calico UI for observability](modules/using-observability-tools.md)
 - [Module 6: Using alerts](modules/using-alerts.md)
 - [Module 7: Packet Capture](modules/packet-capture.md)
 - [Module 8: Anomaly Detection](modules/anomaly-detection.md)

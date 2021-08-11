@@ -1,4 +1,4 @@
-# Module 4: Using egress access controls with global networkset which are also available in Calico open source project
+# Module 4: Using egress access controls with global networkset ( Calico OSS resource)
 
 **Goal:** Configure egress access for specific workloads.
 

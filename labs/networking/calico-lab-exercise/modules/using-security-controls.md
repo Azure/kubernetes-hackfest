@@ -1,4 +1,4 @@
-# Module 3: Using security controls with global network policies which are also available in Calico open source project
+# Module 3: Using security controls with global network policies ( Calico OSS resource )
 
 **Goal:** Leverage global network policies to segment connections within the AKS cluster.
 
@@ -64,7 +64,7 @@
     ```
     
 
-3. Test connectivity with policieis in place.
+3. Test connectivity with policies in place.
 
     This is the connection after we have network policy in place.
       ![global-default-deny](../img/global-default-deny.png)
