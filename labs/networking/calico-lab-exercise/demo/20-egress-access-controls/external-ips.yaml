@@ -1,0 +1,10 @@
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkSet
+metadata:
+  name: external-ips
+  labels: 
+    type: external-ips
+spec:
+  nets:
+  - 198.51.100.0/28
+  - 203.0.113.0/24

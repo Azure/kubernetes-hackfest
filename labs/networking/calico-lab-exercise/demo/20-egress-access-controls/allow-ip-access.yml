@@ -1,0 +1,14 @@
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: allow-ip-access
+spec:
+  selector: (app == "centos" && projectcalico.org/namespace == "dev")
+  order: 99
+  types:
+    - Egress
+  egress:
+  - action: Allow
+    destination:
+      selector: type == "external-ips"
+  

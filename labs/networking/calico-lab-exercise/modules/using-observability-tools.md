@@ -57,15 +57,15 @@
     This will add `centos-to-frontend` policy to your `platform` tier and remove `centos-to-frontend` policy in your `default` tier. 
 
 
-    d. Move the `allow-azure-access`  policy to security tier.
+    d. Add the `allow-azure-access` DNS policy to security tier.
 
     ```bash
-    kubectl apply -f demo/20-egress-access-controls/security.dns-policy.netset.yaml
+    kubectl apply -f demo/20-egress-access-controls/netset.external-apis.yaml
 
-    kubectl delete -f demo/20-egress-access-controls/dns-policy.netset.yaml
+    kubectl apply -f demo/20-egress-access-controls/dns-policy.netset.yaml
     ```
 
-    This will add `allow-azure-access` policy to your `security` tier and remove `allow-azure-access` policy in your `default` tier. 
+    This will add `allow-azure-access` policy to your `security` tier. 
 
 
 
@@ -90,7 +90,8 @@
 
 5. Network Sets 
 
-    Calico offers `GlobalThreatfeed` resource to prevent known bad actors from accessing Kubernetes pods. We will configure a `Network Set` resource to reference an external threatfeed which will dynamically update the IP addresses or FQDNs/domains. Then we configure a network policy to deny traffic to these blacklisted destinations.
+    a. Calico Cloud & Calico EE offers `GlobalThreatfeed` resource to prevent known bad actors from accessing Kubernetes pods. We will configure a `Network Set` resource to reference an external threatfeed which will dynamically update the IP addresses or FQDNs/domains. Then we configure a network policy to deny traffic to these blacklisted destinations.
+    
     
 
     ```bash
@@ -110,6 +111,19 @@
     IP=$(kubectl get globalnetworkset threatfeed.feodo-tracker -ojson | jq '.spec.nets[0]' | sed -e 's/^"//' -e 's/"$//' -e 's/\/32//')
     kubectl -n dev exec -t centos -- sh -c "ping -c1 $IP"
     ```
+    
+    b. Calico Cloud & Calico EE offer DNS policy which leveage `Network Sets` to whitelist the external access. You should be able to view the `external-apis` details in `Network Sets` view and you can add or delete Domain name with your calicocloud manager UI.
+
+
+    ```bash
+    # test egress access to www.azure.com
+    kubectl -n dev exec -t centos -- sh -c 'curl -m3 -skI https://www.azure.com 2>/dev/null | grep -i http'
+    # test egress access to www.bing.com
+    kubectl -n dev exec -t centos -- sh -c 'curl -m3 -skI https://www.bing.com 2>/dev/null | grep -i http'
+    ```
+    As access to `*.azure.com` is permitted and access to `*.bing.com` is denied we are able to whitelist domains as described next, you can also try to add `*.bing.com` in `external-apis` and test the connectivity again.
+
+
 
 6. Service Graph
 

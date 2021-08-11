@@ -1,4 +1,4 @@
-# Module 4: Using egress access controls with global networkset 
+# Module 4: Using egress access controls with global networkset which are also available in Calico open source project
 
 **Goal:** Configure egress access for specific workloads.
 
@@ -43,29 +43,22 @@
     ![default-centos-to-frontend](../img/default-centos-to-frontend.png)
 
 
-3. Implement DNS policy to allow the external endpoint access from a specific workload, e.g. `dev/centos`.
+3. Implement GlobalNetworkSet policy to allow the external endpoint access from a specific workload, e.g. `dev/centos`.
 
-    a. create a `GlobalNetworkSet` to allow external access to `*.azure.com` and apply it in `GlobalNetworkPolicy`.
+    a. create `external-ips` as a `GlobalNetworkSet` with whitelist two CIDR.
 
-    
+    b. create a `GlobalNetworkSet` to allow external access to `198.51.100.0/28 & 203.0.113.0/24` and apply it in `GlobalNetworkPolicy`.
+
 
     ```bash
     # deploy network set
-    kubectl apply -f demo/20-egress-access-controls/netset.external-apis.yaml
+    kubectl apply -f demo/20-egress-access-controls/external-ips.yaml
     # deploy DNS policy using the network set
-    kubectl apply -f demo/20-egress-access-controls/dns-policy.netset.yaml
+    kubectl apply -f demo/20-egress-access-controls/allow-ip-access.yaml
     ```
 
-   
-    ```bash
-    # test egress access to www.azure.com
-    kubectl -n dev exec -t centos -- sh -c 'curl -m3 -skI https://www.azure.com 2>/dev/null | grep -i http'
-    # test egress access to www.bing.com
-    kubectl -n dev exec -t centos -- sh -c 'curl -m3 -skI https://www.bing.com 2>/dev/null | grep -i http'
-    ```
-    As access to `*.azure.com` is permitted and access to `*.bing.com` is denied we are able to whitelist domains as described next
+4. Calico Cloud & Calico EE offer DNS policy feature, which can whitelist DNS domain, we will test it in next module.   
 
-     ![dns-policy](../img/dns-policy.png)
 
 
 [Next -> Module 5](../modules/using-observability-tools.md)

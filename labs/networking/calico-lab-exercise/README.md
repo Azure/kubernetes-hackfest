@@ -12,7 +12,7 @@ The intent of this workshop is to introduce Calico Cloud(https://www.calicocloud
 In this workshop we are going to focus on these main use cases (with links to Calico docs for further info). Note that features for policy and visibility as outlined in this workshop are identical between Calico Cloud and Calico Enterprise. Consult the [Calico Enterprise docs](https://docs.tigera.io/) for further reading:
 
 - **Integration:** [Integrating Calico Cloud into the AKS clusters.](https://docs.calicocloud.io/install/system-requirements)
-- **Essential Network policy:** [Introduce essential Calico OSS (i.e.open source) network policy.](https://docs.calicocloud.io/install/system-requirements)
+- **Essential Network policy:** [Introduce essential Calico OSS (i.e.open source) network policies.](https://docs.projectcalico.org/security/tutorials/calico-policy)
 - **East-West security:** [leveraging zero-trust security approach.](https://docs.tigera.io/security/adopt-zero-trust)
 - **Egress access controls:** [using DNS policy to access external resources by their fully qualified domain names (FQDN).](https://docs.calicocloud.io/use-cases/security-controls/global-egress)
 - **Observability:** [exploring various logs and application level metrics collected by Calico.](https://docs.calicocloud.io/use-cases/troubleshoot-apps)
@@ -45,7 +45,7 @@ In this workshop we are going to focus on these main use cases (with links to Ca
 - [Module 0: Creating an AKS compatible cluster for Calico Cloud](modules/creating-aks-cluster.md)
 - [Module 1: Joining AKS cluster to Calico Cloud](modules/joining-aks-to-calico-cloud.md)
 - [Module 2: Configuring demo applications](modules/configuring-demo-apps.md)
-- [Module 3: Calico OSS-Using Global network policy for security controls](modules/using-security-controls.md)
+- [Module 3: Calico OSS-Using global network policies for security controls](modules/using-security-controls.md)
 - [Module 4: Calico OSS-Using global network sets for egress access controls](modules/using-egress-access-controls.md)
 - [Module 5: Using observability tools with Calico UI](modules/using-observability-tools.md)
 - [Module 6: Using alerts](modules/using-alerts.md)

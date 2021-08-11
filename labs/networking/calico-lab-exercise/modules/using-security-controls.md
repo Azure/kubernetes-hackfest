@@ -1,10 +1,12 @@
-# Module 3: Using security controls with global network policies
+# Module 3: Using security controls with global network policies which are also available in Calico open source project
 
 **Goal:** Leverage global network policies to segment connections within the AKS cluster.
 
 **Docs:** https://docs.projectcalico.org/archive/v3.20/reference/resources/globalnetworkpolicy
 
 ## Steps
+
+
 
 1. Test connectivity between application components and across application stacks, since we don't have network policy in place, the pods are reachable from any endpoints.
 
