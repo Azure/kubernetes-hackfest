@@ -61,13 +61,22 @@
     kubectl exec -it $(kubectl get po -l app=loadgenerator -ojsonpath='{.items[0].metadata.name}') -- sh -c 'apt install curl -y'
     ```
 
-4. Deploy basic DNS policy as global allow with order 80.
+4. Deploy basic DNS policy as global allow.
 
     In order to explicitly allow workloads to connect to the Kubernetes DNS component, we are going to implement a policy that controls such traffic.
+    We are going to deploy some policies into policy tier to take advantage of hierarcical policy management.
 
     ```bash
-    kubectl apply -f demo/10-security-controls/default-allow-kube-dns.yaml
+    kubectl apply -f demo/tiers/tiers.yaml
     ```
+    
+    This will add tiers `security` and `platform` to the aks cluster. 
+
+    ```bash
+    kubectl apply -f demo/10-security-controls/allow-kube-dns.yaml
+    ```
+    This will add `allow-kube-dns` policy to your `platform` tier. 
+
 5. Deploy compliance reports.
 
     >The reports will be needed for one of a later lab.

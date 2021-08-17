@@ -23,30 +23,7 @@
 
     The `Policies Board` shows all policies deployed in the cluster and organized into `policy tiers`. You can control what a user can see and do by configuring Kubernetes RBAC roles which determine what the user can see in this view. You can also use controls to hide away tiers you're not interested in at any given time.
 
-
-    a. Deploy policy tiers.
-
-    We are going to deploy some policies into policy tier to take advantage of hierarcical policy management.
-
-    ```bash
-    kubectl apply -f demo/tiers/tiers.yaml
-    
-    ```
-    This will add tiers `security` and `platform` to the aks cluster. 
-
-
-    b. Move the kube-dns policy to platform tier.
-
-    ```bash
-    kubectl apply -f demo/10-security-controls/allow-kube-dns.yaml
-
-    kubectl delete -f demo/10-security-controls/default-allow-kube-dns.yaml
-    ```
-
-    This will add `allow-kube-dns` policy to your `platform` tier and remove `allow-kube-dns` policy in your `default` tier. 
-
-
-    c. Move the centos-to-frontend policy to platform tier as well.
+    a. Move the centos-to-frontend policy to platform tier as well.
 
     ```bash
     kubectl apply -f demo/20-egress-access-controls/centos-to-frontend.yaml
@@ -57,7 +34,7 @@
     This will add `centos-to-frontend` policy to your `platform` tier and remove `centos-to-frontend` policy in your `default` tier. 
 
 
-    d. Add the `allow-azure-access` DNS policy to security tier.
+    b. Add the `allow-azure-access` DNS policy to security tier.
 
     ```bash
     kubectl apply -f demo/20-egress-access-controls/netset.external-apis.yaml
