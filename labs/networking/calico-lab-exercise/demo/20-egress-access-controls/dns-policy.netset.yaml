@@ -1,14 +1,25 @@
 apiVersion: projectcalico.org/v3
 kind: GlobalNetworkPolicy
 metadata:
-  name: allow-azure-access
+  name: security.allow-azure-access
 spec:
+  tier: security
   selector: (app == "centos" && projectcalico.org/namespace == "dev")
-  order: 99
+  order: 200
   types:
     - Egress
   egress:
   - action: Allow
+    protocol: UDP
+    source: {}
+    destination:
+      ports:
+      - '53'
+  - action: Allow
+    source:
+      selector: app == 'centos'
     destination:
       selector: type == "external-apis"
-  
+  - action: Pass
+    source: {}
+    destination: {}

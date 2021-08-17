@@ -23,7 +23,7 @@
 
     The `Policies Board` shows all policies deployed in the cluster and organized into `policy tiers`. You can control what a user can see and do by configuring Kubernetes RBAC roles which determine what the user can see in this view. You can also use controls to hide away tiers you're not interested in at any given time.
 
-    a. Move the centos-to-frontend policy to platform tier as well.
+    a. Move the centos-to-frontend policy to platform tier.
 
     ```bash
     kubectl apply -f demo/20-egress-access-controls/centos-to-frontend.yaml

@@ -15,7 +15,6 @@
     daily-cis-results        2021-06-10T03:24:05Z
     ```
 
-    >If you don't see any reports, you can manually kick off report generation task. Follow the steps below if you need to do so.
 
     Calico provides `GlobalReport` resource to offer [Compliance reports](https://docs.tigera.io/compliance/compliance-reports/) capability. There are several types of reports that you can configure:
 
@@ -31,7 +30,7 @@
 
     ![compliance report](../img/compliance-report.png)
 
-2. Reports are generated 15 minutes after the end of the report as [documented](https://docs.tigera.io/v3.8/compliance/overview#change-the-default-report-generation-time). As the compliance reports deployed in the [manifests](https://github.com/tigera-solutions/calicocloud-aks-workshop/tree/main/demo/40-compliance-reports) are scheduled to run every 30 minutes the generation of reports will take between 30-60 mins depending when the manifests were deloyed.
+2. Reports are generated 15 minutes after the end of the report as [documented](https://docs.tigera.io/v3.8/compliance/overview#change-the-default-report-generation-time). As the compliance reports deployed in the [manifests](https://github.com/tigera-solutions/calicocloud-aks-workshop/tree/main/demo/40-compliance-reports) are scheduled to run every 15 minutes the generation of reports will take between 30-60 mins depending when the manifests were deloyed.
 <br>
 
 *Congratulations on completing this workshop!*
