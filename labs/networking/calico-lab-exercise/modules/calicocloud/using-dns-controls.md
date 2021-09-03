@@ -34,7 +34,7 @@
     # test egress access to www.bing.com, it will be deny with "exit code 1".
     kubectl -n dev exec -t centos -- sh -c 'curl -m3 -skI https://www.bing.com 2>/dev/null | grep -i http'
     # test egress access to www.microsoft.com.com, it will be allowed with "HTTP/1.1 200".
-    kubectl -n dev exec -t centos -- sh -c 'curl -m3 -skI https://www.microsoft.com.com 2>/dev/null | grep -i http'
+    kubectl -n dev exec -t centos -- sh -c 'curl -m3 -skI https://www.microsoft.com 2>/dev/null | grep -i http'
 
     ```
     As access to `*.microsoft.com` is permitted and access to `*.bing.com` is denied, we are able to whitelist domains as described next, you can also try to add `*.bing.com` in `external-apis` and test the connectivity again.
