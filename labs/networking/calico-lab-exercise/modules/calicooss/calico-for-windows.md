@@ -79,9 +79,7 @@
    - Create a client pod (powershell) and a server (porter) pod on the Windows nodes
 
     ```bash
-    ##Remove the "default-deny" policy from last module.
-    cactl delete -f demo/10-security-controls/default-deny.yaml
-
+   
     kubectl apply -f demo/win-demo/
 
     sleep 60
@@ -127,7 +125,7 @@
 6. Create policy to explicitly allow the `busybox` pod in Linux node to reach the `porter` pod in Windows node, and deny the `powershell` pod in Windows node to reach the `nginx` pod in Linux node
    ```bash
    cactl apply -f demo/20-egress-accesss-control/allow-busybox.yaml
-   cactl apply -f demo/20-egress-accesss-control/allow-busybox.yaml
+   cactl apply -f demo/20-egress-accesss-control/deny-nginx.yaml
    
    ```
 

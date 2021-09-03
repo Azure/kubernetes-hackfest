@@ -12,9 +12,6 @@
     a. Test connectivity between workloads within each namespace.
 
     ```bash
-    # Apply Global network policy "allow-kube-dns" before testing the connectivity.
-    cactl apply -f demo/10-security-controls/default-allow-kube-dns.yaml
-
     # test connectivity within dev namespace
     kubectl -n dev exec -t centos -- sh -c 'curl -m3 -sI http://nginx-svc 2>/dev/null | grep -i http'
 
