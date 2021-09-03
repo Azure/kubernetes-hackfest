@@ -228,4 +228,4 @@ You should now have a Kubernetes cluster running with 3 nodes. You do not see th
 <br>    
 
     
-[Next -> Module 1](../modules/calicooss/configuring-demo-apps.md)
+[Next -> Module 1](../calicooss/configuring-demo-apps.md)
