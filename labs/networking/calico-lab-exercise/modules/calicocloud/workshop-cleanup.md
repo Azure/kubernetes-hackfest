@@ -1,6 +1,7 @@
 # Calico cloud workshop on AKS
 
-<img src="img/calico-on-aks.png" alt="Calicocloud on AKS" width="30%"/>
+<img src="../img/kibana-flow-logs.png" alt="Calicocloud on AKS" width="30%"/>
+
 
 
 ## Workshop cleanup
