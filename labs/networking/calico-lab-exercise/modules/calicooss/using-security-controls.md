@@ -139,4 +139,4 @@
 >Calico Cloud & Calico EE offer a DNS policy feature, which can whitelist DNS domains, such as www.bing.com, we will test this feature in next Chapter.   
 
 
-[Next -> Module 3](../modules/calicooss/wireguard-encryption.md)
+[Next -> Module 3](../calicooss/wireguard-encryption.md)
