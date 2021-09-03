@@ -53,11 +53,11 @@
     ```
     
     Use Cloudshell to download this pcap file and view the content locally.
+
+    ![cloudshell](../img/cloudshell.png)
+    ![download](../img/download.png)
     
     
-    view *.pcap content
-    tcpdump -Xr frontend-XXXXXX.pcap
-    ```
 
 4. Stop packet capture
 
