@@ -15,10 +15,12 @@
     ```
 
     This will add `allow-ms-access` policy to your `security` tier. 
+
+    ![policies board](../img/policies-board.png)
     
     ![create dns policy](../img/create-dns-policy.png)
 
-    ![policies board](../img/policies-board.png)
+   
 
     By leveraging stats controls you can toggle additional metrics to be listed for each shown policy.
 
