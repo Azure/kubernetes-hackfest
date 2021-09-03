@@ -34,4 +34,4 @@
 <br>
 
 *Congratulations on completing this workshop!*
-Follow the cleanup instructions on the [main page](../README.md) if required
+Follow the cleanup instructions on the [main page](./README.md) if required
