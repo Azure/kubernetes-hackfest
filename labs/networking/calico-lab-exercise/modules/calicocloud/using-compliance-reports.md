@@ -34,4 +34,4 @@
 <br>
 
 *Congratulations on completing this workshop!*
-Follow the cleanup instructions on the [clean up](../calicocloud/workshop-cleanup.md) if required.
+Follow the [clean up](../calicocloud/workshop-cleanup.md) instruction if required.
