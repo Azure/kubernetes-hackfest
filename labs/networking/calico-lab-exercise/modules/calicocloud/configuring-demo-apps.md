@@ -107,9 +107,9 @@
     >The alerts will be explored in a later lab. Ignore any warning messages - these do not affect the deployment of resources.
 
     ```bash
-    kubectl apply -f demo/50-alerts/globalnetworkset.changed.yaml
-    kubectl apply -f demo/50-alerts/unsanctioned.dns.access.yaml
-    kubectl apply -f demo/50-alerts/unsanctioned.lateral.access.yaml
+    kubectl create -f demo/50-alerts/globalnetworkset.changed.yaml
+    kubectl create -f demo/50-alerts/unsanctioned.dns.access.yaml
+    kubectl create -f demo/50-alerts/unsanctioned.lateral.access.yaml
     ```
 
 
