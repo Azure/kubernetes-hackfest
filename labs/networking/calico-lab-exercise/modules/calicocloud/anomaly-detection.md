@@ -1,4 +1,4 @@
-# Module 8: Anomaly Detection
+# Module 7: Anomaly Detection
 
 **Goal:** Configure Anomaly Detection to alert upon abnormal/suspicious traffic
 ---
@@ -13,7 +13,11 @@ Use official documentation for the most recent [configuration instructions](http
 Instructions below for a Managed cluster only. Follow [configuration documentation](https://docs.tigera.io/threat/anomaly-detection/customizing) to configure AD jobs for management and standalone clusters.
 
 ```bash
+## Use :q for exiting from the file
+
 less ./demo/90-anomaly-detection/ad-jobs-deployment-managed.yaml
+
+
 
 # The following AD jobs and thresholds have been configured as env vars in the ad-jobs-deployment.yaml. 
 # In production these values may trigger more alerts than required
@@ -51,6 +55,11 @@ less ./demo/90-anomaly-detection/ad-jobs-deployment-managed.yaml
 	sed -i "" "s/\$CALICOCLUSTERNAME/${CALICOCLUSTERNAME}/g" ./demo/90-anomaly-detection/ad-jobs-deployment-managed.yaml
 	```
 
+    Validate the change by cat the variable 
+    ```bash
+	cat demo/90-anomaly-detection/ad-jobs-deployment-managed.yaml |grep -B 5 -A 5 $CALICOCLUSTERNAME
+	```
+
 3. Now apply the Anomaly Detection deployment YAML
 	```bash
 	kubectl apply -f ./demo/90-anomaly-detection/ad-jobs-deployment-managed.yaml
@@ -77,5 +86,5 @@ less ./demo/90-anomaly-detection/ad-jobs-deployment-managed.yaml
 
 <img src="../img/anomaly-detection-alert.png" alt="Anomaly Detection Alert" width="100%"/>
 
-[Next -> Module 9](../modules/using-compliance-reports.md)
+[Next -> Module 8](../modules/calicocloud/using-compliance-reports.md)
 

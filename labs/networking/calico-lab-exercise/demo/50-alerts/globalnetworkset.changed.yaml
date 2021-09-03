@@ -3,6 +3,9 @@ apiVersion: projectcalico.org/v3
 kind: GlobalAlertTemplate
 metadata:
   name: policy.globalnetworkset
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"projectcalico.org/v3","kind":"GlobalAlertTemplate","metadata":{"annotations":{},"name":"policy.globalnetworkset"},"spec":{"aggregateBy":["objectRef.resource","objectRef.name"],"condition":"gt","dataSet":"audit","description":"Alerts on any changes to global network sets","lookback":"5m","metric":"count","period":"5m","query":"(verb=create OR verb=update OR verb=delete OR verb=patch) AND \"objectRef.resource\"=globalnetworksets","severity":100,"summary":"[audit] [privileged access] change detected for ${objectRef.resource} ${objectRef.name}","threshold":0}}
 spec:
   description: "Alerts on any changes to global network sets"
   summary: "[audit] [privileged access] change detected for ${objectRef.resource} ${objectRef.name}"

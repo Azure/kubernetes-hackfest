@@ -1,0 +1,16 @@
+---
+
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: deny-nginx
+  namespace: calico-demo
+spec:
+  selector: app == 'nginx'
+  types:
+  - Ingress
+  ingress:
+  - action: Deny
+    protocol: TCP
+    source:
+      selector: app == 'pwsh'

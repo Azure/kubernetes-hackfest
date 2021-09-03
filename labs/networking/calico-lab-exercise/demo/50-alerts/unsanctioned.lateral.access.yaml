@@ -3,6 +3,9 @@ apiVersion: projectcalico.org/v3
 kind: GlobalAlertTemplate
 metadata:
   name: network.lateral.access
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"projectcalico.org/v3","kind":"GlobalAlertTemplate","metadata":{"annotations":{},"name":"network.lateral.access"},"spec":{"aggregateBy":["source_namespace","source_name_aggr","dest_namespace","dest_name_aggr"],"condition":"gt","dataSet":"flows","description":"Alerts when pods with a specific label (security=strict) accessed by other workloads from other namespaces","field":"num_flows","lookback":"5m","metric":"sum","period":"5m","query":"\"dest_labels.labels\"=\"security=strict\" AND \"dest_namespace\"=\"secured_pod_namespace\" AND \"source_namespace\"!=\"secured_pod_namespace\" AND proto=tcp AND ((\"action\"=\"allow\" AND (\"reporter\"=\"dst\" OR \"reporter\"=\"src\")) OR (\"action\"=\"deny\" AND \"reporter\"=\"src\"))","severity":100,"summary":"[flows] [lateral movement] ${source_namespace}/${source_name_aggr} has accessed ${dest_namespace}/${dest_name_aggr} with label security=strict","threshold":0}}
 spec:
   description: "Alerts when pods with a specific label (security=strict) accessed by other workloads from other namespaces"
   summary: "[flows] [lateral movement] ${source_namespace}/${source_name_aggr} has accessed ${dest_namespace}/${dest_name_aggr} with label security=strict"

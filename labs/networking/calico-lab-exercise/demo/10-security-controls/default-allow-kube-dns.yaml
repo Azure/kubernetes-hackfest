@@ -3,7 +3,7 @@ kind: GlobalNetworkPolicy
 metadata:
   name: allow-kube-dns
 spec:
-  order: 80
+  order: 0
   types:
   - Egress
   egress:
@@ -14,6 +14,3 @@ spec:
       selector: "k8s-app == 'kube-dns'"
       ports:
       - '53'
-  - action: Pass
-    source: {}
-    destination: {}

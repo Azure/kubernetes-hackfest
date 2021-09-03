@@ -12,55 +12,27 @@ If you already have AKS cluster created from AKS network policies, make sure the
 
 ## Prerequisite Tasks
 
-Follow the prequisite steps if you need to verify your Azure subscription and Service Principal otherwise proceed to step 1.
+Follow the prequisite steps if you need to verify your Azure subscription.
 
 - Ensure you are using the correct Azure subscription you want to deploy AKS to.
     
-	```
+	```bash
 	# View subscriptions
 	az account list   
  
-  # Verify selected subscription
-  az account show
-  ```
-    
+    # Verify selected subscription
+    az account show
     ```
-  # Set correct subscription (if needed)
-  az account set --subscription <subscription_id>
-  
-  # Verify correct subscription is now set
-  az account show
-  ```
     
-- Create Azure Service Principal to use through the labs
+    ```bash
+    # Set correct subscription (if needed)
+    az account set --subscription <subscription_id>
+  
+    # Verify correct subscription is now set
+    az account show
+    ```
+    
 
-	```bash
-	az ad sp create-for-rbac --skip-assignment
-	```
-
-- This will return the following. !!!IMPORTANT!!! - Please copy this information down as you'll need it for labs going forward.
-
-	```bash
-	"appId": "7248f250-0000-0000-0000-dbdeb8400d85",
-	"displayName": "azure-cli-2017-10-15-02-20-15",
-	"name": "http://azure-cli-2017-10-15-02-20-15",
-	"password": "77851d2c-0000-0000-0000-cb3ebc97975a",
-	"tenant": "72f988bf-0000-0000-0000-2d7cd011db47"
-	```
-
-- Set the values from above as variables **(replace <appid><password>with your values)</password></appid>**.
-
-> **Warning:** Several of the following steps have you echo values to your .bashrc file. This is done so that you can get those values back if your session reconnects. You will want to remember to clean these up at the end of the training, in particular if you're running on your own, or your company's, subscription.
-
-DON'T MESS THIS STEP UP. REPLACE THE VALUES IN BRACKETS!!!
-
-```bash
-# Persist for Later Sessions in Case of Timeout
-APPID=<appId>
-echo export APPID=$APPID >> ~/.bashrc
-CLIENTSECRET=<password>
-echo export CLIENTSECRET=$CLIENTSECRET >> ~/.bashrc
-```
 
 ## Steps
 
@@ -112,12 +84,15 @@ echo export CLIENTSECRET=$CLIENTSECRET >> ~/.bashrc
     ```bash
     az aks get-versions -l $LOCATION --output table
     ```
-    ```
+    
+    Output is:
+    ```bash
     KubernetesVersion    Upgrades
     -------------------  ------------------------
-    1.21.1(preview)      None available
-    1.20.7               1.21.1(preview)
-    1.20.5               1.20.7, 1.21.1(preview)
+    1.21.2               None available
+    1.21.1               1.21.2
+    1.20.7               1.21.1, 1.21.2
+    1.20.5               1.20.7, 1.21.1, 1.21.2
     1.19.11              1.20.5, 1.20.7
     1.19.9               1.19.11, 1.20.5, 1.20.7
     1.18.19              1.19.9, 1.19.11
@@ -136,9 +111,7 @@ echo export CLIENTSECRET=$CLIENTSECRET >> ~/.bashrc
     # Create AKS Cluster - it is important to set the network-plugin as azure in order to connec to Calico Cloud
     az aks create -n $CLUSTERNAME -g $RGNAME \
     --kubernetes-version $K8SVERSION \
-    --service-principal $APPID \
-    --client-secret $CLIENTSECRET \
-    --generate-ssh-keys -l $LOCATION \
+    --enable-managed-identity \
     --node-count 3 \
     --network-plugin azure \
     --no-wait
@@ -148,15 +121,16 @@ echo export CLIENTSECRET=$CLIENTSECRET >> ~/.bashrc
 4.  Verify your cluster status. The `ProvisioningState` should be `Succeeded`
     
     ```bash
-    az aks list -o table
+    az aks list -o table -g $RGNAME
     ```
-    
+    Output is:
     ```bash
     Name           Location    ResourceGroup      KubernetesVersion    ProvisioningState    Fqdn
     -------------  ----------  -----------------  -------------------  -------------------  -----------------------------------------------------------------
     aksjessie2081  eastus      aks-rg-jessie2081  1.20.7               Succeeded             aksjessie2-aks-rg-jessie208-03cfb8-9713ae4f.hcp.eastus.azmk8s.io
     
     ```
+    
     
 5.  Get the Kubernetes config files for your new AKS cluster
     
@@ -190,7 +164,7 @@ echo export CLIENTSECRET=$CLIENTSECRET >> ~/.bashrc
     a) CloudShell
     ```bash    
     # download and configure calicoctl
-    curl -o calicoctl -O -L https://docs.tigera.io/download/binaries/v3.8.1/calicoctl
+    curl -o calicoctl -O -L https://docs.tigera.io/download/binaries/v3.7.0/calicoctl
     chmod +x calicoctl
     
     # verify calicoctl is running 
@@ -242,4 +216,4 @@ You should now have a Kubernetes cluster running with 3 nodes. You do not see th
 <br>    
 
     
-[Next -> Module 1](../modules/joining-aks-to-calico-cloud.md)
+[Next -> Module 1](../modules/calicocloud/joining-aks-to-calico-cloud.md)

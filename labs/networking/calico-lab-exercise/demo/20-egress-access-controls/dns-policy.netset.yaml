@@ -1,7 +1,7 @@
 apiVersion: projectcalico.org/v3
 kind: GlobalNetworkPolicy
 metadata:
-  name: security.allow-azure-access
+  name: security.allow-ms-access
 spec:
   tier: security
   selector: (app == "centos" && projectcalico.org/namespace == "dev")

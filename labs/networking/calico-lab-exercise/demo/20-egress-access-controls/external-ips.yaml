@@ -3,8 +3,8 @@ kind: GlobalNetworkSet
 metadata:
   name: external-ips
   labels: 
-    type: external-ips
+    ip-allow-list: true
 spec:
   nets:
-  - 198.51.100.0/28
-  - 203.0.113.0/24
+  - 8.8.8.8/32
+  - 4.4.4.4/32
