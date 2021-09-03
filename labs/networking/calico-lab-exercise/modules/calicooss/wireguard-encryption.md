@@ -43,7 +43,7 @@
 
     ```
 
-    Output will be
+    Output will be like:
     ```bash
     ##omit
     status:
@@ -55,12 +55,17 @@
    ##This command starts a privileged container on your node and connects to it over SSH.
    kubectl debug node/$NODE_NAME -it --image=mcr.microsoft.com/aks/fundamental/base-ubuntu:v0.0.11
    ```
-   Output is:
+   Output will be like:
    ```bash
    Creating debugging pod node-debugger-aks-nodepool1-41939440-vmss000001-c9bjq with container debugger on node aks-nodepool1-41939440-vmss000001.
    If you don't see a command prompt, try pressing enter.
    ```
 
+   ```bash
+   ifconfig | grep wireguard
+   ```
+   
+   Output will be like:
    ```bash
    root@aks-nodepool1-41939440-vmss000001:/# ifconfig | grep wireguard
    wireguard.cali: flags=209<UP,POINTOPOINT,RUNNING,NOARP>  mtu 1440

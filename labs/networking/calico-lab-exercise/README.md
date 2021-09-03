@@ -1,6 +1,6 @@
 # Calico cloud workshop on AKS
 
-<img src="img/calico-on-aks.png" alt="Calicocloud on AKS" width="30%"/>
+<img src="modules/img/calico-on-aks.png" alt="Calicocloud on AKS" width="30%"/>
 
 ## AKS Calico Cloud Workshop
 
@@ -47,8 +47,8 @@ Chapter one: Calico OSS
 - [Module 0: Creating an AKS cluster with Calico network policy](modules/calicooss/creating-aks-calico-policy.md)
 - [Module 1: Configuring demo applications](modules/calicooss/configuring-demo-apps.md)
 - [Module 2: Using global network policies for security controls](modules/calicooss/using-security-controls.md)
-- [Module 3: Enabling wireguard to secure on-the-wire for your AKS cluster](modules/calicooss/wireguard-encryption.md)
-- [Module 4: Adding windows node in your AKS and isolate pods traffic](modules/calicooss/calico-for-windows.md)
+- [Module 3: Adding windows node in your AKS and isolate pods traffic](modules/calicooss/calico-for-windows.md)
+- [Module 4: Enabling wireguard to secure on-the-wire for your AKS cluster](modules/calicooss/wireguard-encryption.md)
 
 Chapter two: Calico Cloud Trial 
 

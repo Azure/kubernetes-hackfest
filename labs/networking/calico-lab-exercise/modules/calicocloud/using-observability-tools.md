@@ -109,4 +109,4 @@
 
     Some of the default dashboards you get access to are DNS Logs, Flow Logs, Audit Logs, Kuernetes API calls, L7 HTTP metrics, and others.
 
-[Next -> Module 4](../modules/calicocloud/using-dns-controls.md)
+[Next -> Module 4](../calicocloud/using-dns-controls.md)
