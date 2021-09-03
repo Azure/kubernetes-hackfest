@@ -12,6 +12,9 @@
     a. Test connectivity between workloads within each namespace.
 
     ```bash
+    # Apply Global network policy "allow-kube-dns" before testing the connectivity.
+    cactl apply -f demo/10-security-controls/default-allow-kube-dns.yaml
+
     # test connectivity within dev namespace
     kubectl -n dev exec -t centos -- sh -c 'curl -m3 -sI http://nginx-svc 2>/dev/null | grep -i http'
 
@@ -139,4 +142,4 @@
 >Calico Cloud & Calico EE offer a DNS policy feature, which can whitelist DNS domains, such as www.bing.com, we will test this feature in next Chapter.   
 
 
-[Next -> Module 3](../calicooss/wireguard-encryption.md)
+[Next -> Module 3](../calicooss/calico-for-windows.md)

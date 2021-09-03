@@ -101,7 +101,8 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     For this lab we'll use 1.20.7
     
     ```bash
-    K8SVERSION=1.20.7
+    echo export K8SVERSION=1.20.7 >> ~/.bashrc
+
     ```
     
     > The below command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT and grab a coffee/tea/kombucha...

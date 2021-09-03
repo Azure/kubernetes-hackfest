@@ -79,6 +79,9 @@
    - Create a client pod (powershell) and a server (porter) pod on the Windows nodes
 
     ```bash
+    ##Remove the "default-deny" policy from last module.
+    cactl delete -f demo/10-security-controls/default-deny.yaml
+
     kubectl apply -f demo/win-demo/
 
     sleep 60
