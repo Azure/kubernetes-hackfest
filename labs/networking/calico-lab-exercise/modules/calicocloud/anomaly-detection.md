@@ -86,5 +86,5 @@ less ./demo/90-anomaly-detection/ad-jobs-deployment-managed.yaml
 
 <img src="../img/anomaly-detection-alert.png" alt="Anomaly Detection Alert" width="100%"/>
 
-[Next -> Module 8](../modules/calicocloud/using-compliance-reports.md)
+[Next -> Module 8](../calicocloud/using-compliance-reports.md)
 

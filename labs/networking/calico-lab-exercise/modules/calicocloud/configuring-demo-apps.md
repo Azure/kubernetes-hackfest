@@ -114,4 +114,4 @@
 
 
        
-[Next -> Module 3](../modules/calicocloud/using-observability-tools.md)
+[Next -> Module 3](../calicocloud/using-observability-tools.md)

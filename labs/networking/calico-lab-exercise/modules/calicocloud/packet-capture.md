@@ -62,4 +62,4 @@
     kubectl delete -f demo/80-packet-capture/packet-capture.yaml
     ```
 
-[Next -> Module 7](../modules/calicocloud/anomaly-detection.md)
+[Next -> Module 7](../calicocloud/anomaly-detection.md)

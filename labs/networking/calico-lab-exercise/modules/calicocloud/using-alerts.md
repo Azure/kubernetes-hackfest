@@ -39,4 +39,4 @@
    ```
    ![dns alerts view](../img/dns-alert.png)
 
-[Next -> Module 6](../modules/calicocloud/packet-capture.md)
+[Next -> Module 6](../calicocloud/packet-capture.md)
