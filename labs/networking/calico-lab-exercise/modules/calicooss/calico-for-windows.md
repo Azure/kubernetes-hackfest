@@ -100,6 +100,8 @@
 5. Check the connectivities between pods. Expected Outcome:  
    - The traffic between `busybox` in Linux node and `porter` in Windows node is allowed. 
    - The traffic between `powershell` in Windows node and `nginx` in Linux node is allowed. 
+
+
    
 
    ```bash
@@ -132,6 +134,8 @@
 7. Check the connectivities between pods. Expected Outcome:  
    - The traffic between `busybox` in Linux node and `porter` in Windows node is allowed. 
    - The traffic between `powershell` in Windows node and `nginx` in Linux node is denied. 
+
+      ![demo-diagram](../img/windows-demo.png)
 
    ```bash
    kubectl exec -n calico-demo busybox -- nc -vz $(kubectl get po porter -n calico-demo -o 'jsonpath={.status.podIP}') 80
