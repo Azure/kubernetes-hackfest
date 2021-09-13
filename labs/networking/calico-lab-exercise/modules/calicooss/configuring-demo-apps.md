@@ -9,7 +9,7 @@
     ```bash
     git clone https://github.com/Azure/kubernetes-hackfest.git
  
-    cd ./labs/networking/calico-lab-exercise 
+    cd kubernetes-hackfest/labs/networking/calico-lab-exercise/
     ```
 
 2. Deploy demo applications.
