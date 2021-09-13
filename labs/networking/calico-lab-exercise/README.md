@@ -31,7 +31,7 @@ In this lab we are going to focus on these main use cases (with links to Calico 
 
 ## Lab prerequisites
 
->It is recommended to follow the AKS creation step outlined in [Module 0](modules/creating-aks-cluster.md) and to keep the resources isolated from any existing deployments. If you are using a corporate Azure account for the workshop, make sure to check with account administrator to provide you with sufficient permissions to create and manage AKS clusters and Load Balancer resources.
+>It is recommended to follow the AKS creation step outlined in [Module 0](modules/calicocloud/creating-aks-cluster.md) and to keep the resources isolated from any existing deployments. If you are using a corporate Azure account for the workshop, make sure to check with account administrator to provide you with sufficient permissions to create and manage AKS clusters and Load Balancer resources.
 
 - [Azure Kubernetes Service](https://github.com/Azure/kubernetes-hackfest/blob/master/labs/networking/network-policy/)
 - [Calico Cloud trial account for Chapter two](https://www.calicocloud.io/?utm_campaign=calicocloud&utm_medium=digital&utm_source=microsoft)
