@@ -1,0 +1,9 @@
+kind: GlobalNetworkSet
+apiVersion: projectcalico.org/v3
+metadata:
+  name: external-apis
+  labels: 
+    type: external-apis
+spec:
+  allowedEgressDomains:
+  - '*.microsoft.com'

@@ -1,0 +1,14 @@
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: allow-ip-access
+spec:
+  selector: (app == "netshoot" && projectcalico.org/namespace == "dev")
+  order: 0
+  types:
+    - Egress
+  egress:
+  - action: Allow
+    destination:
+      selector: ip-allow-list == 'true'
+  

@@ -1,0 +1,26 @@
+---
+apiVersion: projectcalico.org/v3
+kind: NetworkPolicy
+metadata:
+  name: platform.centos-to-frontend
+  namespace: dev
+spec:
+  tier: platform
+  order: 100
+  selector: app == "centos"
+  types:
+  - Egress
+  egress:
+  - action: Allow
+    protocol: UDP
+    destination:
+      selector: k8s-app == "kube-dns"
+      namespaceSelector: projectcalico.org/name == "kube-system"
+      ports:
+      - 53
+  - action: Allow
+    protocol: TCP
+    source: {}
+    destination:
+      selector: app == "frontend"
+      namespaceSelector: projectcalico.org/name == "default"

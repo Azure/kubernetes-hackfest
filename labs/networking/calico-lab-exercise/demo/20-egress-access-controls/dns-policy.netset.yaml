@@ -1,0 +1,25 @@
+apiVersion: projectcalico.org/v3
+kind: GlobalNetworkPolicy
+metadata:
+  name: security.allow-ms-access
+spec:
+  tier: security
+  selector: (app == "centos" && projectcalico.org/namespace == "dev")
+  order: 200
+  types:
+    - Egress
+  egress:
+  - action: Allow
+    protocol: UDP
+    source: {}
+    destination:
+      ports:
+      - '53'
+  - action: Allow
+    source:
+      selector: app == 'centos'
+    destination:
+      selector: type == "external-apis"
+  - action: Pass
+    source: {}
+    destination: {}

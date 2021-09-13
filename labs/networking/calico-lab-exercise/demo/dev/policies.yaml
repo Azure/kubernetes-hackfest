@@ -1,0 +1,51 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: nginx
+  namespace: dev
+spec:
+  podSelector:
+    matchLabels:
+      app: nginx
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          compliance: open
+  policyTypes:
+  - Ingress
+
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: centos
+  namespace: dev
+spec:
+  podSelector:
+    matchLabels:
+      app: centos
+  egress:
+    - to:
+      - podSelector:
+          matchLabels:
+            app: nginx
+  policyTypes:
+  - Egress
+
+---
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: netshoot
+  namespace: dev
+spec:
+  podSelector:
+    matchLabels:
+      app: netshoot
+  egress: 
+    - {}
+  policyTypes:
+    - Egress

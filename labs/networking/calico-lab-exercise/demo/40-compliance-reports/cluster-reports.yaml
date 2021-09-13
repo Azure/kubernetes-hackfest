@@ -1,0 +1,18 @@
+---
+apiVersion: projectcalico.org/v3
+kind: GlobalReport
+metadata:
+  name: cluster-inventory
+spec:
+  reportType: inventory
+  schedule: '*/15 * * * *'
+
+---
+apiVersion: projectcalico.org/v3
+kind: GlobalReport
+metadata:
+  name: cluster-network-access
+spec:
+  reportType: network-access
+  schedule: '*/15 * * * *'
+

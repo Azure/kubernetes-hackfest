@@ -1,0 +1,27 @@
+---
+apiVersion: projectcalico.org/v3
+kind: GlobalReport
+metadata:
+  name: boutiqueshop-inventory
+  labels:
+    deployment: production
+spec:
+  reportType: inventory
+  endpoints:
+    namespaces:
+      names: ["default"]
+  schedule: '*/15 * * * *'
+
+---
+apiVersion: projectcalico.org/v3
+kind: GlobalReport
+metadata:
+  name: boutiqueshop-network-access
+  labels:
+    deployment: production
+spec:
+  reportType: network-access
+  endpoints:
+    namespaces:
+      names: ["default"]
+  schedule: '*/15 * * * *'

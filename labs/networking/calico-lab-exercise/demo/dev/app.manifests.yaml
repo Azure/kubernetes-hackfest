@@ -1,0 +1,83 @@
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: dev
+  labels:
+    compliance: open
+    environment: development
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: centos
+  namespace: dev
+  labels:
+    app: centos
+
+spec:
+  containers:
+  - name: centos
+    image: centos:latest
+    command: [ "/bin/bash", "-c", "--" ]
+    args: [ "while true; do curl -m3 http://nginx-svc; sleep 3; done;" ]
+    resources: {}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dev-nginx
+  namespace: dev
+spec:
+  selector:
+    matchLabels:
+      app: nginx
+      security: strict
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: nginx
+        security: strict
+    spec:
+      containers:
+      - name: nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        resources: {}
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+  namespace: dev
+  labels:
+    service: nginx
+spec:
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+  selector:
+    app: nginx
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: netshoot
+  namespace: dev
+  labels:
+    app: netshoot
+spec:
+  containers:
+  - name: netshoot
+    image: nicolaka/netshoot:latest
+    # Just spin & wait forever
+    command: [ "/bin/bash", "-c", "--" ]
+    args: [ "while true; do curl -m3 http://nginx-svc; sleep 3; done;" ]
+    resources: {}

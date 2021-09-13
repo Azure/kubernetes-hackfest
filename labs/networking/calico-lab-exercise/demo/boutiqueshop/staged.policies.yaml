@@ -1,0 +1,482 @@
+---
+apiVersion: projectcalico.org/v3
+kind: StagedNetworkPolicy
+metadata:
+  name: default.adservice
+  namespace: default
+spec:
+  tier: default
+  order: 100
+  selector: app == "adservice"
+  ingress:
+    - action: Allow
+      protocol: TCP
+      source:
+        selector: app == "frontend"
+      destination:
+        ports:
+          - '9555'
+  egress:
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        ports:
+          - '80'
+  types:
+    - Ingress
+    - Egress
+
+---
+apiVersion: projectcalico.org/v3
+kind: StagedNetworkPolicy
+metadata:
+  name: default.cartservice
+  namespace: default
+spec:
+  tier: default
+  order: 110
+  selector: app == "cartservice"
+  ingress:
+    - action: Allow
+      protocol: TCP
+      source:
+        selector: app == "checkoutservice"
+      destination:
+        ports:
+          - '7070'
+    - action: Allow
+      protocol: TCP
+      source:
+        selector: app == "frontend"
+      destination:
+        ports:
+          - '7070'
+  egress:
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        ports:
+          - '6379'
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        selector: app == "redis-cart"
+        ports:
+          - '6379'
+  types:
+    - Ingress
+    - Egress
+
+---
+apiVersion: projectcalico.org/v3
+kind: StagedNetworkPolicy
+metadata:
+  name: default.checkoutservice
+  namespace: default
+spec:
+  tier: default
+  order: 120
+  selector: app == "checkoutservice"
+  ingress:
+    - action: Allow
+      protocol: TCP
+      source:
+        selector: app == "frontend"
+      destination:
+        ports:
+          - '5050'
+  egress:
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        selector: app == "productcatalogservice"
+        ports:
+          - '3550'
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        selector: app == "shippingservice"
+        ports:
+          - '50051'
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        ports:
+          - '80'
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        selector: app == "cartservice"
+        ports:
+          - '7070'
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        selector: app == "currencyservice"
+        ports:
+          - '7000'
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        selector: app == "emailservice"
+        ports:
+          - '8080'
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        selector: app == "paymentservice"
+        ports:
+          - '50051'
+  types:
+    - Ingress
+    - Egress
+
+---
+apiVersion: projectcalico.org/v3
+kind: StagedNetworkPolicy
+metadata:
+  name: default.currencyservice
+  namespace: default
+spec:
+  tier: default
+  order: 130
+  selector: app == "currencyservice"
+  ingress:
+    - action: Allow
+      protocol: TCP
+      source:
+        selector: app == "checkoutservice"
+      destination:
+        ports:
+          - '7000'
+    - action: Allow
+      protocol: TCP
+      source:
+        selector: app == "frontend"
+      destination:
+        ports:
+          - '7000'
+  types:
+    - Ingress
+
+---
+apiVersion: projectcalico.org/v3
+kind: StagedNetworkPolicy
+metadata:
+  name: default.emailservice
+  namespace: default
+spec:
+  tier: default
+  order: 140
+  selector: app == "emailservice"
+  ingress:
+    - action: Allow
+      protocol: TCP
+      source:
+        selector: app == "checkoutservice"
+      destination:
+        ports:
+          - '8080'
+  types:
+    - Ingress
+
+---
+apiVersion: projectcalico.org/v3
+kind: StagedNetworkPolicy
+metadata:
+  name: default.frontend
+  namespace: default
+spec:
+  tier: default
+  order: 150
+  selector: app == "frontend"
+  ingress:
+    - action: Allow
+      protocol: TCP
+      source:
+        selector: app == "loadgenerator"
+      destination:
+        ports:
+          - '8080'
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        ports:
+          - '8080'
+    - action: Allow
+      protocol: TCP
+      source:
+        selector: >-
+          (component == "apiserver"&&endpoints.projectcalico.org/serviceName ==
+          "kubernetes")
+      destination:
+        ports:
+          - '56590'
+  egress:
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        selector: app == "checkoutservice"
+        ports:
+          - '5050'
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        selector: app == "currencyservice"
+        ports:
+          - '7000'
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        selector: app == "productcatalogservice"
+        ports:
+          - '3550'
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        selector: app == "recommendationservice"
+        ports:
+          - '8080'
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        selector: app == "shippingservice"
+        ports:
+          - '50051'
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        ports:
+          - '8080'
+          - '5050'
+          - '9555'
+          - '7070'
+          - '7000'
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        selector: app == "adservice"
+        ports:
+          - '9555'
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        selector: app == "cartservice"
+        ports:
+          - '7070'
+  types:
+    - Ingress
+    - Egress
+
+---
+apiVersion: projectcalico.org/v3
+kind: StagedNetworkPolicy
+metadata:
+  name: default.loadgenerator
+  namespace: default
+spec:
+  tier: default
+  order: 160
+  selector: app == "loadgenerator"
+  egress:
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        selector: projectcalico.org/namespace == "default"
+        ports:
+          - '80'
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        selector: app == "frontend"
+        ports:
+          - '8080'
+  types:
+    - Egress
+
+---
+apiVersion: projectcalico.org/v3
+kind: StagedNetworkPolicy
+metadata:
+  name: default.paymentservice
+  namespace: default
+spec:
+  tier: default
+  order: 170
+  selector: app == "paymentservice"
+  ingress:
+    - action: Allow
+      protocol: TCP
+      source:
+        selector: app == "checkoutservice"
+      destination:
+        ports:
+          - '50051'
+  types:
+    - Ingress
+
+---
+apiVersion: projectcalico.org/v3
+kind: StagedNetworkPolicy
+metadata:
+  name: default.productcatalogservice
+  namespace: default
+spec:
+  tier: default
+  order: 180
+  selector: app == "productcatalogservice"
+  ingress:
+    - action: Allow
+      protocol: TCP
+      source:
+        selector: app == "checkoutservice"
+      destination:
+        ports:
+          - '3550'
+    - action: Allow
+      protocol: TCP
+      source:
+        selector: app == "frontend"
+      destination:
+        ports:
+          - '3550'
+    - action: Allow
+      protocol: TCP
+      source:
+        selector: app == "recommendationservice"
+      destination:
+        ports:
+          - '3550'
+    - action: Allow
+      protocol: TCP
+      source:
+        selector: >-
+          (component == "apiserver"&&endpoints.projectcalico.org/serviceName ==
+          "kubernetes")
+      destination:
+        ports:
+          - '35302'
+  egress:
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        ports:
+          - '80'
+  types:
+    - Ingress
+    - Egress
+
+---
+apiVersion: projectcalico.org/v3
+kind: StagedNetworkPolicy
+metadata:
+  name: default.recommendationservice
+  namespace: default
+spec:
+  tier: default
+  order: 190
+  selector: app == "recommendationservice"
+  ingress:
+    - action: Allow
+      protocol: TCP
+      source:
+        selector: app == "frontend"
+      destination:
+        ports:
+          - '8080'
+  egress:
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        ports:
+          - '80'
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        selector: app == "productcatalogservice"
+        ports:
+          - '3550'
+  types:
+    - Ingress
+    - Egress
+
+---
+apiVersion: projectcalico.org/v3
+kind: StagedNetworkPolicy
+metadata:
+  name: default.redis-cart
+  namespace: default
+spec:
+  tier: default
+  order: 200
+  selector: app == "redis-cart"
+  ingress:
+    - action: Allow
+      protocol: TCP
+      source:
+        selector: app == "cartservice"
+      destination:
+        ports:
+          - '6379'
+  types:
+    - Ingress
+
+---
+apiVersion: projectcalico.org/v3
+kind: StagedNetworkPolicy
+metadata:
+  name: default.shippingservice
+  namespace: default
+spec:
+  tier: default
+  order: 210
+  selector: app == "shippingservice"
+  ingress:
+    - action: Allow
+      protocol: TCP
+      source:
+        selector: app == "checkoutservice"
+      destination:
+        ports:
+          - '50051'
+    - action: Allow
+      protocol: TCP
+      source:
+        selector: app == "frontend"
+      destination:
+        ports:
+          - '50051'
+  egress:
+    - action: Allow
+      protocol: TCP
+      source: {}
+      destination:
+        ports:
+          - '80'
+  types:
+    - Ingress
+    - Egress
