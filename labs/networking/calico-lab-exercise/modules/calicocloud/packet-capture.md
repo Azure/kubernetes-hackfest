@@ -24,7 +24,7 @@
     Review YAML manifests that represent packet capture definition. Each packet capture is configured by deploying a `PacketCapture` resource that targets endpoints using `selector` and `labels`.
 
     ```bash
-    vi demo/80-packet-capture/packet-capture.yaml
+    cat demo/80-packet-capture/packet-capture.yaml
     ```
     
     Deploy packet capture definition to capture packets for `default/frontend` pods.
