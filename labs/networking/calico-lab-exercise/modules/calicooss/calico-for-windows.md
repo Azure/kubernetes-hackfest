@@ -82,14 +82,10 @@
    
     kubectl apply -f demo/win-demo/
 
-    sleep 60
-
-    kubectl get pods -n calico-demo
-
-    ```
-
-    ```bash
-    ### The output is like:
+    # Windows images are large and can take some time to start
+    # Run a watch and wait for the pods to be in running state
+    
+    ### The output is like when ready:
     NAME      READY   STATUS    RESTARTS   AGE
     busybox   1/1     Running   0          5m30s
     nginx     1/1     Running   0          5m30s
