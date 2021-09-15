@@ -8,7 +8,7 @@
 
 ## Steps
 
-1. Enable AKS windows Calico feature and register the service in your cluster.
+1. Enable AKS windows Calico feature and register the service in your cluster. **Note:** This may take several minutes to complete, so it could be a good time for a coffee or lunch break.
 
     
     ```bash
