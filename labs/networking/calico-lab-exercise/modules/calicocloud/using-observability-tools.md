@@ -1,4 +1,4 @@
-# Module 5: Using observability tools
+# Module 3: Using observability tools
 
 **Goal:** Explore Calico observability tools.
 
