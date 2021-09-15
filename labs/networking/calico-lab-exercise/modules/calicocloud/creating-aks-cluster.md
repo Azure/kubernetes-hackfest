@@ -171,7 +171,18 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     # verify calicoctl is running 
     ./calicoctl version
     ```
-
+    Output is:
+    ```bash
+    Client Version:    v3.19.0
+    Git commit:        aa9a3fd4
+    Cluster Version:   v3.19.0-dirty
+    Cluster Type:      typha,kdd,k8s,operator,aks
+    ```
+     
+    ```bash 
+    # save and alias calicoctl for future usage.
+    alias cactl=$(pwd)/calicoctl
+    ```
     
     b) Linux
 
