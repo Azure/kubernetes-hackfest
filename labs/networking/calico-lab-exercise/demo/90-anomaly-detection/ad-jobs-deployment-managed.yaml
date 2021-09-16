@@ -102,7 +102,7 @@ spec:
                 key: password
                 name: tigera-ee-ad-job-elasticsearch-access
           - name: AD_DISABLED_JOBS
-            value: "l7_latency, http_connection_spike, http_verbs, http_response_codes"      
+            value: "l7_latency,http_connection_spike,http_verbs,http_response_codes"      
           - name: AD_max_docs
             value: "100000"
           - name: AD_train_interval_minutes
