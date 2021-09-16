@@ -75,7 +75,7 @@ spec:
       - name: tigera-pull-secret
       containers:
       - name: ad-jobs
-        image: quay.io/tigera/anomaly_detection_jobs:v3.7.0
+        image: quay.io/tigera/anomaly_detection_jobs:v3.9.0
         resources:
           requests:
             memory: 1G
@@ -83,6 +83,8 @@ spec:
           privileged: true
           allowPrivilegeEscalation: true
         env:
+          - name: ELASTIC_HOST
+            value: "tigera-secure-es-gateway-http.tigera-elasticsearch.svc"
           - name: CLUSTER_NAME
             value: "$CALICOCLUSTERNAME"
           - name: ELASTIC_PORT
@@ -99,6 +101,8 @@ spec:
               secretKeyRef:
                 key: password
                 name: tigera-ee-ad-job-elasticsearch-access
+          - name: AD_DISABLED_JOBS
+            value: "l7_latency, http_connection_spike, http_verbs, http_response_codes"      
           - name: AD_max_docs
             value: "100000"
           - name: AD_train_interval_minutes
@@ -120,7 +124,7 @@ spec:
           - name: AD_BytesOutModel_min_size_for_train
             value: "1000"
           - name: AD_debug
-            value: "True"
+            value: "True"      
         volumeMounts:
           - name: host-volume
             mountPath: /home/idsuser/anomaly_detection_jobs/models
@@ -128,7 +132,7 @@ spec:
             mountPath: /certs/es-ca.pem
             subPath: es-ca.pem
         command: ["python3"]
-        args: ["main.py"]
+        args: ["-m", "adj"]
       volumes:
         - name: es-certs
           secret:
@@ -136,7 +140,7 @@ spec:
             items:
               - key: tls.crt
                 path: es-ca.pem
-            secretName: tigera-secure-es-http-certs-public
+            secretName: tigera-secure-es-gateway-http-certs-public
         - name: host-volume
           hostPath:
-            path: /var/log/calico
+            path: /var/log/calico/anomaly_detection_jobs

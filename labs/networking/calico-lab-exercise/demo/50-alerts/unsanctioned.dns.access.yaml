@@ -3,9 +3,6 @@ apiVersion: projectcalico.org/v3
 kind: GlobalAlertTemplate
 metadata:
   name: dns.unsanctioned.access
-  annotations:
-    kubectl.kubernetes.io/last-applied-configuration: |
-      {"apiVersion":"projectcalico.org/v3","kind":"GlobalAlertTemplate","metadata":{"annotations":{},"name":"dns.unsanctioned.access"},"spec":{"aggregateBy":["client_namespace","client_name_aggr","qname"],"condition":"gt","dataSet":"dns","description":"Pod attempted to access google.com domain","lookback":"5m","metric":"count","period":"5m","query":"(qname = \"www.google.com\" OR qname = \"google.com\")","severity":100,"summary":"[dns] pod ${client_namespace}/${client_name_aggr} attempted to access '${qname}'","threshold":0}}
 spec:
   description: "Pod attempted to access google.com domain"
   summary: "[dns] pod ${client_namespace}/${client_name_aggr} attempted to access '${qname}'"

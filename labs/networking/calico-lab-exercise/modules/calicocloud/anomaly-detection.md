@@ -72,7 +72,19 @@ less ./demo/90-anomaly-detection/ad-jobs-deployment-managed.yaml
 	kubectl apply -f ./demo/90-anomaly-detection/ad-jobs-deployment-managed.yaml
 	```
 
-4. Simulate anomaly by using an NMAP port scan above the threshold set in our Deployment env vars listed in Step 1.
+4. Confirm the ad job is running before simulating anomaly behaviour
+    ```bash
+	kubectl get pods -n tigera-intrusion-detection
+	```
+    Output will be like:
+	```bash
+	NAME                                              READY   STATUS    RESTARTS   AGE
+    ad-jobs-deployment-7b5cf99655-n8c5p               1/1     Running   4          6m23s
+    intrusion-detection-controller-5d8fb4494b-tjk68   1/1     Running   0          88m
+    ```
+
+
+5. Simulate anomaly by using an NMAP port scan above the threshold set in our Deployment env vars listed in Step 1.
 
 	```bash
 	# mock port scan
@@ -89,7 +101,7 @@ less ./demo/90-anomaly-detection/ad-jobs-deployment-managed.yaml
 
 	Nmap done: 1 IP address (1 host up) scanned in 201.37 seconds
 	```
-5. After a few minutes we can see the Alert generated in the Web UI
+6. After a few minutes we can see the Alert generated in the Web UI
 
 <img src="../img/anomaly-detection-alert.png" alt="Anomaly Detection Alert" width="100%"/>
 

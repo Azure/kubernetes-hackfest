@@ -165,7 +165,7 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     a) CloudShell
     ```bash    
     # download and configure calicoctl
-    curl -o calicoctl -O -L https://docs.tigera.io/download/binaries/v3.7.0/calicoctl
+    curl -o calicoctl -O -L https://downloads.tigera.io/ee/binaries/v3.9.0/calicoctl
     chmod +x calicoctl
     
     # verify calicoctl is running 
@@ -173,10 +173,12 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     ```
     Output is:
     ```bash
-    Client Version:    v3.19.0
-    Git commit:        aa9a3fd4
-    Cluster Version:   v3.19.0-dirty
-    Cluster Type:      typha,kdd,k8s,operator,aks
+    Client Version:    v3.9.0
+    Release:           Calico Enterprise
+    Git commit:        114364e9
+    Cluster Calico Version:               v3.20.0
+    Cluster Calico Enterprise Version:    v3.9.0
+    Cluster Type:                         typha,kdd,k8s,operator
     ```
      
     ```bash 
@@ -189,7 +191,7 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     >Tip: Consider navigating to a location that’s in your PATH. For example, /usr/local/bin/
     ```bash    
     # download and configure calicoctl
-    curl -o calicoctl -O -L https://docs.tigera.io/download/binaries/v3.8.1/calicoctl
+    curl -o calicoctl -O -L https://downloads.tigera.io/ee/binaries/v3.9.0/calicoctl
     chmod +x calicoctl
     
     # verify calicoctl is running 
@@ -201,20 +203,22 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     >Tip: Consider navigating to a location that’s in your PATH. For example, /usr/local/bin/
     ```bash    
     # download and configure calicoctl
-    curl -o calicoctl -O -L  https://docs.tigera.io/download/binaries/v3.8.1/calicoctl-darwin-amd64
+    curl -o calicoctl -O -L  https://downloads.tigera.io/ee/binaries/v3.9.0/calicoctl-darwin-amd64
+    
     chmod +x calicoctl
     
     # verify calicoctl is running 
     calicoctl version
     ```
     Note: If you are faced with `cannot be opened because the developer cannot be verified` error when using `calicoctl` for the first time. go to `Applicaitons` \> `System Prefences` \> `Security & Privacy` in the `General` tab at the bottom of the window click `Allow anyway`.  
-Note: If the location of calicoctl is not already in your PATH, move the file to one that is or add its location to your PATH. This will allow you to invoke it without having to prepend its location.
+    Note: If the location of calicoctl is not already in your PATH, move the file to one that is or add its location to your PATH. This will allow you to invoke it without having to prepend its location.
 
-    c) Windows - using powershell command to download the calicoctl binary  
+    d) Windows - using powershell command to download the calicoctl binary  
     >Tip: Consider runing powershell as administraor and navigating to a location that’s in your PATH. For example, C:\Windows.
     
     ```pwsh
-    Invoke-WebRequest -Uri "https://docs.tigera.io/download/binaries/v3.8.1/calicoctl-windows-amd64.exe" -OutFile "calicocttl.exe"
+    Invoke-WebRequest -Uri "https://downloads.tigera.io/ee/binaries/v3.9.0/calicoctl-windows-amd64.exe" -OutFile "calicocttl.exe"
+
     ```
     
    
