@@ -79,8 +79,8 @@ less ./demo/90-anomaly-detection/ad-jobs-deployment-managed.yaml
     Output will be like:
 	```bash
 	NAME                                              READY   STATUS    RESTARTS   AGE
-    ad-jobs-deployment-7b5cf99655-n8c5p               1/1     Running   4          6m23s
-    intrusion-detection-controller-5d8fb4494b-tjk68   1/1     Running   0          88m
+    ad-jobs-deployment-86684f644c-xjht8               1/1     Running   0          19m
+    intrusion-detection-controller-6f5986ff6f-tg2zq   1/1     Running   0          47m
     ```
 
 
