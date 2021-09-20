@@ -75,12 +75,11 @@
     ![network-set-grid](../img/network-set-grid.png)
     
     ```bash
-    # try to ping any of the IPs in from the feodo tracker list, and the packet will be denied with "exit code 1".
+    # try to ping any of the IPs in from the feodo tracker list, and the packet will be denied with "exit code 1". 
     IP=$(kubectl get globalnetworkset threatfeed.feodo-tracker -ojson | jq '.spec.nets[0]' | sed -e 's/^"//' -e 's/"$//' -e 's/\/32//')
     kubectl -n dev exec -t centos -- sh -c "ping -c1 $IP"
     ```
-    
-
+   
 7. Service Graph
 
     The dynamic `Service Graph` presents network flows from service level perspective. Top level view shows how traffic flows between namespaces as well as external and internal endpoints.
