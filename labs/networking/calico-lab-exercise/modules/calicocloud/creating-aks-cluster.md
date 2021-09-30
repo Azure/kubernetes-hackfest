@@ -183,7 +183,7 @@ Follow the prequisite steps if you need to verify your Azure subscription.
      
     ```bash 
     # save and alias calicoctl for future usage.
-    alias cactl=$(pwd)/calicoctl
+    alias calicoctl=$(pwd)/calicoctl
     ```
     
     b) Linux
