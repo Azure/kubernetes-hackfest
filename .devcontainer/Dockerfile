@@ -4,3 +4,10 @@ FROM mcr.microsoft.com/azure-cli
 RUN apk update
 RUN apk add zsh
 RUN sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+RUN curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+RUN install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+RUN rm kubectl
+RUN curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 \
+&& chmod 700 get_helm.sh \
+&& ./get_helm.sh
+RUN rm get_helm.sh
