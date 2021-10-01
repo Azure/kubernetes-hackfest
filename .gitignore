@@ -5,6 +5,8 @@ cheatsheet.md
 .vscode
 **/.vscode
 
+.venv
+
 # Logs
 logs
 *.log
