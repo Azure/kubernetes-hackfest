@@ -132,7 +132,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
    1.18.17              1.18.19, 1.19.9, 1.19.11
    ```
 
-   For this lab we'll use 1.18.10
+   For this lab we'll use 1.20.7
 
    ```bash
    K8SVERSION=1.20.7
