@@ -26,15 +26,13 @@ In this lab we will build Docker containers for each of the application componen
     az acr create --resource-group $RGNAME --name $ACRNAME --sku Basic
     ```
 
-2. Run bash script to authenticate with Azure Container Registry from AKS
-
-    Running this script will grant the Service Principal created at cluster creation time access to ACR.
-
-    **NOTE: If the below role assignment fails due to permissions, we will do it the hard way and create an Image Pull Secret.**
+1. Attach the Azure Container Registery to the AKS Cluster
 
     ```bash
-    sh labs/build-application/reg-acr.sh $RGNAME $CLUSTERNAME $ACRNAME
+    az aks update -n $CLUSTERNAME -g $RGNAME --attach-acr $ACRNAME
     ```
+
+    **NOTE: If the role assignment fails due to permissions, we will do it the hard way and create an Image Pull Secret.**
 
     ```bash
     # !!!!!!!!!!
@@ -43,24 +41,25 @@ In this lab we will build Docker containers for each of the application componen
 
     # Extract Container Registry details needed for Login
     # Login Server
-    az acr show -n ${ACRNAME} --query "{acrLoginServer:loginServer}" -o table
+    ACR_FQDN=$(az acr show -n $ACRNAME --query "{acrLoginServer:loginServer}" -o tsv)
     # Enable ACR admin 
-    az acr update -n ${ACRNAME} --admin-enabled true
+    az acr update -n $ACRNAME --admin-enabled true
     # Registry Username and Password
-    az acr credential show -n ${ACRNAME}
+    ACR_USER=$(az acr credential show -n $ACRNAME --query "username" -o tsv)
+    ACR_PASSWD=$(az acr credential show -n $ACRNAME --query "passwords[0].value" -o tsv)
 
     # Use the login and credential information from above
     kubectl create -n hackfest secret docker-registry regcred \
-      --docker-server=<LOGIN SERVER GOES HERE> \
-      --docker-username=<USERNAME GOES HERE> \
-      --docker-password=<PASSWORD GOES HERE>
+      --docker-server=$ACR_FQDN \
+      --docker-username=$ACR_USER \
+      --docker-password=$ACR_PASSWD
 
     # !!!!!!!!!!
     # Only do these steps if the above Service Principal Role Assignment fails.
     # !!!!!!!!!!
     ```
 
-3. Create Application Insights Instance
+1. Create Application Insights Instance
 
     Continue using the same resource group that was created previously
     
@@ -84,7 +83,7 @@ In this lab we will build Docker containers for each of the application componen
 
         ![App Insights](app-insights.png "App Insights")
 
-4. Deploy Cosmos DB
+1. Deploy Cosmos DB
 
     In this step, create a Cosmos DB account for the Mongo api. Again, we will create a random, unique name.
 
@@ -100,7 +99,7 @@ In this lab we will build Docker containers for each of the application componen
 
     You can validate your Cosmos instance in the portal. The credentials and connect string will be used in the next lab.
 
-5. Create Kubernetes secrets for access to CosmosDB and App Insights
+1. Create Kubernetes secrets for access to CosmosDB and App Insights
 
     You will use a secret to hold the credentials for our backend database and Azure App Insights. In the next lab, you will use this secret as a part of your deployment manifests.
 
@@ -125,7 +124,7 @@ In this lab we will build Docker containers for each of the application componen
     kubectl create secret generic cosmos-db-secret --from-literal=user=$MONGODB_USER --from-literal=pwd=$MONGODB_PASSWORD --from-literal=appinsights=$APPINSIGHTS_INSTRUMENTATIONKEY -n hackfest
     ```
 
-6. Create Docker containers in ACR
+1. Create Docker containers in ACR
 
     In this step we will create a Docker container image for each of our microservices. We will use ACR Builder functionality to build and store these images in the cloud. 
 
