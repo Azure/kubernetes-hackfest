@@ -27,7 +27,7 @@ Linkerd is a graduated Cloud Native Computing Foundation (CNCF) project.
     helm uninstall data-api -n hackfest
     ```
 
-2. Install linkerd CLI on your machine
+1. Install linkerd CLI on your machine
 
     ```bash
     curl -sL https://run.linkerd.io/install | sh
@@ -43,7 +43,7 @@ Linkerd is a graduated Cloud Native Computing Foundation (CNCF) project.
     Server version: unavailable
     ```
 
-3. Validate your Kubernetes cluster
+1. Validate your Kubernetes cluster
 
     ```bash
     linkerd check --pre
@@ -53,13 +53,13 @@ Linkerd is a graduated Cloud Native Computing Foundation (CNCF) project.
     Status check results are [ok]
     ```
 
-4. Install linkerd server components into AKS
+1. Install linkerd server components into AKS
 
     ```bash
     linkerd install | kubectl apply -f -
     ```
 
-5. Validate
+1. Validate
 
     ```bash
     linkerd check
@@ -69,7 +69,13 @@ Linkerd is a graduated Cloud Native Computing Foundation (CNCF) project.
     Status check results are [ok]
     ```
 
-6. Open the Dashboard
+1. Install viz extension
+
+    ```bash
+    linkerd viz install | kubectl apply -f - # install the on-cluster metrics stack
+    ```
+
+1. Open the Dashboard
 
     ```bash
     linkerd viz dashboard
@@ -79,7 +85,7 @@ Linkerd is a graduated Cloud Native Computing Foundation (CNCF) project.
 
     ![Dashboard](linkerd-dashboard.png "Dashboard")
 
-7. Use `helm template` to create manifest for injection
+1. Use `helm template` to create manifest for injection
 
     ```bash
     helm template ./kubernetes-hackfest/charts/data-api > ./kubernetes-hackfest/data-api.yaml
@@ -89,7 +95,7 @@ Linkerd is a graduated Cloud Native Computing Foundation (CNCF) project.
     helm template ./kubernetes-hackfest/charts/service-tracker-ui > ./kubernetes-hackfest/service-tracker-ui.yaml
     ```
 
-8. Re-deploy application using `linkerd inject`
+1. Re-deploy application using `linkerd inject`
 
     ```bash
     linkerd inject ./kubernetes-hackfest/data-api.yaml | kubectl apply -n hackfest -f -
@@ -99,14 +105,14 @@ Linkerd is a graduated Cloud Native Computing Foundation (CNCF) project.
     linkerd inject ./kubernetes-hackfest/service-tracker-ui.yaml | kubectl apply -n hackfest -f -
     ```
 
-9. Load test and review traffic in Dashboard
+1. Load test and review traffic in Dashboard
 
     > Note: There are a few ways we could create traffic on the API layer. You could create a load test pod in the cluster that hits the API's on internal IP addresses. Below is a simple setup just for lab purposes.
 
     * Expose one of the API's as a public IP
 
         ```bash
-        kubectl edit svc flights-api -n hackfest
+        kubectl patch svc flights-api -n hackfest -p '{spec:{type:"LoadBalancer"}}'
         ```
 
     * Get the IP address of one of your API's
@@ -125,7 +131,7 @@ Linkerd is a graduated Cloud Native Computing Foundation (CNCF) project.
         while true; do curl -o /dev/null -s -w "%{http_code}\n" $APP_URL; sleep 1; done
         ```
 
-10. Try some other Linkerd features
+1. Try some other Linkerd features
 
 * [Automating injection.](https://linkerd.io/2/tasks/automating-injection)
 * [Setup mTLS encryption.](https://linkerd.io/2/features/automatic-mtls)
