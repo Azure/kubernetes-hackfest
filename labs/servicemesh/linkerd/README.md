@@ -78,7 +78,6 @@ Linkerd is a graduated Cloud Native Computing Foundation (CNCF) project.
     Browse the dashboard:
 
     ![Dashboard](linkerd-dashboard.png "Dashboard")
-    
 
 7. Use `helm template` to create manifest for injection
 
@@ -249,3 +248,5 @@ In this section we will diagnose and repair an issue with a sample application u
 ## Docs / References
 
 * [Linkerd on Github](https://github.com/linkerd/linkerd2)
+* [Linkerd docs](https://linkerd.io/2.11/overview/)
+* [Linkerd Slack community](slack.linkerd.io)
