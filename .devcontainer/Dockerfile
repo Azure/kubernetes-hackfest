@@ -4,7 +4,7 @@ FROM mcr.microsoft.com/azure-cli
 RUN apk update
 
 # Install tools
-RUN apk add nano vim tcpdump
+RUN apk add nano vim tcpdump tmux
 
 RUN apk add zsh \
 && sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"

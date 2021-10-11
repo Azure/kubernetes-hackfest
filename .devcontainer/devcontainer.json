@@ -8,7 +8,7 @@
 	// "overrideCommand": false,
 
 	// some base images require a specific user name
-	//"remoteUser": "vscode",
+	//"remoteUser": "hackfest",
 
 	// Set container specific settings
 	"settings": {
@@ -19,11 +19,11 @@
 	// 	"cpus": 4
 	// },
 	
-	// forward ports for the app
+	//forward ports for the app
 	// "forwardPorts": [
 	// ],
 
-	// add labels
+	//add labels
 	// "portsAttributes": {
 	// },
 
