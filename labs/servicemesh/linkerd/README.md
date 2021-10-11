@@ -112,7 +112,7 @@ Linkerd is a graduated Cloud Native Computing Foundation (CNCF) project.
     * Expose one of the API's as a public IP
 
         ```bash
-        kubectl patch svc flights-api -n hackfest -p '{spec:{type:"LoadBalancer"}}'
+        kubectl patch svc flights-api -n hackfest -p '{"spec":{"type":"LoadBalancer"}}'
         ```
 
     * Get the IP address of one of your API's
