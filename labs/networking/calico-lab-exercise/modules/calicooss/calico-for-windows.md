@@ -122,8 +122,8 @@
 
 6. Create policy to explicitly allow the `busybox` pod in Linux node to reach the `porter` pod in Windows node, and deny the `powershell` pod in Windows node to reach the `nginx` pod in Linux node
    ```bash
-   cactl apply -f demo/20-egress-access-controls/allow-busybox.yaml
-   cactl apply -f demo/20-egress-access-controls/deny-nginx.yaml
+   calicoctl --allow-version-mismatch apply -f demo/20-egress-access-controls/allow-busybox.yaml
+   calicoctl --allow-version-mismatch apply -f demo/20-egress-access-controls/deny-nginx.yaml
    
    ```
 

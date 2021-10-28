@@ -12,7 +12,7 @@
 
     
     ```bash
-    cactl patch felixconfiguration default --type='merge' -p '{"spec":{"wireguardEnabled":true}}'
+    calicoctl --allow-version-mismatch patch felixconfiguration default --type='merge' -p '{"spec":{"wireguardEnabled":true}}'
     ```
     Output will be like this:
     ```bash
@@ -39,7 +39,7 @@
     ##NODE-NAME will be aks-nodepool1-41939440-vmss000000 for example.
     NODE_NAME=$(kubectl get nodes -o jsonpath='{.items[*].status.addresses[?(@.type=="Hostname")].address}'| awk '{print $1;}')
     sleep 10
-    cactl get node $NODE_NAME -o yaml
+    calicoctl --allow-version-mismatch get node $NODE_NAME -o yaml
 
     ```
 
@@ -72,10 +72,6 @@
    root@aks-nodepool1-41939440-vmss000001:/#
    ```
 
-## Conclusion
 
-Congratulations! You've completed the labs for Calico Open Source on AKS. Calico can provide even more amazing capabilities through Calico Cloud by Tigera. To explore those features through additional labs, continue below.
 
->**Note:** The Calico Cloud labs will start by creating a new AKS Cluster with the proper configuration to enable Calico Cloud.
-
-[Next -> Chapter 2-Module 0](../calicocloud/creating-aks-cluster.md)
+[Next -> Module 5](../calicooss/ebpf-dataplane.md)

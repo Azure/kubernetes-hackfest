@@ -33,5 +33,4 @@
 2. Reports are generated 15 minutes after the end of the report as [documented](https://docs.tigera.io/v3.8/compliance/overview#change-the-default-report-generation-time). As the compliance reports deployed in the [manifests](https://github.com/tigera-solutions/calicocloud-aks-workshop/tree/main/demo/40-compliance-reports) are scheduled to run every 15 minutes the generation of reports will take between 30-60 mins depending when the manifests were deloyed.
 <br>
 
-*Congratulations on completing this workshop!*
-Follow the [clean up](../calicocloud/workshop-cleanup.md) instruction if required.
+[Next -> Module 9](../calicocloud/enable-l7-visibility.md)

@@ -89,21 +89,21 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     ```bash
     KubernetesVersion    Upgrades
     -------------------  ------------------------
-    1.21.2               None available
-    1.21.1               1.21.2
-    1.20.7               1.21.1, 1.21.2
-    1.20.5               1.20.7, 1.21.1, 1.21.2
-    1.19.11              1.20.5, 1.20.7
-    1.19.9               1.19.11, 1.20.5, 1.20.7
-    1.18.19              1.19.9, 1.19.11
-    1.18.17              1.18.19, 1.19.9, 1.19.11
+    1.22.2(preview)      None available
+    1.22.1(preview)      1.22.2(preview)
+    1.21.2               1.22.1(preview), 1.22.2(preview)
+    1.21.1               1.21.2, 1.22.1(preview), 1.22.2(preview)
+    1.20.9               1.21.1, 1.21.2
+    1.20.7               1.20.9, 1.21.1, 1.21.2
+    1.19.13              1.20.7, 1.20.9
+    1.19.11              1.19.13, 1.20.7, 1.20.9
     ```
     
-    For this lab we'll use 1.20.7
+    For this lab we'll use 1.21.1
     
     ```bash
-    K8SVERSION=1.20.7
-    echo export K8SVERSION=1.20.7 >> ~/.bashrc
+    K8SVERSION=1.21.1
+    echo export K8SVERSION=1.21.1 >> ~/.bashrc
     ```
     
     > The below command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT and grab a coffee/tea/kombucha...
@@ -128,7 +128,7 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     ```bash
     Name           Location    ResourceGroup      KubernetesVersion    ProvisioningState    Fqdn
     -------------  ----------  -----------------  -------------------  -------------------  -----------------------------------------------------------------
-    aksjessie2081  eastus      aks-rg-jessie2081  1.20.7               Succeeded             aksjessie2-aks-rg-jessie208-03cfb8-9713ae4f.hcp.eastus.azmk8s.io
+    aksjessie2081  eastus      aks-rg-jessie2081  1.21.1               Succeeded             aksjessie2-aks-rg-jessie208-03cfb8-9713ae4f.hcp.eastus.azmk8s.io
     
     ```
     
@@ -148,9 +148,9 @@ Follow the prequisite steps if you need to verify your Azure subscription.
 	```
 	```
 	NAME                                STATUS   ROLES   AGE    VERSION
-	aks-nodepool1-29374799-vmss000000   Ready    agent   118s   v1.20.7
-	aks-nodepool1-29374799-vmss000001   Ready    agent   2m3s   v1.20.7
-	aks-nodepool1-29374799-vmss000002   Ready    agent   2m     v1.20.7
+	aks-nodepool1-29374799-vmss000000   Ready    agent   118s   v1.21.1
+	aks-nodepool1-29374799-vmss000001   Ready    agent   2m3s   v1.21.1
+	aks-nodepool1-29374799-vmss000002   Ready    agent   2m     v1.21.1
 	```
 
 	To see more details about your cluster:
@@ -183,7 +183,7 @@ Follow the prequisite steps if you need to verify your Azure subscription.
      
     ```bash 
     # save and alias calicoctl for future usage.
-    alias cactl=$(pwd)/calicoctl
+    alias calicoctl=$(pwd)/calicoctl
     ```
     
     b) Linux
