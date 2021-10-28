@@ -49,6 +49,8 @@ Chapter one: Calico OSS
 - [Module 2: Using global network policies for security controls](modules/calicooss/using-security-controls.md)
 - [Module 3: Adding windows node in your AKS and isolate pods traffic](modules/calicooss/calico-for-windows.md)
 - [Module 4: Enabling wireguard to secure on-the-wire for your AKS cluster](modules/calicooss/wireguard-encryption.md)
+- [Module 5: Change dataplane from standard to eBPF for your AKS cluster](modules/calicooss/ebpf-dataplane.md)
+
 
 Chapter two: Calico Cloud Trial 
 
@@ -61,7 +63,8 @@ Chapter two: Calico Cloud Trial
 - [Module 6: Packet Capture](modules/calicocloud/packet-capture.md)
 - [Module 7: Anomaly Detection](modules/calicocloud/anomaly-detection.md)
 - [Module 8: Using compliance reports](modules/calicocloud/using-compliance-reports.md)
-
+- [Module 9: Eabling L7 visibility](modules/calicocloud/enable-l7-visibility.md)
+- [Module 10: Host Endpoints](modules/calicocloud/host-end-point.md)
 
 
 

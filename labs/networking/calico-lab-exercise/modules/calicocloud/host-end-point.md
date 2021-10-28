@@ -1,4 +1,6 @@
-# Module 9: Host protection
+# Module 10: Host Endpoints
+
+>Calico can automatically create host endpoints for your Kubernetes nodes. This means you can manage the lifecycle of host endpoints as your cluster evolves, ensuring nodes are always protected by policy.
 
 **Goal:** Secure hosts ports with network policies.
 
