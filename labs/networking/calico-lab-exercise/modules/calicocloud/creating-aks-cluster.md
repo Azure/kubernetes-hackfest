@@ -158,53 +158,37 @@ Follow the prequisite steps if you need to verify your Azure subscription.
 	kubectl cluster-info
 	```
 	
-7.  Install `calicoctl` CLI for use in later labs
-
-    The easiest way to retrieve captured `*.pcap` files is to use [calicoctl](https://docs.tigera.io/maintenance/clis/calicoctl/) CLI. The following binary installations are available:
+7. *[Optional]*  Install `calicoctl` CLI for use in later labs
 
     a) CloudShell
     ```bash    
     # download and configure calicoctl
-    curl -o calicoctl -O -L https://downloads.tigera.io/ee/binaries/v3.9.0/calicoctl
+    curl -o calicoctl -O -L https://downloads.tigera.io/ee/binaries/v3.10.0/calicoctl
+
     chmod +x calicoctl
     
     # verify calicoctl is running 
     ./calicoctl version
     ```
-    Output is:
-    ```bash
-    Client Version:    v3.9.0
-    Release:           Calico Enterprise
-    Git commit:        114364e9
-    Cluster Calico Version:               v3.20.0
-    Cluster Calico Enterprise Version:    v3.9.0
-    Cluster Type:                         typha,kdd,k8s,operator
-    ```
-     
-    ```bash 
-    # save and alias calicoctl for future usage.
-    alias calicoctl=$(pwd)/calicoctl
-    ```
+
     
     b) Linux
-
     >Tip: Consider navigating to a location that’s in your PATH. For example, /usr/local/bin/
     ```bash    
     # download and configure calicoctl
-    curl -o calicoctl -O -L https://downloads.tigera.io/ee/binaries/v3.9.0/calicoctl
+    curl -o calicoctl -O -L https://downloads.tigera.io/ee/binaries/v3.10.0/calicoctl
     chmod +x calicoctl
     
     # verify calicoctl is running 
     calicoctl version
     ```
-    c) MacOS
-    
 
+    c) MacOS
     >Tip: Consider navigating to a location that’s in your PATH. For example, /usr/local/bin/
     ```bash    
     # download and configure calicoctl
-    curl -o calicoctl -O -L  https://downloads.tigera.io/ee/binaries/v3.9.0/calicoctl-darwin-amd64
-    
+    curl -o calicoctl -O -L  https://downloads.tigera.io/ee/binaries/v3.10.0/calicoctl-darwin-amd64
+
     chmod +x calicoctl
     
     # verify calicoctl is running 
@@ -217,8 +201,7 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     >Tip: Consider runing powershell as administraor and navigating to a location that’s in your PATH. For example, C:\Windows.
     
     ```pwsh
-    Invoke-WebRequest -Uri "https://downloads.tigera.io/ee/binaries/v3.9.0/calicoctl-windows-amd64.exe" -OutFile "calicocttl.exe"
-
+    Invoke-WebRequest -Uri "https://downloads.tigera.io/ee/binaries/v3.9.0/calicoctl-windows-amd64.exe" -OutFile "kubectl-calico.exe"
     ```
     
    

@@ -20,10 +20,9 @@
     # deploy dev app stack
     kubectl apply -f demo/dev/app.manifests.yaml
 
-    # deploy boutiqueshop app stack and network policy to control the connection between different micro service. 
+    # deploy boutiqueshop app stack.
     kubectl apply -f demo/boutiqueshop/boutique-app.manifests.yaml
 
-    kubectl apply -f demo/boutiqueshop/policies.yaml
     ```
     
     ```bash
@@ -88,8 +87,10 @@
     kubectl apply -f demo/10-security-controls/allow-kube-dns.yaml
     ```
     
-    This will add `default-deny` policy to your `default` tier. 
+
+    This will add network policy to control the connection between different micro service of boutique app and `default-deny` policy to your `default` tier. 
     ```bash
+    kubectl apply -f demo/boutiqueshop/policies.yaml
     kubectl apply -f demo/10-security-controls/default-deny.yaml
     ```
 
