@@ -28,15 +28,15 @@
     
     Output will be
     ```bash
-    NAME                                STATUS   ROLES   AGE     VERSION
-    aks-nodepool1-21504145-vmss000000   Ready    agent   100m    v1.20.7
-    aks-nodepool1-21504145-vmss000001   Ready    agent   101m    v1.20.7
-    aks-nodepool1-21504145-vmss000002   Ready    agent   101m    v1.20.7
-    aksnpwin000000                      Ready    agent   8m35s   v1.20.7
+    NAME                                STATUS   ROLES   AGE   VERSION
+    aks-nodepool1-40984214-vmss000000   Ready    agent   68m   v1.21.1
+    aks-nodepool1-40984214-vmss000001   Ready    agent   68m   v1.21.1
+    aks-nodepool1-40984214-vmss000002   Ready    agent   67m   v1.21.1
+    aksnpwin000000                      Ready    agent   23m   v1.21.1
     ```
 
     ```bash
-    ##NODE-NAME will be aks-nodepool1-41939440-vmss000000 for example.
+    ##NODE-NAME will be aks-nodepool1-40984214-vmss0000000 for example.
     NODE_NAME=$(kubectl get nodes -o jsonpath='{.items[*].status.addresses[?(@.type=="Hostname")].address}'| awk '{print $1;}')
     sleep 10
     calicoctl --allow-version-mismatch get node $NODE_NAME -o yaml
@@ -67,9 +67,7 @@
    
    Output will be like:
    ```bash
-   root@aks-nodepool1-41939440-vmss000001:/# ifconfig | grep wireguard
-   wireguard.cali: flags=209<UP,POINTOPOINT,RUNNING,NOARP>  mtu 1440
-   root@aks-nodepool1-41939440-vmss000001:/#
+   wireguard.cali: flags=209<UP,POINTOPOINT,RUNNING,NOARP>  mtu 1340
    ```
 
 

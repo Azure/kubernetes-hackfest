@@ -4,7 +4,7 @@
 
 ## AKS Calico Cloud Workshop
 
-The intent of this lab is to introduce Calico OSS and  Calico Cloud(https://www.calicocloud.io/?utm_campaign=calicocloud&utm_medium=digital&utm_source=microsoft) to manage AKS clusters and leverage Calico features to implement the various use cases. While there are many capabilities that the Calico product provides, this lab focuses on a subset of those that are used most often by enterprises to derive value from the Calico Product. 
+The intent of this lab is to introduce Calico OSS and [Calico Cloud](https://www.calicocloud.io/?utm_campaign=calicocloud&utm_medium=digital&utm_source=microsoft) to manage AKS clusters and leverage Calico features to implement the various use cases. While there are many capabilities that the Calico product provides, this lab focuses on a subset of those that are used most often by enterprises to derive value from the Calico Product. 
 
 
 ## Learning Objectives

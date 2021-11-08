@@ -8,7 +8,7 @@
 
 ## Steps
 
-1. Delete the Windows node in your pool, and confirm the result.
+1. Delete the Windows node we create from last step in your pool, and confirm the result.
    ```bash
    az aks nodepool delete \
    --resource-group $RGNAME \
@@ -21,6 +21,15 @@
    kubectl get nodes
    ```
 
+   ```text
+   ### The output is like:
+   NAME                                STATUS   ROLES   AGE     VERSION
+   aks-nodepool1-40984214-vmss000000   Ready    agent   74m     v1.21.1
+   aks-nodepool1-40984214-vmss000001   Ready    agent   74m     v1.21.1
+   aks-nodepool1-40984214-vmss000002   Ready    agent   73m     v1.21.1
+   ```
+
+
 2. Deploy the demo app `yaobank`, and run a quick test to trace the source IP address before changing to eBPF dataplane.
 
    a. Deloy demo application `yaobank`
@@ -30,7 +39,7 @@
 
    b. Deploy LB for Frontend Customer Pod.
    ```bash
-   kubectl apply -f - <<EOF
+   kubectl apply -f - << EOF
    apiVersion: v1
    kind: Service
    metadata:
@@ -62,9 +71,8 @@
  
     > Output should be similar as below, the node private IP will show up as source IP.
     ```text
-    10.240.0.35 - - [26/Oct/2021 19:20:52] "GET / HTTP/1.1" 200 -
-    10.240.0.35 - - [26/Oct/2021 19:21:16] "GET / HTTP/1.1" 200 -
-    10.240.0.35 - - [26/Oct/2021 19:21:58] "GET / HTTP/1.1" 200 -
+    10.240.0.35 - - [08/Nov/2021 21:49:42] "GET / HTTP/1.1" 200 -
+    10.240.0.4 - - [08/Nov/2021 21:51:25] "GET / HTTP/1.1" 200 -
     ```
 
 3. Configure Calico to connect directly to the API server. 
@@ -98,7 +106,7 @@
 
    ```bash
    #edit the cm yaml file by replacing the API server host address before apply it 
-   kubectl appy -f cm.yaml
+   kubectl apply -f cm.yaml
    ```
 
 
