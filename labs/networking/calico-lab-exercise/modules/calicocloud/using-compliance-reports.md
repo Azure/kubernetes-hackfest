@@ -8,11 +8,17 @@
 
     >We have deployed a few compliance reports in one of the first labs and by this time a few reports should have been already generated. 
     ```bash
-    kubectl get globalreport                                                          
-    NAME                     CREATED AT
-    cluster-inventory        2021-06-10T03:24:07Z
-    cluster-network-access   2021-06-10T03:24:07Z
-    daily-cis-results        2021-06-10T03:24:05Z
+    kubectl get globalreport        
+    ```
+
+    ```text                                                   
+    NAME                          CREATED AT
+    boutiqueshop-inventory        2021-11-08T23:19:42Z
+    boutiqueshop-network-access   2021-11-08T23:19:42Z
+    boutiqueshop-policy-audit     2021-11-08T23:19:42Z
+    cluster-inventory             2021-11-08T23:18:52Z
+    cluster-network-access        2021-11-08T23:18:52Z
+    daily-cis-results             2021-11-08T23:18:51Z
     ```
 
 

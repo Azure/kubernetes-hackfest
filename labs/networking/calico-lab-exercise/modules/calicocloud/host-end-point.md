@@ -61,10 +61,10 @@
    >Output is similar as 
 
    ```bash
-   NAME                                                    CREATED AT
-   aks-nodepool1-xxxx-vmss000000-auto-hep   2021-10-28T16:39:53Z
-   aks-nodepool1-xxxx-vmss000001-auto-hep   2021-10-28T16:39:53Z
-   aks-nodepool1-xxxx-vmss000002-auto-hep   2021-10-28T16:39:53Z   
+   NAME                                         CREATED AT
+   aks-nodepool1-51390184-vmss000000-auto-hep   2021-11-09T00:30:43Z
+   aks-nodepool1-51390184-vmss000001-auto-hep   2021-11-09T00:30:43Z
+   aks-nodepool1-51390184-vmss000002-auto-hep   2021-11-09T00:30:44Z
    ```
 
 4. Enable automatic host endpoints flow logs.   
@@ -75,7 +75,7 @@
 
 5.  Expose the frontend service via the NodePort service type, we use `30080` port as example.
    ```bash
-    kubectl -n hipstershop expose deployment frontend --type=NodePort --name=frontend-nodeport --overrides='{"apiVersion":"v1","spec":{"ports":[{"nodePort":30080,"port":80,"targetPort":8080}]}}'
+   kubectl expose deployment frontend --type=NodePort --name=frontend-nodeport --overrides='{"apiVersion":"v1","spec":{"ports":[{"nodePort":30080,"port":80,"targetPort":8080}]}}'
    ```
 
 6. Get internal IP of node and test the exposed port of `30080` from your vm.
@@ -115,28 +115,40 @@
 
     #For other variations/shells the following syntax may be required
     sed -i "" "s/\${PRV_IP}/${PRV_IP}\/32/g" ./demo/60-host-end-point/frontend-nodeport-access.yaml
+    ```
+
+    Confirm the change in yaml file and apply the policy.
+    ```bash
+    cat ./demo/60-host-end-point/frontend-nodeport-access.yaml |grep -B 2 -A 0 $PRV_IP
 
     kubectl apply -f demo/60-host-end-point/frontend-nodeport-access.yaml
-    
-    # test access from vm shell, the expected result is 30080 Operation timed out
+    ```
+
+    Test access from vm shell again, the expected result is 30080 Operation timed out
+    ```bash
     nc -zv $NODE_IP1 30080 
 
     # test access from vm shell to other nodes, the expected result will be 30080 open
     nc -zv $NODE_IP2 30080 
     ```
+    > Note that in order to control access to the NodePort service, you need to enable `preDNAT` and `applyOnForward` policy settings.
 
-9. *[Optional]* Test another node in your node group. 
 
-   > Once you label another node with `host-end-point=test`, you should not be able to access the frontend service i.e the node port `30080` from your VM shell
-   ```bash
-   kubectl label nodes $NODE_NAME2 host-end-point=test
-   ```
+### *[Bonus]* Leverage networkset to control ingress traffic for your k8s node. 
 
-   ```bash
-   #test from your VM
-   nc -zv $NODE_IP2 30080 
-   ```
-   > Note that in order to control access to the NodePort service, you need to enable `preDNAT` and `applyOnForward` policy settings.
+   - Create a networkset with your VM_IP cidr from UI. 
+
+   ![networkset hep](../img/networkset-hep.png)
+   
+   - Update your host endpoints policy with networkset label as source. 
+
+   ![hep policy](../img/hep-policy-networkset.png)
+
+   - You should be able to see the flow logs when you netshoot again from your VM. 
+
+   ![networkset hep flowlog.](../img/networkset-hep-flowlog.png)
+
+
 
 
 *Congratulations on completing this workshop!*

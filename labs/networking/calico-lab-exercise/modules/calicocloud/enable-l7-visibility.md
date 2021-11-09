@@ -2,49 +2,74 @@
 
 **Goal:** Enable L7/HTTP flow logs in hipstershop with Calico cloud. Calico cloud not only can provide L3 flow logs, but also can provide L7 visibility without service mesh headache. 
 
-**Docs:** https://docs.tigera.io/v3.9/visibility/elastic/l7/configure)
+**Docs:** https://docs.tigera.io/visibility/elastic/l7/configure)
 
 ## Steps
 
 
-1. Patch your AKS 
-   > The current installation script doesn't adapt k8s provider to aks and will provide a fix in later version
+1.  Configure Felix for log data collection and patch Felix with AKS specific parameters
 
-   ```bash
-   kubectl patch installation default --type=merge -p '{"spec": {"kubernetesProvider": "AKS"}}'
-
-   kubectl patch installation default --type=merge -p '{"spec": {"flexVolumePath": "/etc/kubernetes/volumeplugins/"}}'
-   ```
-
-2. Create the Envoy configmap with `envoy-config.yaml` in l7-visibility folder
+    >Enable the Policy Sync API in Felix - we configure this cluster-wide
 
     ```bash
-    
-    #Create the Envoy config in calico-system namespace.
-    kubectl create configmap envoy-config -n calico-system --from-file=demo/70-l7-visibility/envoy-config.yaml
-
-    ```
-    
-3. Configure Felix for log data collection.
-    
-    ```bash
-    
     kubectl patch felixconfiguration default --type='merge' -p '{"spec":{"policySyncPathPrefix":"/var/run/nodeagent"}}'
     ```
 
+    ```bash
+    kubectl patch installation default --type=merge -p '{"spec": {"kubernetesProvider": "AKS"}}'
+    kubectl patch installation default --type=merge -p '{"spec": {"flexVolumePath": "/etc/kubernetes/volumeplugins/"}}'
+    ```
 
-4. Apply l7-collector-daemonset.yaml and ensure that l7-collector and envoy-proxy containers are in `Running` state. 
-   >You can also edit the `LOG_LEVEL` with different options: Trace, Debug, Info, Warning, Error, Fatal and Panic. Enable L7 log collection daemonset mode in Felix by setting Felix configuration variable tproxyMode to Enabled or by setting felix environment variable FELIX_TPROXYMODE to Enabled.
 
-   ```bash
+2.  Prepare scripts for deploying L7 Log Collector DaemonSet
 
-   kubectl patch felixconfiguration default --type='merge' -p '{"spec":{"tproxyMode":"Enabled"}}'
+    ```bash
+    DOCS_LOCATION=${DOCS_LOCATION:="https://docs.tigera.io"}
 
-   kubectl apply -f demo/70-l7-visibility/l7-collector-daemonset.yaml
+    #Download manifest file for L7 log collector daemonset
+    curl ${DOCS_LOCATION}/manifests/l7/daemonset/l7-collector-daemonset.yaml -O
 
-   ```
+    #Download and install Envoy Config
+    curl ${DOCS_LOCATION}/manifests/l7/daemonset/envoy-config.yaml -O
+    ```
+3.  Create the Envoy config in `calico-system` namespace
+    ```bash
+    kubectl create configmap envoy-config -n calico-system --from-file=envoy-config.yaml
+    ```
 
-5. Select traffic for L7 log collection
+4.  Enable L7 log collection daemonset mode in Felix
+    ```bash
+    kubectl patch felixconfiguration default --type='merge' -p '{"spec":{"tproxyMode":"Enabled"}}'
+    ```
+
+5.  Apply l7-collector-daemonset.yaml and ensure that l7-collector and envoy-proxy containers are in `Running` state. 
+    >You can also edit the `LOG_LEVEL` with different options: Trace, Debug, Info, Warning, Error, Fatal and Panic. Enable L7 log collection daemonset mode in Felix by setting Felix configuration variable tproxyMode to Enabled or by setting felix environment variable FELIX_TPROXYMODE to Enabled.
+
+    ```bash
+    kubectl apply -f l7-collector-daemonset.yaml
+    ```
+
+    >If successfully deployed an `l7-log-collector` pod will be deployed on each node. To verify:
+    ```bash
+    kubectl get pod -n calico-system
+    ```
+    >Output will look similar to:
+    ```
+    NAME                                       READY   STATUS    RESTARTS   AGE
+    calico-kube-controllers-6b4dccd6c5-579s8   1/1     Running   0          120m
+    calico-node-b26qh                          1/1     Running   0          120m
+    calico-node-pl646                          1/1     Running   0          2m2s
+    calico-node-rmx2q                          1/1     Running   0          120m
+    calico-typha-6f7f966d4-28n9j               1/1     Running   0          122m
+    calico-typha-6f7f966d4-8nx5f               1/1     Running   0          2m1s
+    calico-typha-6f7f966d4-g7b69               1/1     Running   0          122m
+    l7-log-collector-627qf                     2/2     Running   0          91s
+    l7-log-collector-6b6cx                     2/2     Running   0          3m52s
+    l7-log-collector-jxzjq                     2/2     Running   0          15m
+    ```
+
+
+6. Select traffic for L7 log collection
 
    ```bash
    #Annotate the services you wish to collect L7 logs as shown. Use hipstershop service as example
@@ -62,7 +87,8 @@
    kubectl annotate svc shippingservice projectcalico.org/l7-logging=true
    ```
    
-5. *[Optional]* restart the pods of `hipstershop` if you want to see l7 logs right away.    
+7. *[Optional]* restart the pods of `hipstershop` if you want to see l7 logs right away.    
+    >L7 flow logs will require a few minutes to generate, you can also restart pods which will lead l7 logs pop up quicker.  
 
     ```bash
     kubectl delete pods --all 
@@ -74,6 +100,4 @@
    
 
 [Next -> Module 10](../calicocloud/host-end-point.md)
-
-[Menu](../README.md)
 
