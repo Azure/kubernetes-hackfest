@@ -134,22 +134,18 @@
     > Note that in order to control access to the NodePort service, you need to enable `preDNAT` and `applyOnForward` policy settings.
 
 
-### *[Bonus]* Leverage networkset to control ingress traffic for your k8s node. 
+9. *[Optional]* Test another node in your node group. 
 
-   - Create a networkset with your VM_IP cidr from UI. 
+   > Once you label another node with `host-end-point=test`, you should not be able to access the frontend service i.e the node port `30080` from your VM shell
+   ```bash
+   kubectl label nodes $NODE_NAME2 host-end-point=test
+   ```
 
-   ![networkset hep](../img/networkset-hep.png)
+   ```bash
+   #test from your VM
+   nc -zv $NODE_IP2 30080 
+   ```
    
-   - Update your host endpoints policy with networkset label as source. 
-
-   ![hep policy](../img/hep-policy-networkset.png)
-
-   - You should be able to see the flow logs when you netshoot again from your VM. 
-
-   ![networkset hep flowlog.](../img/networkset-hep-flowlog.png)
-
-
-
 
 *Congratulations on completing this workshop!*
 Follow the [clean up](../calicocloud/workshop-cleanup.md) instruction if required.
