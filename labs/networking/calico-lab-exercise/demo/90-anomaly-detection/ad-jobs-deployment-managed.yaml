@@ -75,7 +75,7 @@ spec:
       - name: tigera-pull-secret
       containers:
       - name: ad-jobs
-        image: quay.io/tigera/anomaly_detection_jobs:v3.9.0
+        image: quay.io/tigera/anomaly_detection_jobs:v3.10.0
         resources:
           requests:
             memory: 1G

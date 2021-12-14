@@ -13,10 +13,10 @@
     
     ```bash
     az feature register --namespace "Microsoft.ContainerService" --name "EnableAKSWindowsCalico"
-
     ```
+
     Output will be like this:
-    ```bash
+    ```text
     {
       "id": "/subscriptions/03cfb895-358d-4ad4-8aba-aeede8dbfc30/providers/Microsoft.Features/providers/Microsoft.ContainerService/features/EnableAKSWindowsCalico",
       "name": "Microsoft.ContainerService/EnableAKSWindowsCalico",
@@ -68,10 +68,10 @@
    ```bash
    ### The output is like:
    NAME                                STATUS   ROLES   AGE     VERSION
-   aks-nodepool1-21504145-vmss000000   Ready    agent   100m    v1.20.7
-   aks-nodepool1-21504145-vmss000001   Ready    agent   101m    v1.20.7
-   aks-nodepool1-21504145-vmss000002   Ready    agent   101m    v1.20.7
-   aksnpwin000000                      Ready    agent   8m35s   v1.20.7
+   aks-nodepool1-40984214-vmss000000   Ready    agent   48m     v1.21.1
+   aks-nodepool1-40984214-vmss000001   Ready    agent   48m     v1.21.1
+   aks-nodepool1-40984214-vmss000002   Ready    agent   47m     v1.21.1
+   aksnpwin000000                      Ready    agent   3m16s   v1.21.1
    ```
 
 4. Create demo pods in Linux and Windows nodes. Expected Outcome:
@@ -79,12 +79,15 @@
    - Create a client pod (powershell) and a server (porter) pod on the Windows nodes
 
     ```bash
-   
     kubectl apply -f demo/win-demo/
-
-    # Windows images are large and can take some time to start
-    # Run a watch and wait for the pods to be in running state
+    ```
     
+    ```bash
+    # Windows images are large and can take some time to start, run a watch and wait for the pods to be in running state
+    kubectl get pods -n calico-demo -w
+    ```
+
+    ```bash
     ### The output is like when ready:
     NAME      READY   STATUS    RESTARTS   AGE
     busybox   1/1     Running   0          5m30s
@@ -96,9 +99,6 @@
 5. Check the connectivities between pods. Expected Outcome:  
    - The traffic between `busybox` in Linux node and `porter` in Windows node is allowed. 
    - The traffic between `powershell` in Windows node and `nginx` in Linux node is allowed. 
-
-
-   
 
    ```bash
    kubectl exec -n calico-demo busybox -- nc -vz $(kubectl get po porter -n calico-demo -o 'jsonpath={.status.podIP}') 80
@@ -112,7 +112,7 @@
    The output will be like:
    ```bash
    ##nc command output
-   192.168.40.166 (192.168.40.166:80) open
+   10.240.0.115 (10.240.0.115:80) open
 
    ##powershell command output
    StatusCode        : 200
@@ -122,8 +122,8 @@
 
 6. Create policy to explicitly allow the `busybox` pod in Linux node to reach the `porter` pod in Windows node, and deny the `powershell` pod in Windows node to reach the `nginx` pod in Linux node
    ```bash
-   cactl apply -f demo/20-egress-access-controls/allow-busybox.yaml
-   cactl apply -f demo/20-egress-access-controls/deny-nginx.yaml
+   calicoctl --allow-version-mismatch apply -f demo/20-egress-access-controls/allow-busybox.yaml
+   calicoctl --allow-version-mismatch apply -f demo/20-egress-access-controls/deny-nginx.yaml
    
    ```
 
@@ -142,7 +142,7 @@
    The output will be like:
    ```bash
    ##nc command output
-   192.168.40.166 (192.168.40.166:80) open
+   10.240.0.115 (10.240.0.115:80) open
  
    ##powershell command output 
    Invoke-WebRequest : The operation has timed out.

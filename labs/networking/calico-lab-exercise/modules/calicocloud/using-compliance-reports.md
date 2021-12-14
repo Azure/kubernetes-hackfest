@@ -8,11 +8,17 @@
 
     >We have deployed a few compliance reports in one of the first labs and by this time a few reports should have been already generated. 
     ```bash
-    kubectl get globalreport                                                          
-    NAME                     CREATED AT
-    cluster-inventory        2021-06-10T03:24:07Z
-    cluster-network-access   2021-06-10T03:24:07Z
-    daily-cis-results        2021-06-10T03:24:05Z
+    kubectl get globalreport        
+    ```
+
+    ```text                                                   
+    NAME                          CREATED AT
+    boutiqueshop-inventory        2021-11-08T23:19:42Z
+    boutiqueshop-network-access   2021-11-08T23:19:42Z
+    boutiqueshop-policy-audit     2021-11-08T23:19:42Z
+    cluster-inventory             2021-11-08T23:18:52Z
+    cluster-network-access        2021-11-08T23:18:52Z
+    daily-cis-results             2021-11-08T23:18:51Z
     ```
 
 
@@ -33,5 +39,4 @@
 2. Reports are generated 15 minutes after the end of the report as [documented](https://docs.tigera.io/v3.8/compliance/overview#change-the-default-report-generation-time). As the compliance reports deployed in the [manifests](https://github.com/tigera-solutions/calicocloud-aks-workshop/tree/main/demo/40-compliance-reports) are scheduled to run every 15 minutes the generation of reports will take between 30-60 mins depending when the manifests were deloyed.
 <br>
 
-*Congratulations on completing this workshop!*
-Follow the [clean up](../calicocloud/workshop-cleanup.md) instruction if required.
+[Next -> Module 9](../calicocloud/enable-l7-visibility.md)

@@ -49,15 +49,15 @@
     # deploy dev policies
     kubectl apply -f demo/dev/policies.yaml
 
-    # deploy boutiqueshop policies
-    cactl apply -f demo/boutiqueshop/policies.yaml
+    # deploy boutiqueshop policies, you will need use --allow-version-mismatch to override if client/cluster version mismatch.
+    calicoctl --allow-version-mismatch apply -f demo/boutiqueshop/policies.yaml
     ```
     
     Now as we have proper policies in place, we can deploy `default-deny` as global network policy moving closer to zero-trust security approach. 
 
     ```bash
     # apply enforcing default-deny policy manifest
-    cactl apply -f demo/10-security-controls/default-deny.yaml
+    calicoctl --allow-version-mismatch apply -f demo/10-security-controls/default-deny.yaml
     ```
     Note: The `default-deny` policy includes global egress policy which allow all namespaces to communicate to kube-dns pods.
 
@@ -108,7 +108,7 @@
     a. Deploy egress policy.
 
     ```bash
-    cactl create -f demo/20-egress-access-controls/default-centos-to-frontend.yaml
+    calicoctl --allow-version-mismatch create -f demo/20-egress-access-controls/default-centos-to-frontend.yaml
     ```
 
     b. Test connectivity between `dev/centos` pod and `default/frontend` service. The access should be allowed once the egress policy is in place.

@@ -26,11 +26,9 @@
     
     ```bash
     #confirm the pod/deployments are running. Note the loadgenerator pod waits for the frontend pod to respond to http calls before coming up and can take a few minutes. Eventually, the status of the pods in the default namespace will look as follows: 
-    
     kubectl get pods
     sleep 10
     kubectl get pods -n dev
-    
     ```
 
     Output will be similar as below:

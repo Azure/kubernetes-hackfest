@@ -20,8 +20,9 @@
     # deploy dev app stack
     kubectl apply -f demo/dev/app.manifests.yaml
 
-    # deploy boutiqueshop app stack
+    # deploy boutiqueshop app stack.
     kubectl apply -f demo/boutiqueshop/boutique-app.manifests.yaml
+
     ```
     
     ```bash
@@ -86,10 +87,15 @@
     kubectl apply -f demo/10-security-controls/allow-kube-dns.yaml
     ```
     
-    This will add `default-deny` policy to your `default` tier. 
+
+    This will add network policy to control the connection between different micro service of boutique app and `default-deny` policy to your `default` tier. 
     ```bash
+    kubectl apply -f demo/boutiqueshop/policies.yaml
     kubectl apply -f demo/10-security-controls/default-deny.yaml
     ```
+
+    
+
 
 5. Deploy compliance reports.
 
@@ -103,9 +109,9 @@
     >The alerts will be explored in a later lab. Ignore any warning messages - these do not affect the deployment of resources.
 
     ```bash
-    kubectl create -f demo/50-alerts/globalnetworkset.changed.yaml
-    kubectl create -f demo/50-alerts/unsanctioned.dns.access.yaml
-    kubectl create -f demo/50-alerts/unsanctioned.lateral.access.yaml
+    kubectl apply -f demo/50-alerts/globalnetworkset.changed.yaml
+    kubectl apply -f demo/50-alerts/unsanctioned.dns.access.yaml
+    kubectl apply -f demo/50-alerts/unsanctioned.lateral.access.yaml
     ```
 
 
