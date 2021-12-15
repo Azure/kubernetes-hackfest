@@ -33,7 +33,7 @@
     ```bash
     # test egress access to www.bing.com, it will be deny with "exit code 1".
     kubectl -n dev exec -t centos -- sh -c 'curl -m3 -skI https://www.bing.com 2>/dev/null | grep -i http'
-    # test egress access to www.microsoft.com.com, it will be allowed with "HTTP/1.1 200".
+    # test egress access to www.microsoft.com, it will be allowed with "HTTP/1.1 200".
     kubectl -n dev exec -t centos -- sh -c 'curl -m3 -skI https://www.microsoft.com 2>/dev/null | grep -i http'
 
     ```
