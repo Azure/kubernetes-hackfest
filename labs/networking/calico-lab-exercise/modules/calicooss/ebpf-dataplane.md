@@ -69,7 +69,7 @@
     kubectl logs -n yaobank $CUSTOMER_POD
     ```
  
-    > Output should be similar as below, the node private IP will show up as source IP.
+    > Output should be similar as below, the node private IP will show up as source IP. You see the node IP because the traffic is passed through kube-proxy rules, which will NAT the traffic to the node IP.
     ```text
     10.240.0.35 - - [08/Nov/2021 21:49:42] "GET / HTTP/1.1" 200 -
     10.240.0.4 - - [08/Nov/2021 21:51:25] "GET / HTTP/1.1" 200 -
@@ -149,7 +149,7 @@
    kubectl delete pods -n yaobank --all
    ```
 
-8. Curl the `yaobank-customer` service again and confirm the public IP address of cloudshell or your local shell show up as source IP in pod logs.
+8. Curl the `yaobank-customer` service again and confirm the public IP address of cloudshell or your local shell show up as source IP in pod logs, rather than the node IP which we saw via kube-proxy. 
 
    ```bash
    SVC_HOST=$(kubectl -n yaobank get svc yaobank-customer -ojsonpath='{.status.loadBalancer.ingress[0].ip}')
