@@ -39,20 +39,20 @@
 
    b. Deploy LB for Frontend Customer Pod.
    ```bash
-   kubectl apply -f - << EOF
+   cat <<EOF|kubectl apply -f -
    apiVersion: v1
    kind: Service
    metadata:
      name: yaobank-customer
-     namespace: yaobank  
+     namespace: yaobank
    spec:
-     selector:
-       app: customer
-     ports:
-       - port: 80
-         targetPort: 80
-     type: LoadBalancer
-   EOF 
+      selector:
+        app: customer
+      ports:
+      - port: 80
+        targetPort: 80
+      type: LoadBalancer
+   EOF
    ```
 
    c. Check the source IP when curl customer svc 
