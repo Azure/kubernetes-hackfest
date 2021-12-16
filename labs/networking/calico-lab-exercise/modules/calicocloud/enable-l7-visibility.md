@@ -27,10 +27,10 @@
     DOCS_LOCATION=${DOCS_LOCATION:="https://docs.tigera.io"}
 
     #Download manifest file for L7 log collector daemonset
-    curl ${DOCS_LOCATION}/manifests/l7/daemonset/l7-collector-daemonset.yaml -O
+    curl ${DOCS_LOCATION}/v3.10/manifests/l7/daemonset/l7-collector-daemonset.yaml -O
 
     #Download and install Envoy Config
-    curl ${DOCS_LOCATION}/manifests/l7/daemonset/envoy-config.yaml -O
+    curl ${DOCS_LOCATION}/v3.10/manifests/l7/daemonset/envoy-config.yaml -O
     ```
 3.  Create the Envoy config in `calico-system` namespace
     ```bash
