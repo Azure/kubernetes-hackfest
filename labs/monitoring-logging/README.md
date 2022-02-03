@@ -13,7 +13,8 @@ This section contains a number of labs related to Monitoring and Logging AKS Clu
 
 1. [Azure Monitor and App Insights](azure-monitor/README.md)
 2. [Prometheus and Grafana](prometheus-grafana/README.md)
-3. Custom. Easy to bring your own monitoring/logging tool in this lab
+3. [Kubecost - Kubernetes Cost Insights](kubecost/README.md)
+4. Custom. Easy to bring your own monitoring/logging tool in this lab
     * New Relic
     * Influx DB
     * Datadog

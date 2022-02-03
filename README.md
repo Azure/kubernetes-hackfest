@@ -31,6 +31,7 @@ The following are the basic requirements to **start** the labs. Individual labs 
 * [Best Practices for Cluster Operators](labs/best-practices/operators/README.md)
 * [Best Practices for App Developers](labs/best-practices/appdev/README.md)
 * [Calico lab exercise](labs/networking/calico-lab-exercise/README.md)
+* [Kubecost - Kubernetes Cost Insights](labs/monitoring-logging/kubecost/README.md)
 
 #### Coming soon:
 * [Storage](labs/storage/README.md)
