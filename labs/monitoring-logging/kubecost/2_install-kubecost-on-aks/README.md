@@ -14,25 +14,36 @@ These instructions are also available in [kubecost.com/install](https://kubecost
 
 1. Open the terminal, and create a `kubecost` namespace in your cluster.
 
-    ```
+    ```shell
     $ kubectl create namespace kubecost 
     ```
 
 2. Add the official Kubecost helm repository.
 
-    ```
+    ```shell
     $ helm repo add kubecost https://kubecost.github.io/cost-analyzer/ 
     ```
 
 3. Run the install command. A standard Kubecost installation will also install the Prometheus and Grafana dependencies within the `kubecost` namespace.
 
+    If you created the Azure Cost Export as directed in [Module 0](labs/monitoring-logging/kubecost/0_create-azure-cost-export), follow `A. With Azure Cost Export`, otherwise, follow `B. Without Azure Cost Export`
+  
+    **A. With Azure Cost Export**
+
+    Replace `{storage-account-name}`, `{storage-container-name}`, and `{storage-access-key}` with the appropriate values
+
+    ```shell
+    $ helm install kubecost kubecost/cost-analyzer --namespace kubecost --set kubecostProductConfigs.azureStorageAccount={storage-account-name} --set kubecostProductConfigs.azureStorageAccessKey={storage-access-key} --set kubecostProductConfigs.azureStorageContainer={storage-container-name} --set kubecostProductConfigs.azureStorageCreateSecret=true
     ```
+
+    **B. Without Azure Cost Export**
+    ```shell
     $ helm install kubecost kubecost/cost-analyzer --namespace kubecost
     ```
 
-    This step will take upto a couple of minutes to complete. Once it's done, verify that all the containers have been created and are running without issues:
+    This step will take a couple of minutes to complete. Once it's done, verify that all the containers have been created and are running without issues:
 
-    ```
+    ```shell
     $ kubectl get pods -n kubecost
     ```
 
@@ -42,7 +53,7 @@ You can expose the Kubecost UI dashboards locally using Port Forwarding.
 
 1. Run the `port-forward` command.
 
-    ```
+    ```shell
     $ kubectl port-forward --namespace kubecost deployment/kubecost-cost-analyzer 9090
     ```
 
@@ -60,7 +71,7 @@ One of the available options to open your Kubecost deployment to the world is by
 
 1. Create a file called `kubecost-cost-analyzer.yml` with the following contents. This file is also available within this section's files.
 
-    ```
+    ```yaml
     apiVersion: v1
     kind: Service
     metadata:
@@ -76,13 +87,13 @@ One of the available options to open your Kubecost deployment to the world is by
 
 2. Apply to cluster.
 
-    ```
+    ```shell
     $ kubectl apply -f kubecost-cost-analyzer.yml -n kubecost
     ```
 
 3. Verify that the `public-svc` service has been created as a Load Balancer, exposing port 9090.
 
-```
+```shell
 NAME                                TYPE           CLUSTER-IP     EXTERNAL-IP     PORT(S)                      AGE
 kubecost-cost-analyzer              ClusterIP      10.0.208.169   <none>          9001/TCP,9003/TCP,9090/TCP   1h
 kubecost-grafana                    ClusterIP      10.0.181.47    <none>          80/TCP                       1h
