@@ -10,7 +10,7 @@ CLI version of these docs is also available from a [previous lab](https://github
 
 - You have signed into the [Azure Portal](https://portal.azure.com/)
 - You have the access permissions required to create and manage K8s clusters in your organization
-- [You have set up cost data](0_create-azure-cost-export/README.md)
+- [You have set up cost data](../0_create-azure-cost-export/README.md)
 - You have installed [Azure CLI](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli?view=azure-cli-latest)
 - You have installed [kubectl](https://kubernetes.io/docs/tasks/tools/)
 
