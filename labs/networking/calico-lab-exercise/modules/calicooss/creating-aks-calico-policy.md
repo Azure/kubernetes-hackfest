@@ -160,14 +160,14 @@ Follow the prequisite steps if you need to verify your Azure subscription.
 	kubectl cluster-info
 	```
 	
-7.  Install `calicoctl` CLI for use in later labs. The following guide is based upon the doc from [Install Calicoctl](https://docs.projectcalico.org/getting-started/clis/calicoctl/install) 
+7.  Install `calicoctl` CLI for use in later labs. The following guide is based upon the doc from [Install Calicoctl](https://projectcalico.docs.tigera.io/maintenance/clis/calicoctl/install) 
 
-    a) CloudShell
+    a) Cloud shell(Linux amd64)
  
     ```bash    
     # download and configure calicoctl
-    curl -o calicoctl -O -L  "https://github.com/projectcalico/calicoctl/releases/download/v3.21.0/calicoctl" 
-    chmod +x calicoctl
+    curl -L https://github.com/projectcalico/calico/releases/download/v3.22.0/calicoctl-linux-amd64 -o calicoctl
+    chmod +x ./calicoctl
     
     # verify calicoctl is running 
     ./calicoctl version
@@ -176,7 +176,7 @@ Follow the prequisite steps if you need to verify your Azure subscription.
 
     Output is:
     ```bash
-    Client Version:    v3.21.0
+    Client Version:    v3.22.0
     Git commit:        e9535482
     Cluster Version:   v3.20.0-dirty
     Cluster Type:      typha,kdd,k8s,operator,aks
@@ -187,12 +187,12 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     alias calicoctl=$(pwd)/calicoctl
     ```
 
-    b) Linux
+    b) Linux arm64
 
     >Tip: Consider navigating to a location that’s in your PATH. For example, /usr/local/bin/
     ```bash    
     # download and configure calicoctl
-    curl -o calicoctl -O -L  "https://github.com/projectcalico/calicoctl/releases/download/v3.21.0/calicoctl" 
+    curl -L https://github.com/projectcalico/calico/releases/download/v3.22.0/calicoctl-linux-arm64 -o calicoctl
 
     chmod +x calicoctl
     
@@ -205,7 +205,8 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     >Tip: Consider navigating to a location that’s in your PATH. For example, /usr/local/bin/
     ```bash    
     # download and configure calicoctl
-    curl -o calicoctl -O -L  "https://github.com/projectcalico/calicoctl/releases/download/v3.21.0/calicoctl-darwin-amd64" 
+    curl -L https://github.com/projectcalico/calico/releases/download/v3.22.0/calicoctl-darwin-amd64 -o calicoctl
+
     chmod +x calicoctl
     
     # verify calicoctl is running 
@@ -218,7 +219,7 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     >Tip: Consider runing powershell as administraor and navigating to a location that’s in your PATH. For example, C:\Windows.
     
     ```pwsh
-    Invoke-WebRequest -Uri "https://github.com/projectcalico/calicoctl/releases/download/v3.21.0/calicoctl-windows-amd64.exe" -OutFile "calicocttl.exe" 
+    Invoke-WebRequest -Uri "https://github.com/projectcalico/calico/releases/download/v3.22.0/calicoctl-windows-amd64.exe -OutFile "calicoctl.exe" 
     ```
     
     
