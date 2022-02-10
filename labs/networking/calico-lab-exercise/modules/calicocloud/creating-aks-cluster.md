@@ -86,24 +86,24 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     ```
     
     Output is:
-    ```bash
+   ```bash
     KubernetesVersion    Upgrades
     -------------------  ------------------------
-    1.22.2(preview)      None available
-    1.22.1(preview)      1.22.2(preview)
-    1.21.2               1.22.1(preview), 1.22.2(preview)
-    1.21.1               1.21.2, 1.22.1(preview), 1.22.2(preview)
-    1.20.9               1.21.1, 1.21.2
-    1.20.7               1.20.9, 1.21.1, 1.21.2
-    1.19.13              1.20.7, 1.20.9
-    1.19.11              1.19.13, 1.20.7, 1.20.9
+    1.22.4               None available
+    1.22.2               1.22.4
+    1.21.7               1.22.2, 1.22.4
+    1.21.2               1.21.7, 1.22.2, 1.22.4
+    1.20.13              1.21.2, 1.21.7
+    1.20.9               1.20.13, 1.21.2, 1.21.7
+    1.19.13              1.20.9, 1.20.13
+    1.19.11              1.19.13, 1.20.9, 1.20.13
     ```
     
-    For this lab we'll use 1.21.1
-    
+    For this lab we'll use 1.22.4
+
     ```bash
-    K8SVERSION=1.21.1
-    echo export K8SVERSION=1.21.1 >> ~/.bashrc
+    K8SVERSION=1.22.4
+    echo export K8SVERSION=1.22.4 >> ~/.bashrc
     ```
     
     > The below command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT and grab a coffee/tea/kombucha...
@@ -115,8 +115,8 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     --enable-managed-identity \
     --node-count 3 \
     --network-plugin azure \
-    --no-wait
-    
+    --no-wait \
+    --generate-ssh-keys
     ```
     
 4.  Verify your cluster status. The `ProvisioningState` should be `Succeeded`
@@ -128,7 +128,7 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     ```bash
     Name           Location    ResourceGroup      KubernetesVersion    ProvisioningState    Fqdn
     -------------  ----------  -----------------  -------------------  -------------------  -----------------------------------------------------------------
-    aksjessie2081  eastus      aks-rg-jessie2081  1.21.1               Succeeded             aksjessie2-aks-rg-jessie208-03cfb8-9713ae4f.hcp.eastus.azmk8s.io
+    aksjessie2081  eastus      aks-rg-jessie2081  1.22.4               Succeeded             aksjessie2-aks-rg-jessie208-03cfb8-9713ae4f.hcp.eastus.azmk8s.io
     
     ```
     
@@ -148,9 +148,9 @@ Follow the prequisite steps if you need to verify your Azure subscription.
 	```
 	```
 	NAME                                STATUS   ROLES   AGE    VERSION
-	aks-nodepool1-29374799-vmss000000   Ready    agent   118s   v1.21.1
-	aks-nodepool1-29374799-vmss000001   Ready    agent   2m3s   v1.21.1
-	aks-nodepool1-29374799-vmss000002   Ready    agent   2m     v1.21.1
+	aks-nodepool1-29374799-vmss000000   Ready    agent   118s   v1.22.4
+	aks-nodepool1-29374799-vmss000001   Ready    agent   2m3s   v1.22.4
+	aks-nodepool1-29374799-vmss000002   Ready    agent   2m     v1.22.4
 	```
 
 	To see more details about your cluster:
@@ -161,9 +161,10 @@ Follow the prequisite steps if you need to verify your Azure subscription.
 7. *[Optional]*  Install `calicoctl` CLI for use in later labs
 
     a) CloudShell
-    ```bash    
+
+    ```bash
     # download and configure calicoctl
-    curl -o calicoctl -O -L https://downloads.tigera.io/ee/binaries/v3.10.0/calicoctl
+    curl -o calicoctl -O -L https://downloads.tigera.io/ee/binaries/v3.11.2/calicoctl
 
     chmod +x calicoctl
     
@@ -171,12 +172,12 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     ./calicoctl version
     ```
 
-    
     b) Linux
     >Tip: Consider navigating to a location that’s in your PATH. For example, /usr/local/bin/
-    ```bash    
+
+    ```bash
     # download and configure calicoctl
-    curl -o calicoctl -O -L https://downloads.tigera.io/ee/binaries/v3.10.0/calicoctl
+    curl -o calicoctl -O -L https://downloads.tigera.io/ee/binaries/v3.11.2/calicoctl
     chmod +x calicoctl
     
     # verify calicoctl is running 
@@ -185,27 +186,26 @@ Follow the prequisite steps if you need to verify your Azure subscription.
 
     c) MacOS
     >Tip: Consider navigating to a location that’s in your PATH. For example, /usr/local/bin/
-    ```bash    
+
+    ```bash
     # download and configure calicoctl
-    curl -o calicoctl -O -L  https://downloads.tigera.io/ee/binaries/v3.10.0/calicoctl-darwin-amd64
+    curl -o calicoctl -O -L  https://downloads.tigera.io/ee/binaries/v3.11.2/calicoctl-darwin-amd64
 
     chmod +x calicoctl
     
     # verify calicoctl is running 
     calicoctl version
     ```
+
     Note: If you are faced with `cannot be opened because the developer cannot be verified` error when using `calicoctl` for the first time. go to `Applicaitons` \> `System Prefences` \> `Security & Privacy` in the `General` tab at the bottom of the window click `Allow anyway`.  
     Note: If the location of calicoctl is not already in your PATH, move the file to one that is or add its location to your PATH. This will allow you to invoke it without having to prepend its location.
 
     d) Windows - using powershell command to download the calicoctl binary  
     >Tip: Consider runing powershell as administraor and navigating to a location that’s in your PATH. For example, C:\Windows.
-    
-    ```pwsh
-    Invoke-WebRequest -Uri "https://downloads.tigera.io/ee/binaries/v3.9.0/calicoctl-windows-amd64.exe" -OutFile "kubectl-calico.exe"
-    ```
-    
-   
 
+    ```pwsh
+    Invoke-WebRequest -Uri "https://downloads.tigera.io/ee/binaries/v3.11.2/calicoctl-windows-amd64.exe" -OutFile "kubectl-calico.exe"
+    ```
 
 
 --- 
