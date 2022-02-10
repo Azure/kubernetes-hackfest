@@ -24,9 +24,9 @@
    ```text
    ### The output is like:
    NAME                                STATUS   ROLES   AGE     VERSION
-   aks-nodepool1-40984214-vmss000000   Ready    agent   74m     v1.21.1
-   aks-nodepool1-40984214-vmss000001   Ready    agent   74m     v1.21.1
-   aks-nodepool1-40984214-vmss000002   Ready    agent   73m     v1.21.1
+   aks-nodepool1-40984214-vmss000000   Ready    agent   74m     v1.22.4
+   aks-nodepool1-40984214-vmss000001   Ready    agent   74m     v1.22.4
+   aks-nodepool1-40984214-vmss000002   Ready    agent   73m     v1.22.4
    ```
 
 
@@ -152,7 +152,6 @@
 8. Curl the `yaobank-customer` service again and confirm the public IP address of cloudshell or your local shell show up as source IP in pod logs, rather than the node IP which we saw via kube-proxy. 
 
    ```bash
-   SVC_HOST=$(kubectl -n yaobank get svc yaobank-customer -ojsonpath='{.status.loadBalancer.ingress[0].ip}')
    #Curl the svc ip from your cloud shell/local shell or open in your browser to generate logs.
    curl $SVC_HOST
    ```
