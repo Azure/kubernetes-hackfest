@@ -88,20 +88,20 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     ```bash
     KubernetesVersion    Upgrades
     -------------------  ------------------------
-    1.21.2               None available
-    1.21.1               1.21.2
-    1.20.7               1.21.1, 1.21.2
-    1.20.5               1.20.7, 1.21.1, 1.21.2
-    1.19.11              1.20.5, 1.20.7
-    1.19.9               1.19.11, 1.20.5, 1.20.7
-    1.18.19              1.19.9, 1.19.11
-    1.18.17              1.18.19, 1.19.9, 1.19.11
+    1.22.4               None available
+    1.22.2               1.22.4
+    1.21.7               1.22.2, 1.22.4
+    1.21.2               1.21.7, 1.22.2, 1.22.4
+    1.20.13              1.21.2, 1.21.7
+    1.20.9               1.20.13, 1.21.2, 1.21.7
+    1.19.13              1.20.9, 1.20.13
+    1.19.11              1.19.13, 1.20.9, 1.20.13
     ```
     
-    For this lab we'll use 1.21.1
+    For this lab we'll use 1.22.4
     
     ```bash
-    K8SVERSION=1.21.1
+    K8SVERSION=1.22.4
     echo export K8SVERSION=1.21.1 >> ~/.bashrc
     ```
 
@@ -129,7 +129,7 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     ```bash
     Name           Location    ResourceGroup      KubernetesVersion    ProvisioningState    Fqdn
     -------------  ----------  -----------------  -------------------  -------------------  -----------------------------------------------------------------
-    aksjessie2081  eastus      aks-rg-jessie2081  1.21.1               Succeeded             aksjessie2-aks-rg-jessie208-03cfb8-9713ae4f.hcp.eastus.azmk8s.io
+    aksjessie2081  eastus      aks-rg-jessie2081  1.22.4               Succeeded             aksjessie2-aks-rg-jessie208-03cfb8-9713ae4f.hcp.eastus.azmk8s.io
     
     ```
     
@@ -150,9 +150,9 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     Output is:
 	```bash
 	NAME                                STATUS   ROLES   AGE    VERSION
-	aks-nodepool1-29374799-vmss000000   Ready    agent   118s   v1.21.1
-	aks-nodepool1-29374799-vmss000001   Ready    agent   2m3s   v1.21.1
-	aks-nodepool1-29374799-vmss000002   Ready    agent   2m     v1.21.1
+	aks-nodepool1-29374799-vmss000000   Ready    agent   118s   v1.22.4
+	aks-nodepool1-29374799-vmss000001   Ready    agent   2m3s   v1.22.4
+	aks-nodepool1-29374799-vmss000002   Ready    agent   2m     v1.22.4
 	```
 
 	To see more details about your cluster:
@@ -160,7 +160,7 @@ Follow the prequisite steps if you need to verify your Azure subscription.
 	kubectl cluster-info
 	```
 	
-7.  Install `calicoctl` CLI for use in later labs. The following guide is based upon the doc from [InstallCalicoctl](https://docs.projectcalico.org/getting-started/clis/calicoctl/install) 
+7.  Install `calicoctl` CLI for use in later labs. The following guide is based upon the doc from [Install Calicoctl](https://docs.projectcalico.org/getting-started/clis/calicoctl/install) 
 
     a) CloudShell
  
