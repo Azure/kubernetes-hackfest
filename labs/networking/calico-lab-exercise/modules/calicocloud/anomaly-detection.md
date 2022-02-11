@@ -45,8 +45,16 @@ less ./demo/90-anomaly-detection/ad-jobs-deployment-managed.yaml
 	#   value: "True"
 ```
 
-2. We need to substitute the Cluster Name in the YAML file with the variable `CALICOCLUSTERNAME` we configured in Module 1. This enables the Machine Learning jobs to target the correct indices in Elastic Search
+2. We need to substitute the Cluster Name in the YAML file with the correct cluster name index. We can obtain this value and set as a variable `CALICOCLUSTERNAME`. 
+
 	```bash
+    # obtain ElasticSearch index and set as variable
+    
+    CALICOCLUSTERNAME=$(kubectl get deployment -n tigera-intrusion-detection intrusion-detection-controller -ojson | \
+    jq -r '.spec.template.spec.containers[0].env[] | select(.name == "CLUSTER_NAME").value')
+
+    # Set correct index in manifest This enables the Machine Learning jobs to target the correct indices in Elastic Search
+
 	sed -i "s/\$CALICOCLUSTERNAME/${CALICOCLUSTERNAME}/g" ./demo/90-anomaly-detection/ad-jobs-deployment-managed.yaml
 	```
 	For other variations/shells the following syntax may be required

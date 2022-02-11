@@ -142,7 +142,7 @@ spec:
           - name: AD_DnsLatency_IsolationForest_score_threshold
             value: "-0.886"
           - name: AD_ProcessRestarts_threshold
-            value: "100"
+            value: "5"
           - name: AD_port_scan_threshold
             value: "200"
           - name: AD_ip_sweep_threshold
