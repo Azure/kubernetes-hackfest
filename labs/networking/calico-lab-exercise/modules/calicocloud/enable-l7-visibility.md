@@ -2,7 +2,7 @@
 
 **Goal:** Enable L7/HTTP flow logs in hipstershop with Calico cloud. Calico cloud not only can provide L3 flow logs, but also can provide L7 visibility without service mesh headache. 
 
-**Docs:** https://docs.tigera.io/visibility/elastic/l7/configure)
+Calico Cloud can be enabled for Layer 7 application visibility which captures the HTTP calls applications are making. Application visibility does not require a service mesh but does utilise envoy for capturing logs. Envoy is deployed as part of an L7 Log Collector DaemonSet per Kubernetes node - this requires less resources than a sidecar per pod. For more info please review the [documentation](https://docs.tigera.io/visibility/elastic/l7/configure).
 
 ## Steps
 
@@ -15,41 +15,24 @@
     kubectl patch felixconfiguration default --type='merge' -p '{"spec":{"policySyncPathPrefix":"/var/run/nodeagent"}}'
     ```
 
-    ```bash
-    kubectl patch installation default --type=merge -p '{"spec": {"kubernetesProvider": "AKS"}}'
-    kubectl patch installation default --type=merge -p '{"spec": {"flexVolumePath": "/etc/kubernetes/volumeplugins/"}}'
-    ```
 
-
-2.  Prepare scripts for deploying L7 Log Collector DaemonSet
+2.  Since Calico Cloud v3.11 L7 visibility is deployed using an `ApplicationLayer` resource. Calico's operator will deploy the envoy and log collector containers as a daemonset. To deploy the ApplicationLayer resource:
 
     ```bash
-    DOCS_LOCATION=${DOCS_LOCATION:="https://docs.tigera.io"}
-
-    #Download manifest file for L7 log collector daemonset
-    curl ${DOCS_LOCATION}/v3.10/manifests/l7/daemonset/l7-collector-daemonset.yaml -O
-
-    #Download and install Envoy Config
-    curl ${DOCS_LOCATION}/v3.10/manifests/l7/daemonset/envoy-config.yaml -O
-    ```
-3.  Create the Envoy config in `calico-system` namespace
-    ```bash
-    kubectl create configmap envoy-config -n calico-system --from-file=envoy-config.yaml
-    ```
-
-4.  Enable L7 log collection daemonset mode in Felix
-    ```bash
-    kubectl patch felixconfiguration default --type='merge' -p '{"spec":{"tproxyMode":"Enabled"}}'
+    kubectl apply -f -<<EOF
+    apiVersion: operator.tigera.io/v1
+    kind: ApplicationLayer
+    metadata:
+      name: tigera-secure
+    spec:
+      logCollection:
+        collectLogs: Enabled
+        logIntervalSeconds: 5
+        logRequestsPerInterval: -1
+    EOF
     ```
 
-5.  Apply l7-collector-daemonset.yaml and ensure that l7-collector and envoy-proxy containers are in `Running` state. 
-    >You can also edit the `LOG_LEVEL` with different options: Trace, Debug, Info, Warning, Error, Fatal and Panic. Enable L7 log collection daemonset mode in Felix by setting Felix configuration variable tproxyMode to Enabled or by setting felix environment variable FELIX_TPROXYMODE to Enabled.
-
-    ```bash
-    kubectl apply -f l7-collector-daemonset.yaml
-    ```
-
-    >If successfully deployed an `l7-log-collector` pod will be deployed on each node. To verify:
+3.  If successfully deployed an `l7-log-collector` pod will be deployed on each node. To verify:
     ```bash
     kubectl get pod -n calico-system
     ```
@@ -68,26 +51,24 @@
     l7-log-collector-jxzjq                     2/2     Running   0          15m
     ```
 
+4.  Annotate the Boutiqueshop Services
 
-6. Select traffic for L7 log collection
-
-   ```bash
-   #Annotate the services you wish to collect L7 logs as shown. Use hipstershop service as example
-   kubectl annotate svc adservice projectcalico.org/l7-logging=true
-   kubectl annotate svc cartservice projectcalico.org/l7-logging=true
-   kubectl annotate svc checkoutservice projectcalico.org/l7-logging=true
-   kubectl annotate svc currencyservice projectcalico.org/l7-logging=true
-   kubectl annotate svc emailservice projectcalico.org/l7-logging=true
-   kubectl annotate svc frontend projectcalico.org/l7-logging=true
-   kubectl annotate svc frontend-external projectcalico.org/l7-logging=true
-   kubectl annotate svc paymentservice projectcalico.org/l7-logging=true
-   kubectl annotate svc productcatalogservice projectcalico.org/l7-logging=true
-   kubectl annotate svc recommendationservice projectcalico.org/l7-logging=true
-   kubectl annotate svc redis-cart projectcalico.org/l7-logging=true
-   kubectl annotate svc shippingservice projectcalico.org/l7-logging=true
-   ```
+    ```bash
+    kubectl annotate svc -n default adservice projectcalico.org/l7-logging=true
+    kubectl annotate svc -n default cartservice projectcalico.org/l7-logging=true
+    kubectl annotate svc -n default checkoutservice projectcalico.org/l7-logging=true
+    kubectl annotate svc -n default currencyservice projectcalico.org/l7-logging=true
+    kubectl annotate svc -n default emailservice projectcalico.org/l7-logging=true
+    kubectl annotate svc -n default frontend projectcalico.org/l7-logging=true
+    kubectl annotate svc -n default paymentservice projectcalico.org/l7-logging=true
+    kubectl annotate svc -n default productcatalogservice projectcalico.org/l7-logging=true
+    kubectl annotate svc -n default recommendationservice projectcalico.org/l7-logging=true
+    kubectl annotate svc -n default redis-cart projectcalico.org/l7-logging=true
+    kubectl annotate svc -n default shippingservice projectcalico.org/l7-logging=true
+    ```
+ 
    
-7. *[Optional]* restart the pods of `hipstershop` if you want to see l7 logs right away.    
+5. *[Optional]* restart the pods of `boutiqueshop` if you want to see l7 logs right away.    
     >L7 flow logs will require a few minutes to generate, you can also restart pods which will lead l7 logs pop up quicker.  
 
     ```bash
