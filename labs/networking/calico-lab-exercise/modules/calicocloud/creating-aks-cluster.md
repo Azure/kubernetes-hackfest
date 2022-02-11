@@ -86,7 +86,7 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     ```
     
     Output is:
-   ```bash
+    ```bash
     KubernetesVersion    Upgrades
     -------------------  ------------------------
     1.22.4               None available
