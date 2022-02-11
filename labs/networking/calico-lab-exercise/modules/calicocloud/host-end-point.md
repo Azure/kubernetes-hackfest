@@ -130,10 +130,13 @@
 
     Test access from vm shell again, the expected result is 30080 Operation timed out
     ```bash
-    nc -zv $NODE_IP1 30080 
+    ssh -i /.ssh/id_rsa azureuser@$VM_IP
 
-    # test access from vm shell to other nodes, the expected result will be 30080 open
-    nc -zv $NODE_IP2 30080 
+    # test access from vm shell to node1 (10.240.0.4), the expected result will be port 30080 (tcp) timed out
+    nc -zv $NODE_IP1 30080 -w 10
+
+    # test access from vm shell to node2 (10.240.0.35), the expected result will be 30080 port [tcp/*] succeeded!
+    nc -zv $NODE_IP2 30080 -w 10
     ```
     > Note that in order to control access to the NodePort service, you need to enable `preDNAT` and `applyOnForward` policy settings.
 
@@ -143,11 +146,12 @@
    > Once you label another node with `host-end-point=test`, you should not be able to access the frontend service i.e the node port `30080` from your VM shell
    ```bash
    kubectl label nodes $NODE_NAME2 host-end-point=test
+   ssh -i /.ssh/id_rsa azureuser@$VM_IP
    ```
 
    ```bash
-   #test from your VM
-   nc -zv $NODE_IP2 30080 
+   #test from your VM again, the expected result will be port 30080 (tcp) timed out
+   nc -zv $NODE_IP2 30080 -w 10
    ```
    
 
