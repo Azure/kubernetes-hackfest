@@ -30,10 +30,10 @@ These instructions are also available in [kubecost.com/install](https://kubecost
   
     **A. With Azure Cost Export**
 
-    Replace `{storage-account-name}`, `{storage-container-name}`, and `{storage-access-key}` with the appropriate values
+    Replace `{subscription-id}`, `{storage-account-name}`, `{storage-container-name}`, and `{storage-access-key}` with the appropriate values
 
     ```shell
-    $ helm install kubecost kubecost/cost-analyzer --namespace kubecost --set kubecostProductConfigs.azureStorageAccount={storage-account-name} --set kubecostProductConfigs.azureStorageAccessKey={storage-access-key} --set kubecostProductConfigs.azureStorageContainer={storage-container-name} --set kubecostProductConfigs.azureStorageCreateSecret=true
+    $ helm install kubecost kubecost/cost-analyzer --namespace kubecost --set kubecostProductConfigs.azureSubscriptionID={subscription-id} --set kubecostProductConfigs.azureStorageAccount={storage-account-name} --set kubecostProductConfigs.azureStorageAccessKey={storage-access-key} --set kubecostProductConfigs.azureStorageContainer={storage-container-name} --set kubecostProductConfigs.azureStorageCreateSecret=true
     ```
 
     **B. Without Azure Cost Export**

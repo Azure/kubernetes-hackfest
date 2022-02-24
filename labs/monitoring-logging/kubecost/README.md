@@ -7,7 +7,7 @@ Installing Kubecost on a single cluster or a fleet of clusters uncovers patterns
 
 Kubecost is tightly integrated with the open source Cloud Native ecosystem and built for engineers and developers first, making it easy to drive adoption within any organization. 
 
-<img src="https://www.kubecost.com/images/fp-landing.svg" alt="kubecost screenshot"/>
+<img src="./fp-landing.svg" alt="kubecost screenshot"/>
 
 ## About the workshop
 
@@ -45,4 +45,4 @@ At the end of completing them, you should be able to:
 
 ## Documentation & Support
 
-Official Kubecost documentation is available (here)[https://guide.kubecost.com]. We'd also like to invite you to [join our Slack community](https://join.slack.com/t/kubecost/shared_invite/enQtNTA2MjQ1NDUyODE5LWFjYzIzNWE4MDkzMmUyZGU4NjkwMzMyMjIyM2E0NGNmYjExZjBiNjk1YzY5ZDI0ZTNhZDg4NjlkMGRkYzFlZTU) — for additional support, feature discussions, and general banter!
+Official Kubecost documentation is available [here](https://guide.kubecost.com). We'd also like to invite you to [join our Slack community](https://join.slack.com/t/kubecost/shared_invite/enQtNTA2MjQ1NDUyODE5LWFjYzIzNWE4MDkzMmUyZGU4NjkwMzMyMjIyM2E0NGNmYjExZjBiNjk1YzY5ZDI0ZTNhZDg4NjlkMGRkYzFlZTU) — for additional support, feature discussions, and general banter!
