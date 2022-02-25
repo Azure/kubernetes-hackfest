@@ -37,9 +37,13 @@
    ```
    
    ```bash
-   #Create vnet1 to vnet2 peering and vnet2 to vnet1 peering
+   #Create vnet1 to vnet2 peering and vnet2 to vnet1 peering 
    az network vnet peering create -g $CLUSTER_RESOURCE_GROUP --name vnet1vnet2peer --vnet-name $VNET --remote-vnet-id $vNet2Id --allow-vnet-access
    az network vnet peering create -g $RGNAME --name vnet2vnet1peer --vnet-name myVnet --remote-vnet-id $vNet1Id --allow-vnet-access
+   ```
+
+   ```bash
+   #Confirm vnet1 to vnet2 peering and vnet2 to vnet1 peering status
    az network vnet peering show --name vnet1vnet2peer -g $CLUSTER_RESOURCE_GROUP --vnet-name $VNET --query peeringState
    az network vnet peering show --name vnet2vnet1peer -g $RGNAME --vnet-name myVnet --query peeringState
    ```
@@ -62,9 +66,9 @@
 
    ```bash
    NAME                                         CREATED AT
-   aks-nodepool1-51390184-vmss000000-auto-hep   2021-11-09T00:30:43Z
-   aks-nodepool1-51390184-vmss000001-auto-hep   2021-11-09T00:30:43Z
-   aks-nodepool1-51390184-vmss000002-auto-hep   2021-11-09T00:30:44Z
+   aks-nodepool1-18852703-vmss000000-auto-hep   2022-02-11T01:46:39Z
+   aks-nodepool1-18852703-vmss000001-auto-hep   2022-02-11T01:46:39Z
+   aks-nodepool1-18852703-vmss000002-auto-hep   2022-02-11T01:46:39Z
    ```
 
 4. Enable automatic host endpoints flow logs.   
@@ -126,10 +130,13 @@
 
     Test access from vm shell again, the expected result is 30080 Operation timed out
     ```bash
-    nc -zv $NODE_IP1 30080 
+    ssh -i /.ssh/id_rsa azureuser@$VM_IP
 
-    # test access from vm shell to other nodes, the expected result will be 30080 open
-    nc -zv $NODE_IP2 30080 
+    # test access from vm shell to node1 (10.240.0.4), the expected result will be port 30080 (tcp) timed out
+    nc -zv $NODE_IP1 30080 -w 10
+
+    # test access from vm shell to node2 (10.240.0.35), the expected result will be 30080 port [tcp/*] succeeded!
+    nc -zv $NODE_IP2 30080 -w 10
     ```
     > Note that in order to control access to the NodePort service, you need to enable `preDNAT` and `applyOnForward` policy settings.
 
@@ -139,11 +146,12 @@
    > Once you label another node with `host-end-point=test`, you should not be able to access the frontend service i.e the node port `30080` from your VM shell
    ```bash
    kubectl label nodes $NODE_NAME2 host-end-point=test
+   ssh -i /.ssh/id_rsa azureuser@$VM_IP
    ```
 
    ```bash
-   #test from your VM
-   nc -zv $NODE_IP2 30080 
+   #test from your VM again, the expected result will be port 30080 (tcp) timed out
+   nc -zv $NODE_IP2 30080 -w 10
    ```
    
 

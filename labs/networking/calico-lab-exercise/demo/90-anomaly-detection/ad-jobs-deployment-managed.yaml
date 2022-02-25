@@ -75,14 +75,44 @@ spec:
       - name: tigera-pull-secret
       containers:
       - name: ad-jobs
-        image: quay.io/tigera/anomaly_detection_jobs:v3.10.0
+        image: quay.io/tigera/anomaly_detection_jobs:v3.11.2
         resources:
           requests:
             memory: 1G
         securityContext:
           privileged: true
           allowPrivilegeEscalation: true
+        startupProbe:
+          httpGet:
+            path: /ad/ping
+            port: 8000
+            scheme: HTTP
+          initialDelaySeconds: 40
+          periodSeconds: 30
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 10
+        livenessProbe:
+          httpGet:
+            path: /ad/ping
+            port: 8000
+            scheme: HTTP
+          periodSeconds: 20
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 5
+        readinessProbe:
+          httpGet:
+            path: /ad/ping
+            port: 8000
+            scheme: HTTP
+          periodSeconds: 20
+          timeoutSeconds: 1
+          successThreshold: 1
+          failureThreshold: 5
         env:
+          - name: AD_NEED_API
+            value: "true"
           - name: ELASTIC_HOST
             value: "tigera-secure-es-gateway-http.tigera-elasticsearch.svc"
           - name: CLUSTER_NAME
@@ -124,7 +154,7 @@ spec:
           - name: AD_BytesOutModel_min_size_for_train
             value: "1000"
           - name: AD_debug
-            value: "True"      
+            value: "True"    
         volumeMounts:
           - name: host-volume
             mountPath: /home/idsuser/anomaly_detection_jobs/models
