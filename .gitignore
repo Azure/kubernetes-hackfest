@@ -82,3 +82,6 @@ labs/security/secure-tiller/*.srl
 *~
 *.swp
 *.swo
+
+# Misc
+.history/
