@@ -1,10 +1,6 @@
-=======
 # Otomi: Self-hosted PaaS for AKS
 
 [Otomi](https://otomi.io/) is an open source self-hosted PaaS for Kubernetes and connects many of the technologies found in the CNCF landscape in a single installable package to provide direct value to developers. All used technologies are fully integrated and pre-configured. Combined with a configuration as code and a GitOps way of working (where disired state is reflected as code and automatically synchronised to the cluster), multi-tenancy and developer self-service, Otomi brings a full PaaS (like Heroku) to your own Kubernetes cluster.
-
-
-<img src="./fp-landing.svg" alt="kubecost screenshot"/>
 
 ## About the workshop
 
@@ -24,10 +20,14 @@ The main objective is to get a good understanding/overview of Otomi and be able 
 
 ## Lab Prerequisites
 
-- helm installed
-- az cli installed
-- Kubectl client
-- Optionally: K9s
+- Azure account and Azure cloud shell access
+
+In case of not using Azure Cloud shell, install
+
+- [helm](https://helm.sh/docs/intro/install/)
+- [az cli](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli)
+- [kubectl](https://kubernetes.io/docs/tasks/tools/)
+- Optionally: [K9s](https://kubernetes.io/docs/tasks/tools/)
 
 ## Labs
 
@@ -48,9 +48,8 @@ After completing the labs, you'll be able to:
 - Explain the difference between Otomi core apps and how to activate optional apps
 - Create Knative workloads using the Otomi web UI
 
-
 ## Documentation & Support
 
 Official Otomi documentation is available [here](https://otomi.io). We'd also like to invite you to [join our Slack community](https://join.slack.com/t/kubecost/shared_invite/enQtNTA2MjQ1NDUyODE5LWFjYzIzNWE4MDkzMmUyZGU4NjkwMzMyMjIyM2E0NGNmYjExZjBiNjk1YzY5ZDI0ZTNhZDg4NjlkMGRkYzFlZTU) — for additional support, feature discussions, or just for a quick chat.
 
-The Otomi open source project can be found [here]() on GitHub. Don't forget to star. Thank you!
+The Otomi open source project can be found [here](https://github.com/redkubes/otomi-core) on GitHub. Don't forget to star. Thank you!
