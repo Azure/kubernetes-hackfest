@@ -1,84 +1,89 @@
-# Lab 2: Installing Otomi on AKS
+# Lab 2: Install Otomi on AKS
 
-## Add the Otomi repository
+In this lab, we'll be installing [Otomi](https://github.com/redkubes/otomi-core) using `helm`.
 
-```bash
-helm repo add otomi https://otomi.io/otomi-core
-helm repo update
-```
+## Instructions
 
-## Minimal Values
+1. Helm CLI is installed by default in Azure Cloud shell
 
-Create a `values.yaml` file with the following values:
+    ```bash
+    helm version
+    ```
 
-```yaml
-cluster:
-  k8sVersion: '1.21'
-  name: mycluster
-  provider: Azure
-```
+2. Add Otomi helm chart repository
 
-## Install the Chart
+    ```bash
+    helm repo add otomi https://otomi.io/otomi-core \
+    helm repo update
+    ```
 
-Install the chart with the following command:
+3. Install Otomi with chart values
 
-```bash
-helm install -f values.yaml otomi otomi/otomi
-```
+    ```bash
+    helm install otomi otomi/otomi \
+    --set cluster.k8sVersion="1.21" \
+    --set cluster.name=$CLUSTERNAME \
+    --set cluster.provider=azure \
+    ```
 
-## Monitoring the Chart install
+4. Monitoring the Chart install
 
-The chart deploys a Job (`otomi`) in the `default` namespace. Monitor the chart install using `kubectl`:
+    ```bash
+    # The chart deploys a Job (`otomi`) in the `default` namespace
+    # Monitor the status of the job
+    kubectl get job otomi -w
+    # watch the helm chart install status
+    watch helm list -Aa
+    ```
 
-```bash
-# get the status of the job
-kubectl get job otomi -w
-# watch the helm chart install status:
-watch helm list -Aa
-```
+5. When the installer job has finished, go to the end of the logs
 
-Or view detailed info about Kubernetes resources with [k9s](https://k9scli.io)
+    ```bash
+    kubectl logs jobs/otomi -n default -f
+    ```
 
-When the installer job has finished, go to the bottom of the installer job logs. There you will see the following:
+   There you will see the following:
 
-```
-2022-04-01T10:01:59.239Z otomi:cmd:commit:commit:info                                                                                            
-########################################################################################
-#                      
-#  To start using Otomi, go to https://<your-ip>.nip.io and sign in to the web console 
-#  with username "otomi-admin" and password "password".
-#  Then activate Drone. For more information see: https://otomi.io/docs/installation/post-install/
-#
-########################################################################################
-```
+    ```bash
+    2022-04-01T10:01:59.239Z otomi:cmd:commit:commit:info                                                                                            
+    ######################################################################################## #                                                                                                                       
+    #  To start using Otomi, go to https://<your-ip>.nip.io and sign in to the web console 
+    #  with username "otomi-admin" and password "password".
+    #  Then activate Drone. For more information see: https://otomi.io/docs/installation/post-install/
+    #
+    ########################################################################################
+    ```
 
-## Sign in to the web UI (Otomi Console)
+6. Sign in to the web UI (Otomi Console)
 
-Once Otomi is installed, go to the url provided in the installer job and sign in to the web UI with the provided username and password.
+   Once Otomi is installed, go to the url provided in the installer job and sign in to the web UI with the provided username and password.
 
-## Add the auto generated CA to your keychain (optional)
+7. Add the auto generated CA to your keychain (optional)
 
-Because we install Otomi without proving a custom CA or using LetsEncrypt, the installer generated a CA. This CA is of course not trusted on your local machine. To prevent you from clicking away lots of security warning in your browser, you can add the generated CA to your keychain:
+     TODO: This wont work for windows.
 
-- In the left pane of the console, click on "Download CA"
-- Double click the downloaded CA.crt or add the CA to your keychain on your mac using the following command:
+    Since we install Otomi without proving a custom CA or using LetsEncrypt, the installer generated a CA. This CA is of course not trusted on your local machine.
+    To prevent you from clicking away lots of security warning in your browser, you can add the generated CA to your keychain:
 
-```
-sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ~/Downloads/ca.crt
-```
+    - In the left pane of the console, click on "Download CA"
+    - Double click the downloaded CA.crt or add the CA to your keychain on your mac using the following command:
+  
+      ```bash
+      sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ~/Downloads/ca.crt
+      ```
 
-But you could also run Chrome (sorry guys ;) in insecure mode:
+      But you could also run Chrome (sorry folks ;) in insecure mode:
 
-```
-alias chrome-insecure='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --ignore-certificate-errors --ignore-urlfetcher-cert-requests &> /dev/null'
-```
+      ```bash
+      alias chrome-insecure='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --ignore-certificate-errors --ignore-urlfetcher-cert-requests &> /dev/null'
+      ```
 
-## Activate Drone
+8. Activate Drone
 
-1. Click on the **Drone** app (under Platform/Apps) in the console
-2. Click on the `play` button in the right top. A new tab will open for Drone
-3. Sign in locally with the provided username and password.
-4. Click on `Authorize Application`
-5. Click on `Submit on the Complete your Drone Registration page. You don't need to fill in your Email, Full Name or Company Name if you don't want to
-6. Click on the `otomi/values` repository
-7. Click on `+ Activate Repository`
+- Click on the **Drone** app (under Platform/Apps) in the console
+- Click on the `play` button in the right top. A new tab will open for Drone
+- Sign in locally with the provided username and password.
+- Click on `Authorize Application`
+- Click on `Submit on the Complete your Drone Registration page. You don't need to fill in your Email, Full Name or Company Name if you don't want to
+- Click on the `otomi/values` repository
+- Click on `+ Activate Repository`
