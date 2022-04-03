@@ -121,3 +121,5 @@ In this lab, we'll be using the Azure CLI to create a Azure Kubernetes Service (
     ```bash
     kubectl get nodes
     ```
+
+Go to the [next lab](2_install_otomi/README.md)
