@@ -54,15 +54,15 @@ Now go to the Guestbook application and notice that your messages have gone and 
 
 13. Under Network Policies, select `Allow selected` and click `Add Item`. Add the following 2 items and Submit:
 
-| Team name | Service Name |
-| ---       |              |
-| <team-name> | frontend |
+| Team name   | Service Name |
+| ----------- | ------------ |
+| <team-name> | frontend     |
 | <team-name> | reddis-follower |
 
 Before deploying changes, go to the reddis-follower service and to the same, but in this case only allow the frontend service:
 
-| Team name | Service Name |
-| ---       |              |
+| Team name   | Service Name |
+| ----------- | ------------ |
 | <team-name> | frontend |
 
 Now `Deploy Changes`
