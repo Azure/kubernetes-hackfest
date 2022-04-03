@@ -41,7 +41,7 @@ The workshop is organized into 5 labs (plus one bonus):
 
 - Lab 1: [Create an AKS cluster](1_create_aks_cluster/README.md)
 - Lab 2: [Installing Otomi on AKS](2_install_otomi/README.md)
-- Lab 3: [Using Teams in Otomi](3_create_team/README.md)
+- Lab 3: [Creating Teams in Otomi](3_create_team/README.md)
 - Lab 4: [Configuring network policies in Otomi](4_netpols/README.md)
 - Lab 5: [Activate apps in Otomi](5_activate_apps/README.md)
 - Lab 6: [Using Knative in Otomi](6_knative/README.md)
