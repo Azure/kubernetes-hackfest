@@ -13,7 +13,7 @@ In this lab, we'll be installing [Otomi](https://github.com/redkubes/otomi-core)
 2. Add Otomi helm chart repository
 
     ```bash
-    helm repo add otomi https://otomi.io/otomi-core \
+    helm repo add otomi https://otomi.io/otomi-core && \
     helm repo update
     ```
 
@@ -32,7 +32,7 @@ In this lab, we'll be installing [Otomi](https://github.com/redkubes/otomi-core)
     # The chart deploys a Job (`otomi`) in the `default` namespace
     # Monitor the status of the job
     kubectl get job otomi -w
-    # watch the helm chart install status
+    # watch the helm chart install status (optional)
     watch helm list -Aa
     ```
 
