@@ -69,3 +69,6 @@ Before deploying changes, go to the redis-follower service and to the same, but 
 Now `Deploy Changes`
 
 Notice that the Guestbook app works again.
+
+
+Go to the [next lab](../5_activate_apps/README.md)

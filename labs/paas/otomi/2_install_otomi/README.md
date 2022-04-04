@@ -87,3 +87,6 @@ In this lab, we'll be installing [Otomi](https://github.com/redkubes/otomi-core)
 - Click on `Submit on the Complete your Drone Registration page. You don't need to fill in your Email, Full Name or Company Name if you don't want to
 - Click on the `otomi/values` repository
 - Click on `+ Activate Repository`
+
+
+Go to the [next lab](../3_create_team/README.md)
