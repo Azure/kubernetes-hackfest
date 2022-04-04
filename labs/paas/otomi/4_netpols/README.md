@@ -7,7 +7,7 @@ In this lab we are going to deploy a multi tier web application, called `guestbo
 1. Install the Guestbook application resources:
 
 ```bash
-kubectl apply -f https://github.com/redkubes/workshops/blob/main/netpol/manifests/guestbook.yaml -n team-<team-name>
+kubectl apply -f https://raw.githubusercontent.com/redkubes/workshops/main/netpol/manifests/guestbook.yaml -n team-<team-name>
 ```
 
 2. Get the names of the created ClusterIP services:
