@@ -101,6 +101,7 @@ In this lab, we'll be using the Azure CLI to create a Azure Kubernetes Service (
     --network-plugin azure \
     --network-policy calico \
     --outbound-type loadBalancer \
+    --uptime-sla \
     --generate-ssh-keys
     ```
 
