@@ -74,7 +74,7 @@ IMPORTANT: In order to complete this module, you must have [Calico Cloud trial a
     
     ![cluster-selection](../img/cluster-selection.png)
 
-5. Configure log aggregation and flush intervals in aks cluster, we will use 60s instead of default value 300s for lab testing only.   
+5. Configure log aggregation and flush intervals in aks cluster, we will use 10s instead of default value 300s for lab testing only.   
 
     ```bash
     kubectl patch felixconfiguration.p default -p '{"spec":{"flowLogsFlushInterval":"10s"}}'
