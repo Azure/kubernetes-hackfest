@@ -97,8 +97,11 @@
     ```
 
 5. Check the connectivities between pods. Expected Outcome:  
+
    - The traffic between `busybox` in Linux node and `porter` in Windows node is allowed. 
    - The traffic between `powershell` in Windows node and `nginx` in Linux node is allowed. 
+   - The traffic between `busybox` in Linux node and `nginx` in Linux node is allowed. 
+   - The traffic between `powershell` in Windows node and `porter` in Windows node is allowed. 
 
    ```bash
    kubectl exec -n calico-demo busybox -- nc -vz $(kubectl get po porter -n calico-demo -o 'jsonpath={.status.podIP}') 80
@@ -106,6 +109,14 @@
    sleep 10
 
    kubectl exec -n calico-demo pwsh -- powershell Invoke-WebRequest -Uri http://$(kubectl get po nginx -n calico-demo -o 'jsonpath={.status.podIP}') -UseBasicParsing -TimeoutSec 5
+
+   sleep 10
+
+   kubectl exec -n calico-demo busybox -- nc -vz $(kubectl get po nginx -n calico-demo -o 'jsonpath={.status.podIP}') 80
+
+   sleep 10
+
+   kubectl exec -n calico-demo pwsh -- powershell Invoke-WebRequest -Uri http://$(kubectl get po porter -n calico-demo -o 'jsonpath={.status.podIP}') -UseBasicParsing -TimeoutSec 5
 
    ```
   
@@ -124,7 +135,6 @@
    ```bash
    calicoctl --allow-version-mismatch apply -f demo/20-egress-access-controls/allow-busybox.yaml
    calicoctl --allow-version-mismatch apply -f demo/20-egress-access-controls/deny-nginx.yaml
-   
    ```
 
 7. Check the connectivities between pods. Expected Outcome:  
