@@ -1,5 +1,7 @@
 # Otomi: Self-hosted PaaS for AKS
 
+<img src="./otomi.png" alt="otomiotomi screenshot"/>
+
 [Otomi](https://otomi.io/) is an open source self-hosted PaaS for Kubernetes and connects many of the technologies found in the CNCF landscape in a single installable package to provide direct value to developers. Otomi:
 
 - Brings a full PaaS to your own Kubernetes cluster with a GitOps way of working (where disired state is reflected as code and automatically synchronised to the cluster), an advanced ingress architecture, policy management, multi-tenancy and developer self-service. The only thing you'll need to do is deploy your application and Otomi will do the rest.
