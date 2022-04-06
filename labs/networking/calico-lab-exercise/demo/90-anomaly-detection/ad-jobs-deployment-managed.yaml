@@ -116,7 +116,7 @@ spec:
           - name: ELASTIC_HOST
             value: "tigera-secure-es-gateway-http.tigera-elasticsearch.svc"
           - name: CLUSTER_NAME
-            value: "cd8i1cf9.aks-calicocloud-repo"
+            value: "$CALICOCLUSTERNAME"
           - name: ELASTIC_PORT
             value: "9200"
           - name: ES_CA_CERT
