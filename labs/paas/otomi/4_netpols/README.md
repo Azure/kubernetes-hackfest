@@ -25,7 +25,7 @@ redis-follower   ClusterIP   10.0.135.61    <none>        6379/TCP   6m44s
 redis-leader     ClusterIP   10.0.82.226    <none>        6379/TCP   6m44s
 ```
 
-3. Go to the console and click `Services` under your team
+3. Go to the console, select your team in the top bar en and click `Services` under your team in the right menu.
 
 4. We will now first add the created frontend service to Otomi. Click `Create Service`.
 

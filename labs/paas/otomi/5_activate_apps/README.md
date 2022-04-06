@@ -20,7 +20,7 @@ In this lab we are going to activate Loki for logging. But first: Otomi by defau
 
 7. Click on the play button. A new tab wil open and here you can execute queries to search for logs. Add the following query: `{namespace=team-<team-name>}`. Now you will see all the logs of containers running in the namespace of your team. Copy the path after .nip.io/ in your browser.
 
-7. Go back to the console and in the Loki app, click on `Shortcuts`. Click `Edit` and the `Add item`. Fill in a title (like "team-name logs"), a description (like "The logs of teamname") and the paste the path. Now click Submit. The shortcut you now created can be used to go directly to Loki and see the result of your query.
+7. Go back to the console and in the Loki app, click on `Shortcuts`. Click `Edit` and the `Add item`. Fill in a title (like "team-name logs"), a description (like "The logs of teamname") and paste the path. Now click Submit. The shortcut you now created can be used to go directly to Loki and see the result of your query.
 
 
-Optional: Go to the [next lab](../6_knative/README.md)
+Go to the [next lab](../6_knative/README.md)
