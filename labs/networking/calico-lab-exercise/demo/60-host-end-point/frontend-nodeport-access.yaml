@@ -17,7 +17,7 @@ spec:
     protocol: TCP
     source:
       nets:
-      - ${PRV_IP}
+      - 192.168.1.4/32
     destination:
       ports:
       - 30080

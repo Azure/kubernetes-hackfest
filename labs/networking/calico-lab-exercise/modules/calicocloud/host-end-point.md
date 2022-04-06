@@ -140,6 +140,10 @@
     ```
     > Note that in order to control access to the NodePort service, you need to enable `preDNAT` and `applyOnForward` policy settings.
 
+    ![hep policy](../img/hep-policy.png) 
+
+    ![service graph hep log](../img/hep-service-graph.png)
+
 
 9. *[Optional]* Test another node in your node group. 
 

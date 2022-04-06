@@ -2,7 +2,7 @@
 
 **Goal:** Calico Cloud & Calico EE offer a DNS policy which leverages `Network Sets` to whitelist external access. Configure egress access for specific workloads.
 
-**Docs:** https://docs.projectcalico.org/archive/v3.20/reference/resources/globalnetworkset
+**Docs:** https://projectcalico.docs.tigera.io/reference/resources/globalnetworkset
 
 ## Steps
 

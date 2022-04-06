@@ -3,14 +3,13 @@
 **Goal:** Configure Anomaly Detection to alert upon abnormal/suspicious traffic
 ---
 
-Calico offers [Anomaly Detection](https://docs.tigera.io/threat/anomaly-detection/) (AD) as a part of its [threat defense](https://docs.tigera.io/threat/) capabilities. Calico's Machine Learning software is able to baseline "normal" traffic patterns and subsequently detect abnormal or suspicious behaviour. This may resemble an Indicator of Compromise and will generate an Alert in the UI.
-Use official documentation for the most recent [configuration instructions](https://docs.tigera.io/threat/anomaly-detection/customizing).
+Calico offers [Anomaly Detection](https://docs.tigera.io/threat/security-anomalies) (AD) as a part of its [threat defense](https://docs.tigera.io/threat/) capabilities. Calico's Machine Learning software is able to baseline "normal" traffic patterns and subsequently detect abnormal or suspicious behavior. This may resemble an Indicator of Compromise and will generate an Alert in the UI.
 
 ## Steps
 
 1. Review and apply the Anomaly Detection jobs for the managed cluster.
 
-Instructions below for a Managed cluster only. Follow [configuration documentation](https://docs.tigera.io/threat/anomaly-detection/customizing) to configure AD jobs for management and standalone clusters.
+Instructions below for a Managed cluster only. Follow [installation doc](https://docs.tigera.io/v3.12/threat/security-anomalies#install-anomaly-detection) to configure AD jobs for management and standalone clusters.
 
 ```bash
 ## Use :q for exiting from the file
@@ -49,16 +48,16 @@ less ./demo/90-anomaly-detection/ad-jobs-deployment-managed.yaml
 
 	```bash
     # obtain ElasticSearch index and set as variable
-    
     CALICOCLUSTERNAME=$(kubectl get deployment -n tigera-intrusion-detection intrusion-detection-controller -ojson | \
     jq -r '.spec.template.spec.containers[0].env[] | select(.name == "CLUSTER_NAME").value')
+    ```
 
+	```bash
     # Set correct index in manifest This enables the Machine Learning jobs to target the correct indices in Elastic Search
-
 	sed -i "s/\$CALICOCLUSTERNAME/${CALICOCLUSTERNAME}/g" ./demo/90-anomaly-detection/ad-jobs-deployment-managed.yaml
 	```
-	For other variations/shells the following syntax may be required
 
+	For other variations/shells the following syntax may be required
 	```bash
 	sed -i "" "s/\$CALICOCLUSTERNAME/${CALICOCLUSTERNAME}/g" ./demo/90-anomaly-detection/ad-jobs-deployment-managed.yaml
 	```
@@ -72,7 +71,7 @@ less ./demo/90-anomaly-detection/ad-jobs-deployment-managed.yaml
 	```bash
 	        value: "tigera-secure-es-gateway-http.tigera-elasticsearch.svc"
           - name: CLUSTER_NAME
-            value: "ky48uazv.aks-cc-repo"
+            value: "cd8i1cf9.aks-calicocloud-repo"
 	```		
 
 3. Now apply the Anomaly Detection deployment YAML

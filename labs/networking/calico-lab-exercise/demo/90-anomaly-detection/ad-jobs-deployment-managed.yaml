@@ -75,7 +75,7 @@ spec:
       - name: tigera-pull-secret
       containers:
       - name: ad-jobs
-        image: quay.io/tigera/anomaly_detection_jobs:v3.11.2
+        image: quay.io/tigera/anomaly_detection_jobs:v3.12.0
         resources:
           requests:
             memory: 1G
@@ -116,7 +116,7 @@ spec:
           - name: ELASTIC_HOST
             value: "tigera-secure-es-gateway-http.tigera-elasticsearch.svc"
           - name: CLUSTER_NAME
-            value: "$CALICOCLUSTERNAME"
+            value: "cd8i1cf9.aks-calicocloud-repo"
           - name: ELASTIC_PORT
             value: "9200"
           - name: ES_CA_CERT
@@ -132,7 +132,7 @@ spec:
                 key: password
                 name: tigera-ee-ad-job-elasticsearch-access
           - name: AD_DISABLED_JOBS
-            value: "l7_latency,http_connection_spike,http_verbs,http_response_codes,process_restarts"      
+            value: "l7_latency,http_connection_spike,http_verbs,http_response_codes,process_restarts,generic_dns,time_series_dns,generic_flows,time_series_flows,generic_l7,time_series_l7,dns_latency,l7_bytes"      
           - name: AD_max_docs
             value: "100000"
           - name: AD_train_interval_minutes

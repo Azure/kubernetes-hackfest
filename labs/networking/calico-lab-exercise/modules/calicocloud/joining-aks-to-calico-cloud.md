@@ -12,6 +12,8 @@ IMPORTANT: In order to complete this module, you must have [Calico Cloud trial a
 
 2. Upon signing into the Calico Cloud UI the Welcome screen shows four use cases which will give a quick tour for learning more. This step can be skipped. Tip: the menu icons on the left can be expanded to display the worded menu as shown:
 
+   ![get-start](../img/get-start.png)
+
    ![expand-menu](../img/expand-menu.png)
 
 
@@ -26,12 +28,11 @@ IMPORTANT: In order to complete this module, you must have [Calico Cloud trial a
     choose AKS and click next
       ![choose-aks](../img/choose-aks.png)
 
+    Run installation script in your aks cluster, script should look similar to this
 
-    Run installation script in your aks cluster. 
-    ```bash
-    # script should look similar to this
-    kubectl apply -f https://installer.calicocloud.io/manifests/cc-operator/latest/deploy.yaml && curl -H "Authorization: Bearer xxxxxxxxxxxx" "https://www.calicocloud.io/api/managed-cluster/deploy.yaml" | kubectl apply -f -
-    ```
+      ![install-script](../img/script.png)
+    
+
     > Output should look similar to:
     ```bash
     namespace/calico-cloud created
@@ -46,16 +47,16 @@ IMPORTANT: In order to complete this module, you must have [Calico Cloud trial a
     configmap/calico-cloud-manager-config created
     service/calico-cloud-controller-manager-metrics-service created
     deployment.apps/calico-cloud-controller-manager created
-    % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                    Dload  Upload   Total   Spent    Left  Speed
-    100   355  100   355    0     0    541      0 --:--:-- --:--:-- --:--:--   541
+      % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+    100   365  100   365    0     0   1312      0 --:--:-- --:--:-- --:--:--  1312
     secret/api-key created
-    installer.operator.calicocloud.io/aks-cc-repo created
+    installer.operator.calicocloud.io/aks-calicocloud-repo created
     ```
     Joining the cluster to Calico Cloud can take a few minutes. Meanwhile the Calico resources can be monitored until they are all reporting `Available` as `True`
 
     ```bash
-    Every 2.0s: kubectl get tigerastatus                                                                                                                    
+    kubectl get tigerastatus -w                                                                                                                   
 
     NAME                            AVAILABLE   PROGRESSING   DEGRADED   SINCE
     apiserver                       True        False         False      96s

@@ -75,7 +75,7 @@
     kubectl delete pods --all 
     ``` 
 
-  Now view the L7 logs in Kibana by selecting the tigera_secure_ee_l7 index pattern. You should also see the relevant HTTP log from service graph.    
+  Now view the L7 logs in Kibana by selecting the `L7 HTTP Dashboard`. You should also see the relevant HTTP log from service graph.
 
    ![service graph HTTP log](../img/service-graph-l7.png)
    

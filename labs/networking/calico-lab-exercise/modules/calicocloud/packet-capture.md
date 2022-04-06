@@ -2,7 +2,7 @@
 
 **Goal:** Configure packet capture for specific pods and review captured payload.
 
-Packet captures are Kubernetes Custom Resources and thus native Kubernetes RBAC can be used to control which users/groups can run and access Packet Captures; this may be useful if Compliance or Governance policies mandate strict controls on running Packet Captures for specific workloads. This demo is simplified without RBAC but further details can be found [here](https://docs.tigera.io/v3.10/visibility/packetcapture).
+Packet captures are Kubernetes Custom Resources and thus native Kubernetes RBAC can be used to control which users/groups can run and access Packet Captures; this may be useful if Compliance or Governance policies mandate strict controls on running Packet Captures for specific workloads. This demo is simplified without RBAC but further details can be found [here](https://docs.tigera.io/visibility/packetcapture#enforce-rbac-for-packet-capture).
 
 
 ## Steps
@@ -32,7 +32,7 @@ Packet captures are Kubernetes Custom Resources and thus native Kubernetes RBAC 
    ![download packet capture](../img/download-packet-capture.png)
    
 
-5. Open the pcap file with wireshark or other utilis, you will see the ingress and egress traffic associate with `redis` pods i.e `10.240.0.71`
+5. Open the pcap file with wireshark or other utilis, you will see the ingress and egress traffic associate with `redis` pods i.e `10.240.0.72`
    
    
     ![redis packet capture](../img/redis-pcap.png)
