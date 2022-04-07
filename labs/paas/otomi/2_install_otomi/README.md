@@ -78,7 +78,7 @@ In this lab, we'll be installing [Otomi](https://github.com/redkubes/otomi-core)
   certutil.exe -addstore root <downloaded cert path>  
   ```
 
-    But you could also run Chrome (sorry folks ;) in insecure mode:
+    But you could also run Chrome (sorry Msft folks ;) in insecure mode:
 
     ```bash
     alias chrome-insecure='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --ignore-certificate-errors --ignore-urlfetcher-cert-requests &> /dev/null'
@@ -88,7 +88,7 @@ In this lab, we'll be installing [Otomi](https://github.com/redkubes/otomi-core)
 
 - Click on the **Drone** app (under Platform/Apps) in the console
 - Click on the `play` button in the top right. A new tab will open for Drone
-- Sign in locally with the provided username and password.
+- Sign in locally with as `otomi-admin` and the password provided in the logs of the installer job.
 - Click on `Authorize Application`
 - Click on `Submit on the Complete your Drone Registration page. You don't need to fill in your Email, Full Name or Company Name if you don't want to
 - Click on the `otomi/values` repository

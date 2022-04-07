@@ -64,7 +64,8 @@ Before deploying changes, go to the `redis-follower` service and do the same, bu
 
 | Team name   | Service Name |
 | ----------- | ------------ |
-| $TEAM-NAME   | frontend |
+| $TEAM-NAME   | frontend    |
+| $TEAM-NAME   | redis-leader |
 
 Now `Deploy Changes`
 
