@@ -39,9 +39,15 @@ In case of not using Azure Cloud shell, install
 - [kubectl](https://kubernetes.io/docs/tasks/tools/)
 - Optionally: [K9s](https://kubernetes.io/docs/tasks/tools/)
 
-## Labs
+## 🚀 Labs
 
-The workshop is organized into 5 labs (plus one bonus):
+NOTE
+
+⚠️ The labs use a new version of Otomi that is released on April 11. The labs can only be done after this data!
+
+---
+
+The workshop is organized into 6 labs:
 
 - Lab 1: [Create an AKS cluster](1_create_aks_cluster/README.md)
 - Lab 2: [Installing Otomi on AKS](2_install_otomi/README.md)
@@ -62,4 +68,4 @@ After completing the labs, you'll be able to:
 
 Official Otomi documentation is available [here](https://otomi.io). We'd also like to invite you to [join our Slack community](https://otomi.slack.com/join/shared_invite/zt-12h11e8aa-6po4NWhhpMXxT~nffDsYqA#/shared-invite/email) — for additional support, feature discussions, or just for a quick chat.
 
-The Otomi open source project can be found [here](https://github.com/redkubes/otomi-core) on GitHub. Don't forget to star. Thank you!
+The Otomi open source project can be found [here](https://github.com/redkubes/otomi-core) on GitHub. Don't forget to ⭐️ ⭐️ ⭐️. Thank you!
