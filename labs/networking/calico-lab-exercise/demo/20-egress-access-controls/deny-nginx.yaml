@@ -1,5 +1,3 @@
----
-
 apiVersion: projectcalico.org/v3
 kind: NetworkPolicy
 metadata:
@@ -14,3 +12,7 @@ spec:
     protocol: TCP
     source:
       selector: app == 'pwsh'
+  - action: Allow
+    protocol: TCP
+    source:
+      selector: app == 'busybox'

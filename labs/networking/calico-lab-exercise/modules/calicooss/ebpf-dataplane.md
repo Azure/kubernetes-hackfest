@@ -8,7 +8,7 @@
 
 ## Steps
 
-1. Delete the Windows node we create from last step in your pool, and confirm the result.
+1. Delete the Windows node we created from last step in your pool as windows doesn't support ebpf dataplane yet, and confirm the result.
    ```bash
    az aks nodepool delete \
    --resource-group $RGNAME \
@@ -109,6 +109,10 @@
    kubectl apply -f cm.yaml
    ```
 
+   ```bash
+   #restart tigera-operator
+   kubectl rollout restart deployment tigera-operator -n tigera-operator
+   ```
 
 4. The operator will pick up the change to the config map automatically and do a rolling update to pass on the change. Confirm that pods restart and then reach the Running state with the following command:
    ```bash
@@ -121,8 +125,9 @@
    kubectl get pods -n calico-system 
    ```
 
-5. Replace kube-proxy
+5. Replace kube-proxy 
    > In eBPF mode, Calico replaces kube-proxy so it wastes resources to run both. To disable kube-proxy reversibly, we recommend adding a node selector to kube-proxy’s DaemonSet that matches no nodes. By doing so, we’re telling kube-proxy not to run on any nodes (because they’re all running Calico):
+   
 
    ```bash
    kubectl patch ds -n kube-system kube-proxy -p '{"spec":{"template":{"spec":{"nodeSelector":{"non-calico": "true"}}}}}'
@@ -194,13 +199,18 @@
    ```bash
    kubectl delete cm -n tigera-operator kubernetes-services-endpoint 
    ```
+   
+   ```bash
+   #restart tigera-operator
+   kubectl rollout restart deployment tigera-operator -n tigera-operator
+   ```
 
    ```bash
    #confirm calico-node restart again
    kubectl get pods -n calico-system
    ```
 
-5. Confirm the source IP in yaobank-customer pod been reversed to node private IP.   
+5. Confirm the source IP in yaobank-customer pod been reversed to node private IP.
 
    ```bash
    #check the source IP fromm pod log
