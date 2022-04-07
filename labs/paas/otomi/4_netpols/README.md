@@ -7,13 +7,13 @@ In this lab we are going to deploy a multi tier web application, called `guestbo
 1. Install the Guestbook application resources:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/redkubes/workshops/main/netpol/manifests/guestbook.yaml -n team-<team-name>
+kubectl apply -f https://raw.githubusercontent.com/redkubes/workshops/main/netpol/manifests/guestbook.yaml -n team-$TEAM-NAME
 ```
 
 2. Get the names of the created ClusterIP services:
 
 ```bash
-kubectl get svc -n team<team-name>
+kubectl get svc -n team-<$TEAM-NAME>
 ```
 
 You will see 3 services:
@@ -57,17 +57,18 @@ Now go to the Guestbook application and notice that your messages have gone and 
 
 | Team name   | Service Name |
 | ----------- | ------------ |
-| team-name   | frontend     |
-| team-name   | redis-follower |
+| $TEAM-NAME   | frontend     |
+| $TEAM-NAME   | redis-follower |
 
 Before deploying changes, go to the redis-follower service and to the same, but in this case only allow the frontend service:
 
 | Team name   | Service Name |
 | ----------- | ------------ |
-| team-name   | frontend |
+| $TEAM-NAME   | frontend |
 
 Now `Deploy Changes`
 
 Notice that the Guestbook app works again.
+
 
 Go to the [next lab](../5_activate_apps/README.md)

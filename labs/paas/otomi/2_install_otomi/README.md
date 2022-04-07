@@ -56,27 +56,26 @@ In this lab, we'll be installing [Otomi](https://github.com/redkubes/otomi-core)
 
 6. Sign in to the web UI (Otomi Console)
 
-   Once Otomi is installed, go to the url provided in the installer job and sign in to the web UI with the provided username and password.
+   Once Otomi is installed, go to the url provided in the logs of the installer job and sign in to the web UI with the provided username and password.
 
 7. Add the auto generated CA to your keychain (optional)
 
-     TODO: This wont work for windows.
 
-    Since we install Otomi without proving a custom CA or using LetsEncrypt, the installer generated a CA. This CA is of course not trusted on your local machine.
-    To prevent you from clicking away lots of security warning in your browser, you can add the generated CA to your keychain:
+Since we install Otomi without proving a custom CA or using LetsEncrypt, the installer generated a CA. This CA is of course not trusted on your local machine.
+To prevent you from clicking away lots of security warning in your browser, you can add the generated CA to your keychain:
 
-    - In the left pane of the console, click on "Download CA"
-    - Double click the downloaded CA.crt or add the CA to your keychain on your mac using the following command:
+- In the left pane of the console, click on "Download CA"
+- Double click the downloaded CA.crt or add the CA to your keychain on your mac using the following command:
   
-      ```bash
-      sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ~/Downloads/ca.crt
-      ```
+```bash
+sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ~/Downloads/ca.crt
+```
 
-      But you could also run Chrome (sorry folks ;) in insecure mode:
+But you could also run Chrome (sorry folks ;) in insecure mode:
 
-      ```bash
-      alias chrome-insecure='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --ignore-certificate-errors --ignore-urlfetcher-cert-requests &> /dev/null'
-      ```
+```bash
+alias chrome-insecure='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --ignore-certificate-errors --ignore-urlfetcher-cert-requests &> /dev/null'
+```
 
 8. Activate Drone
 
@@ -87,5 +86,6 @@ In this lab, we'll be installing [Otomi](https://github.com/redkubes/otomi-core)
 - Click on `Submit on the Complete your Drone Registration page. You don't need to fill in your Email, Full Name or Company Name if you don't want to
 - Click on the `otomi/values` repository
 - Click on `+ Activate Repository`
+
 
 Go to the [next lab](../3_create_team/README.md)
