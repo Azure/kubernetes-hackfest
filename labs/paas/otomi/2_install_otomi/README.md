@@ -80,7 +80,7 @@ alias chrome-insecure='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ C
 8. Activate Drone
 
 - Click on the **Drone** app (under Platform/Apps) in the console
-- Click on the `play` button in the right top. A new tab will open for Drone
+- Click on the `play` button in the top right. A new tab will open for Drone
 - Sign in locally with the provided username and password.
 - Click on `Authorize Application`
 - Click on `Submit on the Complete your Drone Registration page. You don't need to fill in your Email, Full Name or Company Name if you don't want to

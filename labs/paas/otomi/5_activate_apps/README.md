@@ -6,13 +6,13 @@ In this lab we are going to activate Loki for logging. But first: The multi-tena
 
 ## Instructions
 
-1. Go to the `Settings` section under `Platform` and then select `Otomi`. In the bottom of the page you will see the flag `Multi-tenancy`. For this lab, we will not enable multi-tenancy.
+1. Go to the `Settings` under the `Platform` section and then select `Otomi`. In the bottom of the page you will see the flag `Multi-tenancy`. For this lab, we will not enable multi-tenancy.
 
 2. Go to the Apps section under `Platform` and Drag and Drop `Loki` from the `Disabled apps` to the `Enabled apps`. Notice that `Grafana` will also be enabled. This is because Loki uses Grafana and thus is a dependency for Loki (and is also installed).
 
 3. Click on `Deploy changes`
 
-4. To see the progress of the installation of Loki, go the apps section and click on `Drone`. In the top right you will see a play button. Click on it. The Drone app will now open in a new tab. Click on the `otomi/values` repository and the on the last build execution. When the `apply` step is finished, Loki/Grafana will be installed.
+4. To see the progress of the installation of Loki, go the apps section and click on `Drone`. In the top right you will see a play button. Click on it. The Drone app will now open in a new tab. Click on the `otomi/values` repository and then on the last build execution. When the `apply` step is finished, Loki/Grafana will be installed.
 
 5. In the Apps section, click on `Loki`. In the app bar, click on `Values`. The Loki chart has been installed with sane default values. Click on `Duration` to see the default value. All the defaults (specified in the Otomi values [schema](https://github.com/redkubes/otomi-core/blob/master/values-schema.yaml) can be modified.
 

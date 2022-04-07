@@ -6,15 +6,15 @@
 
 Otomi:
 
-- Brings a full PaaS (like Heroku) to your own Kubernetes cluster. The thing you'll need to do is deploy your application and Otomi will do the rest.
+- Brings a full PaaS (like Heroku) to your own Kubernetes cluster. The only thing you'll need to do yourself is to deploy your application and then Otomi will do the rest.
 
 - Allows you to use a PaaS on top of K8s without the constraints and abstractions of traditional PaaS offerings like OpenShift, Cloud Foundry and Heroku.
 
-- Removes the burden of building and maintaining your internal platform, lowers the burden on operations, and empowers developers to focus on application deployment and management only.
+- Removes the burden of building and maintaining your internal (developer) platform, lowers the burden on operations, and empowers developers to focus on application deployment and management only.
 
 ## About the workshop
 
-The workshop walks you through the all the steps required to install and use Otomi on AKS.
+The workshop walks you through the all the steps required to install and use Otomi on Kubernetes (AKS in this case).
 
 ## For who is the workshop?
 
@@ -58,7 +58,7 @@ The workshop is organized into 6 labs:
 
 After completing the labs, you'll be able to:
 
-- Install Otomi on AKS with basic configuration options
+- Install Otomi on AKS
 - Use the Teams feature in Otomi for multi-tenancy and network isolation
 - Use te Otomi web UI to expose K8s services and configure network policies between workloads
 - Explain the difference between Otomi core apps and how to activate optional apps

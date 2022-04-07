@@ -14,23 +14,23 @@ Let's create a Team!
 
 ## Instructions
 
-1. Go to the Teams sections in Otomi Console
+1. Click on `Teams` under the `Platform` section in Otomi Console (in the menu right).
 
-2. Click on `Create team`
+2. Click on `Create team`.
 
-3. Provide a name for the team
+3. Provide a name for the team.
 
-4. Under NetworkPolicy, disable `Network policies` and `Egress control` (we will activate this later on)
+4. Under NetworkPolicy, disable `Network policies` and `Egress control` (we will activate this later on).
 
-5. Leave all other settings default
+5. Leave all other settings default.
 
-6. Click on `Submit`
+6. Click on `Submit`.
 
-7. Click on `Deploy Changes` (this will become active after a change has been submitted)
+7. Click on `Deploy Changes` (this will become active after a change has been submitted).
 
-8. Select your team in the top bar
+8. Select your team in the top bar. Here you can select your context (cluster and team).
 
-9. See that in the left bar, the team section appears
+9. See that in the left bar, the team section appears.
 
 Note:
 

@@ -25,13 +25,13 @@ redis-follower   ClusterIP   10.0.135.61    <none>        6379/TCP   6m44s
 redis-leader     ClusterIP   10.0.82.226    <none>        6379/TCP   6m44s
 ```
 
-3. Go to the console, select your team in the top bar en and click `Services` under your team in the right menu.
+3. Go to the console, make sure you have selected your team in the top bar en and click `Services` under your team in the right menu.
 
 4. We will now first add the created frontend service to Otomi. Click `Create Service`.
 
 5. Fill in the name `frontend`
 
-6. Under `Exposure`, select `Public`. Leave all other settings default
+6. Under `Exposure`, select `Public`. Leave all other settings under exposure default
 
 7. Leave all other settings default and click `Submit`
 
@@ -39,7 +39,7 @@ redis-leader     ClusterIP   10.0.82.226    <none>        6379/TCP   6m44s
 
 After the changes have been deployed (this will take a couple of minutes), you will see that the service we just created has a host name. Click on the host name. What do you see? Submit a couple of messages.
 
-9. Now add the other 2 services (redis-follower and redis-leader). Make sure to provide the correct port (6379). Leave all other settings default and Submit. You don't need to Deploy Changes after every Submit. Just create the 2 services and then Deploy Changes.
+9. Now add the other 2 services (`redis-follower` and `redis-leader`). Make sure to provide the correct port (6379). Leave all other settings default (so no exposure) and Submit. You don't need to Deploy Changes after every Submit. Just create the 2 services and then Deploy Changes.
 
 When you create a service in Otomi with ingress `Cluster`, the K8s service will be added to the service-mesh in Otomi. When you create services in Otomi, the Istio Gateway is automatically configured and Istio virtual services are also automatically created.
 
@@ -49,7 +49,7 @@ Notice that the guestbook front-end still works!
 
 11. Under NetworkPolicy, enable `Network Policies`
 
-Now go to the Guestbook application and notice that your messages have gone and you can't submit new messages. This is because traffic between the frontend and the 2 redis services is not permitted anymore. Let's fix this.
+Now go to the Guestbook application and notice that your messages are gone and you can't submit new messages. This is because traffic between the frontend and the 2 redis services is not permitted anymore. Let's fix this.
 
 12. Click on the `redis-leader` service
 
@@ -60,7 +60,7 @@ Now go to the Guestbook application and notice that your messages have gone and 
 | $TEAM-NAME   | frontend     |
 | $TEAM-NAME   | redis-follower |
 
-Before deploying changes, go to the redis-follower service and to the same, but in this case only allow the frontend service:
+Before deploying changes, go to the `redis-follower` service and do the same, but in this case only allow the frontend service:
 
 | Team name   | Service Name |
 | ----------- | ------------ |
