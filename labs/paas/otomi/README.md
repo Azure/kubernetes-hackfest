@@ -1,14 +1,14 @@
 # Otomi: Self-hosted PaaS for AKS
 
-<img src="./otomi.png" alt="otomi-screenshot"/>
+<img src="./otomi-console.png" alt="otomi-screenshot"/>
 
 [Otomi](https://otomi.io/) is an open source self-hosted PaaS for Kubernetes and connects many of the technologies found in the CNCF landscape in a single installable package to provide direct value to developers.
 
 Otomi:
 
-- Brings a full PaaS to your own Kubernetes cluster with a GitOps way of working (where desired state is reflected as code and automatically synchronized to the cluster), an advanced ingress architecture, policy management, multi-tenancy and developer self-service. The only thing you'll need to do is deploy your application and Otomi will do the rest.
+- Brings a full PaaS (like Heroku) to your own Kubernetes cluster. The thing you'll need to do is deploy your application and Otomi will do the rest.
 
-- Allows you to turn any Kubernetes cluster into a full platform without the constraints and abstractions of traditional PaaS offerings like OpenShift, Cloud Foundry and Heroku.
+- Allows you to use a PaaS on top of K8s without the constraints and abstractions of traditional PaaS offerings like OpenShift, Cloud Foundry and Heroku.
 
 - Removes the burden of building and maintaining your internal platform, lowers the burden on operations, and empowers developers to focus on application deployment and management only.
 
@@ -39,9 +39,15 @@ In case of not using Azure Cloud shell, install
 - [kubectl](https://kubernetes.io/docs/tasks/tools/)
 - Optionally: [K9s](https://kubernetes.io/docs/tasks/tools/)
 
-## Labs
+## 🚀 Labs
 
-The workshop is organized into 5 labs (plus one bonus):
+NOTE
+
+⚠️ The labs use a new version of Otomi that is released on April 11. The labs can only be done after this date!
+
+---
+
+The workshop is organized into 6 labs:
 
 - Lab 1: [Create an AKS cluster](1_create_aks_cluster/README.md)
 - Lab 2: [Installing Otomi on AKS](2_install_otomi/README.md)
@@ -62,4 +68,6 @@ After completing the labs, you'll be able to:
 
 Official Otomi documentation is available [here](https://otomi.io). We'd also like to invite you to [join our Slack community](https://otomi.slack.com/join/shared_invite/zt-12h11e8aa-6po4NWhhpMXxT~nffDsYqA#/shared-invite/email) — for additional support, feature discussions, or just for a quick chat.
 
-The Otomi open source project can be found [here](https://github.com/redkubes/otomi-core) on GitHub. Don't forget to star. Thank you!
+The Otomi open source project can be found [here](https://github.com/redkubes/otomi-core) on GitHub. Don't forget to ⭐️ ⭐️ ⭐️. 
+
+Thank you!
