@@ -46,7 +46,7 @@ In this lab, we'll be using the Azure CLI to create a Azure Kubernetes Service (
 6. Create a unique identifier suffix for resources to be created in this lab.
 
    ```bash
-   echo "\n# Start AKS Otomi Hackfest Lab Params">>~/.bashrc
+   echo -e "\n# Start AKS Otomi Hackfest Lab Params">>~/.bashrc
    UNIQUE_SUFFIX=$USER$RANDOM
    # Remove Underscores and Dashes (Not Allowed in AKS and ACR Names)
    UNIQUE_SUFFIX="${UNIQUE_SUFFIX//_}"

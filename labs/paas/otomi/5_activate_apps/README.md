@@ -1,4 +1,4 @@
-# Lab 5
+# Lab 5: Activate apps in Otomi
 
 Otomi by default installs a minimal set of apps. These are called the Core apps. With the Core apps, Otomi offers an advanced ingress architecture, using Nginx, Istio, Keycloak, Certmanager and Oauth2, combined with developer self-service. Next to the Core apps, Otomi offers optional apps like Knative, Harbor, Vault, Kubeapps, Prometheus, Loki, Alertmanager, and more. These apps are all fully integrated and can be activated by dragging them to the active apps section in the Console.
 
@@ -20,7 +20,6 @@ In this lab we are going to activate Loki for logging. But first: The multi-tena
 
 7. Click on the play button. A new tab wil open and here you can execute queries to search for logs. Add the following query: `{namespace=team-"<team-name>"}`. Now you will see all the logs of containers running in the namespace of your team. Copy the path after .nip.io/ from the address bar in your browser.
 
-7. Go back to the console and in the Loki app, click on `Shortcuts`. Click `Edit` and the `Add item`. Fill in a title (like "team-name logs"), a description (like "The logs of teamname") and paste the path. Now click Submit. The shortcut you now created can be used to go directly to Loki and see the result of your query.
-
+8. Go back to the console and in the Loki app, click on `Shortcuts`. Click `Edit` and the `Add item`. Fill in a title (like "team-name logs"), a description (like "The logs of teamname") and paste the path. Now click Submit. The shortcut you now created can be used to go directly to Loki and see the result of your query.
 
 Go to the [next lab](../6_knative/README.md)
