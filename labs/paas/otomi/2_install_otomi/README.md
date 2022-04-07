@@ -72,10 +72,12 @@ In this lab, we'll be installing [Otomi](https://github.com/redkubes/otomi-core)
   ```  
 
   ```powershell
-  # On Windows(PowerShell)
+  # On Windows(PowerShell - Run as Administrator)
+  # Use certutil:
+  certutil.exe -addstore root <downloaded cert path>
+  # Or 
   Import-Certificate -FilePath "<downloaded cert path>" -CertStoreLocation Cert:\LocalMachine\Root
-  # otherwise use certutil:
-  certutil.exe -addstore root <downloaded cert path>  
+  # Restart the browser 
   ```
 
     But you could also run Chrome (sorry Msft folks ;) in insecure mode:
