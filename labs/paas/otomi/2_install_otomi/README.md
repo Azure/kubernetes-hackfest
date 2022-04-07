@@ -60,8 +60,6 @@ In this lab, we'll be installing [Otomi](https://github.com/redkubes/otomi-core)
 
 7. Add the auto generated CA to your keychain (optional)
 
-     TODO: This wont work for windows.
-
     Since we install Otomi without proving a custom CA or using LetsEncrypt, the installer generated a CA. This CA is of course not trusted on your local machine.
     To prevent you from clicking away lots of security warning in your browser, you can add the generated CA to your keychain:
 
@@ -69,7 +67,15 @@ In this lab, we'll be installing [Otomi](https://github.com/redkubes/otomi-core)
     - Double click the downloaded CA.crt or add the CA to your keychain on your mac using the following command:
   
       ```bash
-      sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ~/Downloads/ca.crt
+      # On Mac
+      sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain ~/Downloads/ca.crt  
+      ```  
+
+      ```powershell
+      # On Windows(PowerShell)
+      Import-Certificate -FilePath "<downloaded cert path>" -CertStoreLocation Cert:\LocalMachine\Root
+      # otherwise use certutil:
+      certutil.exe -addstore root <downloaded cert path>  
       ```
 
       But you could also run Chrome (sorry folks ;) in insecure mode:
