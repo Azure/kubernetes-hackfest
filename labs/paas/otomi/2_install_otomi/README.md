@@ -84,7 +84,7 @@ In this lab, we'll be installing [Otomi](https://github.com/redkubes/otomi-core)
     alias chrome-insecure='/Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome --ignore-certificate-errors --ignore-urlfetcher-cert-requests &> /dev/null'
     ```
 
-8. Activate Drone
+8. Activate Drone:
 
 - Click on the **Drone** app (under Platform/Apps) in the console
 - Click on the `play` button in the top right. A new tab will open for Drone

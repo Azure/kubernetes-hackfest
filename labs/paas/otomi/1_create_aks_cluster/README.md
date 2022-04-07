@@ -15,7 +15,7 @@ In this lab, we'll be using the Azure CLI to create a Azure Kubernetes Service (
 
 3. The first time Cloud Shell is started will require you to create a storage account.
 
-4. Once your cloud shell is started, clone the workshop repo into the cloud shell environment
+4. Once your cloud shell is started, clone the workshop repo into the cloud shell environment:
 
    ```bash
    git clone https://github.com/Azure/kubernetes-hackfest
@@ -23,7 +23,7 @@ In this lab, we'll be using the Azure CLI to create a Azure Kubernetes Service (
 
    > Note: In the cloud shell, you are automatically logged into your Azure subscription.
 
-5. Ensure you are using the correct Azure subscription you want to deploy AKS to.
+5. Ensure you are using the correct Azure subscription you want to deploy AKS to:
 
    ```bash
    # View subscriptions
@@ -43,7 +43,7 @@ In this lab, we'll be using the Azure CLI to create a Azure Kubernetes Service (
    az account show
    ```
 
-6. Create a unique identifier suffix for resources to be created in this lab.
+6. Create a unique identifier suffix for resources to be created in this lab:
 
    ```bash
    echo -e "\n# Start AKS Otomi Hackfest Lab Params">>~/.bashrc
@@ -57,7 +57,7 @@ In this lab, we'll be using the Azure CLI to create a Azure Kubernetes Service (
    echo export UNIQUE_SUFFIX=$UNIQUE_SUFFIX >> ~/.bashrc
    ```
 
-7. Create an Azure Resource Group in East US.
+7. Create an Azure Resource Group in `East US`:
 
    ```bash
    # Set Resource Group Name using the unique suffix
@@ -72,7 +72,7 @@ In this lab, we'll be using the Azure CLI to create a Azure Kubernetes Service (
    az group create -n $RGNAME -l $LOCATION
    ```
 
-8. Create an AKS cluster
+8. Create an AKS cluster:
 
     ```bash
     # Set AKS Cluster Name
@@ -105,19 +105,19 @@ In this lab, we'll be using the Azure CLI to create a Azure Kubernetes Service (
     --generate-ssh-keys
     ```
 
-9. Verify your cluster status. The `ProvisioningState` should be `Succeeded`
+9. Verify your cluster status. The `ProvisioningState` should be `Succeeded`:
 
     ```bash
      az aks list -o table
     ```
 
-10. Get the Kubernetes config files for your new AKS cluster
+10. Get the Kubernetes config files for your new AKS cluster:
 
     ```bash
     az aks get-credentials -n $CLUSTERNAME -g $RGNAME
     ```
 
-11. Verify you have API access to your new AKS cluster
+11. Verify you have API access to your new AKS cluster:
 
     ```bash
     kubectl get nodes

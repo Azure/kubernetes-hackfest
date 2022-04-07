@@ -29,13 +29,13 @@ redis-leader     ClusterIP   10.0.82.226    <none>        6379/TCP   6m44s
 
 4. We will now first add the created frontend service to Otomi. Click `Create Service`.
 
-5. Fill in the name `frontend`
+5. Fill in the name `frontend`.
 
-6. Under `Exposure`, select `Public`. Leave all other settings under exposure default
+6. Under `Exposure`, select `Public`. Leave all other settings under exposure default.
 
-7. Leave all other settings default and click `Submit`
+7. Leave all other settings default and click `Submit`.
 
-8. Click `Deploy Changes`
+8. Click `Deploy Changes`.
 
 After the changes have been deployed (this will take a couple of minutes), you will see that the service we just created has a host name. Click on the host name. What do you see? Submit a couple of messages.
 
@@ -47,11 +47,11 @@ Notice that the guestbook front-end still works!
 
 10. Go to the console and select `Settings` under your team.
 
-11. Under NetworkPolicy, enable `Network Policies`
+11. Under NetworkPolicy, enable `Network Policies`.
 
 Now go to the Guestbook application and notice that your messages are gone and you can't submit new messages. This is because traffic between the frontend and the 2 redis services is not permitted anymore. Let's fix this.
 
-12. Click on the `redis-leader` service
+12. Click on the `redis-leader` service.
 
 13. Under Network Policies, select `Allow selected` and click `Add Item`. Add the following 2 items and Submit:
 
