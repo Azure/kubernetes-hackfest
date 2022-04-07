@@ -29,7 +29,7 @@ You might notice that in the `Service type` section there are now 2 extra option
 6. The new service and the Hostname are now shown in the list of services. Wait until the Drone pipeline has finished and click on the hostname. What do you see?
 
 
-This was the last lab. In the labs we only toughed upon a couple of Otomi features. Please go and play around some more. And if you run into any issues, please report them [here](https://github.com/redkubes/otomi-core). We hope you enjoyed the labs. To show your appreciation to our open source project, please ⭐️ ⭐️ ⭐️
+This was the last lab. In the labs we only touched upon a couple of Otomi features. Please go and play around some more. And if you run into any issues, please report them [here](https://github.com/redkubes/otomi-core). We hope you enjoyed the labs. To show your appreciation to our open source project, please ⭐️ ⭐️ ⭐️
 
 Thank you!
 
