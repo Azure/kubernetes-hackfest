@@ -24,7 +24,12 @@ You might notice that in the `Service type` section there are now 2 extra option
 - Requests: CPU=100m, Memory=64Mi
 - Exposure: Public
 
-5. Now click `submit` and `Deploy changes.
+5. Now click `Submit` and then `Deploy changes`.
 
-6. The new service and the Hostname are now shown in the list of services. Wait until the Drone pipeline has finished and click on the hostname.
+6. The new service and the Hostname are now shown in the list of services. Wait until the Drone pipeline has finished and click on the hostname. What do you see?
+
+
+This was the last lab. In the labs we only toughed upon a couple of Otomi features. Please go and play around some more. And if you run into any issues, please report them [here](https://github.com/redkubes/otomi-core). We hope you enjoyed the labs. To show your appreciation to our open source project, please ⭐️ ⭐️ ⭐️
+
+Thank you!
 

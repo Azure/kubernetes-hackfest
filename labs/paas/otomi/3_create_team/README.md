@@ -2,15 +2,15 @@
 
 In this lab, we are going to create a Team in Otomi. Teams in Otomi serve the following purpose:
 
-1. Creating a namespace on the cluster, configuring RBAC and setting default quota's
+- Creating a namespace on the cluster, configuring RBAC and setting default quota's
 
-2. Provide self-service options for team members in Otomi Console
+- Provide self-service options for team members in Otomi Console
 
-3. Isolate ingress traffic between teams
+- Isolate ingress traffic between teams
 
-4. Optionally: Separate team metrics and logs. When multi-tenancy is not enabled (default), metrics and logs are not separated (providing all users admin role to see cluster wide metrics and logs)
+- Optionally: Separate team metrics and logs. When multi-tenancy is not enabled (default), metrics and logs are not separated (providing all users admin role to see cluster wide metrics and logs)
 
-Let's create a Team
+Let's create a Team!
 
 ## Instructions
 
@@ -26,9 +26,9 @@ Let's create a Team
 
 6. Click on `Submit`
 
-7. Click on `Deploy Changed` (this will become active after a change has been submitted)
+7. Click on `Deploy Changes` (this will become active after a change has been submitted)
 
-8. Select your team in teh top bar
+8. Select your team in the top bar
 
 9. See that in the left bar, the team section appears
 
