@@ -45,7 +45,7 @@ When you create a service in Otomi with ingress `Cluster`, the K8s service will 
 
 Notice that the guestbook front-end still works!
 
-10. Go to the console and select `Settings` under your team.
+10. In the console go to your team and then `Settings`.
 
 11. Under NetworkPolicy, enable `Network Policies`.
 
