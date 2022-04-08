@@ -23,7 +23,7 @@ In this lab, we'll be installing [Otomi](https://github.com/redkubes/otomi-core)
     helm install otomi otomi/otomi \
     --set cluster.k8sVersion="1.21" \
     --set cluster.name=$CLUSTERNAME \
-    --set cluster.provider=azure \
+    --set cluster.provider=azure
     ```
 
 4. Monitoring the Chart install
@@ -50,7 +50,6 @@ In this lab, we'll be installing [Otomi](https://github.com/redkubes/otomi-core)
     #  To start using Otomi, go to https://<your-ip>.nip.io and sign in to the web console 
     #  with username "otomi-admin" and password "password".
     #  Then activate Drone. For more information see: https://otomi.io/docs/installation/post-install/
-    #
     ########################################################################################
     ```
 
