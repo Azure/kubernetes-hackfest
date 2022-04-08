@@ -88,7 +88,7 @@ In this lab, we'll be installing [Otomi](https://github.com/redkubes/otomi-core)
 
 8. Activate Drone:
 
-- Click on the **Drone** app (under Platform/Apps) in the console
+- In the side menu of Otomi Console under `platform` click on the **Drone** app
 - Click on the `play` button in the top right. A new tab will open for Drone
 - Sign in locally with as `otomi-admin` and the password provided in the logs of the installer job.
 - Click on `Authorize Application`

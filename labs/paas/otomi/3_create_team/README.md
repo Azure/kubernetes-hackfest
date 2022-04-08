@@ -14,7 +14,7 @@ Let's create a Team!
 
 ## Instructions
 
-1. Click on `Teams` under the `Platform` section in Otomi Console (in the menu right).
+1. In the side menu, click on `Teams` under the `Platform` section.
 
 2. Click on `Create team`.
 
@@ -26,11 +26,11 @@ Let's create a Team!
 
 6. Click on `Submit`.
 
-7. Click on `Deploy Changes` (this will become active after a change has been submitted).
+7. Click on `Deploy Changes` (this will become active after in the side menu after you submit a change).
 
 8. Select your team in the top bar. Here you can select your context (cluster and team).
 
-9. See that in the left bar, the team section appears.
+9. In the side menu, the team section will now become visible.
 
 Note:
 

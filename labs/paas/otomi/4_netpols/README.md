@@ -25,7 +25,7 @@ redis-follower   ClusterIP   10.0.135.61    <none>        6379/TCP   6m44s
 redis-leader     ClusterIP   10.0.82.226    <none>        6379/TCP   6m44s
 ```
 
-3. Go to the console, make sure you have selected your team in the top bar en and click `Services` under your team in the right menu.
+3. Go to Otomi Console. Make sure you have selected your team in the top bar en and then click the `Services` item under your team in the side menu.
 
 4. We will now first add the created frontend service to Otomi. Click `Create Service`.
 
@@ -45,7 +45,7 @@ When you create a service in Otomi with ingress `Cluster`, the K8s service will 
 
 Notice that the guestbook front-end still works!
 
-10. In the console go to your team and then `Settings`.
+10. In Otomi Console go to your team and then click the `Settings` item.
 
 11. Under NetworkPolicy, enable `Network Policies`.
 

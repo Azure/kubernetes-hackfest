@@ -4,7 +4,7 @@ In this lab we are going to activate Knative and create a new Knative service us
 
 ## Instructions
 
-1. Go to the Apps section under `Platform` and Drag and Drop `Knative` from the `Disabled apps` to the `Enabled apps` and `Deploy changes`.
+1. Go to the Apps section under `Platform` in the side menu and Drag and Drop `Knative` from the `Disabled apps` to the `Enabled apps` and `Deploy changes`.
 
 2. Select your team in the top bar, click `Services` under your team in the right menu and click on `Create Service`.
 
@@ -26,7 +26,7 @@ You might notice that in the `Service type` section there are now 2 extra option
 
 5. Now click `Submit` and then `Deploy changes`.
 
-6. The new service and the Hostname are now shown in the list of services. Wait until the Drone pipeline has finished and click on the hostname. What do you see?
+6. The new service and the hostname are now shown in the list of services. Wait until the Drone pipeline has finished and click on the hostname. What do you see?
 
 This was the last lab. In the labs we only touched upon a couple of Otomi features. Please go and play around some more. And if you run into any issues, please report them [here](https://github.com/redkubes/otomi-core). We hope you enjoyed the labs. To show your appreciation to our open source project, please ⭐️ ⭐️ ⭐️
 
