@@ -6,7 +6,7 @@
 
 Otomi:
 
-- Brings a full PaaS (like Heroku) to your own Kubernetes cluster. The only thing you'll need to do yourself is to deploy your application and then Otomi will do the rest.
+- Brings a full PaaS (like Heroku) to your own Kubernetes cluster. The only thing you'll need to do yourself is deploy your application and Otomi will do the rest.
 
 - Allows you to use a PaaS on top of K8s without the constraints and abstractions of traditional PaaS offerings like OpenShift, Cloud Foundry and Heroku.
 
@@ -24,11 +24,11 @@ The workshop walks you through the all the steps required to install and use Oto
 - SREs
 - Infrastructure & Cloud Engineers
 
-## Learning objectives
+## 🎊 Learning objectives
 
 The main objective is to get a good understanding/overview of Otomi and be able to identify the benefits and possible use cases for it.
 
-## Lab prerequisites
+## 🛠 Lab prerequisites
 
 - Azure account and Azure cloud shell access
 
@@ -40,12 +40,6 @@ In case of not using Azure Cloud shell, install
 - Optionally: [K9s](https://kubernetes.io/docs/tasks/tools/)
 
 ## 🚀 Labs
-
-NOTE
-
-⚠️ The labs use a new version of Otomi that is released on April 11. The labs can only be done after this date!
-
----
 
 The workshop is organized into 6 labs:
 
@@ -64,7 +58,7 @@ After completing the labs, you'll be able to:
 - Explain the difference between Otomi core apps and how to activate optional apps
 - Create Knative workloads using the Otomi web UI
 
-## Documentation & support
+## 📖 Documentation & support
 
 Official Otomi documentation is available [here](https://otomi.io). We'd also like to invite you to [join our Slack community](https://otomi.slack.com/join/shared_invite/zt-12h11e8aa-6po4NWhhpMXxT~nffDsYqA#/shared-invite/email) for additional support, feature discussions, or just for a quick chat.
 
