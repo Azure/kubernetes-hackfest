@@ -20,7 +20,7 @@
     "hbs": "^4.0.4",
     "http-errors": "~1.6.2",
     "jwt-simple": "^0.5.6",
-    "moment": "^2.22.2",
+    "moment": "^2.29.2",
     "mongoose": "^5.5.12",
     "morgan": "^1.9.1"
   }
