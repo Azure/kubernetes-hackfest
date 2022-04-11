@@ -46,10 +46,10 @@ In this lab, we'll be installing [Otomi](https://github.com/redkubes/otomi-core)
 
     ```bash
     2022-04-01T10:01:59.239Z otomi:cmd:commit:commit:info                                                                                            
-    ######################################################################################## #                                                                                                                       
+    ########################################################################################                                      
     #  To start using Otomi, go to https://<your-ip>.nip.io and sign in to the web console 
     #  with username "otomi-admin" and password "password".
-    #  Then activate Drone. For more information see: https://otomi.io/docs/installation/post-install/
+    #  Then activate Drone. For more information see: https://otomi.io/docs/installation/activation
     ########################################################################################
     ```
 
@@ -60,9 +60,9 @@ In this lab, we'll be installing [Otomi](https://github.com/redkubes/otomi-core)
 7. Add the auto generated CA to your keychain (optional)
 
    Since we install Otomi without proving a custom CA or using LetsEncrypt, the installer generated a CA. This CA is of course not trusted on your local machine.
-   To prevent you from clicking away lots of security warning in your browser, you can add the generated CA to your keychain:
+   To prevent you from clicking away lots of security warnings in your browser, you can add the generated CA to your keychain:
 
-- In the left pane of the console, click on "Download CA"
+- In the left menu of the console, click on "Download CA"
 - Double click the downloaded CA.crt or add the CA to your keychain on your mac using the following command:
   
   ```bash
