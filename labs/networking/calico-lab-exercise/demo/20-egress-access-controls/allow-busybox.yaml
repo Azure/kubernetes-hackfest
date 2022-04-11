@@ -12,3 +12,7 @@ spec:
     protocol: TCP
     source:
       selector: app == 'busybox'
+  - action: Allow
+    protocol: TCP
+    source:
+      selector: app == 'pwsh'    

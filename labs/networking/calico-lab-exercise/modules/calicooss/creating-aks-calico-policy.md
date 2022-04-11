@@ -102,7 +102,7 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     
     ```bash
     K8SVERSION=1.22.4
-    echo export K8SVERSION=1.21.1 >> ~/.bashrc
+    echo export K8SVERSION=1.22.4 >> ~/.bashrc
     ```
 
     
@@ -177,8 +177,8 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     Output is:
     ```bash
     Client Version:    v3.22.0
-    Git commit:        e9535482
-    Cluster Version:   v3.20.0-dirty
+    Git commit:        a86e41d02
+    Cluster Version:   v3.21.4
     Cluster Type:      typha,kdd,k8s,operator,aks
     ```
      

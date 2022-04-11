@@ -39,15 +39,14 @@
     ##NODE-NAME will be aks-nodepool1-40984214-vmss0000000 for example.
     NODE_NAME=$(kubectl get nodes -o jsonpath='{.items[*].status.addresses[?(@.type=="Hostname")].address}'| awk '{print $1;}')
     sleep 10
-    calicoctl --allow-version-mismatch get node $NODE_NAME -o yaml
+    calicoctl --allow-version-mismatch get node $NODE_NAME -o yaml | grep wireguard
 
     ```
 
     Output will be like:
     ```bash
-    ##omit
-    status:
-     wireguardPublicKey: jlkVyQYooZYzI2wFfNhSZez5eWh44yfq1wKVjLvSXgY=
+    wireguard:
+    wireguardPublicKey: +vkMXAJ3BSbxkqqozx3ZArNcctWjOoGIpgbi2ZmsgGQ=
     ```
 
 3. You can also verify it in one of the nodes, Calico will generate a wireguard interface as `wireguard.cali` 

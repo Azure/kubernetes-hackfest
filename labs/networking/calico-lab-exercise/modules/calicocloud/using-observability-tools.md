@@ -4,12 +4,9 @@
 
 ## Calico observability tools
 
->If you are interested in enabling collection of application layer metrics for your workloads, refer to [Configure L7 logs](https://docs.tigera.io/visibility/elastic/l7/configure) documentation to enable application layer metrics collection.
-
-
 1. Choose your cluster
    To access resources in a managed cluster from the Calico cloud Manager UI, you can select via the drop down in the top right corner of the portal.
-   All your clusters are displayed in the cluster selection drop-down menu with the fixed name.
+   All your connected clusters are displayed in the cluster selection drop-down menu with the fixed name.
    
 
    ![drop-down menu](../img/drop-down-menu.png)
@@ -107,5 +104,7 @@
     ![kibana flows](../img/kibana-flow-logs.png)
 
     Some of the default dashboards you get access to are DNS Logs, Flow Logs, Audit Logs, Kuernetes API calls, L7 HTTP metrics, and others.
+
+    ![kibana dashboard](../img/kibana-dashboard.png)
 
 [Next -> Module 4](../calicocloud/using-dns-controls.md)
