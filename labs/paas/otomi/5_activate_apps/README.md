@@ -8,7 +8,7 @@ In this lab we are going to activate Loki for logging. But first: The multi-tena
 
 1. Go to `Settings` under the `Platform` section in the side menu and then select `Otomi`. In the bottom of the page you will see the flag `Multi-tenancy`. For this lab, we will not enable multi-tenancy.
 
-2. Go to `Apps` under the `Platform` section in the side menu and Drag and Drop `Loki` from the `Disabled apps` to the `Enabled apps`. Notice that `Grafana` will also be enabled. This is because Loki requires Grafana and is also installed because of this dependency.
+2. Go to `Apps` under the `Platform` section in the side menu and Drag and Drop `Loki` from the `Disabled apps` to the `Enabled apps`. Notice that `Grafana` and `Prometheus` will also be enabled. This is because Loki requires Grafana, and Grafana requires Prometheus and therefor are also installed because of these dependencies.
 
 3. Click on `Deploy changes`
 
