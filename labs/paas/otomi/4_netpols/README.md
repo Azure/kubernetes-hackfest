@@ -57,15 +57,15 @@ Now go to the Guestbook application and notice that your messages are gone and y
 
 | Team name   | Service Name |
 | ----------- | ------------ |
-| <TEAM-NAME>   | frontend     |
-| <TEAM-NAME>   | redis-follower |
+| TEAM-NAME   | frontend     |
+| TEAM-NAME   | redis-follower |
 
 Before deploying changes, go to the `redis-follower` service and do the same, but in this case only allow the frontend service:
 
 | Team name   | Service Name |
 | ----------- | ------------ |
-| <TEAM-NAME>   | frontend    |
-| <TEAM-NAME>   | redis-leader |
+| TEAM-NAME   | frontend    |
+| TEAM-NAME   | redis-leader |
 
 Now `Deploy Changes` and check the progress of the deployment in the `Drone` application.
 
