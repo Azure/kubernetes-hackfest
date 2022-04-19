@@ -4,7 +4,7 @@ In this lab we are going to activate Knative and create a new Knative service us
 
 ## Instructions
 
-1. Go to the Apps section under `Platform` in the side menu and Drag and Drop `Knative` from the `Disabled apps` to the `Enabled apps` and `Deploy changes`.
+1. Go to the Apps section under `Platform` in the side menu and Drag and Drop `Knative` from the `Disabled apps` to the `Enabled apps` and `Deploy Changes`.
 
 2. Select your team in the top bar, click `Services` under your team in the right menu and click on `Create Service`.
 
@@ -24,7 +24,7 @@ You might notice that in the `Service type` section there are now 2 extra option
 - Requests: CPU=100m, Memory=64Mi
 - Exposure: Public
 
-5. Now click `Submit` and then `Deploy changes`.
+5. Now click `Submit` and then `Deploy Changes`.
 
 6. The new service and the hostname are now shown in the list of services. Wait until the Drone pipeline has finished and click on the hostname. What do you see?
 

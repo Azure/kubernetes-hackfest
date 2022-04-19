@@ -4,16 +4,16 @@ In this lab we are going to deploy a multi tier web application, called `guestbo
 
 ## Instructions
 
-1. Install the Guestbook application resources:
+1. Install the Guestbook application resources in the `team-<TEAM-NAME>` namespace:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/redkubes/workshops/main/netpol/manifests/guestbook.yaml -n team-$TEAM-NAME
+kubectl apply -f https://raw.githubusercontent.com/redkubes/workshops/main/netpol/manifests/guestbook.yaml -n team-<TEAM-NAME>
 ```
 
 2. Get the names of the created ClusterIP services:
 
 ```bash
-kubectl get svc -n team-<$TEAM-NAME>
+kubectl get svc -n team-<TEAM-NAME>
 ```
 
 You will see three services:
@@ -57,19 +57,18 @@ Now go to the Guestbook application and notice that your messages are gone and y
 
 | Team name   | Service Name |
 | ----------- | ------------ |
-| $TEAM-NAME   | frontend     |
-| $TEAM-NAME   | redis-follower |
+| <TEAM-NAME>   | frontend     |
+| <TEAM-NAME>   | redis-follower |
 
 Before deploying changes, go to the `redis-follower` service and do the same, but in this case only allow the frontend service:
 
 | Team name   | Service Name |
 | ----------- | ------------ |
-| $TEAM-NAME   | frontend    |
-| $TEAM-NAME   | redis-leader |
+| <TEAM-NAME>   | frontend    |
+| <TEAM-NAME>   | redis-leader |
 
-Now `Deploy Changes`
+Now `Deploy Changes` and check the progress of the deployment in the `Drone` application.
 
-Notice that the Guestbook app works again.
-
+Note that the Guestbook app works again.
 
 Go to the [next lab](../5_activate_apps/README.md)

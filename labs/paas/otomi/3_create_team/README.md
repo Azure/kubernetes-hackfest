@@ -26,7 +26,8 @@ Let's create a Team!
 
 6. Click on `Submit`.
 
-7. Click on `Deploy Changes` (this will become active after in the side menu after you submit a change).
+7. Click on `Deploy Changes` and check the progress of the deployment in the `Drone` application.
+   Note: this will become active after in the side menu after you submit a change
 
 8. Select your team in the top bar. Here you can select your context (cluster and team).
 
@@ -36,6 +37,5 @@ Note:
 
 - Because we did not enable Alert manager, the Alerts section is disabled
 - Because we did not enable Grafana, the Azure Monitor section is disabled
-
 
 Go to the [next lab](../4_netpols/README.md)
