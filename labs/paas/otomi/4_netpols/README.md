@@ -16,7 +16,7 @@ kubectl apply -f https://raw.githubusercontent.com/redkubes/workshops/main/netpo
 kubectl get svc -n team-<$TEAM-NAME>
 ```
 
-You will see 3 services:
+You will see three services:
 
 ```bash
 NAME             TYPE        CLUSTER-IP     EXTERNAL-IP   PORT(S)    AGE
@@ -31,7 +31,7 @@ redis-leader     ClusterIP   10.0.82.226    <none>        6379/TCP   6m44s
 
 5. Fill in the name `frontend`.
 
-6. Under `Exposure`, select `Public`. Leave all other settings under exposure default.
+6. Under `Exposure ingress`, select `Public`. Leave all other settings under exposure default.
 
 7. Leave all other settings default and click `Submit`.
 
@@ -39,7 +39,7 @@ redis-leader     ClusterIP   10.0.82.226    <none>        6379/TCP   6m44s
 
 After the changes have been deployed (this will take a couple of minutes), you will see that the service we just created has a host name. Click on the host name. What do you see? Submit a couple of messages.
 
-9. Now add the other 2 services (`redis-follower` and `redis-leader`). Make sure to provide the correct port (6379). Leave all other settings default (so no exposure) and Submit. You don't need to Deploy Changes after every Submit. Just create the 2 services and then Deploy Changes.
+9. Now add the other two services (`redis-follower` and `redis-leader`). Make sure to provide the correct port (6379) for both the `redis-leader` and `redis-follower` services. Leave all other settings default (so no exposure) and Submit. You don't need to Deploy Changes after every Submit. Just create the 2 services and then Deploy Changes.
 
 When you create a service in Otomi with ingress `Cluster`, the K8s service will be added to the service-mesh in Otomi. When you create services in Otomi, the Istio Gateway is automatically configured and Istio virtual services are also automatically created.
 
@@ -47,7 +47,7 @@ Notice that the guestbook front-end still works!
 
 10. In Otomi Console go to your team and then click the `Settings` item.
 
-11. Under NetworkPolicy, enable `Network Policies`.
+11. Under NetworkPolicy, enable `Network Policies`. Click on `submit` and then `Deploy Changes`.
 
 Now go to the Guestbook application and notice that your messages are gone and you can't submit new messages. This is because traffic between the frontend and the 2 redis services is not permitted anymore. Let's fix this.
 
