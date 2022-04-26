@@ -21,7 +21,7 @@ In this lab we will build Docker containers for each of the application componen
     # Check ACR Name (Can Only Container lowercase)
     echo $ACRNAME
     # Persist for Later Sessions in Case of Timeout
-    echo export ACRNAME=acrhackfest$UNIQUE_SUFFIX >> ~/.bashrc
+    echo export ACRNAME=acrhackfest$UNIQUE_SUFFIX >> ~/workshopvars.env
     # Create Azure Container Registry
     az acr create --resource-group $RGNAME --name $ACRNAME --sku Basic
     ```
@@ -68,20 +68,9 @@ In this lab we will build Docker containers for each of the application componen
     APPINSIGHTSNAME=appInsightshackfest$UNIQUE_SUFFIX
     # Deploy the appinsights ARM template   
     az deployment group create --resource-group $RGNAME --template-file labs/build-application/app-Insights.json --parameters type=Node.js name=$APPINSIGHTSNAME regionId=eastus --no-wait
+    # Get the Instrumentation Key
+    export APPINSIGHTS_INSTRUMENTATIONKEY=$(az resource show -g $RGNAME -n $APPINSIGHTSNAME --resource-type "microsoft.insights/components" --query properties.InstrumentationKey -o tsv)
     ```
-
-    Alternatively :    
-
-    * In your Azure portal, click "Create a resource", select "Developer tools", and choose "Application Insights"
-    * Pick a unique name (you can use the unique identifier created in the 1st lab)
-    * Use "Node.js Application" for the app type
-    * Select "kubernetes-hackfest" for the Resource Group
-    * Use "East US" for location
-    * When this is completed, select "All services", and search for "Application Insights" 
-    * Select your newly created Application Insights instance
-    * On the Overview Page take note of the Instrumentation Key 
-
-        ![App Insights](app-insights.png "App Insights")
 
 1. Deploy Cosmos DB
 
@@ -113,11 +102,6 @@ In this lab we will build Docker containers for each of the application componen
 
     ```bash
     export MONGODB_PASSWORD=$(az cosmosdb keys list --name $COSMOSNAME --resource-group $RGNAME --query "primaryMasterKey" -o tsv)
-    ```
-
-    Use Instrumentation Key from step 3 above.
-    ```bash
-    export APPINSIGHTS_INSTRUMENTATIONKEY='replace-me'
     ```
 
     ```bash
