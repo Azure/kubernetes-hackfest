@@ -9,13 +9,13 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
 ## Instructions
 
 1. Login to Azure Portal at http://portal.azure.com.
-1. Open the Azure Cloud Shell and choose Bash Shell (do not choose Powershell)
+2. Open the Azure Cloud Shell and choose Bash Shell (do not choose Powershell)
 
    ![Azure Cloud Shell](img-cloud-shell.png "Azure Cloud Shell")
 
-1. The first time Cloud Shell is started will require you to create a storage account.
+3. The first time Cloud Shell is started will require you to create a storage account.
 
-1. Once your cloud shell is started, clone the workshop repo into the cloud shell environment
+4. Once your cloud shell is started, clone the workshop repo into the cloud shell environment
 
    ```bash
    git clone https://github.com/Azure/kubernetes-hackfest
@@ -23,7 +23,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
 
    > Note: In the cloud shell, you are automatically logged into your Azure subscription.
 
-1. Ensure you are using the correct Azure subscription you want to deploy AKS to.
+5. Ensure you are using the correct Azure subscription you want to deploy AKS to.
 
    ```
    # View subscriptions
@@ -43,7 +43,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
    az account show
    ```
 
-1. Create a unique identifier suffix for resources to be created in this lab.
+6. Create a unique identifier suffix for resources to be created in this lab.
 
 > *NOTE:* In the following sections we'll be generating and setting some environment variables. If you're terminal session restarts you may need to reset these variables. You can use that via the following command:
 >
@@ -61,9 +61,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
    echo export UNIQUE_SUFFIX=$UNIQUE_SUFFIX >> ~/workshopvars.env
    ```
 
-   **_ Note this value as it will be used in the next couple labs. _**
-
-1. Create an Azure Resource Group in East US.
+7. Create an Azure Resource Group in East US.
 
    ```bash
    # Set Resource Group Name using the unique suffix
@@ -78,7 +76,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
    az group create -n $RGNAME -l $LOCATION
    ```
 
-2. Create your AKS cluster in the resource group created above with 3 nodes. We will check for a recent version of kubnernetes before proceeding. We are also including the monitoring add-on for Azure Container Insights. You will use the Service Principal information from step 5.
+8. Create your AKS cluster in the resource group created above with 3 nodes. We will check for a recent version of kubnernetes before proceeding. We are also including the monitoring add-on for Azure Container Insights. You will use the Service Principal information from step 5.
 
    Use Unique CLUSTERNAME
 
@@ -124,7 +122,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
    --no-wait
    ```
 
-3.  Verify your cluster status. The `ProvisioningState` should be `Succeeded`
+9.  Verify your cluster status. The `ProvisioningState` should be `Succeeded`
 
     ```bash
     az aks list -o table
@@ -136,13 +134,13 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
       aks25415        eastus      aks-rg-25415       1.21.1               Succeeded            aks25415-aks-rg-25415-62afe9-3a0152d0.hcp.eastus.azmk8s.io
     ```
 
-4.  Get the Kubernetes config files for your new AKS cluster
+10.  Get the Kubernetes config files for your new AKS cluster
 
     ```bash
     az aks get-credentials -n $CLUSTERNAME -g $RGNAME
     ```
 
-5.  Verify you have API access to your new AKS cluster
+11.  Verify you have API access to your new AKS cluster
 
     > Note: It can take 5 minutes for your nodes to appear and be in READY state. You can run `watch kubectl get nodes` to monitor status.
 
