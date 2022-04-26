@@ -81,7 +81,7 @@ In this lab we will build Docker containers for each of the application componen
     # Check COSMOS Name
     echo $COSMOSNAME
     # Persist for Later Sessions in Case of Timeout
-    echo export COSMOSNAME=cosmos$UNIQUE_SUFFIX >> ~/.bashrc
+    echo export COSMOSNAME=cosmos$UNIQUE_SUFFIX >> ~/workshopvars.env
     # Create Cosmos DB
     az cosmosdb create --name $COSMOSNAME --resource-group $RGNAME --kind MongoDB
     ```
