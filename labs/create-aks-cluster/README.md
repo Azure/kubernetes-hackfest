@@ -45,9 +45,9 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
 
 6. Create a unique identifier suffix for resources to be created in this lab.
 
-> *NOTE:* In the following sections we'll be generating and setting some environment variables. If you're terminal session restarts you may need to reset these variables. You can use that via the following command:
->
-> source ~/workshopvars.env
+   > *NOTE:* In the following sections we'll be generating and setting some environment variables. If you're terminal session restarts you may need to reset these variables. You can use that via the following command:
+   >
+   > source ~/workshopvars.env
 
    ```bash
    echo "# Start AKS Hackfest Lab Params">>~/workshopvars.env
