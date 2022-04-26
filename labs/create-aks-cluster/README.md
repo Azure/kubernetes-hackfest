@@ -124,50 +124,50 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
 
 9.  Verify your cluster status. The `ProvisioningState` should be `Succeeded`
 
-    ```bash
+   ```bash
     az aks list -o table
-    ```
+   ```
 
-    ```bash
+   ```bash
       Name            Location    ResourceGroup      KubernetesVersion    ProvisioningState    Fqdn
       --------------  ----------  -----------------  -------------------  -------------------  ----------------------------------------------------------------
       aks25415        eastus      aks-rg-25415       1.21.1               Succeeded            aks25415-aks-rg-25415-62afe9-3a0152d0.hcp.eastus.azmk8s.io
-    ```
+   ```
 
 10.  Get the Kubernetes config files for your new AKS cluster
 
-    ```bash
-    az aks get-credentials -n $CLUSTERNAME -g $RGNAME
-    ```
+   ```bash
+     az aks get-credentials -n $CLUSTERNAME -g $RGNAME
+   ```
 
-11.  Verify you have API access to your new AKS cluster
+12.  Verify you have API access to your new AKS cluster
 
     > Note: It can take 5 minutes for your nodes to appear and be in READY state. You can run `watch kubectl get nodes` to monitor status.
 
-    ```bash
-    kubectl get nodes
-    ```
+   ```bash
+   kubectl get nodes
+   ```
 
-    ```bash
+   ```bash
       NAME                                STATUS   ROLES   AGE     VERSION
       aks-nodepool1-16820300-vmss000000   Ready    agent   2m11s   v1.21.1
       aks-nodepool1-16820300-vmss000001   Ready    agent   2m15s   v1.21.1
       aks-nodepool1-16820300-vmss000002   Ready    agent   2m12s   v1.21.1
-    ```
+   ```
 
     To see more details about your cluster:
 
-    ```bash
+   ```bash
     kubectl cluster-info
-    ```
+   ```
 
-    ```bash
+   ```bash
       Kubernetes control plane is running at https://akssteve10-aks-rg-steve1075-62afe9-631a3ab4.hcp.eastus.azmk8s.io:443
       CoreDNS is running at https://akssteve10-aks-rg-steve1075-62afe9-631a3ab4.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
       Metrics-server is running at https://akssteve10-aks-rg-steve1075-62afe9-631a3ab4.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
 
       To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
-    ```
+   ```
 
     You should now have a Kubernetes cluster running with 3 nodes. You do not see the master servers for the cluster because these are managed by Microsoft. The Control Plane services which manage the Kubernetes cluster such as scheduling, API access, configuration data store and object controllers are all provided as services to the nodes.
 
