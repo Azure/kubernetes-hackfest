@@ -155,18 +155,16 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
       aks-nodepool1-16820300-vmss000002   Ready    agent   2m12s   v1.21.1
    ```
 
-    To see more details about your cluster:
+   To see more details about your cluster:
 
    ```bash
     kubectl cluster-info
-   ```
+   
+   Kubernetes control plane is running at https://akssteve10-aks-rg-steve1075-62afe9-631a3ab4.hcp.eastus.azmk8s.io:443
+   CoreDNS is running at https://akssteve10-aks-rg-steve1075-62afe9-631a3ab4.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+   Metrics-server is running at https://akssteve10-aks-rg-steve1075-62afe9-631a3ab4.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
 
-   ```bash
-      Kubernetes control plane is running at https://akssteve10-aks-rg-steve1075-62afe9-631a3ab4.hcp.eastus.azmk8s.io:443
-      CoreDNS is running at https://akssteve10-aks-rg-steve1075-62afe9-631a3ab4.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-      Metrics-server is running at https://akssteve10-aks-rg-steve1075-62afe9-631a3ab4.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
-
-      To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+   To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
    ```
 
     You should now have a Kubernetes cluster running with 3 nodes. You do not see the master servers for the cluster because these are managed by Microsoft. The Control Plane services which manage the Kubernetes cluster such as scheduling, API access, configuration data store and object controllers are all provided as services to the nodes.
