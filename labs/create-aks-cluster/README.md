@@ -149,10 +149,10 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
    ```
 
    ```bash
-      NAME                                STATUS   ROLES   AGE     VERSION
-      aks-nodepool1-16820300-vmss000000   Ready    agent   2m11s   v1.21.1
-      aks-nodepool1-16820300-vmss000001   Ready    agent   2m15s   v1.21.1
-      aks-nodepool1-16820300-vmss000002   Ready    agent   2m12s   v1.21.1
+   NAME                                STATUS   ROLES   AGE     VERSION
+   aks-nodepool1-25335207-vmss000000   Ready    agent   2m1s    v1.23.5
+   aks-nodepool1-25335207-vmss000001   Ready    agent   2m5s    v1.23.5
+   aks-nodepool1-25335207-vmss000002   Ready    agent   2m13s   v1.23.5
    ```
 
    To see more details about your cluster:
