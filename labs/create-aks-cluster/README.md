@@ -110,7 +110,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
    K8SVERSION=1.23.5
    ```
 
-   > The below command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT and grab a coffee...
+   > The below command can take 3-5 minutes to run as it is creating the AKS cluster. 
 
    ```bash
    # Create AKS Cluster
@@ -125,7 +125,9 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
 9.  Verify your cluster status. The `ProvisioningState` should be `Succeeded`
 
    ```bash
-    az aks list -o table
+   az aks list -o table
+   # Or
+   watch az aks list -o table
    ```
 
    ```bash
