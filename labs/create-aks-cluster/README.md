@@ -144,8 +144,6 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
 
 12.  Verify you have API access to your new AKS cluster
 
-    > Note: It can take 5 minutes for your nodes to appear and be in READY state. You can run `watch kubectl get nodes` to monitor status.
-
    ```bash
    kubectl get nodes
    ```
