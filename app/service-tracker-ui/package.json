@@ -8,7 +8,7 @@
     "container": "vue-cli-service serve"
   },
   "dependencies": {
-    "async": "^2.6.1",
+    "async": "^2.6.4",
     "babel-helper-vue-jsx-merge-props": "^2.0.3",
     "bootstrap": "^4.3.1",
     "chartist": "^0.11.0",
