@@ -110,7 +110,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
    K8SVERSION=1.23.5
    ```
 
-   > The below command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT and grab a coffee...
+   > The below command can take 3-5 minutes to run as it is creating the AKS cluster. 
 
    ```bash
    # Create AKS Cluster
@@ -125,7 +125,9 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
 9.  Verify your cluster status. The `ProvisioningState` should be `Succeeded`
 
    ```bash
-    az aks list -o table
+   az aks list -o table
+   # Or
+   watch az aks list -o table
    ```
 
    ```bash
@@ -142,17 +144,15 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
 
 12.  Verify you have API access to your new AKS cluster
 
-    > Note: It can take 5 minutes for your nodes to appear and be in READY state. You can run `watch kubectl get nodes` to monitor status.
-
    ```bash
    kubectl get nodes
    ```
 
    ```bash
-      NAME                                STATUS   ROLES   AGE     VERSION
-      aks-nodepool1-16820300-vmss000000   Ready    agent   2m11s   v1.21.1
-      aks-nodepool1-16820300-vmss000001   Ready    agent   2m15s   v1.21.1
-      aks-nodepool1-16820300-vmss000002   Ready    agent   2m12s   v1.21.1
+   NAME                                STATUS   ROLES   AGE     VERSION
+   aks-nodepool1-25335207-vmss000000   Ready    agent   2m1s    v1.23.5
+   aks-nodepool1-25335207-vmss000001   Ready    agent   2m5s    v1.23.5
+   aks-nodepool1-25335207-vmss000002   Ready    agent   2m13s   v1.23.5
    ```
 
    To see more details about your cluster:

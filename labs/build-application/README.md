@@ -7,6 +7,9 @@ In this lab we will build Docker containers for each of the application componen
 * Complete previous labs:
     * [Azure Kubernetes Service](../create-aks-cluster/README.md)
 
+> *NOTE:* If you restarted your shell session, you need to reload your environment variables. You can use the following command:
+> source ~/workshopvars.env 
+
 ## Instructions
 
 1. Create Azure Container Registry (ACR)
@@ -69,6 +72,11 @@ In this lab we will build Docker containers for each of the application componen
     # Deploy the appinsights ARM template   
     az deployment group create --resource-group $RGNAME --template-file labs/build-application/app-Insights.json --parameters type=Node.js name=$APPINSIGHTSNAME regionId=eastus --no-wait
     # Get the Instrumentation Key
+    export APPINSIGHTS_INSTRUMENTATIONKEY=$(az resource show -g $RGNAME -n $APPINSIGHTSNAME --resource-type "microsoft.insights/components" --query properties.InstrumentationKey -o tsv)
+    ```
+
+    ```bash
+    # Get the Instrumentation Key. If you get an error, wait a few seconds and run this again.
     export APPINSIGHTS_INSTRUMENTATIONKEY=$(az resource show -g $RGNAME -n $APPINSIGHTSNAME --resource-type "microsoft.insights/components" --query properties.InstrumentationKey -o tsv)
     ```
 
