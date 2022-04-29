@@ -133,7 +133,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
    ```bash
       Name            Location    ResourceGroup      KubernetesVersion    ProvisioningState    Fqdn
       --------------  ----------  -----------------  -------------------  -------------------  ----------------------------------------------------------------
-      aks25415        eastus      aks-rg-25415       1.21.1               Succeeded            aks25415-aks-rg-25415-62afe9-3a0152d0.hcp.eastus.azmk8s.io
+      aks25415        eastus      aks-rg-25415       1.23.5               Succeeded            aks25415-aks-rg-25415-62afe9-3a0152d0.hcp.eastus.azmk8s.io
    ```
 
 10.  Get the Kubernetes config files for your new AKS cluster

@@ -123,7 +123,10 @@ version.BuildInfo{Version:"v3.8.0", GitCommit:"d14138609b01886f544b2025f5000351c
 
     ```bash
     kubectl apply -f charts/mongo/.
-    
+    ```
+
+    Sample Output:
+    ```bash
     deployment.apps/mongo-client created
     deployment.apps/mongo created
     persistentvolume/mongo-data-pv created
