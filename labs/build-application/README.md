@@ -78,6 +78,11 @@ In this lab we will build Docker containers for each of the application componen
     export APPINSIGHTS_INSTRUMENTATIONKEY=$(az resource show -g $RGNAME -n $APPINSIGHTSNAME --resource-type "microsoft.insights/components" --query properties.InstrumentationKey -o tsv)
     ```
 
+    ```bash
+    # Get the Instrumentation Key. If you get an error, wait a few seconds and run this again.
+    export APPINSIGHTS_INSTRUMENTATIONKEY=$(az resource show -g $RGNAME -n $APPINSIGHTSNAME --resource-type "microsoft.insights/components" --query properties.InstrumentationKey -o tsv)
+    ```
+
 2. Create Kubernetes secrets for access to App Insights
 
     You will use a secret to hold the API Key for App Insights. This is used by the pods once we deploy the app.
