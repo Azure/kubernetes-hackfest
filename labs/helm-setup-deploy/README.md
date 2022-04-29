@@ -125,14 +125,10 @@ version.BuildInfo{Version:"v3.8.0", GitCommit:"d14138609b01886f544b2025f5000351c
     kubectl apply -f charts/mongo/.
     ```
 
-    Sample Output:
+    Wait for the mongo pod to be in 'Ready' state before deploying the rest of the application. You can watch the pod status with the following:
+
     ```bash
-    deployment.apps/mongo-client created
-    deployment.apps/mongo created
-    persistentvolume/mongo-data-pv created
-    persistentvolumeclaim/mongo-data created
-    secret/mongo-creds created
-    service/mongo-svc created
+    watch kubectl get pods -n hackfest
     ```
 
 2. Deploy Charts
