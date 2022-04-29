@@ -27,7 +27,7 @@ spec:
             - name: APPINSIGHTS_INSTRUMENTATIONKEY
               valueFrom:
                 secretKeyRef:
-                  name: cosmos-db-secret
+                  name: app-insights-secret
                   key: appinsights
             - name: DATA_SERVICE_URI
               value: http://data-api.hackfest.svc.cluster.local:3009/

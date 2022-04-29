@@ -43,7 +43,7 @@ spec:
             - name: APPINSIGHTS_INSTRUMENTATIONKEY
               valueFrom:
                 secretKeyRef:
-                  name: cosmos-db-secret
+                  name: app-insights-secret
                   key: appinsights                   
           ports:
           - containerPort: {{.Values.deploy.containerPort}}

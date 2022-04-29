@@ -119,7 +119,20 @@ version.BuildInfo{Version:"v3.8.0", GitCommit:"d14138609b01886f544b2025f5000351c
         ...
         ```
 
-1. Deploy Charts
+1. Deploy MongoDB
+
+    ```bash
+    kubectl apply -f charts/mongo/.
+    
+    deployment.apps/mongo-client created
+    deployment.apps/mongo created
+    persistentvolume/mongo-data-pv created
+    persistentvolumeclaim/mongo-data created
+    secret/mongo-creds created
+    service/mongo-svc created
+    ```
+
+2. Deploy Charts
 
     Ensure namespace was created earlier:
     ```bash
@@ -141,7 +154,7 @@ version.BuildInfo{Version:"v3.8.0", GitCommit:"d14138609b01886f544b2025f5000351c
     helm upgrade --install service-tracker-ui charts/service-tracker-ui --namespace hackfest
     ```
 
-1. Initialize application
+3. Initialize application
 
     * First check to see if pods and services are working correctly
 

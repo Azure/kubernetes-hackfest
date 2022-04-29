@@ -30,7 +30,10 @@ spec:
             - name: QUAKES_API_ROOT
               value: http://quakes-api.hackfest.svc.cluster.local:3012/
             - name: APPINSIGHTS_INSTRUMENTATIONKEY
-              value: 6dc23005-a1d0-418a-82bd-b232498b5221
+              valueFrom:
+                secretKeyRef:
+                  name: app-insights-secret
+                  key: appinsights
             - name: KUBE_NODE_NAME
               valueFrom:
                 fieldRef:
