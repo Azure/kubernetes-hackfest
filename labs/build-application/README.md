@@ -80,7 +80,7 @@ In this lab we will build Docker containers for each of the application componen
 
 2. Create Kubernetes secrets for access to App Insights
 
-    You will use a secret to hold the credentials for our backend database and Azure App Insights. In the next lab, you will use this secret as a part of your deployment manifests.
+    You will use a secret to hold the API Key for App Insights. This is used by the pods once we deploy the app.
 
     ```bash
     kubectl create secret generic app-insights-secret --from-literal=appinsights=$APPINSIGHTS_INSTRUMENTATIONKEY -n hackfest
