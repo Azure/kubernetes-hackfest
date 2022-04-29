@@ -12,6 +12,8 @@ spec:
       labels:
         app: data-api
     spec:
+      imagePullSecrets:
+        - name: regcred
       containers:
         - image: "{{.Values.deploy.acrServer}}/hackfest/data-api:{{.Values.deploy.imageTag}}"
           imagePullPolicy: Always
@@ -24,20 +26,24 @@ spec:
               memory: "1024Mi"
               cpu: "1000m"
           env:
+            - name: MONGODB_URI
+              value: "mongo-svc.hackfest.svc.cluster.local"
+            - name: MONGODB_PORT
+              value: "27017"
             - name: MONGODB_USER
               valueFrom:
                 secretKeyRef:
-                  name: cosmos-db-secret
-                  key: user
+                  name: mongo-creds
+                  key: username
             - name: MONGODB_PASSWORD
               valueFrom:
                 secretKeyRef:
-                  name: cosmos-db-secret
-                  key: pwd
+                  name: mongo-creds
+                  key: password
             - name: APPINSIGHTS_INSTRUMENTATIONKEY
               valueFrom:
                 secretKeyRef:
-                  name: cosmos-db-secret
+                  name: app-insights-secret
                   key: appinsights                   
           ports:
           - containerPort: {{.Values.deploy.containerPort}}
