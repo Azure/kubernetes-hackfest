@@ -7,7 +7,7 @@ In this lab we are going to deploy a multi tier web application, called `guestbo
 1. Install the Guestbook application resources in the `team-<TEAM-NAME>` namespace:
 
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/redkubes/workshops/main/netpol/manifests/guestbook.yaml -n team-<TEAM-NAME>
+kubectl apply -f https://raw.githubusercontent.com/Azure/kubernetes-hackfest/master/labs/paas/otomi/4_netpols/guestbook.yaml -n team-<TEAM-NAME>
 ```
 
 2. Get the names of the created ClusterIP services:
