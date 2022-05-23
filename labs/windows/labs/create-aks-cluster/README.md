@@ -6,6 +6,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
 
 * Complete previous labs:
     * [Build Application](../build-application/README.md)
+    * Reload environment variables (run: source ~/workshopvars.env)
 
 ## Instructions
 
@@ -19,7 +20,7 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
    # Look at AKS Cluster Name for Future Reference
    echo $CLUSTERNAME
    # Persist for Later Sessions in Case of Timeout
-   echo export CLUSTERNAME=aks${UNIQUE_SUFFIX} >> ~/.bashrc
+   echo export CLUSTERNAME=aks${UNIQUE_SUFFIX} >> ~/workshopvars.env
    ```
 
    Get available kubernetes versions for the region. You will likely see more recent versions in your lab.
@@ -28,27 +29,25 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
    az aks get-versions -l $LOCATION --output table
 
    KubernetesVersion    Upgrades
-   -------------------  ----------------------------------------
-   1.18.6(preview)      None available
-   1.18.4(preview)      1.18.6(preview)
-   1.17.9               1.18.4(preview), 1.18.6(preview)
-   1.17.7               1.17.9, 1.18.4(preview), 1.18.6(preview)
-   1.16.13              1.17.7, 1.17.9
-   1.16.10              1.16.13, 1.17.7, 1.17.9
-   1.15.12              1.16.10, 1.16.13
-   1.15.11              1.15.12, 1.16.10, 1.16.13
+   -------------------  ----------------------
+   1.23.5               None available
+   1.23.3               1.23.5
+   1.22.6               1.23.3, 1.23.5
+   1.22.4               1.22.6, 1.23.3, 1.23.5
+   1.21.9               1.22.4, 1.22.6
+   1.21.7               1.21.9, 1.22.4, 1.22.6
    ```
 
-   For this lab we'll use 1.17.9
+   For this lab we'll use 1.23.5
 
    ```bash
-   K8SVERSION=1.17.9
+   K8SVERSION=1.23.5
    ```
 
-   > The below command can take 10-20 minutes to run as it is creating the AKS cluster. Please be PATIENT and grab a coffee...
+   > The below command can take 3-5 minutes to run as it is creating the AKS cluster.
 
    ```bash
-   PASSWORD_WIN="P@ssw0rd1234"
+   PASSWORD_WIN="P@ssw0rd123456"
 
    # Create AKS Cluster
    az aks create -n $CLUSTERNAME -g $RGNAME \
@@ -69,9 +68,9 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     ```
 
     ```bash
-    Name             Location    ResourceGroup            KubernetesVersion    ProvisioningState    Fqdn
-    ---------------  ----------  -----------------------  -------------------  -------------------  ----------------------------------------------------------------
-    aksstephen14260  eastus      aks-rg-stephen14260      1.17.7             Succeeded            aksstephen-aks-rg-stephen14-62afe9-9aa48ae4.hcp.eastus.azmk8s.io
+    Name          Location    ResourceGroup     KubernetesVersion    ProvisioningState    Fqdn
+    ------------  ----------  ----------------  -------------------  -------------------  ----------------------------------------------------------------
+    akssteve6217  eastus      aks-rg-steve6217  1.23.5               Succeeded             akssteve62-aks-rg-steve6217-62afe9-10a899bd.hcp.eastus.azmk8s.io
     ```
 
 1. Add your Windows node pool
@@ -113,11 +112,11 @@ In this lab we will create our Azure Kubernetes Services (AKS) distributed compu
     ```
 
     ```bash
-    Kubernetes master is running at https://akssteve75-aks-rg-steve7535-62afe9-b2c50c75.hcp.eastus.azmk8s.io:443
-    CoreDNS is running at https://akssteve75-aks-rg-steve7535-62afe9-b2c50c75.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
-    Metrics-server is running at https://akssteve75-aks-rg-steve7535-62afe9-b2c50c75.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
+   Kubernetes control plane is running at https://akssteve62-aks-rg-steve6217-62afe9-10a899bd.hcp.eastus.azmk8s.io:443
+   CoreDNS is running at https://akssteve62-aks-rg-steve6217-62afe9-10a899bd.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/kube-dns:dns/proxy
+   Metrics-server is running at https://akssteve62-aks-rg-steve6217-62afe9-10a899bd.hcp.eastus.azmk8s.io:443/api/v1/namespaces/kube-system/services/https:metrics-server:/proxy
 
-    To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
+   To further debug and diagnose cluster problems, use 'kubectl cluster-info dump'.
     ```
 
     You should now have a Kubernetes cluster running with 1 nodes, one in a linux pool and another in a windows pool. You do not see the master servers for the cluster because these are managed by Microsoft. The Control Plane services which manage the Kubernetes cluster such as scheduling, API access, configuration data store and object controllers are all provided as services to the nodes.

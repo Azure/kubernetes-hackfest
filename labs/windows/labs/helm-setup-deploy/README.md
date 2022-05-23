@@ -17,7 +17,7 @@ In this lab we will use helm to deploy our Jabbr application.
 helm version
 
 # Example Output:
-version.BuildInfo{Version:"v3.3.0-rc.1", GitCommit:"5c2dfaad847df2ac8f289d278186d048f446c70c", GitTreeState:"dirty", GoVersion:"go1.14.4"}
+version.BuildInfo{Version:"v3.8.0", GitCommit:"d14138609b01886f544b2025f5000351c9eb092e", GitTreeState:"clean", GoVersion:"go1.17.5"}
 ```
 
 1. Create a registry credential secret in your Kubernetes cluster to be used by AKS when pulling your image:

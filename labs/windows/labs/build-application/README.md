@@ -44,7 +44,11 @@ In this lab we will build Docker containers for the JabbR ASP.Net application an
 
 1. Create a unique identifier suffix for resources to be created in this lab.
 
+> *NOTE:* In the following sections we'll be generating and setting some environment variables. If you're terminal session restarts you may need to reset these variables. You can use that via the following command:<br>
+source ~/workshopvars.env
+
    ```bash
+   echo "# Start AKS Hackfest Lab Params">>~/workshopvars.env
    UNIQUE_SUFFIX=$USER$RANDOM
    # Remove Underscores and Dashes (Not Allowed in AKS and ACR Names)
    UNIQUE_SUFFIX="${UNIQUE_SUFFIX//_}"
@@ -52,7 +56,7 @@ In this lab we will build Docker containers for the JabbR ASP.Net application an
    # Check Unique Suffix Value (Should be No Underscores or Dashes)
    echo $UNIQUE_SUFFIX
    # Persist for Later Sessions in Case of Timeout
-   echo export UNIQUE_SUFFIX=$UNIQUE_SUFFIX >> ~/.bashrc
+   echo export UNIQUE_SUFFIX=$UNIQUE_SUFFIX >> ~/workshopvars.env
    ```
 
    **Note this value as it will be used in the next couple labs.**
@@ -63,11 +67,11 @@ In this lab we will build Docker containers for the JabbR ASP.Net application an
    # Set Resource Group Name using the unique suffix
    RGNAME=aks-rg-$UNIQUE_SUFFIX
    # Persist for Later Sessions in Case of Timeout
-   echo export RGNAME=$RGNAME >> ~/.bashrc
+   echo export RGNAME=$RGNAME >> ~/workshopvars.env
    # Set Region (Location)
    LOCATION=eastus
    # Persist for Later Sessions in Case of Timeout
-   echo export LOCATION=eastus >> ~/.bashrc
+   echo export LOCATION=eastus >> ~/workshopvars.env
    # Create Resource Group
    az group create -n $RGNAME -l $LOCATION
    ```
@@ -84,7 +88,7 @@ In this lab we will build Docker containers for the JabbR ASP.Net application an
     # Check ACR Name (Can Only Container lowercase)
     echo $ACRNAME
     # Persist for Later Sessions in Case of Timeout
-    echo export ACRNAME=acrhackfest$UNIQUE_SUFFIX >> ~/.bashrc
+    echo export ACRNAME=acrhackfest$UNIQUE_SUFFIX >> ~/workshopvars.env
     # Create Azure Container Registry
     az acr create --resource-group $RGNAME --name $ACRNAME --sku Basic --admin-enabled
     ```
@@ -97,11 +101,11 @@ In this lab we will build Docker containers for the JabbR ASP.Net application an
     # Get the Admin user name
     export ACRUSERNAME=$(az acr credential show -g $RGNAME -n $ACRNAME -o tsv --query username)
     # Persist for Later Sessions in Case of Timeout
-    echo export ACRUSERNAME=$ACRUSERNAME >> ~/.bashrc
+    echo export ACRUSERNAME=$ACRUSERNAME >> ~/workshopvars.env
     # Get the password
     export ACRPASSWD=$(az acr credential show -g $RGNAME -n $ACRNAME -o tsv --query passwords[0].value)
     # Persist for Later Sessions in Case of Timeout
-    echo export ACRPASSWD=\'$ACRPASSWD\' >> ~/.bashrc
+    echo export ACRPASSWD=\'$ACRPASSWD\' >> ~/workshopvars.env
     ```
 
 1. Deploy Azure SQL DB
@@ -113,10 +117,10 @@ In this lab we will build Docker containers for the JabbR ASP.Net application an
     # Check COSMOS Name
     echo $SQLSERVERNAME
     # Persist for Later Sessions in Case of Timeout
-    echo export SQLSERVERNAME=sql$UNIQUE_SUFFIX >> ~/.bashrc
+    echo export SQLSERVERNAME=sql$UNIQUE_SUFFIX >> ~/workshopvars.env
 
     export SQLSERVERPASSWD=$UNIQUE_SUFFIX-passwd
-    echo export SQLSERVERPASSWD=$UNIQUE_SUFFIX-passwd >> ~/.bashrc
+    echo export SQLSERVERPASSWD=$UNIQUE_SUFFIX-passwd >> ~/workshopvars.env
     # Create SQL Server
     az sql server create --name $SQLSERVERNAME --resource-group $RGNAME --admin-user sqladmin --admin-password $SQLSERVERPASSWD
 
@@ -129,7 +133,7 @@ In this lab we will build Docker containers for the JabbR ASP.Net application an
 
 1. Create Docker containers in ACR
 
-    In this step we will create a Docker container image for each of our microservices. We will use ACR Builder functionality to build and store these images in the cloud.
+    In this step we will create a Docker container image for our application. We will use ACR Builder functionality to build and store these images in the cloud.
 
     >**NOTE:** The directory name 'JabbR' referenced below is case sensitive, so make sure you clone with the proper case before trying to run ACR build.
 
