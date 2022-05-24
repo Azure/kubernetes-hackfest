@@ -2,10 +2,13 @@
 
 In this lab we will install [kube prometheus](https://github.com/prometheus-operator/kube-prometheus/blob/main/README.md) to our cluster, install the Windows Node Exporter, to get node metrics into prometheus, and then will deploy a grafana dashboard to view our Windows node data.
 
+>*NOTE:* This lab assumes your cluster supports [host process pods](https://kubernetes.io/docs/tasks/configure-pod-container/create-hostprocess-pod/), which are the approach for priviledged escalation of pods in Windows nodes. This is supported in beta in Kubenretes 1.23.
+
 ## Prerequisites
 
 * Complete previous labs:
     * [Create AKS Cluster](../create-aks-cluster/README.md)
+* Kubernetes cluster must be running version 1.23 or later
 
 ## Instructions
 
