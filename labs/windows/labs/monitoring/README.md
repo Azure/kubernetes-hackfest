@@ -133,7 +133,7 @@ The Windows node exporter is a separate Prometheus project, which you can find [
 
 To visualize data in Grafana, we need a dashboard. We can create one from scratch, or borrow from others. The following is a dashboard created based on a Grafana community dashboard which has been modified.
 
-1. Navigate back to Grafana and click the '+' link on the left of the page and select 'Import' to import a new dashboard.
+1. Navigate back to Grafana and click the '+' link on the left of the page and select 'Import' to import a new dashboard. Import from file, using the 'dashboard.json' found at ```kubernetes-hackfest/labs/windows/labs/monitoring/dashboard.json```
 
     ![import dashboard](../../assets/img/import-dashboard.jpg)
 
