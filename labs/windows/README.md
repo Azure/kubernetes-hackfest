@@ -18,7 +18,7 @@ The following are the basic requirements to **start** the labs. Individual labs 
 1. [Helm Setup and Deploy Application](labs/helm-setup-deploy/README.md)
 
 #### Additional exercises (in no order):
-* [Monitoring Windows Nodes](labs/monitoring/README.md)
+* [Monitoring Windows Nodes](labs/monitoring/monitoring.md)
 * [Ingress Control](labs/ingress/README.md)
 
 
