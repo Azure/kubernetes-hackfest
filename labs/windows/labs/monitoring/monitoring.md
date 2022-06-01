@@ -146,3 +146,6 @@ To visualize data in Grafana, we need a dashboard. We can create one from scratc
 Congratulations! You now have windows nodes exporting metrics which Prometheus is scraping. Grafana allows you to create great visualizations of those metrics. From here you can explore the other metrics from the Windows Node Exporter, see link below, and create your own dashboards views.
 
 [Windows Node Exporter Collectors](https://github.com/prometheus-community/windows_exporter#collectors)
+
+
+#### Next Lab: [Alerting](./alerting-part1.md)
