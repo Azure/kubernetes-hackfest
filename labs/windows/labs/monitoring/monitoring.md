@@ -99,7 +99,7 @@ The Windows node exporter is a separate Prometheus project, which you can find [
 
 1. Apply the Windows Node Exporter manifests
 
-    > *NOTE:* The windows-exporter-daemonset.yaml contains a configmap which defines the metrics to export. You can look at more options [here](https://github.com/prometheus-community/windows_exporter/blob/master/README.md#collectors). For now we'll just enable 'cpu,process,logical_disk,memory,service,cs,net,system,os'
+    > *NOTE:* The windows-exporter-daemonset.yaml contains a configmap which defines the metrics to export. You can look at more options [here](https://github.com/prometheus-community/windows_exporter/blob/master/README.md#collectors). For now we'll just enable '[defaults],container'
 
     ```bash
     # Move to the directory containing the manifest files
