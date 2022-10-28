@@ -63,7 +63,7 @@ Chapter two: Calico Cloud Trial
 - [Module 6: Packet Capture](modules/calicocloud/packet-capture.md)
 - [Module 7: Anomaly Detection](modules/calicocloud/anomaly-detection.md)
 - [Module 8: Using compliance reports](modules/calicocloud/using-compliance-reports.md)
-- [Module 9: Eabling L7 visibility](modules/calicocloud/enable-l7-visibility.md)
+- [Module 9: Enabling L7 visibility](modules/calicocloud/enable-l7-visibility.md)
 - [Module 10: Host Endpoints](modules/calicocloud/host-end-point.md)
 
 

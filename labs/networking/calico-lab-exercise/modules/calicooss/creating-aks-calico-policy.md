@@ -166,7 +166,7 @@ Follow the prequisite steps if you need to verify your Azure subscription.
  
     ```bash    
     # download and configure calicoctl
-    curl -L https://github.com/projectcalico/calico/releases/download/v3.22.0/calicoctl-linux-amd64 -o calicoctl
+    curl -L https://github.com/projectcalico/calico/releases/download/v3.23.4/calicoctl-linux-amd64 -o calicoctl
     chmod +x ./calicoctl
     
     # verify calicoctl is running 
@@ -192,7 +192,8 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     >Tip: Consider navigating to a location that’s in your PATH. For example, /usr/local/bin/
     ```bash    
     # download and configure calicoctl
-    curl -L https://github.com/projectcalico/calico/releases/download/v3.22.0/calicoctl-linux-arm64 -o calicoctl
+    curl -L https://github.com/projectcalico/calico/releases/download/v3.23.4/calicoctl-linux-arm64 -o calicoctl
+
 
     chmod +x calicoctl
     
@@ -205,7 +206,7 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     >Tip: Consider navigating to a location that’s in your PATH. For example, /usr/local/bin/
     ```bash    
     # download and configure calicoctl
-    curl -L https://github.com/projectcalico/calico/releases/download/v3.22.0/calicoctl-darwin-amd64 -o calicoctl
+    curl -L https://github.com/projectcalico/calico/releases/download/v3.23.4/calicoctl-darwin-amd64 -o calicoctl
 
     chmod +x calicoctl
     
@@ -219,7 +220,7 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     >Tip: Consider runing powershell as administraor and navigating to a location that’s in your PATH. For example, C:\Windows.
     
     ```pwsh
-    Invoke-WebRequest -Uri "https://github.com/projectcalico/calico/releases/download/v3.22.0/calicoctl-windows-amd64.exe -OutFile "calicoctl.exe" 
+    Invoke-WebRequest -Uri "https://github.com/projectcalico/calico/releases/download/v3.23.4/calicoctl-windows-amd64.exe -OutFile "calicoctl.exe" 
     ```
     
     
