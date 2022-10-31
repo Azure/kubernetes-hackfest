@@ -1,4 +1,4 @@
-# Calico cloud workshop on AKS
+# Calico Cloud Workshop on AKS
 
 <img src="modules/img/calico-on-aks.png" alt="Calicocloud on AKS" width="30%"/>
 
