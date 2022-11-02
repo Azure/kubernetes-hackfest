@@ -51,10 +51,10 @@
     
     > *NOTE:* In the following sections we'll be generating and setting some environment variables. If you're terminal session restarts you may need to reset these variables. You can use that via the following command:
     >
-    > source ~/workshopvars.env
+    > source ~/workshopvars-calioss.env
 
 	```bash
-    echo "# Start AKS Hackfest Lab Params" >> ~/workshopvars.env
+    echo "# Start AKS Hackfest Calico OSS Lab Params" >> ~/workshopvars-calioss.env
     UNIQUE_SUFFIX=$USER$RANDOM
     # Remove Underscores and Dashes (Not Allowed in AKS and ACR Names)
     UNIQUE_SUFFIX="${UNIQUE_SUFFIX//_}"
@@ -62,7 +62,7 @@
     # Check Unique Suffix Value (Should be No Underscores or Dashes)
     echo $UNIQUE_SUFFIX
     # Persist for Later Sessions in Case of Timeout
-    echo export UNIQUE_SUFFIX=$UNIQUE_SUFFIX >> ~/workshopvars.env
+    echo export UNIQUE_SUFFIX=$UNIQUE_SUFFIX >> ~/workshopvars-calioss.env
 	```
 	
 7. Create an Azure Resource Group in your chosen region. We will use East US in this example.
@@ -71,11 +71,11 @@
    # Set Resource Group Name using the unique suffix
    RGNAME=aks-rg-$UNIQUE_SUFFIX
    # Persist for Later Sessions in Case of Timeout
-   echo export RGNAME=$RGNAME >> ~/workshopvars.env
+   echo export RGNAME=$RGNAME >> ~/workshopvars-calioss.env
    # Set Region (Location)
    LOCATION=eastus
    # Persist for Later Sessions in Case of Timeout
-   echo export LOCATION=eastus >> ~/workshopvars.env
+   echo export LOCATION=eastus >> ~/workshopvars-calioss.env
    # Create Resource Group
    az group create -n $RGNAME -l $LOCATION
    ```
@@ -90,7 +90,7 @@
     # Look at AKS Cluster Name for Future Reference
     echo $OSSCLUSTERNAME
     # Persist for Later Sessions in Case of Timeout
-    echo export OSSCLUSTERNAME=aks-oss-${UNIQUE_SUFFIX} >> ~/workshopvars.env
+    echo export OSSCLUSTERNAME=aks-oss-${UNIQUE_SUFFIX} >> ~/workshopvars-calioss.env
     ```
     
     Get available kubernetes versions for the region. You will likely see more recent versions in your lab.
