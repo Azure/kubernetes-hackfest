@@ -1,10 +1,10 @@
-# Calico cloud workshop on AKS
+# Calico Cloud Workshop on AKS
 
 <img src="modules/img/calico-on-aks.png" alt="Calicocloud on AKS" width="30%"/>
 
 ## AKS Calico Cloud Workshop
 
-The intent of this lab is to introduce Calico OSS and [Calico Cloud](https://www.calicocloud.io/?utm_campaign=calicocloud&utm_medium=digital&utm_source=microsoft) to manage AKS clusters and leverage Calico features to implement the various use cases. While there are many capabilities that the Calico product provides, this lab focuses on a subset of those that are used most often by enterprises to derive value from the Calico Product. 
+The intent of this lab is to introduce [Calico OSS](https://www.tigera.io/project-calico/) and [Calico Cloud](https://www.calicocloud.io/?utm_campaign=calicocloud&utm_medium=digital&utm_source=microsoft) to manage AKS clusters and leverage Calico features to implement the various use cases. While there are many capabilities that the Calico product provides, this lab focuses on a subset of those that are used most often by enterprises to derive value from the Calico Product. 
 
 
 ## Learning Objectives
@@ -37,8 +37,8 @@ In this lab we are going to focus on these main use cases (with links to Calico 
 - [Calico Cloud trial account for Chapter two](https://www.calicocloud.io/?utm_campaign=calicocloud&utm_medium=digital&utm_source=microsoft)
 - Terminal or Command Line console to work with Azure resources and AKS cluster
  
-- `Git`
-- `netcat`
+- [`git`](https://git-scm.com/downloads)
+- [`netcat`](https://nmap.org/ncat/)
 
 ## Workshop modules
 
@@ -63,7 +63,7 @@ Chapter two: Calico Cloud Trial
 - [Module 6: Packet Capture](modules/calicocloud/packet-capture.md)
 - [Module 7: Anomaly Detection](modules/calicocloud/anomaly-detection.md)
 - [Module 8: Using compliance reports](modules/calicocloud/using-compliance-reports.md)
-- [Module 9: Eabling L7 visibility](modules/calicocloud/enable-l7-visibility.md)
+- [Module 9: Enabling L7 visibility](modules/calicocloud/enable-l7-visibility.md)
 - [Module 10: Host Endpoints](modules/calicocloud/host-end-point.md)
 
 

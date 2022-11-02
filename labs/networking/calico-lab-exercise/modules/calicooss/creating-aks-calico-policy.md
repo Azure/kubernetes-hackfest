@@ -1,26 +1,42 @@
-# Module 0: Creating an AKS cluster with calico network policy
+# Module 0: Create an AKS cluster with Calico network policy
 
-The following guide is based upon the repos from [lastcoolnameleft](https://github.com/lastcoolnameleft/kubernetes-workshop/blob/master/create-aks-cluster.md) and [Azure Kubernetes Hackfest](https://github.com/Azure/kubernetes-hackfest/tree/master/labs/create-aks-cluster#readme).
-
-* * *
+---
 
 **Goal:** Create AKS cluster.
 
 > This cluster deployment utilizes Azure CLI v2.x from your local terminal or via Azure Cloud Shell. Instructions for installing Azure CLI can be found [here](https://docs.microsoft.com/en-us/cli/azure/install-azure-cli).
 
 
-## Prerequisite Tasks
+## Prerequisite
 
-Follow the prequisite steps if you need to verify your Azure subscription.
+- Azure Account
 
-- Ensure you are using the correct Azure subscription you want to deploy AKS to.
+## Instructions
+
+1. Login to Azure Portal at http://portal.azure.com.
+
+2. Open the Azure Cloud Shell and choose Bash Shell (do not choose Powershell)
+
+   ![img-cloud-shell](https://user-images.githubusercontent.com/104035488/199605731-86d9f1c5-d3a6-40fb-8e95-3a9bf837c84b.png)
+
+3. The first time Cloud Shell is started will require you to create a storage account.
+
+4. Once your cloud shell is started, clone the workshop repo into the cloud shell environment
+
+   ```bash
+   git clone https://github.com/Azure/kubernetes-hackfest
+   ```
+
+   > Note: In the cloud shell, you are automatically logged into your Azure subscription.
+
+5. Ensure you are using the correct Azure subscription you want to deploy AKS to.
     
 	```bash
 	# View subscriptions
-	az account list   
+	az account list --out table
  
     # Verify selected subscription
-    az account show
+    az account show --out table
     ```
     
     ```bash
@@ -28,16 +44,17 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     az account set --subscription <subscription_id>
   
     # Verify correct subscription is now set
-    az account show
+    az account show --out table
     ```
+
+6.  Create a unique identifier suffix for resources to be created in this lab.
     
+    > *NOTE:* In the following sections we'll be generating and setting some environment variables. If you're terminal session restarts you may need to reset these variables. You can use that via the following command:
+    >
+    > source ~/workshopvars-calioss.env
 
-
-## Steps
-
-1.  Create a unique identifier suffix for resources to be created in this lab.
-    
 	```bash
+    echo "# Start AKS Hackfest Calico OSS Lab Params" >> ~/workshopvars-calioss.env
     UNIQUE_SUFFIX=$USER$RANDOM
     # Remove Underscores and Dashes (Not Allowed in AKS and ACR Names)
     UNIQUE_SUFFIX="${UNIQUE_SUFFIX//_}"
@@ -45,22 +62,20 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     # Check Unique Suffix Value (Should be No Underscores or Dashes)
     echo $UNIQUE_SUFFIX
     # Persist for Later Sessions in Case of Timeout
-    echo export UNIQUE_SUFFIX=$UNIQUE_SUFFIX >> ~/.bashrc
+    echo export UNIQUE_SUFFIX=$UNIQUE_SUFFIX >> ~/workshopvars-calioss.env
 	```
-    
-    **_ Note this value as it will be used in the next couple labs. _**
 	
-2. Create an Azure Resource Group in your chosen region. We will use East US in this example.
+7. Create an Azure Resource Group in your chosen region. We will use East US in this example.
 
    ```bash
    # Set Resource Group Name using the unique suffix
    RGNAME=aks-rg-$UNIQUE_SUFFIX
    # Persist for Later Sessions in Case of Timeout
-   echo export RGNAME=$RGNAME >> ~/.bashrc
+   echo export RGNAME=$RGNAME >> ~/workshopvars-calioss.env
    # Set Region (Location)
    LOCATION=eastus
    # Persist for Later Sessions in Case of Timeout
-   echo export LOCATION=eastus >> ~/.bashrc
+   echo export LOCATION=eastus >> ~/workshopvars-calioss.env
    # Create Resource Group
    az group create -n $RGNAME -l $LOCATION
    ```
@@ -75,7 +90,7 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     # Look at AKS Cluster Name for Future Reference
     echo $OSSCLUSTERNAME
     # Persist for Later Sessions in Case of Timeout
-    echo export OSSCLUSTERNAME=aks-oss-${UNIQUE_SUFFIX} >> ~/.bashrc
+    echo export OSSCLUSTERNAME=aks-oss-${UNIQUE_SUFFIX} >> ~/workshopvars-calioss.env
     ```
     
     Get available kubernetes versions for the region. You will likely see more recent versions in your lab.
@@ -166,7 +181,7 @@ Follow the prequisite steps if you need to verify your Azure subscription.
  
     ```bash    
     # download and configure calicoctl
-    curl -L https://github.com/projectcalico/calico/releases/download/v3.22.0/calicoctl-linux-amd64 -o calicoctl
+    curl -L https://github.com/projectcalico/calico/releases/download/v3.23.4/calicoctl-linux-amd64 -o calicoctl
     chmod +x ./calicoctl
     
     # verify calicoctl is running 
@@ -192,7 +207,8 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     >Tip: Consider navigating to a location that’s in your PATH. For example, /usr/local/bin/
     ```bash    
     # download and configure calicoctl
-    curl -L https://github.com/projectcalico/calico/releases/download/v3.22.0/calicoctl-linux-arm64 -o calicoctl
+    curl -L https://github.com/projectcalico/calico/releases/download/v3.23.4/calicoctl-linux-arm64 -o calicoctl
+
 
     chmod +x calicoctl
     
@@ -205,7 +221,7 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     >Tip: Consider navigating to a location that’s in your PATH. For example, /usr/local/bin/
     ```bash    
     # download and configure calicoctl
-    curl -L https://github.com/projectcalico/calico/releases/download/v3.22.0/calicoctl-darwin-amd64 -o calicoctl
+    curl -L https://github.com/projectcalico/calico/releases/download/v3.23.4/calicoctl-darwin-amd64 -o calicoctl
 
     chmod +x calicoctl
     
@@ -219,7 +235,7 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     >Tip: Consider runing powershell as administraor and navigating to a location that’s in your PATH. For example, C:\Windows.
     
     ```pwsh
-    Invoke-WebRequest -Uri "https://github.com/projectcalico/calico/releases/download/v3.22.0/calicoctl-windows-amd64.exe -OutFile "calicoctl.exe" 
+    Invoke-WebRequest -Uri "https://github.com/projectcalico/calico/releases/download/v3.23.4/calicoctl-windows-amd64.exe -OutFile "calicoctl.exe" 
     ```
     
     

@@ -1,0 +1,14 @@
+apiVersion: projectcalico.org/v3
+kind: GlobalAlert
+metadata:
+  name: tigera.io.detector.port-scan
+spec:
+  description: Port Scan detection
+  summary: "Looks for pods in your cluster that are sending packets to one destination on multiple ports."
+  detector:
+    name: port_scan
+  period: 5m0s
+  lookback: 5m0s
+  severity: 100
+  type: AnomalyDetection
+---
