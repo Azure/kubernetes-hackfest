@@ -17,7 +17,7 @@
 
 2. Open the Azure Cloud Shell and choose Bash Shell (do not choose Powershell)
 
-   ![Azure Cloud Shell](img-cloud-shell.png "Azure Cloud Shell")
+   ![img-cloud-shell](https://user-images.githubusercontent.com/104035488/199605731-86d9f1c5-d3a6-40fb-8e95-3a9bf837c84b.png)
 
 3. The first time Cloud Shell is started will require you to create a storage account.
 
