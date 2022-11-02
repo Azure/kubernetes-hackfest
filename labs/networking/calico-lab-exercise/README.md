@@ -38,7 +38,7 @@ In this lab we are going to focus on these main use cases (with links to Calico 
 - Terminal or Command Line console to work with Azure resources and AKS cluster
  
 - [`git`](https://git-scm.com/downloads)
-- `netcat`
+- [`netcat`](https://nmap.org/ncat/)
 
 ## Workshop modules
 
