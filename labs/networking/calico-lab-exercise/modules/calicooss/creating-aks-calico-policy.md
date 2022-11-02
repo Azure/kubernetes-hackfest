@@ -33,10 +33,10 @@
     
 	```bash
 	# View subscriptions
-	az account list   
+	az account list --out table
  
     # Verify selected subscription
-    az account show
+    az account show --out table
     ```
     
     ```bash
@@ -44,7 +44,7 @@
     az account set --subscription <subscription_id>
   
     # Verify correct subscription is now set
-    az account show
+    az account show --out table
     ```
 
 6.  Create a unique identifier suffix for resources to be created in this lab.
