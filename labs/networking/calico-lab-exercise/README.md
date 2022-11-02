@@ -37,7 +37,7 @@ In this lab we are going to focus on these main use cases (with links to Calico 
 - [Calico Cloud trial account for Chapter two](https://www.calicocloud.io/?utm_campaign=calicocloud&utm_medium=digital&utm_source=microsoft)
 - Terminal or Command Line console to work with Azure resources and AKS cluster
  
-- `Git`
+- [`git`](https://git-scm.com/downloads)
 - `netcat`
 
 ## Workshop modules
