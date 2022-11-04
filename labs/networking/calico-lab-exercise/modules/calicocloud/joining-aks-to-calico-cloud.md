@@ -8,7 +8,7 @@ IMPORTANT: In order to complete this module, you must have [Calico Cloud trial a
 
 1. Navigate to [calicocloud](https://www.calicocloud.io/?utm_campaign=calicocloud&utm_medium=digital&utm_source=microsoft) and sign up for a 14 day trial account - no credit cards required. Returning users can login.
 
-   ![calico-cloud-login](../img/calico-cloud-login.png)
+   ![register](../img/calico-cloud-registering.gif)
 
 2. Upon signing into the Calico Cloud UI the Welcome screen shows four use cases which will give a quick tour for learning more. This step can be skipped. Tip: the menu icons on the left can be expanded to display the worded menu as shown:
 
@@ -72,7 +72,7 @@ IMPORTANT: In order to complete this module, you must have [Calico Cloud trial a
 
     Once the cluster has successfully connected to Calico Cloud you can review the cluster status in the UI. Click on `Managed Clusters` from the left side menu and look for the `connected` status of your cluster. You will also see a `Tigera-labs` cluster for demo purposes. Ensure you are in the correct cluster context by clicking the `Cluster` dropdown in the top right corner. This will list the connected clusters. Click on your cluster to switch context otherwise the current cluster context is in *bold* font.
     
-    ![cluster-selection](../img/cluster-selection.png)
+    ![selecting_cluster](../img/selecting-cluster.gif)
 
 5. Configure log aggregation and flush intervals in aks cluster, we will use 10s instead of default value 300s for lab testing only.   
 

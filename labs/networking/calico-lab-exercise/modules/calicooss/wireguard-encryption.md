@@ -61,11 +61,15 @@
    ```
 
    ```bash
+   #Interact with the node session by running chroot /host from the privileged container.
+   chroot /host
+   #Obtain local wireguard tunnel interface
    ifconfig | grep wireguard
    ```
    
    Output will be like:
    ```bash
+   
    wireguard.cali: flags=209<UP,POINTOPOINT,RUNNING,NOARP>  mtu 1340
    ```
 

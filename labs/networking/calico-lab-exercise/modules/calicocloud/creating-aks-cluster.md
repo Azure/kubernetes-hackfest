@@ -164,7 +164,7 @@ Follow the prequisite steps if you need to verify your Azure subscription.
 
     ```bash
     # download and configure calicoctl
-    curl -o calicoctl -O -L https://downloads.tigera.io/ee/binaries/v3.12.0/calicoctl
+    curl -o calicoctl -O -L https://downloads.tigera.io/ee/binaries/v3.14.2/calicoctl
 
     chmod +x calicoctl
     
@@ -177,7 +177,7 @@ Follow the prequisite steps if you need to verify your Azure subscription.
 
     ```bash
     # download and configure calicoctl
-    curl -o calicoctl -O -L https://downloads.tigera.io/ee/binaries/v3.12.0/calicoctl
+    curl -o calicoctl -O -L https://downloads.tigera.io/ee/binaries/v3.14.2/calicoctl
     chmod +x calicoctl
     
     # verify calicoctl is running 
@@ -189,7 +189,7 @@ Follow the prequisite steps if you need to verify your Azure subscription.
 
     ```bash
     # download and configure calicoctl
-    curl -o calicoctl -O -L  https://downloads.tigera.io/ee/binaries/v3.12.0/calicoctl-darwin-amd64
+    curl -o calicoctl -O -L  https://downloads.tigera.io/ee/binaries/v3.14.2/calicoctl-darwin-amd64
 
     chmod +x calicoctl
     
@@ -204,7 +204,7 @@ Follow the prequisite steps if you need to verify your Azure subscription.
     >Tip: Consider runing powershell as administraor and navigating to a location that’s in your PATH. For example, C:\Windows.
 
     ```pwsh
-    Invoke-WebRequest -Uri "https://downloads.tigera.io/ee/binaries/v3.12.0/calicoctl-windows-amd64.exe" -OutFile "kubectl-calico.exe"
+    Invoke-WebRequest -Uri "https://downloads.tigera.io/ee/binaries/v3.14.2/calicoctl-windows-amd64.exe" -OutFile "calicocttl.exe"
     ```
 
 
