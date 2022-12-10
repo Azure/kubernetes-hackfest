@@ -12,7 +12,7 @@
   "dependencies": {
     "applicationinsights": "^1.0.4",
     "async": "^2.6.1",
-    "express": "~4.16.0",
+    "express": "~4.17.3",
     "mongoose": "^5.7.5",
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
