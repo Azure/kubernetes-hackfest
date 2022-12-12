@@ -15,7 +15,6 @@ metadata:
   namespace: dev
   labels:
     app: centos
-
 spec:
   containers:
   - name: centos
@@ -23,6 +22,8 @@ spec:
     command: [ "/bin/bash", "-c", "--" ]
     args: [ "while true; do curl -m3 http://nginx-svc; sleep 3; done;" ]
     resources: {}
+  nodeSelector:
+    kubernetes.io/os: linux
 
 ---
 apiVersion: apps/v1
@@ -81,3 +82,5 @@ spec:
     command: [ "/bin/bash", "-c", "--" ]
     args: [ "while true; do curl -m3 http://nginx-svc; sleep 3; done;" ]
     resources: {}
+  nodeSelector:
+    kubernetes.io/os: linux
