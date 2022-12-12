@@ -8,7 +8,7 @@
 
 **Goal:** Disable Wireguard encryption for the cluster and swap from the standard Linux dataplane to the eBPF dataplane that will allow for preserving the source IP of traffic from outside the cluster.
 
-**Docs:** [https://docs.projectcalico.org/maintenance/enabling-ebpf](https://projectcalico.docs.tigera.io/maintenance/ebpf/enabling-ebpf)
+**Docs:** <https://docs.projectcalico.org/maintenance/enabling-ebpf>
 
 ## Steps
 

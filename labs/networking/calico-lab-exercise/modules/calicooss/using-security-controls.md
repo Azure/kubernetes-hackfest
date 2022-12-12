@@ -2,7 +2,7 @@
 
 **Goal:** Leverage global network policies to segment connections within the AKS cluster.
 
-**Docs:** [https://projectcalico.docs.tigera.io/reference/resources/globalnetworkpolicy]
+**Docs:** <https://projectcalico.docs.tigera.io/reference/resources/globalnetworkpolicy>
 
 ## Steps
 
@@ -134,5 +134,3 @@
 >Calico Cloud & Calico EE offer a DNS policy feature, which can whitelist DNS domains, such as www.bing.com, we will test this feature in next Chapter.
 
 [Next -> Module 3](../calicooss/calico-for-windows.md)
-
-[https://projectcalico.docs.tigera.io/reference/resources/globalnetworkpolicy]: ttps://projectcalico.docs.tigera.io/reference/resources/globalnetworkpolic

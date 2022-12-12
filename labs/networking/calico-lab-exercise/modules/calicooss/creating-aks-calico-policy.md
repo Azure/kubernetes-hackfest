@@ -12,7 +12,7 @@
 
 ## Instructions
 
-1. Login to Azure Portal at [https://portal.azure.com/#home].
+1. Login to Azure Portal at <https://portal.azure.com/>
 
 2. Open the Azure Cloud Shell and choose Bash Shell (do not choose Powershell)
 

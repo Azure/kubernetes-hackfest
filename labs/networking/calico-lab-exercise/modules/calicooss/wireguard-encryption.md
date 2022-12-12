@@ -4,7 +4,7 @@
 
 **Goal:** Enable WireGuard to secure on-the-wire, in-cluster pod traffic in a AKS cluster.
 
-**Docs:** [https://docs.projectcalico.org/security/encrypt-cluster-pod-traffic]
+**Docs:** <https://docs.projectcalico.org/security/encrypt-cluster-pod-traffic>
 
 ## Steps
 
@@ -80,5 +80,3 @@
    ```
 
 [Next -> Module 5](../calicooss/ebpf-dataplane.md)
-
-[https://docs.projectcalico.org/security/encrypt-cluster-pod-traffic]: ttps://docs.projectcalico.org/security/encrypt-cluster-pod-traffi

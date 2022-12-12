@@ -4,7 +4,7 @@
 
 **Goal:** Create client and server pods on Linux and Windows nodes, verify connectivity between the pods, and then isolate pod traffic.
 
-**Docs:** <[https://docs.projectcalico.org/getting-started/windows-calico/quickstart]>
+**Docs:** <https://docs.projectcalico.org/getting-started/windows-calico/quickstart>
 
 ## Steps
 
@@ -160,5 +160,3 @@
    Invoke-WebRequest : The operation has timed out.
 
 [Next -> Module 4](../calicooss/wireguard-encryption.md)
-
-[https://docs.projectcalico.org/getting-started/windows-calico/quickstart]: ttps://docs.projectcalico.org/getting-started/windows-calico/quickstar
