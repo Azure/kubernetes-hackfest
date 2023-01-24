@@ -34,42 +34,37 @@ Navigate to [http://localhost:9090](http://localhost:9090) and click on the 'Ale
 
 ![alerts-dashboard](../../assets/img/alerts-dashboard.jpg)
 
-You can view these alert rules in the configmap named 'prometheus-k8s-rulefiles-0'. Lets get that file locally so we can edit it:
-
-```bash
-kubectl get configmap prometheus-k8s-rulefiles-0  -n monitoring -o yaml > prometheus-k8s-rulefiles-0.yaml  
-```
-
-There are some additional rules in here that are already firing alerts, for example the rule for the ControlerManager health. We can remove those later, but lets start by adding a new rule.
-
-In the file, add the following to the 'data' block. This rule will check the number of Jabbr pods we have running, and if it's less than or equal to 1 the alert will fire. This alert will be labeled as 'severity: critical', which will be important later.
+These alert rules are mantained through a custom resource definition called 'PrometheusRule'. Create a new file called jabbr-rules.yaml and paste the following in the file:
 
 ```yaml
-data:
-  monitoring-alertmanager-jabbr-rules.yaml: |
-    groups:
-    - name: jabbr.rules
-      rules:
-      - alert: JabbrPodCountGreaterThan1
-        annotations:
-          description: Jabbr Running with 1 or fewer pods
-          summary: Jabbr Running with 1 or fewer pods
-        expr: |
-          # Get the number of jabbr pods running
-          count(kube_pod_info{namespace="jabbr"})<=1
-        for: 1m
-        labels:
-          severity: critical 
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    prometheus: k8s
+    role: alert-rules
+  name: jabbr-rules
+  namespace: monitoring
+spec:
+  groups:
+  - name: jabbr.rules
+    rules:
+    - alert: JabbrPodCountGreaterThan1
+      annotations:
+        description: Jabbr Running with 1 or fewer pods
+        summary: Jabbr Running with 1 or fewer pods
+      expr: |
+        # Get the number of jabbr pods running
+        count(kube_pod_info{namespace="jabbr"})<=1
+      for: 1m
+      labels:
+        severity: critical 
 ```
-
-In order to use this file we need to remove some additional content. From the 'metadata' section, remove everythign but the 'name' and 'namespace' fields and then save the file. You can see an example file at [./manifests/prometheus-k8s-rulefiles-0.yaml](./manifests/prometheus-k8s-rulefiles-0.yaml)
 
 ### Apply the rules and check the alerts
 
-We can apply the changes with the kubectl 'replace' command. 
-
 ```bash
-kubectl replace -f ./manifests/prometheus-k8s-rulefiles-0.yaml 
+kubectl apply -f jabbr-rules.yaml 
 ```
 
 Wait for a minute or two for the rule to be loaded and fire and then check the Alerts dashboard again. Notice that the alert is already firing in a 'pending'state and will shortly be in an 'active' state. This is because our rule is checking the number of Jabbr pods we have in our deployment, and right now, unless you've already modified it, you only have 1 jabbr pod. 

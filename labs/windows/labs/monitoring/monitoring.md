@@ -25,12 +25,12 @@ The first step in getting our Windows node metrics into Prometheus and Grafana i
 1. To make sure you're running the right version, check the [version compatibility table](https://github.com/prometheus-operator/kube-prometheus#compatibility) and then git checkout the right branch for your specific Kubernetes version. 
 
     ```bash
-    # Looking at the compatibility matrix I can see that Kubernetes 1.23 is compatible with Kube Prometheus release-0.10
+    # Looking at the compatibility matrix I can see that Kubernetes 1.24 is compatible with Kube Prometheus release-0.11
 
-    # Checkout the release-0.10 branch
-    git checkout release-0.10
-    Switched to branch 'release-0.10'
-    Your branch is up to date with 'origin/release-0.10'.
+    # Checkout the release-0.11 branch
+    git checkout release-0.11
+    Switched to branch 'release-0.11'
+    Your branch is up to date with 'origin/release-0.11'.
     ```
 
 1. Now we can follow the documented installation steps from the Kube Prometheus project
