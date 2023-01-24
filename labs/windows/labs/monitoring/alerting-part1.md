@@ -55,7 +55,7 @@ spec:
         summary: Jabbr Running with 1 or fewer pods
       expr: |
         # Get the number of jabbr pods running
-        count(kube_pod_info{namespace="jabbr"})<=1
+        kube_deployment_status_replicas_available{namespace="jabbr",deployment="jabbr"}
       for: 1m
       labels:
         severity: critical 
