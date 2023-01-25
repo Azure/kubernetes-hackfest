@@ -13,46 +13,34 @@ In the last lab we configured Prometheus and Alert Manager to raise an alert bas
 
 ## Instructions
 
-Alert Manager provides a bunch of notification options, which are documented [here](https://prometheus.io/docs/alerting/latest/configuration/). For our lab we'll make use of the [WebHook Configuration](https://prometheus.io/docs/alerting/latest/configuration/#webhook_config). Unlike the Prometheus rule file we pulled in the last lab, which was stored in a Kubernetes ConfigMap, the Alert Manager configuration is stored in a Kubernetes Secret. This makes is slightly harder to access, but we'll work through the steps here.
+Alert Manager provides a bunch of notification options, which are documented [here](https://prometheus.io/docs/alerting/latest/configuration/). For our lab we'll make use of the [WebHook Configuration](https://prometheus.io/docs/alerting/latest/configuration/#webhook_config). Unlike the Prometheus rule file we pulled in the last lab, which was stored in a Kubernetes ConfigMap, the Alert Manager configuration is stored in a Kubernetes Secret. We can update that secret by modifying it's manifest in the kube-prometheus installation manifests.
 
 ### Get the Alert Manager Configuration File
 
-```bash
-kubectl get secret alertmanager-main-generated  -n monitoring -o yaml > alertmanager-main.yaml
-```
-
-Take a look at the output file. It should look something like this:
-
-```yaml
-apiVersion: v1
-data:
-  alertmanager.yaml: Imdsb2JhbCI6CiAgIn...truncated....NyaXRpY2FsIg==
-kind: Secret
-metadata:
-  creationTimestamp: "2022-05-24T14:28:31Z"
-  labels:
-    managed-by: prometheus-operator
-  name: alertmanager-main-generated
-  namespace: monitoring
-  ownerReferences:
-  - apiVersion: monitoring.coreos.com/v1
-    blockOwnerDeletion: true
-    controller: true
-    kind: Alertmanager
-    name: main
-    uid: 2f20493f-f298-4cba-8fcb-5b35f6faa964
-  resourceVersion: "2948836"
-  uid: 7577eb1f-f173-452a-afd8-4ba0de483813
-type: Opaque
-```
-
-The big blob of data in the 'alertmanager.yaml' section is our configuration file, but it's base64 encoded, so we need to decode. There are a lot of ways to decode. You can find a website that you can paste it in to decode, like [www.base64decode.org](https://www.base64decode.org/), or you can just use the command line like follows:
+In the [Monitoring Setup](monitoring.md) step you cloned the kube-prometheus repository. We'll navigate to that folder.
 
 ```bash
-echo "Imdsb2JhbCI6CiAgInJlc29s...truncated....yaXRpY2FsIg==" | base64 -d > alertmanager.yaml
+# I store my git repos in a github.com folder in my home directory
+# modify to match your own folder structure:
+cd ~/github.com/kube-prometheus/manifests
 ```
 
-Take a look at that file and familiarize yourself with the contents. You can review the alert manager configuration document [here](https://prometheus.io/docs/alerting/latest/configuration/) to understand the file structure.
+Now open the file named **alertmanager-secret.yaml** for editing. Take a look at that file and familiarize yourself with the contents. You can review the alert manager configuration document [here](https://prometheus.io/docs/alerting/latest/configuration/) to understand the file structure.
+
+In the 'recievers' section, update to look like the following. 
+
+>**NOTE:** You don't have the logic app URL yet. You'll come back and fill that in later.
+
+```bash
+"receivers":
+- "name": "Default"
+- "name": "Watchdog"
+- "name": "Critical"
+    "webhook_configs":
+    - "url": "INSERT YOUR LOGIC APP URL"
+    "send_resolved": true
+- "name": "null"
+```
 
 ### Create the Webhook
 
@@ -110,26 +98,26 @@ This is extremely helpful, because it means we can create an HTTP Reciever that 
 
     ```json
     {
-        "version": "4",
-        "groupKey": "data",
-        "truncatedAlerts": 1,
+    "version": "4",
+    "groupKey": "data",
+    "truncatedAlerts": 1,
+    "status": "data",
+    "receiver": "data",
+    "groupLabels": null,
+    "commonLabels": null,
+    "commonAnnotations": null,
+    "externalURL": "data",
+    "alerts": [
+        {
         "status": "data",
-        "receiver": "data",
-        "groupLabels": null,
-        "commonLabels": null,
-        "commonAnnotations": null,
-        "externalURL": "data",
-        "alerts": [
-            {
-            "status": "data",
-            "labels": null,
-            "annotations": null,
-            "startsAt": "data",
-            "endsAt": "data",
-            "generatorURL": "data",
-            "fingerprint": "data"  
-            }
-        ]
+        "labels": null,
+        "annotations": null,
+        "startsAt": "data",
+        "endsAt": "data",
+        "generatorURL": "data",
+        "fingerprint": "data"
+        }
+    ]
     }
     ```
     ![sample-payload-2](../../assets/img/http-trigger-sample-payload-2.jpg)
@@ -154,33 +142,30 @@ This is extremely helpful, because it means we can create an HTTP Reciever that 
 
     ```json
     {
+        "type": "object",
         "properties": {
-            "annotations": {
-                "properties": {
-                    "description": {
-                        "type": "string"
-                    },
-                    "runbook_url": {
-                        "type": "string"
-                    },
-                    "summary": {
-                        "type": "string"
-                    }
-                },
-                "type": "object"
-            },
-            "endsAt": {
-                "type": "string"
-            },
-            "fingerprint": {
-                "type": "string"
-            },
-            "generatorURL": {
+            "status": {
                 "type": "string"
             },
             "labels": {
+                "type": "object",
                 "properties": {
                     "alertname": {
+                        "type": "string"
+                    },
+                    "container": {
+                        "type": "string"
+                    },
+                    "deployment": {
+                        "type": "string"
+                    },
+                    "instance": {
+                        "type": "string"
+                    },
+                    "job": {
+                        "type": "string"
+                    },
+                    "namespace": {
                         "type": "string"
                     },
                     "prometheus": {
@@ -189,17 +174,32 @@ This is extremely helpful, because it means we can create an HTTP Reciever that 
                     "severity": {
                         "type": "string"
                     }
-                },
-                "type": "object"
+                }
+            },
+            "annotations": {
+                "type": "object",
+                "properties": {
+                    "description": {
+                        "type": "string"
+                    },
+                    "summary": {
+                        "type": "string"
+                    }
+                }
             },
             "startsAt": {
                 "type": "string"
             },
-            "status": {
+            "endsAt": {
+                "type": "string"
+            },
+            "generatorURL": {
+                "type": "string"
+            },
+            "fingerprint": {
                 "type": "string"
             }
-        },
-        "type": "object"
+        }
     }
     ```
 
@@ -229,45 +229,23 @@ This is extremely helpful, because it means we can create an HTTP Reciever that 
 
 ### Update the Alert Manager Config with the WebHook Details
 
-1. Go to your 'alertmanager.yaml' file and update the 'recievers' section as follows, providing your logic app URL:
+1. Go to your 'alertmanager-secret.yaml' file and update the 'recievers' section as follows, providing your logic app URL:
 
-    ```yaml
+    ```bash
     "receivers":
     - "name": "Default"
     - "name": "Watchdog"
     - "name": "Critical"
-    "webhook_configs":
-    - "url": "<Insert Logic App URL"
+        "webhook_configs":
+        - "url": "INSERT YOUR LOGIC APP URL"
         "send_resolved": true
+    - "name": "null"
     ```
 
-1. We need to put this back into the secret, which means we need to base64 encode the file
+1. Now we can apply this updated secret.
 
     ```bash
-    cat alertmanager.yaml|base64
-    Imdsb2JhbCI6CiAgInJlc29sdm....truncated.....IkNyaXRpY2FsIg==
-    ```
-
-1. Copy the base64 encoded string and update the alertmanager-main-generated.yaml file you created above and replace the value of 'alertmanager.yaml' with your base64 encoded string.
-
-1. We need to remove the references to the previous owner of the manifest file, so from the metadata section, remove all fields except 'name' and 'namespace'. Your file should look as follows:
-
-
-    ```yaml
-    apiVersion: v1
-    data:
-      alertmanager.yaml: Imdsb2...truncated...kNyaXRpY2FsIg==
-    kind: Secret
-    metadata:
-      name: alertmanager-main-generated
-      namespace: monitoring
-    type: Opaque
-    ```
-
-1. Now we replace the existing secret.
-
-    ```bash
-    kubectl replace -f alertmanager-main.yaml -n monitoring 
+    kubectl apply -f alertmanager-secret.yaml -n monitoring
     ```
 
 1. Now if we go back and try to trigger our alert and the resolve the alert, we should see the messages arrive in our Teams chat.
