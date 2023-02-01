@@ -19,7 +19,7 @@
     "express": "~4.16.0",
     "hbs": "^4.0.4",
     "http-errors": "~1.6.2",
-    "mongoose": "^5.7.5",
+    "mongoose": "^5.13.15",
     "morgan": "^1.9.1",
     "path": "^0.12.7",
     "request": "^2.88.0",
