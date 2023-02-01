@@ -13,7 +13,7 @@
     "applicationinsights": "^1.0.4",
     "async": "^2.6.1",
     "express": "~4.16.0",
-    "mongoose": "^5.7.5",
+    "mongoose": "^5.13.15",
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
     "dayjs": "^1.7.5"
