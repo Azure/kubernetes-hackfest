@@ -1,17 +1,13 @@
-# Lab: Linkerd
+# Lab: Portworx
 
-Linkerd is a service sidecar designed to give service owners automatic observability, reliability, and runtime diagnostics for their service without requiring configuration or code changes. Linkerd is also a service mesh, running across an entire cluster to provide platform-wide telemetry, security, and reliability.
+Portworx Enterprise is the Kubernetes storage and data platform trusted in production by the world’s leading enterprises. Portworx has been identified as the #1 Kubernetes storage solution four years in a row and provides capabilities like Kubernetes-native high availability and replication, unified storage layer for both block and file based persistent volumes, automated capacity management for stateful applications, Synchronous and Asynchronous disaster recovery solution for Kubernetes, and many more! 
 
-Linkerd is a graduated Cloud Native Computing Foundation (CNCF) project.
-
-**This lab will focus on the v2 release of Linkerd**
+**In this lab, we will use Portworx Enterprise 3.0 to walk through some of the capabilities Portworx delivers for AKS**
 
 ## Prerequisites
 
 * Complete previous labs:
-    * [Azure Kubernetes Service](../../create-aks-cluster/README.md)
-    * [Build Application Components in Azure Container Registry](../../build-application/README.md)
-    * [Helm Setup and Deploy Application](../../helm-setup-deploy/README.md)
+    * Deploy a new AKS cluster using [Azure Kubernetes Service](../../create-aks-cluster/README.md) running Kubernetes version 1.26.6
 
 ## Instructions
 
