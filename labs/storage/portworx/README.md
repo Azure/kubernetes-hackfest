@@ -151,11 +151,57 @@ kubectl create ns pxbbq
 kubectl apply -f pxbbq-mongo.yaml
 ```
 
+3. Deploy the frontend components for our demo application.
 
+``` bash 
+kubectl apply -f pxbbq-frontend.yaml
+```
 
+4. Monitor the application deployment using the following commands:
 
+``` bash
+watch kubectl get all -n pxbbq
+```
 
+When all the pods are running, use `CTRL+C` to exit the watch command. 
 
+5. Access the demo application: 
+
+Use the following commnad to fetch the LoadBalancer endpoint for the pxbbq-svc service in the demo namespace and navigate to it using a new browser tab.
+
+``` bash 
+kubectl get svc -n pxbbq pxbbq-svc
+```
+
+6. Interact with the Demo application
+This demo application allows users to place orders that are saved in the backend MongoDB database. Use the following steps to register a new user and place a simple order.
+
+- Click on Menu on the Top Right and select Register.
+![PXBBQ Homepage](images/pxbbq-1.jpg "PXBBQ Homepage")
+
+- Enter your first name, last name, email address and password. Click Register.
+![PXBBQ New User](images/pxbbq-2.jpg "PXBBQ New User")
+
+- Click on Menu on the Top Right and select Order.
+![PXBBQ Homepage](images/pxbbq-1.jpg "PXBBQ Homepage")
+
+- Select a Main Dish, Couple of Side dishes and a drink. Click Place Order.
+![PXBBQ Order](images/pxbbq-3.jpg "PXBBQ Order")
+
+![PXBBQ Order Status](images/pxbbq-4.jpg "PXBBQ Order Status")
+
+- You can either click on the order confirmation, or navigate to Order History from the Top Right, to find your order.
+![PXBBQ Order History](images/pxbbq-5.jpg "PXBBQ Order History")
+
+Now that we have some data generated, let’s use the following command to inspect the MongoDB volume and look at the Portworx parameters configured for the volume:
+
+``` bash 
+VOL=`kubectl get pvc -n pxbbq | grep mongodb-pvc | awk '{print $3}'`
+kubectl exec -it $PX_POD -n portworx -- /opt/pwx/bin/pxctl volume inspect ${VOL}
+```
+
+Observe how Portworx creates volume replicas, and spreads them across your Kubernetes worker nodes.
+In this step, you saw how Portworx can dynamically provisions a highly available ReadWriteOnce persistent volume for your application.
 
 
 
