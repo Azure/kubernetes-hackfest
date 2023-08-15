@@ -196,12 +196,579 @@ This demo application allows users to place orders that are saved in the backend
 Now that we have some data generated, let’s use the following command to inspect the MongoDB volume and look at the Portworx parameters configured for the volume:
 
 ``` bash 
-VOL=`kubectl get pvc -n pxbbq | grep mongodb-pvc | awk '{print $3}'`
-kubectl exec -it $PX_POD -n portworx -- /opt/pwx/bin/pxctl volume inspect ${VOL}
+PXBBQVOL=`kubectl get pvc -n pxbbq | grep mongodb-pvc | awk '{print $3}'`
+kubectl exec -it $PX_POD -n portworx -- /opt/pwx/bin/pxctl volume inspect ${PXBBQVOL}
 ```
 
 Observe how Portworx creates volume replicas, and spreads them across your Kubernetes worker nodes.
 In this step, you saw how Portworx can dynamically provisions a highly available ReadWriteOnce persistent volume for your application.
+
+### Deploying demo application for ReadWriteMany volumes
+
+Portworx offers a sharedv4 service volume which allows applications to connect to the shared persistent volume either using a ClusterIP or a LoadBalancer endpoint. This is advantageous as even if one of the worker node goes down, the shared volume is still accessible without any interruption of the application utilizing the data on the shared volume.
+
+1. Create the sharedservice namespace
+
+``` bash
+kubectl create ns sharedservice
+```
+
+2. Deploy the sharedv4 service PVC 
+
+``` bash
+kubectl apply -f sharedpvc.yaml -n sharedservice
+```
+
+3. Deploy the busybox pods using the following command: 
+
+``` bash 
+kubectl apply -f busyboxpod.yaml -n sharedservice
+```
+
+This creates a deployment using multiple simple busybox pods that have mounted and will constantly write to the shared persistent volume. It also deploys a single busybox pod that will constantly read from the shared persistent volume.
+
+4. Inspect the volume
+
+``` bash
+BUSYBOXVOL=`kubectl get pvc -n sharedservice | grep px-sharedv4-pvc | awk '{print $3}'`
+kubectl exec -it $PX_POD -n portworx -- /opt/pwx/bin/pxctl volume inspect ${BUSYBOXVOL}
+```
+
+Note that we have four pods accessing the RWX volume for our demo!
+
+5. Describe the sharedv4service endpoint
+
+``` bash
+kubectl describe svc -n sharedservice
+```
+
+Applications can mount the RWX using the ClusterIP (IP) and Portworx will automatically redirect it to one of the worker nodes in your cluster. The Endpoint in the output is the current node, but in case of that node going down, Portworx will automatically route the traffic using a different node endpoint, without the user having to reboot/restart the application pods.
+
+6. Inspect the log file to ensure that there was no application interruption due to node failure
+
+``` bash
+kubectl logs shared-demo-reader -n sharedservice
+```
+You’ve just deployed applications with different needs on the same Kubernetes cluster without the need to install multiple CSI drivers/plugins, and it will function exactly the same way no matter what backing storage you provide for Portworx Enterprise to use!
+
+### Wrap up this section
+Use the following commands to delete objects used for this scenario
+
+``` bash
+kubectl delete -f busyboxpod.yaml -n sharedservice
+kubectl delete -f sharedpvc.yaml -n sharedservice
+kubectl delete ns sharedservice
+kubectl wait --for=delete ns/sharedservice --timeout=60s
+```
+
+## Protecting your data using VolumeSnapshots and GroupVolumeSnapshots
+
+Portworx allows you to take standard snapshots of your persistent volumes on a per-volume basis, but also gives you the capability to take group snapshots if you have persistence across multiple volumes to enable application-consistent snapshots.
+
+In this scenario, you will:
+
+1. Perform a single volume snapshot and restore
+2. Configure pre and post snapshot rules to quiesce an application
+3. Perform a group volume snapshot and restore, utilizing the pre and post rules
+
+### Working with single volume snapshots
+
+Before we take volume snapshots, let’s navigate to the application UI that we deployed in the previous step, and verify that we can see order that we placed in the previous section. To find the LoadBalancer endpoint for our demo application, use the following command:
+
+``` bash 
+kubectl get svc -n pxbbq pxbbq-svc
+```
+
+Navigate to the application and login as the Demo user and look at the Order History
+![PXBBQ Order History](images/pxbbq-5.jpg "PXBBQ Order History")
+
+1. Create volumesnapshot for the MongoDB volume. 
+
+``` bash 
+cat mongo-snapshot.yaml
+
+kubectl apply -f mongo-snapshot.yaml
+```
+
+And let’s look at the snapshot object:
+``` bash
+kubectl get stork-volumesnapshots,volumesnapshotdatas -n pxbbq
+```
+
+2. Accidently “Drop Table” in your MongoDB database
+
+Let’s delete the data within our MongoDB DB by exec’ing into the pod:
+``` bash
+MONGOPOD=$(kubectl get pods -l app.kubernetes.io/name=mongo -n pxbbq | grep 1/1 | awk '{print $1}')
+kubectl exec -it $MONGOPOD -n pxbbq -- mongosh --quiet
+```
+And then drop our table:
+
+``` bash
+use admin
+db.auth('porxie','porxie')
+show dbs
+use porxbbq
+db.dropDatabase()
+```
+Use the `quit` command to exit out of the mongodb pod.
+
+3. Verify data has been deleted
+
+Navigate to the Portworx BBQ App using the LoadBalancer endpoint, you should not see your order from order history.
+![PXBBQ Order Empty](images/pxbbq-8.jpg "PXBBQ Order Empty")
+
+4. Restore our application from snapshot by creating a new PVC from our snapshot. 
+
+``` bash
+kubectl apply -f pvc-from-snap.yaml -n pxbbq
+```
+
+``` bash 
+kubectl get pvc px-mongo-snap-clone -n pxbbq
+```
+
+5. Redeploy the Demo application using the following command: 
+
+``` bash
+kubectl delete -f pxbbq-mongo.yaml
+```
+``` bash
+kubectl apply -f pxbbq-mongo-restore.yaml
+```
+
+6. Verify the application has been completely restored
+
+Access the application by navigating to the LoadBalancer endpoint and refreshing the page. Our original order will be back in our order history. If you need to find your LoadBalancer endpoint, use the following command:
+
+``` bash
+kubectl get svc -n pxbbq pxbbq-svc
+```
+
+![PXBBQ Order History](images/pxbbq-5.jpg "PXBBQ Order History")
+
+In this step, we took a snapshot of the persistent volume, deleted the database table and then restored our application by restoring the persistent volume using the snapshot!
+
+### Portworx Group Volume Snapshots
+
+In this step, we will look at how you can use Portworx Group Volume Snapshots and 3D snapshots - to take application consistent multi-PVC snapshots for your application.
+
+1. Create a new StorageClass for GroupVolumeSnapshots. 
+
+``` bash 
+kubectl apply -f group-sc.yaml
+```
+
+2. Create a new namespace for MySQL
+
+``` bash 
+kubectl create ns mysql
+```
+
+3. Create a pre-snap and post-snap rules for MySQL
+
+Portworx allows users to specify pre- and post-snapshot rules to ensure that the snapshots are application consistent and not crash consistent. For this example, we are creating a pre-snapshot and a post-snapshot rule for MySQL that we will use when we take a group volume snapshot.
+
+Review the yaml for the snapshot rule:
+
+``` bash
+cat mysql-presnap-rule.yaml
+
+cat mysql-postsnap-rule.yaml
+```
+
+Let’s apply both the rules:
+
+``` bash 
+kubectl apply -f mysql-presnap-rule.yaml -n mysql
+kubectl apply -f mysql-postsnap-rule.yaml -n mysql
+``` 
+
+4. Deploy MySQL statefulset, service, and secret in the mysql namespace
+
+``` bash 
+kubectl apply -f mysql-app.yaml -n mysql
+```
+
+Watch until you see the three mysql pods, one mysql-client pod are up and running
+
+``` bash 
+watch kubectl get pods,pvc,sts,svc,secret -n mysql
+```
+Note: use CTRL+C to exit out of the watch command once all the pods are running.
+
+5. Interacting with MySQL
+Let’s exec into the mysql-client pod and create a new portworx database and a new features table in that database.
+
+``` bash
+kubectl exec mysql-client -n mysql -- apk add mysql-client
+```
+
+``` bash 
+oc exec mysql-client -n mysql -it -- sh
+mysql -u root -p --password=password -h mysql-set-0.mysql.mysql.svc.cluster.local
+create database portworx;
+show databases;
+
+use portworx;
+
+CREATE TABLE features (id varchar(255), name varchar(255), value varchar(255));
+INSERT INTO features (id, name, value) VALUES ('px-1', 'snapshots', 'point in time recovery!');
+INSERT INTO features (id, name, value) VALUES ('px-2', 'cloudsnaps', 'backup/restore to/from any cloud!');
+INSERT INTO features (id, name, value) VALUES ('px-3', 'STORK', 'convergence, scale, and high availability!');
+INSERT INTO features (id, name, value) VALUES ('px-4', 'share-volumes', 'better than NFS, run wordpress on k8s!');
+INSERT INTO features (id, name, value) VALUES ('px-5', 'DevOps', 'your data needs to be automated too!');
+
+SELECT * FROM features;
+
+quit
+exit
+```
+
+6. Create and deploy a GroupVolumeSnapshot for MySQL
+
+``` bash 
+cat mysql-groupsnapshot.yaml
+
+kubectl apply -f mysql-groupsnapshot.yaml -n mysql
+```
+
+Note that once the snapshots have completed successfully, you should see Snapshot created successfully and it is ready for all mysql volumes in the kubectl describe output:
+
+``` bash 
+kubectl get groupvolumesnapshot -n mysql
+kubectl describe groupvolumesnapshot mysql-group-snapshot -n mysql
+``` 
+
+7. Drop the Portworx database from MySQL
+
+Let’s drop our Portworx database, and see if we can recover it from our group volume snapshots.
+
+``` bash 
+kubectl exec mysql-client -n mysql -it -- sh
+mysql -u root -p --password=password -h mysql-set-0.mysql.mysql.svc.cluster.local
+
+DROP database portworx;
+quit
+
+exit
+```
+
+Now, that we have dropped the Portworx database, let’s see how we can restore our data.
+
+We will start by deleting the mysql statefulset, Creating new PVCs using the snapshots we created earlier, and then redeploying the mysql statefulset.
+
+``` bash 
+kubectl delete sts mysql-set -n mysql
+```
+
+And let’s get the snapshot names and assign them into variables
+
+``` bash
+SNAP0=$(kubectl get volumesnapshotdatas.volumesnapshot.external-storage.k8s.io -n mysql | grep mysql-group-snapshot-mysql-store-mysql-set-0 | awk '{print $1}')
+SNAP1=$(kubectl get volumesnapshotdatas.volumesnapshot.external-storage.k8s.io -n mysql | grep mysql-group-snapshot-mysql-store-mysql-set-1 | awk '{print $1}')
+SNAP2=$(kubectl get volumesnapshotdatas.volumesnapshot.external-storage.k8s.io -n mysql | grep mysql-group-snapshot-mysql-store-mysql-set-2 | awk '{print $1}')
+```
+
+Now let’s create a new yaml file for our PVC objects that will be deployed from our snapshots:
+
+``` bash
+kubectl apply -f restoregrouppvc.yaml -n mysql
+```
+
+Inspect the PVCs deployed from the snapshots
+
+``` bash
+kubectl get pvc -n mysql
+```
+
+Once you have these PVCs deployed, you can redeploy the MySQL statefulset.
+
+``` bash
+kubectl apply -f mysql-restore-app.yaml -n mysql
+```
+
+Inspect the Pods and PVCs deployed to restore our mysql instance:
+
+``` bash
+watch kubectl get pods,pvc -n mysql
+```
+
+8. Inspect the MySQL instance
+
+Let’s verify that all of our data was restored:
+
+``` bash
+kubectl exec mysql-client -n mysql -it -- sh
+mysql -u root -p --password=password -h mysql-set-0.mysql.mysql.svc.cluster.local
+use portworx;
+select * from features;
+
+quit
+
+exit
+```
+
+As you can see, our data has been successfully restored and is consistent due to our pre-snapshot and post-snapshot commands executed prior and post the group volume snapshot!
+
+That’s how easy it is to use Portworx snapshots, groupsnapshots and 3Dsnapshots to create application consistent snapshots for your applications running on Kubernetes.
+
+### Wrap up this section
+Use the following commands to delete objects used for this specific scenario:
+
+``` bash 
+kubectl delete -f mysql-app.yaml -n mysql
+kubectl delete -f restoregrouppvc.yaml -n mysql
+kubectl delete -f mysql-groupsnapshot.yaml -n mysql
+kubectl delete -f mysql-restore-app.yaml -n mysql
+kubectl delete -f mongo-snapshot.yaml
+kubectl delete -f pxbbq-mongo-restore.yaml -n pxbbq
+kubectl delete -f pxbbq-frontend.yaml -n pxbbq
+kubectl delete ns pxbbq
+kubectl delete ns mysql
+kubectl wait --for=delete ns/pxbbq --timeout=60s
+kubectl wait --for=delete ns/mysql --timeout=60s
+```
+
+## No More Noisy Neighbors on OpenShift using Portworx Application IO Control
+
+In this module, we will use Portworx Application I/O control to dynamically update Read and Write IOPS limits to avoid noisy neighbor scenarios where applications sharing a Kubernetes cluster starve for storage resources. Keep in mind you can also limit bandwidth to a persistent volume using Application I/O Control with Portworx, not just IOPS!
+
+1. Configuring Grafana Dashboards for Portworx
+Enter the following commands to download the Grafana dashboard and datasource configuration files
+
+``` bash
+curl -O https://docs.portworx.com/samples/k8s/pxc/grafana-dashboard-config.yaml
+sleep 3
+curl -O https://docs.portworx.com/samples/k8s/pxc/grafana-datasource.yaml
+```
+
+Create a configmap for the dashboard and data source:
+
+``` bash
+kubectl -n portworx create configmap grafana-dashboard-config --from-file=grafana-dashboard-config.yaml
+kubectl -n portworx create configmap grafana-source-config --from-file=grafana-datasource.yaml
+```
+
+Download and install Grafana dashboards using the following commands:
+
+``` bash
+curl "https://docs.portworx.com/samples/k8s/pxc/portworx-cluster-dashboard.json" -o portworx-cluster-dashboard.json && \
+curl "https://docs.portworx.com/samples/k8s/pxc/portworx-node-dashboard.json" -o portworx-node-dashboard.json && \
+curl "https://docs.portworx.com/samples/k8s/pxc/portworx-volume-dashboard.json" -o portworx-volume-dashboard.json && \
+curl "https://docs.portworx.com/samples/k8s/pxc/portworx-performance-dashboard.json" -o portworx-performance-dashboard.json && \
+curl "https://docs.portworx.com/samples/k8s/pxc/portworx-etcd-dashboard.json" -o portworx-etcd-dashboard.json
+```
+
+``` bash
+kubectl -n portworx create configmap grafana-dashboards \
+--from-file=portworx-cluster-dashboard.json \
+--from-file=portworx-performance-dashboard.json \
+--from-file=portworx-node-dashboard.json \
+--from-file=portworx-volume-dashboard.json \
+--from-file=portworx-etcd-dashboard.json
+```
+
+Deploy Grafana components using the following command: 
+
+``` bash
+kubectl apply -f grafana.yaml
+```
+
+Wait till Grafana is up and running
+
+``` bash
+watch kubectl get pods -n portworx -l app=grafana
+``` 
+Use `CTRL+C` to exit out of the watch command.
+
+2. Downloading Kubestr and generating I/O using Kubestr
+
+``` bash 
+wget https://github.com/kastenhq/kubestr/releases/download/v0.4.36/kubestr_0.4.36_Linux_amd64.tar.gz
+sleep 5
+tar -xvf kubestr_0.4.36_Linux_amd64.tar.gz
+```
+
+``` bash
+./kubestr fio -z 30G -s block-sc -f /tmp/rand-write.fio -o json -e /tmp/rand-RW-WL.json >& /dev/null &
+```
+
+3. Inpect PVC
+``` bash
+kubectl get pvc
+```
+
+4. Portworx Volume Dashboard using Grafana
+
+Use the following command to access the LoadBalancer endpoint for the Grafana instance we deployed earlier.
+
+``` bash 
+kubectl get svc -n portworx grafana-svc
+```
+
+Navigate to the LoadBalancer endpoint and append :3000 at the end. Log in using admin/admin credentials. You will be prompted to set a new password for Grafana. You can set it to Password!. If you use anything else as a password, please remember it - or you may not be able to access Grafana in upcoming modules if desired!
+![Grafana Login](images/grafana-0.jpg "Grafana Login")
+
+![Grafana New Password](images/grafana-1.jpg "Grafana New Password")
+Once logged in, find the Portworx Volume Dashboard by navigating to left pane –> Dashboards –> Manage –> Portworx Volume Dashboard
+
+![Grafana Dashboards](images/appio-0.jpg "Grafana Dashboards")
+
+On the Volume Dashboard, find your persistent volume using the PVC ID from Step 3 above in the Volume Name drop down.
+![Grafana Volume](images/appio-1.jpg "Grafana Volume")
+
+After you have selected the right volume, find the Volume IOPS pane, click View from the dropdown, and then change the timeline view to last 5 mins (defaults to last 3 hours) using the drop down box in the upper right corner of Grafana.
+
+You should see the current IOPS load on the volume is more than 5000.
+![Volume IOPS Pre](images/appio-2.jpg "Volume IOPS Pre")
+
+5. Update the IOPS limits for the PVC
+Let’s get our volume ID:
+
+``` bash
+KubestrVol=$(kubectl exec -it $PX_POD -n portworx -- /opt/pwx/bin/pxctl volume list | grep "28 GiB" | awk '{print $2}' )
+```
+Then inspect the volume using the command:
+``` bash
+kubectl exec -it $PX_POD -n portworx -- /opt/pwx/bin/pxctl volume inspect ${KubestrVol}
+```
+
+Next, let’s update the MAX Read and Write IOPS for the volume to 750 IOPS:
+
+``` bash
+kubectl exec -it $PX_POD -n portworx -- /opt/pwx/bin/pxctl volume update --max_iops 750,750 ${KubestrVol}
+```
+
+After updating the volume, we can observe the new IOPS settings via pxctl:
+
+``` bash
+kubectl exec -it $PX_POD -n portworx -- /opt/pwx/bin/pxctl volume inspect ${KubestrVol}
+```
+
+6. Monitor the updated IOPS numbers using Portworx Volume Dashboard
+Navigate back to the Grafana UI and find the Volume IOPS pane for our volume again. You should see the current IOPS number is now set to below 750.
+![Volume IOPS Post](images/appio-3.jpg "Volume IOPS Post")
+
+Note: Grafana takes a couple of minute to reflect the changes, so if you dont see the drop in IOPS right away, wait a couple of minutes and refresh the page again.
+
+That’s how you can use Portworx Application IO control to ensure a single application doesn’t consume all the resources available to the cluster and cause a noisy neighbor issue!
+
+### Wrap up this section
+Use the following commands to delete objects used for this specific scenario:
+
+``` bash 
+kubectl delete pods --all
+kubectl delete pvc --all
+kubectl wait --for=delete pvc/all --timeout=60s
+rm grafana-dashboard-config.yaml
+rm grafana-datasource.yaml
+rm portworx-cluster-dashboard.json
+rm portworx-node-dashboard.json
+rm portworx-volume-dashboard.json
+rm portworx-performance-dashboard.json
+rm portworx-etcd-dashboard.json
+rm /tmp/grafana.yaml
+```
+
+## Automated storage capacity management using Portworx Autopilot
+
+Portworx Autopilot is a rule-based engine that responds to changes from a monitoring source. Autopilot allows you to specify monitoring conditions along with actions it should take when those conditions occur.
+
+1. Configure Autopilot Rule
+
+Autopilot rules allow users to create IFTTT (IF This Then That) rules, where Autopilot will monitor for a condition and then perform an action on your behalf. 
+
+Let’s create a simple rule that will monitor persistent volumes associated with objects that have the app: postgres label and in namespaces that have the label `type: db`. If capacity usage grows to or above 20%, it will automatically grow the persistent volume and underlying filesystem by 20% of the current volume size, up to a maximum volume size of 50Gi:
+
+Keep in mind, an AutoPilot Rule has 4 main parts.
+* Selector Matches labels on the objects that the rule should monitor.
+* Namespace Selector Matches labels on the Kubernetes namespaces the rule should monitor. This is optional, and the default is all namespaces.
+* Conditions The metrics for the objects to monitor.
+* Actions to perform once the metric conditions are met.
+
+``` bash 
+cat autopilotrule.yaml
+```
+
+``` bash 
+kubectl create -f autopilotrule.yaml
+```
+
+2. Create a namespace for demo application
+
+Since our Portworx Autopilot rule only targets namespaces that have the label type: db, let’s create the yaml for the namespace:
+
+``` bash
+kubectl apply -f namespaces.yaml
+```
+
+3. Deploy Postgres App for testing Portworx Autopilot
+
+Let's deploy PVCs for our Postgres deployment:
+
+``` bash
+kubectl apply -f autopilot-postgres.yaml -n pg1
+```
+
+Next, let’s deploy our Postgres and pgbench pods:
+
+``` bash 
+kubectl apply -f autopilot-app.yaml -n pg1
+```
+
+Verify that the application is deployed and pgbench is writing data to the postgres database.
+
+``` bash 
+kubectl get pods,pvc -n pg1
+```
+
+``` bash
+POSTGRES_POD=$(kubectl get pods -n pg1 | grep 2/2 | awk '{print $1}')
+
+kubectl logs $POSTGRES_POD -n pg1 pgbench
+```
+
+4. Observe the Portworx Autopilot events
+
+Wait for a couple of minutes and run the following command to observe the state changes for Portworx Autopilot:
+
+``` bash
+watch kubectl get events --field-selector involvedObject.kind=AutopilotRule,involvedObject.name=volume-resize --all-namespaces --sort-by .lastTimestamp
+```
+
+You will see Portworx Autopilot move through the following states as it monitors volumes and takes actions defined in Portworx Autopilot rules:
+1. Initializing (Detected a volume to monitor via applied rule conditions)
+2. Normal (Volume is within defined conditions and no action is necessary)
+3. Triggered (Volume is no longer within defined conditions and action is necessary)
+4. ActiveActionsPending (Corrective action is necessary but not executed yet)
+5. ActiveActionsInProgress (Corrective action is under execution)
+6. ActiveActionsTaken (Corrective action is complete)
+
+Once you see ActiveActionsTaken in the event output, click CTRL+C to exit the watch command.
+
+5. Verify the Volume Expansion
+Now let’s take a look at our PVCs - note the automatic expansion of the volume occurred with no human interaction and no application interruption:
+
+``` bash
+kubectl get pvc -n pg1
+```
+
+You’ve just configured Portworx Autopilot and observed how it can perform automated capacity management based on rules you configure, and be able to “right size” your underlying persistent storage as it is needed!
+
+### Wrap up this module
+Use the following commands to delete objects used for this specific scenario:
+
+``` bash
+kubectl delete -f autopilot-app.yaml -n pg1
+kubectl delete -f autopilot-postgres.yaml -n pg1
+kubectl delete -f autopilotrule.yaml
+kubectl delete -f namespaces.yaml
+kubectl wait --for=delete ns/pg1 --timeout=60s
+```
+
+
+
 
 
 
