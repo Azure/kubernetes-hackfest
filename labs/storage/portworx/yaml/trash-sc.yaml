@@ -1,0 +1,9 @@
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: trash-sc
+provisioner: pxd.portworx.com
+reclaimPolicy: Delete
+parameters:
+  repl: "2"
+allowVolumeExpansion: true

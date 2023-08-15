@@ -108,7 +108,7 @@ In this scenario, you’ll learn about Portworx Enterprise StorageClass paramete
 
 ### Deploying Portworx Storage Classes
 
-> Note: Change directories to the Portworx folder in your cloned repo: `cd kubernetes-hackfest/labs/storage/portworx/`
+> Note: Change directories to the Portworx folder in your cloned repo: `cd kubernetes-hackfest/labs/storage/portworx/yaml`
 
 Portworx provides the ability for users to leverage a unified storage pool to dynamically provision both Block-based (ReadWriteOnce) and File-based (ReadWriteMany) volumes for applications running on your Kubernetes cluster without having to provision multiple CSI drivers/plugins, and without the need for specific backing storage devices!
 
@@ -530,7 +530,7 @@ kubectl wait --for=delete ns/pxbbq --timeout=60s
 kubectl wait --for=delete ns/mysql --timeout=60s
 ```
 
-## No More Noisy Neighbors on OpenShift using Portworx Application IO Control
+## No More Noisy Neighbors on AKS using Portworx Application IO Control
 
 In this module, we will use Portworx Application I/O control to dynamically update Read and Write IOPS limits to avoid noisy neighbor scenarios where applications sharing a Kubernetes cluster starve for storage resources. Keep in mind you can also limit bandwidth to a persistent volume using Application I/O Control with Portworx, not just IOPS!
 
@@ -767,251 +767,121 @@ kubectl delete -f namespaces.yaml
 kubectl wait --for=delete ns/pg1 --timeout=60s
 ```
 
+## Protect againt accidental volume deletion using Portworx Volume Trashcan
 
+Ever had that sinking feeling after deleting a critical volume, disk, or file? The Portworx Volume Trashcan feature provides protection against accidental or inadvertent volume deletions which could result in loss of data. Volume Trashcan is disabled by default, but can be enabled using a simple pxctl command. Let’s test it out!
 
+1. Setting Volume expiration minutes
+First, configure the Portworx cluster to enable volume deletion and tell it how long you want to retain volumes after a delete. In this example, we’ll tell Portworx to retain volumes for 720 minutes after a deletion:
 
+``` bash 
+kubectl exec -it $PX_POD -n portworx -- /opt/pwx/bin/pxctl cluster options update --volume-expiration-minutes 720
+```
 
+2. Configuring a StorageClass
+Review the yaml for the StorageClass that we’ll use - note the reclaimPolicy is set to Delete:
 
+``` bash
+kubectl apply -f trashcan-sc.yaml
+```
 
+3. Create a new namespace
 
-> Note: This lab uses a CLI tools that must be installed on your local machine. You will need to connect to your cluster from a local bash shell on your machine. (hint: use `az aks get-credentials` to setup access locally)
+``` bash
+kubectl create ns trashcan
+```
 
-1. Remove the application pods/services from the cluster. We will re-deploy with linkerd.
+4. Deploy the mongodb backend for the application
 
-    ```bash
-    helm uninstall service-tracker-ui -n hackfest
-    helm uninstall weather-api -n hackfest
-    helm uninstall quakes-api -n hackfest
-    helm uninstall flights-api -n hackfest
-    helm uninstall data-api -n hackfest
-    ```
+``` bash 
+kubectl create -f pxbbq-mongo-tc.yaml
+```
 
-1. Install linkerd CLI on your machine
+5. Deploy the front-end components for the application
 
-    ```bash
-    curl -sL https://run.linkerd.io/install | sh
+``` bash 
+kubectl apply -f pxbbq-frontend-tc.yaml
+```
 
-    export PATH=$PATH:$HOME/.linkerd2/bin
-    ```
+6. Access the application
+Access the demo application using the LoadBalancer endpoint from the command below, and place some orders to store in the backend MongoDB database. If you need help placing orders, please refer to the steps earlier in this doc.
 
-    ```bash
-    # verify CLI (ignore that the server version is unavailable)
-    linkerd version
-    
-    Client version: stable-2.11.0
-    Server version: unavailable
-    ```
+``` bash 
+kubectl get svc -n trashcan pxbbq-svc
+```
 
-1. Validate your Kubernetes cluster
+7. Delete the demo application
+Next, let's accidently delete the postgres pod and persistent volume: 
 
-    ```bash
-    linkerd check --pre
+``` bash 
+kubectl delete -f pxbbq-mongo-tc.yaml
+```
+Wait for the delete to complete before continuing.
 
-    ...
+Once the MongoDB is deleted, navigate back to the Demo App tab to verify that it stopped working. Click on the refresh icon to the right of the tabs just to make sure - once the DB pod has been deleted, the app should be unreachable.
 
-    Status check results are [ok]
-    ```
+8. Restoring volume from Volume Trashcan
 
-1. Install linkerd server components into AKS
+Let’s use pxctl commands to restore our volume from the trashcan:
 
-    ```bash
-    linkerd install | kubectl apply -f -
-    ```
+``` bash 
+VolMongoTC=$(kubectl exec -it $PX_POD -n portworx -- /opt/pwx/bin/pxctl volume list --trashcan | grep "5 GiB" | awk '{print $8}')
+```
 
-1. Validate
+``` bash 
+kubectl exec -it $PX_POD -n portworx -- /opt/pwx/bin/pxctl volume restore --trashcan $VolMongoTC pvc-restoredvol
+```
 
-    ```bash
-    linkerd check
+``` bash
+TCVolId=$(kubectl exec -it $PX_POD -n portworx -- /opt/pwx/bin/pxctl volume list | grep "pvc-restoredvol" | awk '{print $1}' )
+```
 
-    ...
+9. Create a persistent volume from the recovered portworx volume
+Now that we’ve restored the volume from the trashcan, let’s create the yaml to tie the volume to a Kubernetes persistent volume:
 
-    Status check results are [ok]
-    ```
+``` bash
+kubectl apply -f recoverpv.yaml
+```
 
-1. Install viz extension
+10. Redeploy the app
+Let’s redeploy the application which is using the recovered volume:
+``` bash 
+kubectl apply -f pxbbq-mongo-tc.yaml
+```
 
-    ```bash
-    linkerd viz install | kubectl apply -f - # install the on-cluster metrics stack
-    ```
+Delete the old web front end:
+``` bash
+kubectl delete deploy pxbbq-web -n trashcan
+```
 
-1. Open the Dashboard
+And redeploy the web front end: 
+``` bash
+kubectl apply -f pxbbq-frontend-tc.yaml
+```
 
-    ```bash
-    linkerd viz dashboard
-    ```
+11. Verify the restore by accessing the app
+Navigate to the Demo App UI by using the LoadBalancer endpoint from the command below and see that our orders are back!
 
-    Browse the dashboard:
+``` bash 
+kubectl get svc -n trashcan pxbbq-svc
+```
+This is how Portworx allows users to use the Trash Can feature to recover accidentally deleted persistent volumes. This prevents additional downtime and reduces ticket churn for data restoration due to human error!
 
-    ![Dashboard](linkerd-dashboard.png "Dashboard")
-
-1. Use `helm template` to create manifest for injection
-
-    ```bash
-    helm template ./kubernetes-hackfest/charts/data-api > ./kubernetes-hackfest/data-api.yaml
-    helm template ./kubernetes-hackfest/charts/flights-api > ./kubernetes-hackfest/flights-api.yaml
-    helm template ./kubernetes-hackfest/charts/quakes-api > ./kubernetes-hackfest/quakes-api.yaml
-    helm template ./kubernetes-hackfest/charts/weather-api > ./kubernetes-hackfest/weather-api.yaml
-    helm template ./kubernetes-hackfest/charts/service-tracker-ui > ./kubernetes-hackfest/service-tracker-ui.yaml
-    ```
-
-1. Re-deploy application using `linkerd inject`
-
-    ```bash
-    linkerd inject ./kubernetes-hackfest/data-api.yaml | kubectl apply -n hackfest -f -
-    linkerd inject ./kubernetes-hackfest/flights-api.yaml | kubectl apply -n hackfest -f -
-    linkerd inject ./kubernetes-hackfest/quakes-api.yaml | kubectl apply -n hackfest -f -
-    linkerd inject ./kubernetes-hackfest/weather-api.yaml | kubectl apply -n hackfest -f -
-    linkerd inject ./kubernetes-hackfest/service-tracker-ui.yaml | kubectl apply -n hackfest -f -
-    ```
-
-1. Load test and review traffic in Dashboard
-
-    > Note: There are a few ways we could create traffic on the API layer. You could create a load test pod in the cluster that hits the API's on internal IP addresses. Below is a simple setup just for lab purposes.
-
-    * Expose one of the API's as a public IP
-
-        ```bash
-        kubectl patch svc flights-api -n hackfest -p '{"spec":{"type":"LoadBalancer"}}'
-        ```
-
-    * Get the IP address of one of your API's
-
-        ```bash
-        kubectl get svc flights-api -n hackfest
-        
-        NAME          TYPE        CLUSTER-IP    EXTERNAL-IP   PORT(S)    AGE
-        flights-api   ClusterIP   10.0.75.165   13.10.293.100 3003/TCP   100s
-        ```
-
-    * Create a variable with the URL
-
-        ```bash
-        export APP_URL=http://<your_ip_address>:3003/status
-        while true; do curl -o /dev/null -s -w "%{http_code}\n" $APP_URL; sleep 1; done
-        ```
-
-1. Try some other Linkerd features
-
-* [Automating injection.](https://linkerd.io/2/tasks/automating-injection)
-* [Setup mTLS encryption.](https://linkerd.io/2/features/automatic-mtls)
-* [Routing and Service Profiles.](https://linkerd.io/2/features/service-profiles)
-* [Server policy.](https://linkerd.io/2.11/features/server-policy/)
-
-## Troubleshooting / Debugging
-
-### Finding the bad path with Emojivoto
-
-In this section you'll have to work out the solution on your own. Some steps have been provided but ultimately you'll need to use Linkerd to determine what's going wrong with your application.
-
-1. Install emojivoto
-
-    ```bash
-    curl -sL https://run.linkerd.io/emojivoto.yml | linkerd inject - | kubectl apply -f -
-    ```
-
-2. Launch the Linkerd dashboard
-
-    ```bash
-    linkerd viz dashboard
-    ```
-
-    Browse the dashboard:
-
-    ![Dashboard](linkerd-dashboard.png "Dashboard")
-
-3. Figure out what's breaking emojivoto!
-
-    * Sort namespaces by success rate
-    * Go into the emojivoto namespace
-    * Look at the application graph
-    * Sort deployments by success rate
-    * Browse to a deployment and view the live api calls
-    * Can you see which component is the root of the issue?
-    * Can you see which specific path is failing?
-
-Still having trouble? View the step by step cli commands [here](debug-emojivoto.sh).
-
-### Mitigate an issue with retries
-
-In this section we will diagnose and repair an issue with a sample application using Linkerd's service profile resource.
-
-1. Install Booksapp
-
-    ```bash
-    kubectl create ns booksapp
-
-    curl -sL https://run.linkerd.io/booksapp.yml | kubectl -n booksapp apply -f -
-    ```
-
-2. Access the app
-  
-    You can do this a number of different ways, expose it via a load balancer, add a mapping for your ingress, or port-forward it via the cli. We will show how to get to it from the cli.
-
-    ```bash
-    kubectl -n booksapp port-forward svc/webapp 7000
-    ```
-
-   * Browse to localhost:7000
-   * try adding a new book a few times and see if you run into an issue
-
-3. Make some service profiles
-
-    ```bash
-    # Create our first service profile using a swagger file
-    
-    curl -sL https://run.linkerd.io/booksapp/webapp.swagger | linkerd -n booksapp profile --open-api - webapp
-
-    # Inspect the resulting yaml
-
-    # Begin applying service profiles
-
-    curl -sL https://run.linkerd.io/booksapp/webapp.swagger | linkerd -n booksapp profile --open-api - webapp | kubectl -n booksapp apply -f -
-
-    curl -sL https://run.linkerd.io/booksapp/authors.swagger | linkerd -n booksapp profile --open-api - authors | kubectl -n booksapp apply -f -
-
-    curl -sL https://run.linkerd.io/booksapp/books.swagger | linkerd -n booksapp profile --open-api - books | kubectl -n booksapp apply -f -
-
-    # Check out the new service profile objects
-
-    kubectl get serviceprofile
-
-    ```
-
-4. Diagnose our app using serviceprofiles
-
-    We're going to use the linkerd cli to inspect our routes. Routes come from service profiles and allow us to instrument things like retries.
-
-    ```bash
-    linkerd viz -n booksapp routes svc/webapp
-
-    linkerd viz -n booksapp routes deploy/webapp --to svc/books
-
-    linkerd viz -n booksapp routes deploy/books --to svc/authors
-    ```
-
-    * Those commands will show you the current status on the booksapp routes
-    * Can you diagnose the issue by looking at the routes?
-    * Continue to the next section once you see the problem or get bored of looking
-
-5. Fix it with retries
-
-    Now that we've diagnosed the issue we can repair it using serviceprofiles!
-
-    ```bash
-
-    # Edit the service profile for the authors service
-    kubectl -n booksapp edit sp/authors.booksapp.svc.cluster.local
-
-    # in the editor go down to the route named HEAD /authors/{id}.json and add a new value after the name.
-    ## Add the following to the yaml at the same indent as name:
-    ## isRetryable: true
-
-    ```
-
-    Now you should be able to watch booksapp begin succeeding on it's end to end calls. For more information along with a step by step video please see [this talk.](https://www.youtube.com/watch?v=YJ8zP-lqB5E)
-
+### Wrap up this module
+Use the following commands to delete objects used for this specific scenario:
+
+``` bash 
+kubectl exec -it $PX_POD -n portworx -- /opt/pwx/bin/pxctl cluster options update --volume-expiration-minutes 0
+```
+
+``` bash 
+kubectl delete -f pxbbq-frontend-tc.yaml
+kubectl delete -f pxbbq-mongo-tc.yaml
+kubectl delete ns trashcan
+kubectl wait --for=delete ns/trashcan --timeout=60s
+```
 ## Docs / References
 
-* [Linkerd on Github](https://github.com/linkerd/linkerd2)
-* [Linkerd docs](https://linkerd.io/2.11/overview/)
-* [Linkerd Slack community](slack.linkerd.io)
+* [Portworx Documentation](https://docs.portworx.com/)
+* [Portworx Central - 30 day free trial](https://central.portworx.com/)
+* [Portworx Slack community](https://slack.portworx.com/)
