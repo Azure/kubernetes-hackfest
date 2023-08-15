@@ -6,10 +6,122 @@ Portworx Enterprise is the Kubernetes storage and data platform trusted in produ
 
 ## Prerequisites
 
-* Complete previous labs:
-    * Deploy a new AKS cluster using [Azure Kubernetes Service](../../create-aks-cluster/README.md) running Kubernetes version 1.26.6
+    1. Deploy a new AKS cluster using [Azure Kubernetes Service](../../create-aks-cluster/README.md) running Kubernetes version 1.26.6. Don't need to walk through the `Namespaces Setup` section after AKS cluster creation on the create-aks-cluster page.
+    2. Create a custom role for Portworx. Enter the subscription ID using the subscription ID, also specify a role name:
+``` bash
+SUBSCRIPTIONID="$(az account show | grep id | awk '{ print $2 }' |  sed 's/\"//g' |  sed 's/\,//g')"
+echo export SUBSCRIPTIONID=$SUBSCRIPTIONID >> ~/workshopvars.env
+```
 
-## Instructions
+``` bash
+az role definition create --role-definition '{
+"Name": "px-role",
+"Description": "Custom role for Portworx",
+"AssignableScopes": [
+    "/subscriptions/'$SUBSCRIPTIONID'"
+],
+"Actions": [
+    "Microsoft.ContainerService/managedClusters/agentPools/read",
+    "Microsoft.Compute/disks/delete",
+    "Microsoft.Compute/disks/write",
+    "Microsoft.Compute/disks/read",
+    "Microsoft.Compute/virtualMachines/write",
+    "Microsoft.Compute/virtualMachines/read",
+    "Microsoft.Compute/virtualMachineScaleSets/virtualMachines/write",
+    "Microsoft.Compute/virtualMachineScaleSets/virtualMachines/read"
+],
+"NotActions": [],
+"DataActions": [],
+"NotDataActions": []
+}'
+```
+
+    3. Find the AKS cluster infrastructure resource group, we will use this to create a new service principal in the next step:
+``` bash
+INFRARG="$(az aks show -n $CLUSTERNAME -g $RGNAME | jq -r '.nodeResourceGroup')"
+echo export INFRARG=$INFRARG >> ~/workshopvars.env
+```
+
+    4. Create a service principal for Portworx custom role:
+``` bash
+az ad sp create-for-rbac --role=px-role --scopes="/subscriptions/$SUBSCRIPTIONID/resourceGroups/$INFRARG" >> spdetails.json
+```
+
+``` bash
+CLIENTID="$(cat spdetails.json | grep appId | awk '{ print $2 }' | sed 's/\"//g' |  sed 's/\,//g')"
+echo export CLIENTID=$CLIENTID >> ~/workshopvars.env
+
+CLIENTSECRET="$(cat spdetails.json | grep password | awk '{ print $2 }' | sed 's/\"//g' |  sed 's/\,//g')"
+echo export CLIENTSECRET=$CLIENTSECRET >> ~/workshopvars.env
+
+TENANTID="$(az account tenant list | grep tenantId | awk '{ print $2 }' | sed 's/\"//g' |  sed 's/\,//g')"
+echo export TENANTID=$TENANTID >> ~/workshopvars.env
+```
+
+    5. Create a secret called `px-azure` to give Portworx access to Azure APIs.
+``` bash
+kubectl create ns portworx
+
+kubectl create secret generic -n portworx px-azure --from-literal=AZURE_TENANT_ID=$TENANTID --from-literal=AZURE_CLIENT_ID=$CLIENTID --from-literal=AZURE_CLIENT_SECRET=$CLIENTSECRET
+```
+
+## Deploying Portworx on AKS
+
+Now that we have all the prereqs configured, we can proceed with Portworx installation. Portworx is deployed by first installing the Portworx Operator and then deploying a custom resource called the Portworx `StorageCluster`. Portworx Enterprise has a free 30 day trial that users can sign up by creating a new account on [Portworx Central](https://central.portworx.com/). For this workshop, we have a couple of `kubectl apply` commands, that will help us deploy the Operator and the Portworx StorageCluster. 
+
+    1. Deploy Portworx Operator
+
+``` bash
+kubectl apply -f 'https://install.portworx.com/3.0.0?comp=pxoperator&kbver=1.26.6&ns=portworx'
+```
+
+    2. Deploy the Portworx StorageCluster
+``` bash
+kubectl apply -f 'https://install.portworx.com/3.0.0?operator=true&mc=false&kbver=1.26.6&ns=portworx&b=true&iop=6&s=%22type%3DPremium_LRS%2Csize%3D150%22&c=px-demo&aks=true&stork=true&csi=true&mon=true&tel=true&st=k8s&promop=true'
+```
+
+    3. Monitor the deployment for Portworx
+``` bash
+watch kubectl get pods -n portworx -l name=portworx -o wide
+```
+It can take upto 5-7 mins for Portworx to be deployed. When all nodes are `Ready 2/2`, press `CTRL+C` to exit out of the watch command. 
+
+    4. Look at the Portworx status using the following command: 
+``` bash
+PX_POD=$(kubectl get pods -l name=portworx -n portworx -o jsonpath='{.items[0].metadata.name}')
+kubectl -n portworx exec $PX_POD -c portworx -it -- /opt/pwx/bin/pxctl status
+```
+Now that we have Portworx installed on our AKS cluster, we will look at a few of the features that Portworx offers in the rest of the workshop. 
+
+## Dynamic Volume provisioning for stateful applications
+
+In this scenario, you’ll learn about Portworx Enterprise StorageClass parameters and deploy demo applications that use RWO (ReadWriteOnce) and RWX (ReadWriteMany) Persistent Volumes provisioned by Portworx Enterprise.
+
+### Deploying Portworx Storage Classes
+
+Portworx provides the ability for users to leverage a unified storage pool to dynamically provision both Block-based (ReadWriteOnce) and File-based (ReadWriteMany) volumes for applications running on your Kubernetes cluster without having to provision multiple CSI drivers/plugins, and without the need for specific backing storage devices!
+
+#### Deploy StorageClass for Block (ReadWriteOnce) volumes
+
+Run the following command to create a new yaml file for the block-based StorageClass configuration:
+
+``` bash
+cat << EOF > /tmp/block-sc.yaml
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: block-sc
+provisioner: pxd.portworx.com
+parameters:
+  repl: "3"
+  priority_io: "high"
+  io_profile: "auto"
+allowVolumeExpansion: true
+EOF
+```
+
+
+
 
 > Note: This lab uses a CLI tools that must be installed on your local machine. You will need to connect to your cluster from a local bash shell on your machine. (hint: use `az aks get-credentials` to setup access locally)
 
