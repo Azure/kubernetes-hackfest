@@ -19,7 +19,6 @@ spec:
       labels:
         app: pgbench
     spec:
-      serviceAccountName: pg-sa
       schedulerName: stork
       containers:
         - image: postgres:9.5

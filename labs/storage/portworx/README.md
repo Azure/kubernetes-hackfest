@@ -227,7 +227,14 @@ kubectl apply -f busyboxpod.yaml -n sharedservice
 
 This creates a deployment using multiple simple busybox pods that have mounted and will constantly write to the shared persistent volume. It also deploys a single busybox pod that will constantly read from the shared persistent volume.
 
-4. Inspect the volume
+4. Verify the pods and pvc have been deployed: 
+
+``` bash 
+watch kubectl get pods,pvc -n sharedservice
+```
+Once the pods are up and running, Use `CTRL+C` to exit out of the watch command 
+
+5. Inspect the volume
 
 ``` bash
 BUSYBOXVOL=`kubectl get pvc -n sharedservice | grep px-sharedv4-pvc | awk '{print $3}'`
@@ -236,7 +243,7 @@ kubectl exec -it $PX_POD -n portworx -- /opt/pwx/bin/pxctl volume inspect ${BUSY
 
 Note that we have four pods accessing the RWX volume for our demo!
 
-5. Describe the sharedv4service endpoint
+6. Describe the sharedv4service endpoint
 
 ``` bash
 kubectl describe svc -n sharedservice
@@ -244,7 +251,7 @@ kubectl describe svc -n sharedservice
 
 Applications can mount the RWX using the ClusterIP (IP) and Portworx will automatically redirect it to one of the worker nodes in your cluster. The Endpoint in the output is the current node, but in case of that node going down, Portworx will automatically route the traffic using a different node endpoint, without the user having to reboot/restart the application pods.
 
-6. Inspect the log file to ensure that there was no application interruption due to node failure
+7. Inspect the log file to ensure that there was no application interruption due to node failure
 
 ``` bash
 kubectl logs shared-demo-reader -n sharedservice
@@ -405,8 +412,14 @@ kubectl exec mysql-client -n mysql -- apk add mysql-client
 ```
 
 ``` bash 
-oc exec mysql-client -n mysql -it -- sh
+kubectl exec mysql-client -n mysql -it -- sh
+``` 
+
+``` bash
 mysql -u root -p --password=password -h mysql-set-0.mysql.mysql.svc.cluster.local
+```
+
+``` bash
 create database portworx;
 show databases;
 
@@ -420,8 +433,13 @@ INSERT INTO features (id, name, value) VALUES ('px-4', 'share-volumes', 'better 
 INSERT INTO features (id, name, value) VALUES ('px-5', 'DevOps', 'your data needs to be automated too!');
 
 SELECT * FROM features;
+```
 
+``` bash
 quit
+```
+
+``` bash
 exit
 ```
 
@@ -446,11 +464,21 @@ Let’s drop our Portworx database, and see if we can recover it from our group 
 
 ``` bash 
 kubectl exec mysql-client -n mysql -it -- sh
+``` 
+
+``` bash
 mysql -u root -p --password=password -h mysql-set-0.mysql.mysql.svc.cluster.local
+```
 
+``` bash
 DROP database portworx;
-quit
+```
 
+``` bash
+quit
+```
+
+``` bash
 exit
 ```
 
@@ -468,9 +496,58 @@ And let’s get the snapshot names and assign them into variables
 SNAP0=$(kubectl get volumesnapshotdatas.volumesnapshot.external-storage.k8s.io -n mysql | grep mysql-group-snapshot-mysql-store-mysql-set-0 | awk '{print $1}')
 SNAP1=$(kubectl get volumesnapshotdatas.volumesnapshot.external-storage.k8s.io -n mysql | grep mysql-group-snapshot-mysql-store-mysql-set-1 | awk '{print $1}')
 SNAP2=$(kubectl get volumesnapshotdatas.volumesnapshot.external-storage.k8s.io -n mysql | grep mysql-group-snapshot-mysql-store-mysql-set-2 | awk '{print $1}')
+echo export SNAP0=$SNAP0 >> ~/workshopvars.env
+echo export SNAP1=$SNAP1 >> ~/workshopvars.env
+echo export SNAP2=$SNAP2 >> ~/workshopvars.env
 ```
 
 Now let’s create a new yaml file for our PVC objects that will be deployed from our snapshots:
+
+``` bash
+cat << EOF > restoregrouppvc.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-snap-store-mysql-set-0
+  annotations:
+    snapshot.alpha.kubernetes.io/snapshot: $SNAP0
+spec:
+  accessModes:
+     - ReadWriteOnce
+  storageClassName: stork-snapshot-sc
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-snap-store-mysql-set-1
+  annotations:
+    snapshot.alpha.kubernetes.io/snapshot: $SNAP1
+spec:
+  accessModes:
+     - ReadWriteOnce
+  storageClassName: stork-snapshot-sc
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-snap-store-mysql-set-2
+  annotations:
+    snapshot.alpha.kubernetes.io/snapshot: $SNAP2
+spec:
+  accessModes:
+     - ReadWriteOnce
+  storageClassName: stork-snapshot-sc
+  resources:
+    requests:
+      storage: 2Gi
+EOF
+```
 
 ``` bash
 kubectl apply -f restoregrouppvc.yaml -n mysql
@@ -500,12 +577,22 @@ Let’s verify that all of our data was restored:
 
 ``` bash
 kubectl exec mysql-client -n mysql -it -- sh
+```
+
+``` bash
 mysql -u root -p --password=password -h mysql-set-0.mysql.mysql.svc.cluster.local
+```
+
+``` bash
 use portworx;
 select * from features;
+```
 
+``` bash
 quit
+```
 
+``` bash
 exit
 ```
 
@@ -591,7 +678,7 @@ tar -xvf kubestr_0.4.36_Linux_amd64.tar.gz
 ```
 
 ``` bash
-./kubestr fio -z 30G -s block-sc -f /tmp/rand-write.fio -o json -e /tmp/rand-RW-WL.json >& /dev/null &
+./kubestr fio -z 30G -s block-sc -f rand-write.fio -o json -e rand-RW-WL.json >& /dev/null &
 ```
 
 3. Inpect PVC
@@ -782,7 +869,7 @@ kubectl exec -it $PX_POD -n portworx -- /opt/pwx/bin/pxctl cluster options updat
 Review the yaml for the StorageClass that we’ll use - note the reclaimPolicy is set to Delete:
 
 ``` bash
-kubectl apply -f trashcan-sc.yaml
+kubectl apply -f trash-sc.yaml
 ```
 
 3. Create a new namespace
@@ -805,6 +892,11 @@ kubectl apply -f pxbbq-frontend-tc.yaml
 
 6. Access the application
 Access the demo application using the LoadBalancer endpoint from the command below, and place some orders to store in the backend MongoDB database. If you need help placing orders, please refer to the steps earlier in this doc.
+
+``` bash 
+watch kubectl get pods,pvc,svc -n trashcan
+```
+Use `Ctrl+C` to exit out of the watch command, once the pods are up and running.
 
 ``` bash 
 kubectl get svc -n trashcan pxbbq-svc
@@ -838,6 +930,33 @@ TCVolId=$(kubectl exec -it $PX_POD -n portworx -- /opt/pwx/bin/pxctl volume list
 
 9. Create a persistent volume from the recovered portworx volume
 Now that we’ve restored the volume from the trashcan, let’s create the yaml to tie the volume to a Kubernetes persistent volume:
+
+``` bash
+cat << EOF > recoverpv.yaml
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  annotations:
+    pv.kubernetes.io/provisioned-by: pxd.portworx.com
+  finalizers:
+  - kubernetes.io/pv-protection
+  name: pvc-restoredvol
+spec:
+  capacity:
+    storage: 5Gi
+  claimRef:
+    apiVersion: v1
+    kind: PersistentVolumeClaim
+    name: mongodb-pvc
+    namespace: trashcan
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: trash-sc
+  persistentVolumeReclaimPolicy: Retain
+  portworxVolume:
+    volumeID: "$TCVolId"
+EOF
+```
 
 ``` bash
 kubectl apply -f recoverpv.yaml
