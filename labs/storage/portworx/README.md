@@ -6,7 +6,7 @@ Portworx Enterprise is the Kubernetes storage and data platform trusted in produ
 
 ## Prerequisites
 
-1. Deploy a new AKS cluster using [Azure Kubernetes Service](../../create-aks-cluster/README.md) running Kubernetes version 1.26.6. Don't need to walk through the `Namespaces Setup` section after AKS cluster creation on the create-aks-cluster page.
+1. Deploy a new AKS cluster using [Azure Kubernetes Service](../../create-aks-cluster/README.md) running Kubernetes version 1.26.6 and selecting AKS worker nodes with at least 4 cores and 4GB of RAM (This guide has been tested by using --node-vm-size Standard_A4_v2 in the az aks create command). Don't need to walk through the `Namespaces Setup` section after AKS cluster creation on the create-aks-cluster page.
 
 2. Create a custom role for Portworx. Enter the subscription ID using the subscription ID, also specify a role name:
 
@@ -145,15 +145,11 @@ kubectl get sc
 kubectl create ns pxbbq
 ```
 
-2.  Deploy the MongoDB backend components for our demo application. This will deploy a PersistentVolumeClaim using the `block-sc` storage class that we deployed in the previous step. 
+2.  Deploy the MongoDB backend components for our demo application. This will deploy a PersistentVolumeClaim using the `block-sc` storage class that we deployed in the previous step. Also, deploy the frontend components for our demo application. 
 
 ``` bash
 kubectl apply -f pxbbq-mongo.yaml
-```
-
-3. Deploy the frontend components for our demo application.
-
-``` bash 
+sleep 15
 kubectl apply -f pxbbq-frontend.yaml
 ```
 
@@ -213,15 +209,11 @@ Portworx offers a sharedv4 service volume which allows applications to connect t
 kubectl create ns sharedservice
 ```
 
-2. Deploy the sharedv4 service PVC 
+2. Deploy the sharedv4 service PVC and the busybox pods using the following commands: 
 
 ``` bash
 kubectl apply -f sharedpvc.yaml -n sharedservice
-```
-
-3. Deploy the busybox pods using the following command: 
-
-``` bash 
+sleep 20
 kubectl apply -f busyboxpod.yaml -n sharedservice
 ```
 
@@ -257,16 +249,6 @@ Applications can mount the RWX using the ClusterIP (IP) and Portworx will automa
 kubectl logs shared-demo-reader -n sharedservice
 ```
 You’ve just deployed applications with different needs on the same Kubernetes cluster without the need to install multiple CSI drivers/plugins, and it will function exactly the same way no matter what backing storage you provide for Portworx Enterprise to use!
-
-### Wrap up this section
-Use the following commands to delete objects used for this scenario
-
-``` bash
-kubectl delete -f busyboxpod.yaml -n sharedservice
-kubectl delete -f sharedpvc.yaml -n sharedservice
-kubectl delete ns sharedservice
-kubectl wait --for=delete ns/sharedservice --timeout=60s
-```
 
 ## Protecting your data using VolumeSnapshots and GroupVolumeSnapshots
 
@@ -600,69 +582,18 @@ As you can see, our data has been successfully restored and is consistent due to
 
 That’s how easy it is to use Portworx snapshots, groupsnapshots and 3Dsnapshots to create application consistent snapshots for your applications running on Kubernetes.
 
-### Wrap up this section
-Use the following commands to delete objects used for this specific scenario:
-
-``` bash 
-kubectl delete -f mysql-app.yaml -n mysql
-kubectl delete -f restoregrouppvc.yaml -n mysql
-kubectl delete -f mysql-groupsnapshot.yaml -n mysql
-kubectl delete -f mysql-restore-app.yaml -n mysql
-kubectl delete -f mongo-snapshot.yaml
-kubectl delete -f pxbbq-mongo-restore.yaml -n pxbbq
-kubectl delete -f pxbbq-frontend.yaml -n pxbbq
-kubectl delete ns pxbbq
-kubectl delete ns mysql
-kubectl wait --for=delete ns/pxbbq --timeout=60s
-kubectl wait --for=delete ns/mysql --timeout=60s
-```
-
 ## No More Noisy Neighbors on AKS using Portworx Application IO Control
 
 In this module, we will use Portworx Application I/O control to dynamically update Read and Write IOPS limits to avoid noisy neighbor scenarios where applications sharing a Kubernetes cluster starve for storage resources. Keep in mind you can also limit bandwidth to a persistent volume using Application I/O Control with Portworx, not just IOPS!
 
 1. Configuring Grafana Dashboards for Portworx
-Enter the following commands to download the Grafana dashboard and datasource configuration files
+Use the following script to configure grafana on your AKS cluster. 
 
 ``` bash
-curl -O https://docs.portworx.com/samples/k8s/pxc/grafana-dashboard-config.yaml
-sleep 3
-curl -O https://docs.portworx.com/samples/k8s/pxc/grafana-datasource.yaml
+./install-grafana.sh
 ```
 
-Create a configmap for the dashboard and data source:
-
-``` bash
-kubectl -n portworx create configmap grafana-dashboard-config --from-file=grafana-dashboard-config.yaml
-kubectl -n portworx create configmap grafana-source-config --from-file=grafana-datasource.yaml
-```
-
-Download and install Grafana dashboards using the following commands:
-
-``` bash
-curl "https://docs.portworx.com/samples/k8s/pxc/portworx-cluster-dashboard.json" -o portworx-cluster-dashboard.json && \
-curl "https://docs.portworx.com/samples/k8s/pxc/portworx-node-dashboard.json" -o portworx-node-dashboard.json && \
-curl "https://docs.portworx.com/samples/k8s/pxc/portworx-volume-dashboard.json" -o portworx-volume-dashboard.json && \
-curl "https://docs.portworx.com/samples/k8s/pxc/portworx-performance-dashboard.json" -o portworx-performance-dashboard.json && \
-curl "https://docs.portworx.com/samples/k8s/pxc/portworx-etcd-dashboard.json" -o portworx-etcd-dashboard.json
-```
-
-``` bash
-kubectl -n portworx create configmap grafana-dashboards \
---from-file=portworx-cluster-dashboard.json \
---from-file=portworx-performance-dashboard.json \
---from-file=portworx-node-dashboard.json \
---from-file=portworx-volume-dashboard.json \
---from-file=portworx-etcd-dashboard.json
-```
-
-Deploy Grafana components using the following command: 
-
-``` bash
-kubectl apply -f grafana.yaml
-```
-
-Wait till Grafana is up and running
+Wait till Grafana pod is up and running
 
 ``` bash
 watch kubectl get pods -n portworx -l app=grafana
@@ -681,7 +612,7 @@ tar -xvf kubestr_0.4.36_Linux_amd64.tar.gz
 ./kubestr fio -z 30G -s block-sc -f rand-write.fio -o json -e rand-RW-WL.json >& /dev/null &
 ```
 
-3. Inpect PVC
+3. Inpect PVC. Remember the last 4-5 characters of the PVC, we will use those to find this PVC in our Grafana dashboard. 
 ``` bash
 kubectl get pvc
 ```
@@ -741,23 +672,6 @@ Note: Grafana takes a couple of minute to reflect the changes, so if you dont se
 
 That’s how you can use Portworx Application IO control to ensure a single application doesn’t consume all the resources available to the cluster and cause a noisy neighbor issue!
 
-### Wrap up this section
-Use the following commands to delete objects used for this specific scenario:
-
-``` bash 
-kubectl delete pods --all
-kubectl delete pvc --all
-kubectl wait --for=delete pvc/all --timeout=60s
-rm grafana-dashboard-config.yaml
-rm grafana-datasource.yaml
-rm portworx-cluster-dashboard.json
-rm portworx-node-dashboard.json
-rm portworx-volume-dashboard.json
-rm portworx-performance-dashboard.json
-rm portworx-etcd-dashboard.json
-rm /tmp/grafana.yaml
-```
-
 ## Automated storage capacity management using Portworx Autopilot
 
 Portworx Autopilot is a rule-based engine that responds to changes from a monitoring source. Autopilot allows you to specify monitoring conditions along with actions it should take when those conditions occur.
@@ -792,16 +706,13 @@ kubectl apply -f namespaces.yaml
 
 3. Deploy Postgres App for testing Portworx Autopilot
 
-Let's deploy PVCs for our Postgres deployment:
+Let's deploy PVCs and pods for our Postgres and pgbench deployment:
 
 ``` bash
 kubectl apply -f autopilot-postgres.yaml -n pg1
-```
-
-Next, let’s deploy our Postgres and pgbench pods:
-
-``` bash 
+sleep 30
 kubectl apply -f autopilot-app.yaml -n pg1
+sleep 20
 ```
 
 Verify that the application is deployed and pgbench is writing data to the postgres database.
@@ -843,17 +754,6 @@ kubectl get pvc -n pg1
 
 You’ve just configured Portworx Autopilot and observed how it can perform automated capacity management based on rules you configure, and be able to “right size” your underlying persistent storage as it is needed!
 
-### Wrap up this module
-Use the following commands to delete objects used for this specific scenario:
-
-``` bash
-kubectl delete -f autopilot-app.yaml -n pg1
-kubectl delete -f autopilot-postgres.yaml -n pg1
-kubectl delete -f autopilotrule.yaml
-kubectl delete -f namespaces.yaml
-kubectl wait --for=delete ns/pg1 --timeout=60s
-```
-
 ## Protect againt accidental volume deletion using Portworx Volume Trashcan
 
 Ever had that sinking feeling after deleting a critical volume, disk, or file? The Portworx Volume Trashcan feature provides protection against accidental or inadvertent volume deletions which could result in loss of data. Volume Trashcan is disabled by default, but can be enabled using a simple pxctl command. Let’s test it out!
@@ -878,15 +778,11 @@ kubectl apply -f trash-sc.yaml
 kubectl create ns trashcan
 ```
 
-4. Deploy the mongodb backend for the application
+4. Deploy the mongodb backend and frontend components for the application
 
 ``` bash 
 kubectl create -f pxbbq-mongo-tc.yaml
-```
-
-5. Deploy the front-end components for the application
-
-``` bash 
+sleep 5 
 kubectl apply -f pxbbq-frontend-tc.yaml
 ```
 
@@ -903,7 +799,7 @@ kubectl get svc -n trashcan pxbbq-svc
 ```
 
 7. Delete the demo application
-Next, let's accidently delete the postgres pod and persistent volume: 
+Once you have placed an order, let's accidently delete the postgres pod and persistent volume: 
 
 ``` bash 
 kubectl delete -f pxbbq-mongo-tc.yaml
@@ -986,19 +882,13 @@ kubectl get svc -n trashcan pxbbq-svc
 ```
 This is how Portworx allows users to use the Trash Can feature to recover accidentally deleted persistent volumes. This prevents additional downtime and reduces ticket churn for data restoration due to human error!
 
-### Wrap up this module
-Use the following commands to delete objects used for this specific scenario:
+### Wrap up this workshop
+Use the following script to delete objects used for this workshop:
 
 ``` bash 
-kubectl exec -it $PX_POD -n portworx -- /opt/pwx/bin/pxctl cluster options update --volume-expiration-minutes 0
+./wrapuplab.sh
 ```
 
-``` bash 
-kubectl delete -f pxbbq-frontend-tc.yaml
-kubectl delete -f pxbbq-mongo-tc.yaml
-kubectl delete ns trashcan
-kubectl wait --for=delete ns/trashcan --timeout=60s
-```
 ## Docs / References
 
 * [Portworx Documentation](https://docs.portworx.com/)
