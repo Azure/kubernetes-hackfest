@@ -32,7 +32,7 @@ spec:
           - -c
           - |
             while true; do
-              echo -e "{\"time\":\$(date +%H:%M:%S),\"hostname\":\$(hostname) writing to shared vol }""\n" >> /mnt/shared.log
+              echo -e "{"time":$(date +%H:%M:%S),"hostname":$(hostname) writing to shared vol }""\n" >> /mnt/shared.log
               sleep 1
             done
 ---
