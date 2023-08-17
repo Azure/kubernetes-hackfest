@@ -6,7 +6,7 @@ Portworx Enterprise is the Kubernetes storage and data platform trusted in produ
 
 ## Prerequisites
 
-1. Deploy a new AKS cluster using [Azure Kubernetes Service](../../create-aks-cluster/README.md) running Kubernetes version 1.26.6 and selecting AKS worker nodes with at least 4 cores and 4GB of RAM (This guide has been tested by using --node-vm-size Standard_A4_v2 in the az aks create command). Don't need to walk through the `Namespaces Setup` section after AKS cluster creation on the create-aks-cluster page.
+1. Deploy a new AKS cluster using [Azure Kubernetes Service](../../create-aks-cluster/README.md) running Kubernetes version 1.26.6 and selecting AKS worker nodes with at least 4 cores and 4GB of RAM (This guide has been tested by adding the parameter `--node-vm-size Standard_F8s_v2` in the az aks create command). Don't need to walk through the `Namespaces Setup` section after AKS cluster creation on the create-aks-cluster page.
 
 2. Create a custom role for Portworx. Enter the subscription ID using the subscription ID, also specify a role name:
 
