@@ -894,3 +894,17 @@ Use the following script to delete objects used for this workshop:
 * [Portworx Documentation](https://docs.portworx.com/)
 * [Portworx Central - 30 day free trial](https://central.portworx.com/)
 * [Portworx Slack community](https://slack.portworx.com/)
+
+## Troubleshooting
+
+* `No such file or directory` - when you are trying to run a script of apply a yaml file: 
+
+``` bash 
+cd kubernetes-hackfest/labs/storage/portworx/yaml
+```
+
+* `error: pod, type/name or --filename must be specified`: This is because the PX_POD variable isnt set, use the following command to set the variable and rerun the command:
+
+``` bash
+PX_POD=$(kubectl get pods -l name=portworx -n portworx -o jsonpath='{.items[0].metadata.name}')
+```
