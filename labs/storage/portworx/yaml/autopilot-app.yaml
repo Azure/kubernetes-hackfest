@@ -46,7 +46,7 @@ spec:
             - name: PG_USER
               value: pgbench
             - name: SIZE
-              value: "11"
+              value: "7"
           volumeMounts:
           - mountPath: /var/lib/postgresql/data
             name: pgbenchdb
