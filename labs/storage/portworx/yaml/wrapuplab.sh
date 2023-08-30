@@ -14,17 +14,7 @@ kubectl delete -f pxbbq-mongo-restore.yaml -n pxbbq
 kubectl delete -f pxbbq-frontend.yaml -n pxbbq
 kubectl delete ns pxbbq
 kubectl delete ns mysql
-kubectl delete pods --all
-kubectl delete pvc --all
 
-rm grafana-dashboard-config.yaml
-rm grafana-datasource.yaml
-rm portworx-cluster-dashboard.json
-rm portworx-node-dashboard.json
-rm portworx-volume-dashboard.json
-rm portworx-performance-dashboard.json
-rm portworx-etcd-dashboard.json
-rm /tmp/grafana.yaml
 kubectl delete -f autopilot-app.yaml -n pg1
 kubectl delete -f autopilot-postgres.yaml -n pg1
 kubectl delete -f autopilotrule.yaml
