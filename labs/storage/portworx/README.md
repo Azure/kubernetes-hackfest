@@ -43,8 +43,8 @@ az role definition create --role-definition '{
 3. Find the AKS cluster infrastructure resource group, we will use this to create a new service principal in the next step:
 
 ``` bash
-CLUSTERNAME=
-RGNAME=
+CLUSTERNAME=<SET TO AKS CLUSTER NAME>
+RGNAME=<SET TO AKS RESOURCE GROUP>
 INFRARG="$(az aks show -n $CLUSTERNAME -g $RGNAME --query nodeResourceGroup -o tsv)"
 echo export INFRARG=$INFRARG >> ~/workshopvars.env
 ```
