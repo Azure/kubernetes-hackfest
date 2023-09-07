@@ -6,12 +6,14 @@ Portworx Enterprise is the Kubernetes storage and data platform trusted in produ
 
 ## Prerequisites
 
+- [jq](https://jqlang.github.io/jq/)
+
 1. Deploy a new AKS cluster using [Azure Kubernetes Service](../../create-aks-cluster/README.md) running Kubernetes version 1.26.6 and selecting AKS worker nodes with at least 4 cores and 4GB of RAM (This guide has been tested by adding the parameter `--node-vm-size Standard_F8s_v2` in the az aks create command). Don't need to walk through the `Namespaces Setup` section after AKS cluster creation on the create-aks-cluster page.
 
 2. Create a custom role for Portworx. Enter the subscription ID using the subscription ID, also specify a role name:
 
 ``` bash
-SUBSCRIPTIONID="$(az account show | grep id | awk '{ print $2 }' |  sed 's/\"//g' |  sed 's/\,//g')"
+SUBSCRIPTIONID=$(az account show --query id -o tsv)
 echo export SUBSCRIPTIONID=$SUBSCRIPTIONID >> ~/workshopvars.env
 ```
 
@@ -41,24 +43,26 @@ az role definition create --role-definition '{
 3. Find the AKS cluster infrastructure resource group, we will use this to create a new service principal in the next step:
 
 ``` bash
-INFRARG="$(az aks show -n $CLUSTERNAME -g $RGNAME | jq -r '.nodeResourceGroup')"
+CLUSTERNAME=
+RGNAME=
+INFRARG="$(az aks show -n $CLUSTERNAME -g $RGNAME --query nodeResourceGroup -o tsv)"
 echo export INFRARG=$INFRARG >> ~/workshopvars.env
 ```
 
 4. Create a service principal for Portworx custom role:
 
 ``` bash
-az ad sp create-for-rbac --role=px-role --scopes="/subscriptions/$SUBSCRIPTIONID/resourceGroups/$INFRARG" >> spdetails.json
+az ad sp create-for-rbac --role=px-role --scopes="/subscriptions/$SUBSCRIPTIONID/resourceGroups/$INFRARG" --output json > spdetails.json
 ```
 
 ``` bash
-CLIENTID="$(cat spdetails.json | grep appId | awk '{ print $2 }' | sed 's/\"//g' |  sed 's/\,//g')"
+CLIENTID=$(cat spdetails.json | jq -r '.appId')
 echo export CLIENTID=$CLIENTID >> ~/workshopvars.env
 
-CLIENTSECRET="$(cat spdetails.json | grep password | awk '{ print $2 }' | sed 's/\"//g' |  sed 's/\,//g')"
+CLIENTSECRET=$(cat spdetails.json | jq -r '.password')
 echo export CLIENTSECRET=$CLIENTSECRET >> ~/workshopvars.env
 
-TENANTID="$(az account tenant list | grep tenantId | awk '{ print $2 }' | sed 's/\"//g' |  sed 's/\,//g')"
+TENANTID=$(cat spdetails.json | jq -r '.tenant')
 echo export TENANTID=$TENANTID >> ~/workshopvars.env
 ```
 
