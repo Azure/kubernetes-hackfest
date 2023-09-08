@@ -1,0 +1,22 @@
+##Random Write 4k blocksize test
+[global]
+ioengine=libaio
+size=20GiB
+name=fio-rand-write
+direct=1
+iodepth=128
+numjobs=1
+group_reporting=1
+##----layout file-------
+[4k-init-write]
+blocksize=4k
+filename=/dataset/fio.dat
+readwrite=randwrite
+end_fsync=1
+##----Begin 4k tests-------
+[4k-rand-write]
+stonewall
+blocksize=4k
+filename=/dataset/fio.dat
+readwrite=randwrite
+end_fsync=1

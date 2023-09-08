@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: shared-demo
+  name: shared-busybox
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: shared-demo
+  template:
+    metadata:
+      labels:
+        app: shared-demo
+    spec:
+      volumes:
+      - name: shared-vol
+        persistentVolumeClaim:
+          claimName: px-sharedv4-pvc
+      terminationGracePeriodSeconds: 5
+      containers:
+      - image: busybox
+        imagePullPolicy: Always
+        name: busybox
+        volumeMounts:
+        - name: shared-vol
+          mountPath: "/mnt"
+        command:
+          - sh
+        args:
+          - -c
+          - |
+            while true; do
+              echo -e "{"time":$(date +%H:%M:%S),"hostname":$(hostname) writing to shared vol }""\n" >> /mnt/shared.log
+              sleep 1
+            done
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: shared-demo-reader
+spec:
+  volumes:
+  - name: shared-vol
+    persistentVolumeClaim:
+      claimName: px-sharedv4-pvc
+  terminationGracePeriodSeconds: 5
+  containers:
+  - image: busybox
+    imagePullPolicy: Always
+    name: busybox
+    volumeMounts:
+    - name: shared-vol
+      mountPath: "/mnt"
+    command:
+      - sh
+    args:
+      - -c
+      - |
+        while true; do
+          tail -f /mnt/shared.log
+        done

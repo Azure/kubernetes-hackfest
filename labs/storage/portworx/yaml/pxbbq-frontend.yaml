@@ -1,0 +1,50 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pxbbq-web
+  namespace: pxbbq
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: pxbbq-web
+  template:
+    metadata:
+      labels:
+        app: pxbbq-web
+    spec:
+      containers:
+      - name: pxbbq-web
+        image: eshanks16/pxbbq:v3.2
+        env:
+        - name: MONGO_INIT_USER
+          value: "porxie" #Mongo User with permissions to create additional databases and users. Typically "porxie" or "pds"
+        - name: MONGO_INIT_PASS
+          value: "porxie" #Required to connect the init user to the database. If using the mongodb yaml supplied, use "porxie"
+        - name: MONGO_NODES
+          value: "mongo" #COMMA SEPARATED LIST OF MONGO ENDPOINTS. Example: mongo1.dns.name,mongo2.dns.name
+        - name: MONGO_PORT
+          value: "27017"
+        - name: MONGO_USER
+          value: porxie #Mongo DB User that will be created by using the Init_User
+        - name: MONGO_PASS
+          value: "porxie" #Mongo DB Password for User that will be created by using the Init User
+        imagePullPolicy: Always
+        ports:
+          - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pxbbq-svc
+  namespace: pxbbq
+  labels:
+    app: pxbbq-web
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+  type: LoadBalancer
+  selector:
+    app: pxbbq-web
