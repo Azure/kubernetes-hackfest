@@ -1,0 +1,16 @@
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServer
+metadata:
+  name: prometheus-vs 
+  namespace: monitoring
+spec:
+  host: prometheus.example.com
+  upstreams:
+  - name: prometheus 
+    service: nginx-prometheus-server
+    port: 80 
+  routes:
+  - path: /
+    action:
+      pass: prometheus
+      

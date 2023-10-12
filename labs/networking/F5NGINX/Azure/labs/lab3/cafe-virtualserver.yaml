@@ -1,0 +1,39 @@
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServer
+metadata:
+  name: cafe-vs
+spec:
+  host: cafe.example.com
+  tls:
+    secret: cafe-secret
+    redirect:
+      enable: true   #Redirect from http > https
+      code: 301
+  upstreams:
+    - name: coffee
+      service: coffee-svc
+      port: 80
+    - name: tea
+      service: tea-svc
+      port: 80
+  routes:
+    - path: /
+      action:
+        redirect:
+          url: https://cafe.example.com/coffee
+          code: 302
+    - path: /tea
+      policies:
+      - name: oidc-policy # This enables Azure AD authentication for /tea path
+      action:
+        pass: tea
+    - path: /coffee
+      action:
+        pass: coffee
+    - path: /milk
+      action:
+        return:
+          code: 200
+          type: text/html
+          body: "Welcome to AKS Hackfest & NGINX Plus NIC Workshop!!"
+

@@ -1,0 +1,13 @@
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServer
+metadata:
+  name: grafana-vs
+  namespace: monitoring
+spec:
+  host: grafana.example.com
+  tls:
+    secret: grafana-secret
+  routes:
+  - path: /
+    route: monitoring/grafana-dashboard
+    
