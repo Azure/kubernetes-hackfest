@@ -345,4 +345,4 @@ Within the `Dashboard` section, expand the right `New` button and then click on 
 
 -------------
 
-Navigate to ([Lab5](../lab5/readme.md) | [Main Menu](../LabGuide.md#lab-outline))
+Navigate to ([Lab5](../lab5/readme.md) | [Main Menu](../readme.md#lab-outline))

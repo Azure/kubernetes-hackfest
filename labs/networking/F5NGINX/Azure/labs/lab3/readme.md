@@ -250,4 +250,4 @@ Once your credentials have been successfully verified by Microsoft Azure AD, NGI
 
 -------------
 
-Navigate to ([Lab4](../lab4/readme.md) | [Main Menu](../LabGuide.md#lab-outline))
+Navigate to ([Lab4](../lab4/readme.md) | [Main Menu](../readme.md#lab-outline))

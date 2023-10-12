@@ -459,4 +459,4 @@ You can try and verify additional FIPS ciphers with common scanning tools. To ch
 
 -------------
 
-Navigate to [Main Menu](../LabGuide.md)
+Navigate to [Main Menu](../readme.md)

@@ -332,4 +332,4 @@ The NGINX Ingress Controller is a pod running NGINX Plus under the hood, let's g
 
 -------------
 
-Navigate to ([Lab2](../lab2/readme.md) | [Main Menu](../LabGuide.md#lab-outline))
+Navigate to ([Lab2](../lab2/readme.md) | [Main Menu](../readme.md#lab-outline))

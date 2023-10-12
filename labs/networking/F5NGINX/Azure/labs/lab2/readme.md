@@ -307,6 +307,6 @@ What happens if you try just plain  http://cafe.example.com? It should redirect 
 
 -------------
 
-Navigate to ([Lab3](../lab3/readme.md) | [Main Menu](../LabGuide.md#lab-outline))
+Navigate to ([Lab3](../lab3/readme.md) | [Main Menu](../readme.md#lab-outline))
 
 
