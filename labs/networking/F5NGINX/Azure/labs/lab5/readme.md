@@ -433,6 +433,20 @@ closed
 
 You can try and verify additional FIPS ciphers with common scanning tools. To check the list of FIPS compliant ciphers check this [link](https://docs.nginx.com/nginx/fips-compliance-nginx-plus/#step-4-verify-compliance-with-fips-140-2).
 
+
+
+## (Optional: LAB Cleanup Step) Delete your AKS cluster and other resources associated to cluster
+
+You can easily delete your AKS cluster using the Azure CLI
+
+1. Delete the cluster and its associated nodes with the following command.
+   ```bash
+   MY_RESOURCEGROUP=s.dutta
+   MY_AKS=aks-shouvik
+
+   az aks delete --resource-group $MY_RESOURCEGROUP --name $MY_AKS
+   ```
+
 <br/>
 
 **This completes the Lab.** 

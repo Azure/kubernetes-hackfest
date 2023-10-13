@@ -98,7 +98,7 @@ With the kubernetes secret getting created, the next piece is to configure `oidc
 2. Within the `Overview` page, click on the `Endpoints` tab. This will open all the application specific endpoints in a right pane as shown below. For NGINX Ingress Controller point of view you would only need the authorization endpoint and the token endpoint.
   ![Endpoint information](media/endpoints.png)
 
-1. Copy the `OAuth2.0` authorization endpoint and token endpoint and paste it within your `lab3/oidc-policy.yaml` manifest file at their respective position.
+1. Copy the `OAuth2.0 authorization endpoint and token endpoint` and paste it within your `lab3/oidc-policy.yaml` manifest file at their respective position.
 
 2. To retrieve the `jwksURI` endpoint you need to `curl` the `.well-known/openid-configuration` endpoint. You are going to be using `OpenID Connect metadata document` to find your `.well-known/openid-configuration`. 
    

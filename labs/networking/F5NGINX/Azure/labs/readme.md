@@ -56,20 +56,20 @@ An excellent Prerequisite for taking this Workshop is the NGINX Basics Workshop,
 #### Lab 0: Azure cli, AKS and ACR Setup guide
 - [Lab 0: Azure cli, AKS and ACR Setup guide](lab0/readme.md)
 
-#### Lab 1: Deploying NIC to AKS cluster
-- [Lab 1: Deploy NIC to AKS cluster](lab1/readme.md)
+#### Lab 1: Deploying NGINX Ingress Controller to AKS cluster
+- [Lab 1: Deploy NGINX Ingress Controller to AKS cluster](lab1/readme.md)
 
 #### Lab 2: Deploy Cafe Demo Application to AKS cluster
 - [Lab 2: Deploy Cafe Demo Application to AKS cluster](lab2/readme.md)
 
-#### Lab 3: Configuring NIC with AzureAD 
-- [Lab 3: Configuring NIC with AzureAD](lab3/readme.md)
+#### Lab 3: Configuring NGINX Ingress Controller with AzureAD 
+- [Lab 3: Configuring NGINX Ingress Controller with AzureAD](lab3/readme.md)
   
-#### Lab 4: Monitoring NIC with Prometheus and Grafana
+#### Lab 4: Monitoring NGINX Ingress Controller with Prometheus and Grafana
 - [Lab 4: Prometheus and Grafana](lab4/readme.md)
 
-#### Lab 5: Deploying NIC with FIPS for AKS
-- [Lab 5: Deploying NIC with FIPS for AKS](lab5/readme.md)
+#### Lab 5: Deploying NGINX Ingress Controller with FIPS for AKS
+- [Lab 5: Deploying NGINX Ingress Controller with FIPS for AKS](lab5/readme.md)
 
 <br/>
 

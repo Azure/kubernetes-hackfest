@@ -151,10 +151,17 @@ Here is a brief description of what these different tools and application provid
 
     ```bash
     helm repo add grafana https://grafana.github.io/helm-charts
+
+    helm repo update
     ```
     ```bash
     ###Sample Output###
     "grafana" has been added to your repositories
+    Hang tight while we grab the latest from your chart repositories...
+    ...Successfully got an update from the "kube-state-metrics" chart repository
+    ...Successfully got an update from the "prometheus-community" chart repository
+    ...Successfully got an update from the "grafana" chart repository
+    Update Complete. ⎈Happy Helming!⎈
     ```
 
 2. The Grafana repo is added via Helm. Next you will install Grafana using the below command. For this lab, you will create a second release called `nginx-grafana`.  
@@ -243,11 +250,16 @@ For you and your team to access Prometheus and Grafana from outside the cluster,
    
     ![Grafana Login](media/ext_grafana_login.png)
 
-    Retrieve the Grafana admin login password, which was dynamically created by Helm during the installation:
+    Retrieve the Grafana `admin` login password, which was dynamically created by Helm during the installation:
 
     ```bash
     kubectl get secret --namespace monitoring nginx-grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
     ```
+    | | |
+    |---|---|
+    | **username:** | admin |
+    | **password:** | Output of the above command |
+
 
     After logging in, you should see the main Grafana Welcome page:
 

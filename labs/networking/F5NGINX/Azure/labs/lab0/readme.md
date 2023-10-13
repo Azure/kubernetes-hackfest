@@ -111,7 +111,7 @@ az --version
         --node-vm-size $AKS_NODE_VM \
         --kubernetes-version $K8S_VERSION \
         --tags owner=$MY_NAME \
-        --enable-addons monitoring \ 
+        --enable-addons monitoring \
         --generate-ssh-keys \
         --enable-fips-image
    ```
@@ -137,36 +137,7 @@ az --version
    az aks get-credentials --resource-group $MY_RESOURCEGROUP --name $MY_AKS
    ```
 
-4. If you are managing multiple Kubernetes clusters, you can easily change between context using the `kubectl config set-context` command:
-   ```bash
-   # Get a list of kubernetes clusters in you local kube config
-   kubectl config get-clusters
-   ```
-   ```bash
-   ###Sample Output###
-   NAME
-   local-k8s-cluster
-   aks-development
-   minikube
-   aks-shouvik
-   ```
-   ```bash 
-   # Set context
-   kubectl config set-context aks-shouvik
-   ```
-   ```bash
-   # Check which context you are currently targeting
-   kubectl config current-context
-   ```
-   ```bash
-   ###Sample Output###
-   aks-shouvik
-   ```
-   ```bash
-   # Allows you to switch between contexts using their name
-   kubectl config use-context <CONTEXT_NAME>
-   ```
-5. Test if you are able to access your newly created AKS cluster.
+4. Test if you are able to access your newly created AKS cluster.
    ```bash
    # Get Nodes in the target kubernetes cluster
    kubectl get nodes
@@ -179,7 +150,7 @@ az --version
    aks-nodepool1-76910942-vmss000002   Ready    agent   9m30s   v1.27.3    
    ```
 
-6. Finally to stop a running AKS cluster use below command.
+5. Finally to stop a running AKS cluster use below command.
    ```bash
    MY_RESOURCEGROUP=s.dutta
    MY_AKS=aks-shouvik
@@ -187,7 +158,7 @@ az --version
    az aks stop --resource-group $MY_RESOURCEGROUP --name $MY_AKS
    ```
 
-7. To start an already deployed AKS cluster use below command.
+6. To start an already deployed AKS cluster use below command.
    ```bash
    MY_RESOURCEGROUP=s.dutta
    MY_AKS=aks-shouvik
@@ -222,54 +193,14 @@ az --version
 
 We can quickly test the ability to push images to our Private ACR from our client machine.
 
-1. If you do not have a test container image to push to ACR, you can download a simple container for testing, e.g.[nginxinc/ingress-demo](https://hub.docker.com/r/nginxinc/ingress-demo)
+1. If you do not have a test container image to push to ACR, you can use a simple container for testing, e.g.[nginxinc/ingress-demo](https://hub.docker.com/r/nginxinc/ingress-demo)
 
    ```bash
-   docker pull nginxinc/ingress-demo
+   az acr import --name $MY_ACR --source docker.io/nginxinc/ingress-demo:latest --image nginxinc/ingress-demo:v1
    ```
+   The above command pulls the `nginxinc/ingress-demo` image from docker hub and pushes it to Azure ACR.
 
-2. Get the image ID so we can tag it on the next step
-
-   ```bash
-   docker images | grep ingress-demo
-   ```
-   ```bash
-   ###Sample Output###
-   nginxinc/ingress-demo                latest    73ba987f213a   2 years ago   23MB
-   ```
-
-3. Tag the image with your registry login server name
-
-   ```bash
-   MY_ACR=acrshouvik
-   MY_REPO=nginxinc/ingress-demo
-   MY_TAG=v1
-   MY_IMAGE_ID=$(docker images nginxinc/ingress-demo --format "{{.ID}}")
-
-   set| grep MY_
-
-   docker tag $MY_IMAGE_ID $MY_ACR.azurecr.io/$MY_REPO:$MY_TAG
-   ```
-
-4. Your newly tagged image is now listed under `docker images`:
-   
-   ```bash
-   docker images | grep ingress-demo
-   ```
-   ```bash
-   ###Sample Output###
-   acrshouvik.azurecr.io/nginxinc/ingress-demo   v1        73ba987f213a   2 years ago   23MB
-   nginxinc/ingress-demo                         latest    73ba987f213a   2 years ago   23MB
-   ```
-
-5. Push your tagged image to ACR
-
-   ```bash
-   # you can get copy the docker image name from the last step 
-   docker push acrshouvik.azurecr.io/nginxinc/ingress-demo:v1 
-   ```
-
-6. Check if the image was successfully pushed to ACR using the azure cli command below
+2. Check if the image was successfully pushed to ACR using the azure cli command below
 
    ```bash
    MY_ACR=acrshouvik
@@ -305,24 +236,24 @@ To do so create a `private-registry.nginx.com` directory under below paths based
      -  **mac** : `~/.docker/certs.d`
      -  **windows** : `~/.docker/certs.d` 
 
-1. Copy your `nginx-repo.crt` and `nginx-repo.key` file in the newly created directory.
+3. Copy your `nginx-repo.crt` and `nginx-repo.key` file in the newly created directory.
      -  Below are the commands for mac/windows based systems
         ```bash
-        mkdir ~/.docker/certs.d/private-registry.nginx.com
+        mkdir -p ~/.docker/certs.d/private-registry.nginx.com
         cp nginx-repo.crt ~/.docker/certs.d/private-registry.nginx.com/client.cert
         cp nginx-repo.key ~/.docker/certs.d/private-registry.nginx.com/client.key
         ```  
 
-2. ***Optional** Step only for Mac and Windows system
+4. ***Optional** Step only for Mac and Windows system
      - Restart Docker Desktop so that it copies the `~/.docker/certs.d` directory from your Mac or Windows system to the `/etc/docker/certs.d` directory on **Moby** (the Docker Desktop `xhyve` virtual machine).
 
-3. Once Docker Desktop has restarted, run below command to pull the NGINX Plus Ingress Controller image from F5 private container registry.
+5. Once Docker Desktop has restarted, run below command to pull the NGINX Plus Ingress Controller image from F5 private container registry.
     ```bash
     docker pull private-registry.nginx.com/nginx-ic/nginx-plus-ingress:3.2.1-alpine-fips
     ```
     >**Note**: At the time of this writing `3.2.1-alpine-fips` is the latest NGINX Plus Ingress FIPS-enabled version that is available. Please feel free to use the latest version of NGINX Plus Ingress Controller. Look into [references](#references) for latest Ingress images.
 
-4. Set below variables to tag and push image to AWS ECR
+6. Set below variables to tag and push image to Azure ACR
     ```bash
     MY_ACR=acrshouvik
     MY_REPO=nginxinc/nginx-plus-ingress
@@ -334,36 +265,24 @@ To do so create a `private-registry.nginx.com` directory under below paths based
     set | grep MY_
     ```
 
-5. After setting the variables, tag the pulled NGINX Plus Ingress image using below command
+7. After setting the variables, tag the pulled NGINX Plus Ingress image using below command
     ```bash
     docker tag $MY_IMAGE_ID $MY_ACR.azurecr.io/$MY_REPO:$MY_TAG
     ```
-6. Login to the ACR registry using below command. 
+8. Login to the ACR registry using below command. 
    ```bash
    az acr login --name $MY_ACR
    ```
 
-7. Push your tagged image to ACR registry
+9. Push your tagged image to ACR registry
    ```bash
    docker push $MY_ACR.azurecr.io/$MY_REPO:$MY_TAG
    ```
 
-8. Once pushed you can check the image by running below command
+10. Once pushed you can check the image by running below command
     ```bash
     az acr repository list --name $MY_ACR --output table
     ```
-
-## Delete your AKS cluster and other resources associated to cluster
-
-You can easily delete your AKS cluster using the Azure CLI
-
-1. Delete the cluster and its associated nodes with the following command.
-   ```bash
-   MY_RESOURCEGROUP=s.dutta
-   MY_AKS=aks-shouvik
-
-   az aks delete --resource-group $MY_RESOURCEGROUP --name $MY_AKS
-   ```
 
 **This completes the Lab.** 
 <br/>
