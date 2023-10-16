@@ -20,42 +20,22 @@ Finally, you are going to use the NGINX Plus Dashboard to monitor both NGINX Ing
 
 ## Install NGINX Ingress Controller using Manifest files
 
-1. Make sure your AKS cluster is running. If it is in stopped state then you can start it using below command. 
-   ```bash
-   MY_RESOURCEGROUP=s.dutta
-   MY_AKS=aks-shouvik
-
-   az aks start --resource-group $MY_RESOURCEGROUP --name $MY_AKS
-   ```
-   >**Note**: The FQDN for API server for AKS might change on restart of the cluster which would result in errors running `kubectl` commands from your workstation. To update the FQDN re-import the credentials again using below command. This command would prompt about overwriting old objects. Enter "y" to overwrite the existing objects.
-   >```bash
-   >az aks get-credentials --resource-group $MY_RESOURCEGROUP --name $MY_AKS
-   >```
-   >```bash
-   >###Sample Output###
-   >A different object named aks-shouvik already exists in your kubeconfig file.
-   >Overwrite? (y/n): y
-   >A different object named clusterUser_s.dutta_aks-shouvik already exists in your kubeconfig file.
-   >Overwrite? (y/n): y
-   >Merged "aks-shouvik" as current context in /Users/shodutta/.kube/config
-   >```
-
-2. Clone the Ingress Controller repo and navigate into the deployments folder to make it your working directory:
+1. Clone the Ingress Controller repo and navigate into the deployments folder to make it your working directory:
    ```bash
    git clone https://github.com/nginxinc/kubernetes-ingress.git --branch v3.2.1
    cd kubernetes-ingress/deployments
    ```
 
-3. Create a namespace and a service account for the Ingress Controller
+2. Create a namespace and a service account for the Ingress Controller
     ```bash
     kubectl apply -f common/ns-and-sa.yaml
     ```
-4. Create a cluster role and cluster role binding for the service account
+3. Create a cluster role and cluster role binding for the service account
     ```bash
     kubectl apply -f rbac/rbac.yaml
     ```
 
-5. Create Common Resources:
+4. Create Common Resources:
      1. Create a secret with TLS certificate and a key for the default server in NGINX.
         ```bash
         cd ..
@@ -73,7 +53,7 @@ Finally, you are going to use the NGINX Plus Dashboard to monitor both NGINX Ing
         kubectl apply -f common/ingress-class.yaml
         ```
 
-6. Create Custom Resources
+5. Create Custom Resources
     1. Create custom resource definitions for VirtualServer and VirtualServerRoute, TransportServer and Policy resources:
         ```bash
         kubectl apply -f common/crds/k8s.nginx.org_virtualservers.yaml
@@ -86,7 +66,7 @@ Finally, you are going to use the NGINX Plus Dashboard to monitor both NGINX Ing
         ```bash
         kubectl apply -f common/crds/k8s.nginx.org_globalconfigurations.yaml
         ```
-7. Deploy the Ingress Controller as a Deployment:
+6. Deploy the Ingress Controller as a Deployment:
 
    The sample deployment file(`nginx-plus-ingress.yaml`) can be found within `deployment` sub-directory within your present working directory.
 
