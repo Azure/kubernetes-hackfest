@@ -283,6 +283,24 @@ To do so create a `private-registry.nginx.com` directory under below paths based
     ```bash
     az acr repository list --name $MY_ACR --output table
     ```
+    ```
+    ### Sample Output ###
+    Result
+    ---------------------------
+    nginxinc/ingress-demo
+    nginxinc/nginx-plus-ingress
+    ```
+
+## Workshop Requirement
+
+1. Make sure you clone this repository as in upcoming labs you would apply few manifest files using a relative path to this clone repository.
+   ```bash
+   git clone "https://github.com/Azure/kubernetes-hackfest"
+   ```
+2. Once you have cloned the repository, navigate to workshop root directory
+   ```bash
+   cd [Cloned path]/kubernetes-hackfest/labs/networking/F5NGINX
+   ```
 
 **This completes the Lab.** 
 <br/>
