@@ -85,3 +85,7 @@ labs/security/secure-tiller/*.srl
 
 # Misc
 .history/
+
+# NGINX Ingress Cloned Repo #
+#############################
+kubernetes-ingress/

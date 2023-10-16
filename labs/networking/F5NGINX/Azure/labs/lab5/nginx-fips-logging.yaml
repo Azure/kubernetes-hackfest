@@ -1,0 +1,8 @@
+# Nginx FIPS Logging for NIC
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: nginx-config
+  namespace: nginx-ingress
+data:
+  log-format:  '$remote_addr [$time_local] "$request" $status $body_bytes_sent rn="$resource_name" "$resource_namespace" svc="$service" ua=“$upstream_addr” sslid="$ssl_session_id" sslpr="$ssl_protocol" sslci="$ssl_cipher"'

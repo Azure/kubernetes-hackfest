@@ -1,0 +1,13 @@
+apiVersion: k8s.nginx.org/v1
+kind: Policy
+metadata:
+  name: oidc-policy
+spec:
+  oidc:
+    clientID: <change_to_your_client_id>
+    clientSecret: oidc-secret # Name of the kubernetes secret that you created 
+    authEndpoint: <authEndpoint is collected from endpoints in Azure AD>
+    tokenEndpoint: <Token Endpoint is collected from endpoints in Azure AD> 
+    jwksURI: <jwksURI Endpoint is collected from endpoints in Azure AD> 
+    scope: openid+profile+email
+    accessTokenEnable: true

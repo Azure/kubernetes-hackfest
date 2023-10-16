@@ -1,0 +1,8 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: nginx-config
+  namespace: nginx-ingress
+data:
+  resolver-addresses: <kube-dns-ip> # add your kube-dns service CLUSTER-IP here.
+  resolver-valid: 5s

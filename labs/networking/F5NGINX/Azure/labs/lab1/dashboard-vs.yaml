@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: dashboard-svc
+  namespace: nginx-ingress
+spec:
+  ports:
+  - port: 9000
+    targetPort: 9000
+    protocol: TCP
+    name: dashboard
+  selector:
+    app: nginx-ingress
+---
+apiVersion: k8s.nginx.org/v1
+kind: VirtualServer
+metadata:
+  name: dashboard-vs
+  namespace: nginx-ingress
+spec:
+  host: dashboard.example.com
+  upstreams:
+  - name: dashboard
+    service: dashboard-svc
+    port: 9000
+  routes:
+  - path: /dashboard.html
+    action:
+      pass: dashboard
+  - path: /api
+    action:
+      pass: dashboard
