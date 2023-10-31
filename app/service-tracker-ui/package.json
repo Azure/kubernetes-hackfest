@@ -15,7 +15,7 @@
     "es6-promise": "^4.2.4",
     "jquery": "^3.5.0",
     "mapbox-gl": "^0.53.0",
-    "moment": "^2.22.2",
+    "moment": "^2.29.4",
     "popper.js": "^1.14.3",
     "request-promise": "^4.2.2",
     "vue": "^2.6.6",
