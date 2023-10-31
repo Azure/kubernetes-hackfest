@@ -30,7 +30,7 @@
     "@vue/cli-plugin-eslint": "^3.4.0",
     "@vue/cli-service": "^3.8.0",
     "@vue/eslint-config-prettier": "^3.0.0-beta.9",
-    "node-sass": "^4.11.0",
+    "node-sass": "^7.0.0",
     "sass-loader": "^6.0.7",
     "url-parse": "^1.5.2"
   },
