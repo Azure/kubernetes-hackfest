@@ -32,7 +32,7 @@
     "@vue/eslint-config-prettier": "^3.0.0-beta.9",
     "node-sass": "^4.11.0",
     "sass-loader": "^6.0.7",
-    "url-parse": "^1.5.2"
+    "url-parse": "^1.5.9"
   },
   "description": "Web UI Service Status Dashboard",
   "author": "Joey Schluchter <jschluchter@gmail.com>",
