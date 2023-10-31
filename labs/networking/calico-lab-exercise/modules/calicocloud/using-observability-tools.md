@@ -103,7 +103,7 @@
 
     ![kibana flows](../img/kibana-flow-logs.png)
 
-    Some of the default dashboards you get access to are DNS Logs, Flow Logs, Audit Logs, Kuernetes API calls, L7 HTTP metrics, and others.
+    Some of the default dashboards you get access to are DNS Logs, Flow Logs, Audit Logs, Kubernetes API calls, L7 HTTP metrics, and others.
 
     ![kibana dashboard](../img/kibana-dashboard.png)
 
